@@ -1,0 +1,15 @@
+export { Spa2FaqManageView } from './spa2-faq-manage-view';
+export { Spa2BlogManageView } from './spa2-blog-manage-view';
+export { Spa2StaffManageView } from './spa2-staff-manage-view';
+export { Spa2OffersManageView } from './spa2-offers-manage-view';
+export { Spa2CareersManageView } from './spa2-careers-manage-view';
+export { Spa2GalleryManageView } from './spa2-gallery-manage-view';
+export { Spa2ServicesManageView } from './spa2-services-manage-view';
+export { Spa2BookingsManageView } from './spa2-bookings-manage-view';
+export { Spa2BranchesManageView } from './spa2-branches-manage-view';
+export { Spa2PartnersManageView } from './spa2-partners-manage-view';
+export { Spa2TrainingManageView } from './spa2-training-manage-view';
+export { Spa2FeedbacksManageView } from './spa2-feedbacks-manage-view';
+export { Spa2TreatmentsManageView } from './spa2-treatments-manage-view';
+export { Spa2PromotionsManageView } from './spa2-promotions-manage-view';
+export { Spa2BeforeAfterManageView } from './spa2-before-after-manage-view';
