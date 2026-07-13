@@ -1,0 +1,104 @@
+{
+  "hero": {
+    "brand": "Mediterranean Spa",
+    "titleLine1": "Feel the warmth",
+    "titleLine2": "of the Mediterranean",
+    "subtitle": "Experience beauty treatments inspired by the Mediterranean, combining natural ingredients and ancient techniques.",
+    "ctaPrimary": "Book now",
+    "ctaSecondary": "View services"
+  },
+  "about": {
+    "eyebrow": "Our story",
+    "title": "The art of Mediterranean care",
+    "description": "Mediterranean Spa blends the finest traditions of Mediterranean beauty care with modern technology. Each treatment is crafted with precious ingredients from olive, lavender, and deep-sea minerals, delivering a holistic relaxation experience for body and soul.",
+    "stat1": "Years active",
+    "stat2": "Experts",
+    "stat3": "Clients served"
+  },
+  "services": {
+    "eyebrow": "Our services",
+    "title": "Mediterranean therapies",
+    "items": [
+      {
+        "title": "Hot stone massage",
+        "desc": "Therapeutic massage with heated basalt stones for deep muscle relaxation and improved circulation."
+      },
+      {
+        "title": "Olive facial mask",
+        "desc": "Premium facial care with pure Greek olive extract for deep hydration and anti-aging."
+      },
+      {
+        "title": "Sea salt bath",
+        "desc": "Immerse yourself in Mediterranean sea minerals to cleanse and rejuvenate your skin."
+      },
+      {
+        "title": "Lavender therapy",
+        "desc": "Aromatherapy with Provençal lavender essential oils to reduce stress and improve natural sleep."
+      }
+    ],
+    "viewAll": "Explore all services"
+  },
+  "packages": {
+    "eyebrow": "Pricing",
+    "title": "Treatment packages",
+    "items": [
+      {
+        "name": "Olive Package",
+        "features": ["60-min hot stone massage", "Mediterranean herbal tea", "Herbal steam room"]
+      },
+      {
+        "name": "Santorini Package",
+        "features": [
+          "90-min full-body massage",
+          "Olive & honey facial mask",
+          "Sea salt bath",
+          "Refreshment bar"
+        ]
+      },
+      {
+        "name": "Amalfi Package",
+        "features": [
+          "120-min full-body treatment",
+          "Deep-sea collagen facial",
+          "Foot reflexology",
+          "Private VIP room",
+          "Welcome drink & snack"
+        ]
+      }
+    ],
+    "cta": "Book now"
+  },
+  "testimonials": {
+    "eyebrow": "Testimonials",
+    "title": "What our clients say",
+    "items": [
+      {
+        "name": "Thanh Thao",
+        "role": "VIP client",
+        "comment": "Beautiful space that truly captures the Mediterranean feel. Very relaxing and professional."
+      },
+      {
+        "name": "Quoc Hung",
+        "role": "Gold member",
+        "comment": "The Santorini package is the best spa experience I've ever had in Vietnam."
+      },
+      {
+        "name": "Mai Linh",
+        "role": "Loyal client",
+        "comment": "My skin improved noticeably after the olive treatment. Will recommend to friends."
+      }
+    ]
+  },
+  "gallery": {
+    "eyebrow": "Our space",
+    "title": "Explore Mediterranean Spa"
+  },
+  "contact": {
+    "title": "Experience it today",
+    "subtitle": "Let us bring you an authentic Mediterranean relaxation journey, right here in Saigon.",
+    "ctaBook": "Book appointment",
+    "ctaCall": "Free consultation",
+    "address": "123 Le Loi, District 1, HCMC",
+    "hours": "9:00 AM - 9:00 PM, Mon - Sun"
+  }
+}

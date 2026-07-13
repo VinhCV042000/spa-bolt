@@ -1,0 +1,100 @@
+{
+  "hero": {
+    "cta": "ĐẶT LỊCH",
+    "tagline": "l'art du bien-être",
+    "title": "Maison",
+    "titleAccent": "de Lumière",
+    "eyebrow": "HAUTE-COUTURE SPA · EST. 2014",
+    "nav": ["Maison", "Nghi lễ", "Suites", "Maîtres", "Membre", "Contact"],
+    "subtitle": "Một biệt thự thầm lặng giữa lòng Hà Nội — nơi mỗi nghi lễ được may đo thủ công như một bộ haute-couture, và mỗi khách là một câu chuyện duy nhất.",
+    "press": ["VOGUE", "CONDÉ NAST", "HARPER'S BAZAAR", "FORBES 5★", "TATLER ASIA"]
+  },
+  "manifesto": {
+    "eyebrow": "LE MANIFESTE",
+    "title": "Xa xỉ không nằm ở vật chất.",
+    "titleAccent": "Mà ở sự chú tâm.",
+    "description": "Maison de Lumière không phải là một spa — đó là một biệt thự nghệ thuật, nơi 22 nghệ nhân từ Paris, Kyoto và Grasse cùng nhau may đo từng nghi lễ như một kiệt tác cá nhân. Chúng tôi chỉ phục vụ 12 khách mỗi ngày. Và mỗi khách, là một thế giới.",
+    "quote": "— Madame Hélène Beaumont",
+    "role": "FOUNDER & CRÉATRICE",
+    "years": "11",
+    "yearsText": "NĂM KIẾN TẠO NGHỆ THUẬT SỐNG ĐẸP"
+  },
+  "pillars": {
+    "eyebrow": "BỐN NGUYÊN TẮC MAISON",
+    "title": "Bốn cột trụ của",
+    "titleAccent": "tinh tế"
+  },
+  "signatures": {
+    "eyebrow": "NGHI LỄ SIGNATURE",
+    "title": "Bốn nghi lễ",
+    "titleAccent": "haute-couture",
+    "description": "Mỗi nghi lễ được may đo riêng dựa trên buổi tư vấn 30 phút với Maître Spa. Nguyên liệu được nhập trực tiếp từ các maison Paris, Mikimoto Japan và Grasse."
+  },
+  "gems": {
+    "eyebrow": "ATELIER ĐÁ QUÝ TRỊ LIỆU",
+    "title": "Đá quý —",
+    "titleAccent": "linh hồn của Maison"
+  },
+  "journey": {
+    "eyebrow": "LE PARCOURS",
+    "title": "Một buổi chiều tại",
+    "titleAccent": "Maison",
+    "description": "Mỗi nghi lễ là một hành trình bốn giờ được dàn dựa tinh xảo — từ ly champagne chào đón đến món quà pha lê tiễn khách.",
+    "duration": "4 heures"
+  },
+  "suites": {
+    "eyebrow": "LES SUITES PRIVÉES",
+    "title": "Ba suite",
+    "titleAccent": "tuyệt mật"
+  },
+  "therapists": {
+    "eyebrow": "LES MAÎTRES",
+    "title": "22 nghệ nhân toàn cầu,",
+    "titleAccent": "một Maison"
+  },
+  "membership": {
+    "eyebrow": "CERCLE DES MEMBRES",
+    "title": "Membership",
+    "titleAccent": "theo lời mời"
+  },
+  "testimonials": {
+    "eyebrow": "TÉMOIGNAGES",
+    "title": "Lời thì thầm từ",
+    "titleAccent": "Cercle Privé"
+  },
+  "faqs": {
+    "eyebrow": "QUESTIONS",
+    "title": "Những điều",
+    "titleAccent": "quý khách thường hỏi"
+  },
+  "reservation": {
+    "title": "réservation privée",
+    "subtitle": "Đặt nghi lễ riêng tư",
+    "description": "Concierge của chúng tôi sẽ liên hệ trong vòng 4 giờ để xác nhận và mời tham gia buổi tư vấn video riêng với Maître Spa.",
+    "name": "Quý danh",
+    "email": "Email",
+    "phone": "Số điện thoại",
+    "date": "Ngày mong muốn",
+    "ritual": "Nghi lễ Signature",
+    "notes": "Yêu cầu đặc biệt",
+    "nda": "NDA ký kết · Bảo mật tuyệt đối",
+    "submit": "GỬI YÊU CẦU",
+    "cta1": "ĐẶT NGHI LỄ RIÊNG",
+    "cta2": "XEM PHIM GIỚI THIỆU"
+  },
+  "footer": {
+    "description": "Biệt thự spa haute-couture đầu tiên tại Đông Nam Á — nơi xa xỉ trở thành ngôn ngữ của sự chú tâm.",
+    "sections": {
+      "maison": ["Triết lý", "Nghệ nhân", "Báo chí", "Sự kiện"],
+      "rituals": ["Signature", "Đá quý", "Sommelier", "Couple Royale"],
+      "contact": [
+        "concierge@maisondelumiere.vn",
+        "+84 24 1900 8888",
+        "88 Đặng Thái Mai, Tây Hồ, HN",
+        "Đặt lịch 24/7"
+      ]
+    },
+    "copyright": "© 2026 MAISON DE LUMIÈRE · TOUS DROITS RÉSERVÉS",
+    "badges": ["FORBES 5★", "LEADING HOTELS"]
+  }
+}

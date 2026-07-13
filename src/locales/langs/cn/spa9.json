@@ -1,0 +1,62 @@
+{
+  "hero": {
+    "badge": "地中海阳光",
+    "tagline": "海岸养生静修",
+    "title1": "阳光、",
+    "title2": "海风",
+    "title3": "与地中海的活力",
+    "description": "一段灵感源自希腊与意大利海岸的养生之旅——橄榄油、地中海海盐、阳光与海洋气息唤醒每一个生命细胞。",
+    "startJourney": "开启您的旅程",
+    "viewDayPass": "查看日间通票",
+    "openLabel": "全年开放",
+    "tempLabel": "泳池水温",
+    "tempValue": "32°C — 38°C"
+  },
+  "pillars": {
+    "label": "地中海哲学",
+    "title": "四大",
+    "titleHighlight": "养生元素",
+    "description": "地中海人曾是世界上最健康、最长寿的民族。他们的秘诀在于四种自然元素的平衡。",
+    "p1Title": "海疗 · 海洋",
+    "p1Desc": "遵循古希腊传统，融合深海矿物盐、海藻与水压疗法。",
+    "p2Title": "橄榄 · 橄榄油",
+    "p2Desc": "来自克里特岛的纯正橄榄油——大自然所能提供的最强多酚抗氧化剂。",
+    "p3Title": "太阳 · 阳光",
+    "p3Desc": "光与热疗法补充维生素D，促进血液循环，振奋心情。",
+    "p4Title": "岩石 · 石疗",
+    "p4Desc": "蕴含深层热能的火山岩与爱琴海矿物，带来深度排毒。"
+  },
+  "treatments": {
+    "label": "疗程菜单",
+    "title": "地中海",
+    "titleHighlight": "风味",
+    "description": "从罗马浴场到橄榄油按摩——每一项疗程都是通往碧蓝海岸的旅程。",
+    "duration": "分钟",
+    "bookTreatment": "预约疗程"
+  },
+  "daypass": {
+    "label": "日间通票与套餐",
+    "title": "选择您的",
+    "titleHighlight": "完美一天",
+    "description": "从宁静的清晨到奢华的日落——每一款日间通票套餐都是一段完整的地中海体验。",
+    "includes": "包含：",
+    "book": "预约此套餐",
+    "perPerson": "/位"
+  },
+  "booking": {
+    "label": "预约",
+    "title": "为您保留",
+    "titleHighlight": "阳光下的位置",
+    "description": "请至少提前24小时预约以获得最佳体验。我们为每位宾客提供专属储物柜和浴巾。",
+    "name": "姓名",
+    "email": "电子邮箱",
+    "phone": "电话",
+    "guests": "宾客人数",
+    "date": "日期",
+    "package": "选择日间通票套餐",
+    "notes": "备注",
+    "notesPlaceholder": "特殊需求、特别场合……",
+    "confirm": "确认预约",
+    "callLine": "或致电我们的热线预约"
+  }
+}

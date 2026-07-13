@@ -1,0 +1,75 @@
+{
+  "hero": {
+    "badge": "✦ Jade Blossom Wellness",
+    "title1": "La beauté pure",
+    "title2": "issue de",
+    "title3": "la nature asiatique",
+    "description": "Un voyage de beauté inspiré de la K-Beauty et de la philosophie zen japonaise — où la science moderne rencontre l'essence de la nature, prenant soin de vous à l'intérieur comme à l'extérieur.",
+    "bookNow": "Réserver une expérience",
+    "watchVideo": "Voir la vidéo",
+    "yearsExp": "Années d'expérience",
+    "clients": "Clients satisfaits",
+    "exclusiveTreatments": "Soins exclusifs",
+    "ratingLabel": "avis",
+    "availableToday": "Disponible aujourd'hui",
+    "slotsLeft": "créneaux horaires"
+  },
+  "philosophy": {
+    "label": "Notre philosophie",
+    "title": "Trois piliers d'une",
+    "titleHighlight": "beauté durable",
+    "pillar1Title": "Nature pure",
+    "pillar1Desc": "Chaque produit est soigneusement sélectionné à partir d'herbes naturelles — sans conservateurs et parfaitement sûr pour les peaux sensibles.",
+    "pillar2Title": "Science moderne",
+    "pillar2Desc": "Propulsé par la technologie K-Beauty de pointe : analyse du type de peau et formules nutritives de nouvelle génération pour des résultats optimaux.",
+    "pillar3Title": "Équilibre mental",
+    "pillar3Desc": "Inspiré du Wabi-sabi japonais — apprécier la beauté naturelle, trouver la paix à chaque respiration."
+  },
+  "treatments": {
+    "label": "Soins signature",
+    "title": "Soins signature",
+    "viewAll": "Voir tous les soins",
+    "bookNow": "Réserver"
+  },
+  "specialists": {
+    "label": "Nos spécialistes",
+    "title": "Les mains d'or",
+    "titleHighlight": "de Jade Blossom",
+    "description": "Chaque spécialiste est intensivement formé en Corée du Sud et au Japon, offrant des expériences de beauté de classe mondiale.",
+    "experience": "d'expérience"
+  },
+  "membership": {
+    "label": "Formules d'abonnement",
+    "title": "Choisissez la formule idéale",
+    "description": "Économisez plus, soyez choyé davantage. Les membres Jade Blossom profitent d'avantages exclusifs chaque mois.",
+    "mostPopular": "✦ LE PLUS POPULAIRE",
+    "perMonth": "/mois",
+    "registerNow": "S'inscrire",
+    "noContract": "Tous les abonnements peuvent être annulés à tout moment. Sans engagement."
+  },
+  "testimonials": {
+    "label": "Avis des clients",
+    "title": "Ce qu'ils disent de nous"
+  },
+  "booking": {
+    "label": "Réservation en ligne",
+    "title": "Commencez votre",
+    "titleHighlight": "voyage de beauté",
+    "description": "Réservation gratuite, confirmation instantanée par SMS. Modifiez ou annulez à tout moment.",
+    "fullName": "Nom complet",
+    "fullNamePlaceholder": "Saisissez votre nom",
+    "phone": "Numéro de téléphone",
+    "phonePlaceholder": "0xxx xxx xxx",
+    "selectTreatment": "Sélectionner un soin",
+    "appointmentDate": "Date du rendez-vous",
+    "timeSlot": "Créneau horaire",
+    "specialRequest": "Demandes particulières (facultatif)",
+    "specialRequestPlaceholder": "Allergies, conditions de santé particulières...",
+    "confirmBooking": "Confirmer la réservation",
+    "refund": "Garantie satisfait ou remboursé",
+    "refundDesc": "Remboursement à 100 % si vous n'êtes pas satisfait après votre première séance.",
+    "badge1": "Informations sécurisées",
+    "badge2": "Réponse en 5 minutes",
+    "badge3": "Remboursement 100 %"
+  }
+}

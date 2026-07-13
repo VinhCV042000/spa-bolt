@@ -1,0 +1,164 @@
+{
+  "hero": {
+    "badge": "Aurora Nordic Spa",
+    "tagline": "Bien-être des forêts scandinaves",
+    "title1": "Le silence",
+    "title2": "des forêts nordiques",
+    "title3": "— l'âme renaît",
+    "description": "Rituels nordiques ancestraux — sauna au bouleau, bain glacé, 'Friluftsliv' et bain de forêt, et thérapie à la vapeur suédoise. Là où le froid glacial et la chaleur du sauna guérissent ensemble.",
+    "bookRitual": "Réserver un rituel",
+    "viewRituals": "Découvrir les rituels nordiques",
+    "tempWarm": "Sauna 80°C",
+    "tempCold": "Bain glacé 4°C"
+  },
+  "rituals": {
+    "label": "Rituels nordiques",
+    "title": "Trois rituels",
+    "titleHighlight": "nordiques de guérison",
+    "description": "'Lagom' — juste comme il faut, ni trop ni trop peu. La philosophie nordique de l'équilibre, incarnée par trois rituels complets chaud-froid-forêt.",
+    "duration": "minutes",
+    "bookRituel": "Réserver maintenant"
+  },
+  "services": {
+    "label": "Carte des services",
+    "title": "Soins nordiques",
+    "titleHighlight": "authentiques",
+    "description": "Ingrédients issus des forêts scandinaves : bouleau, pin, cèdre, écorce de chêne et sel de la mer Baltique.",
+    "book": "Réserver le service",
+    "title_page": "Nos Services",
+    "subtitle": "Vivez les rituels nordiques authentiques"
+  },
+  "booking": {
+    "label": "Réservation",
+    "title": "Bienvenue",
+    "titleHighlight": "dans la forêt nordique",
+    "name": "Nom",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "date": "Date",
+    "ritual": "Sélectionnez un rituel",
+    "guests": "Invités",
+    "notes": "Remarques",
+    "confirm": "Confirmer la réservation",
+    "policy": "Annulation gratuite jusqu'à 24h avant",
+    "title_page": "Réserver en ligne",
+    "subtitle": "Réservez votre expérience nordique",
+    "formTitle": "Formulaire de réservation",
+    "service": "Sélectionnez un service",
+    "submit": "Envoyer la réservation"
+  },
+  "about": {
+    "title": "À Propos",
+    "subtitle": "Découvrez l'histoire de Nordic Spa",
+    "storyLabel": "Notre Histoire",
+    "storyTitle": "Où les Traditions Nordiques Rencontrent le Bien-être Moderne",
+    "storyDesc1": "Fondé en 2020, Nordic Spa apporte les traditions authentiques du bien-être scandinave au Vietnam. Nos rituels signature combinent le pouvoir guérisseur de la chaleur, du froid et de la nature — inspirés de la culture du sauna finlandais, du 'Friluftsliv' norvégien et des techniques de massage suédois.",
+    "storyDesc2": "Chaque détail est soigné pour vous transporter dans les forêts sereines de la Scandinavie, de nos salles de sauna en bois de bouleau à nos bassins d'eau froide naturels.",
+    "valuesTitle": "Nos Valeurs Nordiques",
+    "value1Title": "Eldur — Feu",
+    "value1Desc": "Sauna finlandais traditionnel chauffé à 80°C pour une détoxification profonde et une relaxation.",
+    "value2Title": "Is — Glace",
+    "value2Desc": "Thérapie par bain glacé à 4°C pour stimuler l'immunité et la circulation.",
+    "value3Title": "Skog — Forêt",
+    "value3Desc": "Bain de forêt et connexion à la nature pour la clarté mentale."
+  },
+  "serviceDetails": {
+    "description": "Description",
+    "benefits": "Bienfaits",
+    "bookNow": "Réserver",
+    "back": "Retour aux Services"
+  },
+  "training": {
+    "title": "Formations",
+    "subtitle": "Devenez spécialiste du bien-être nordique"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Aperçus et histoires du bien-être nordique"
+  },
+  "careers": {
+    "title": "Carrières",
+    "subtitle": "Rejoignez l'équipe Nordic Spa",
+    "apply": "Postuler"
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Contactez Nordic Spa",
+    "phone": "Téléphone",
+    "email": "E-mail",
+    "hours": "Heures d'ouverture",
+    "sendMessage": "Envoyer un Message",
+    "name": "Nom",
+    "subject": "Sujet",
+    "message": "Message",
+    "send": "Envoyer"
+  },
+  "offers": {
+    "title": "Offres Spéciales",
+    "subtitle": "Offres exclusives pour nos invités"
+  },
+  "feedback": {
+    "title": "Avis Clients",
+    "subtitle": "Ce que disent nos invités"
+  },
+  "promotions": {
+    "title": "Promotions",
+    "subtitle": "Promotions et réductions actuelles",
+    "valid": "Valide jusqu'au"
+  },
+  "branches": {
+    "title": "Nos Emplacements",
+    "subtitle": "Trouvez un Nordic Spa près de chez vous"
+  },
+  "account": {
+    "title": "Mon Compte",
+    "subtitle": "Gérez votre compte Nordic Spa",
+    "login": "Connexion",
+    "register": "S'inscrire",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "fullName": "Nom complet",
+    "confirmPassword": "Confirmer le mot de passe",
+    "loginBtn": "Se connecter",
+    "registerBtn": "Créer un compte"
+  },
+  "partners": {
+    "title": "Nos Partenaires",
+    "subtitle": "Partenaires de confiance du bien-être nordique"
+  },
+  "packages": {
+    "title": "Forfaits Bien-être",
+    "subtitle": "Forfaits d'expérience nordique complète",
+    "treatments": "Soins",
+    "validity": "Validité",
+    "includes": "Comprend",
+    "bookNow": "Réserver le forfait"
+  },
+  "beforeAfter": {
+    "title": "Résultats",
+    "subtitle": "Transformations Avant & Après"
+  },
+  "faq": {
+    "title": "FAQ",
+    "subtitle": "Questions fréquemment posées"
+  },
+  "policy": {
+    "title": "Politiques",
+    "subtitle": "Conditions, confidentialité et remboursement",
+    "termsTitle": "Conditions d'Utilisation",
+    "termsContent": "En utilisant les services de Nordic Spa, vous acceptez nos conditions. Tous les services sont soumis à disponibilité et peuvent nécessiter une réservation anticipée.",
+    "privacyTitle": "Politique de Confidentialité",
+    "privacyContent": "Nous protégeons vos informations personnelles et ne les partageons jamais avec des tiers sans consentement. Vos données sont stockées en toute sécurité selon les normes internationales.",
+    "refundTitle": "Politique de Remboursement",
+    "refundContent": "Les annulations 24 heures avant le rendez-vous sont remboursées intégralement. Les annulations tardives peuvent entraîner des frais de 50%. Les absences sont facturées en totalité."
+  },
+  "gallery": {
+    "title": "Galerie",
+    "subtitle": "Explorez Nordic Spa en images",
+    "all": "Tout",
+    "facilities": "Installations",
+    "exterior": "Extérieur",
+    "treatments": "Soins",
+    "team": "Équipe"
+  }
+}

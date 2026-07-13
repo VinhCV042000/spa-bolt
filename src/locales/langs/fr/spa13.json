@@ -1,0 +1,212 @@
+{
+  "hero": {
+    "badge": "Amazônia Selvagem",
+    "tagline": "Guérison de l'Amazonie brésilienne",
+    "title1": "La puissance",
+    "title2": "de l'Amazonie",
+    "title3": "— nature brute",
+    "description": "Botanique amazonienne : huile d'andiroba, beurre de tucumã, exfoliation à l'açaí et enveloppements d'argile argila. Les secrets de guérison des peuples autochtones du Brésil, alliés à la science moderne.",
+    "startJourney": "Commencer le voyage",
+    "viewBotanicals": "Voir les plantes",
+    "rainforestNote": "Ingrédients amazoniens 100 % durables",
+    "certNote": "Certifié IBAMA Brésil"
+  },
+  "botanicals": {
+    "label": "Trésors d'Amazonie",
+    "title": "4 plantes",
+    "titleHighlight": "légendaires",
+    "description": "Les Kayapó, les Yanomami et les Tikuna utilisent ces ingrédients depuis des milliers d'années. Nous vous apportons les secrets de la forêt.",
+    "learnMore": "En savoir plus"
+  },
+  "treatments": {
+    "label": "Soins amazoniens",
+    "title": "Guérison venue",
+    "titleHighlight": "de la grande forêt",
+    "description": "De l'exfoliation à l'açaí à l'argile blanche d'Amazonie — chaque soin est une rencontre avec la puissance originelle de la nature.",
+    "duration": "minutes",
+    "book": "Réserver un soin"
+  },
+  "booking": {
+    "label": "Réservation",
+    "title": "Plongez",
+    "titleHighlight": "au cœur de la forêt",
+    "name": "Nom",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "date": "Date",
+    "treatment": "Choisir un soin",
+    "notes": "Remarques",
+    "confirm": "Réserver",
+    "ecoNote": "Chaque réservation = 1 arbre planté en Amazonie"
+  },
+  "about": {
+    "heroTitle": "Notre histoire",
+    "heroDesc": "De l'Amazonie à votre Spa",
+    "storyTitle": "Le voyage depuis l'Amazonie",
+    "storyDesc": "Fondé par des passionnés de la forêt tropicale, Spa 13 combine la sagesse autochtone du Brésil avec la science moderne.",
+    "values1Title": "Durable",
+    "values1Desc": "100% d'ingrédients de sources durables",
+    "values2Title": "Authentique",
+    "values2Desc": "Secrets des peuples autochtones",
+    "values3Title": "Scientifique",
+    "values3Desc": "Combiné à la recherche moderne",
+    "missionTitle": "Mission",
+    "missionDesc": "Apporter le pouvoir de guérison de l'Amazonie à tous, tout en protégeant la grande forêt.",
+    "stats1": "Années d'expérience",
+    "stats2": "Clients satisfaits",
+    "stats3": "Prix verts",
+    "stats4": "Arbres plantés",
+    "teamTitle": "Équipe d'experts",
+    "teamDesc": "Thérapeutes formés aux plantes amazoniennes"
+  },
+  "services": {
+    "heroTitle": "Soins amazoniens",
+    "heroDesc": "Découvrez la puissance des plantes de la forêt",
+    "filterAll": "Tous",
+    "filterSignature": "Signature",
+    "filterBody": "Corps",
+    "filterFace": "Visage",
+    "filterRetreat": "Retraite"
+  },
+  "serviceDetails": {
+    "backBtn": "Retour aux soins",
+    "duration": "minutes",
+    "benefits": "Bienfaits",
+    "includes": "Inclus",
+    "bookNow": "Réserver"
+  },
+  "training": {
+    "heroTitle": "Formation botanique",
+    "heroDesc": "Devenez expert en thérapie amazonienne",
+    "programsTitle": "Programmes",
+    "enroll": "S'inscrire"
+  },
+  "blog": {
+    "heroTitle": "Journal de la Forêt",
+    "heroDesc": "Histoires de l'Amazonie",
+    "readMore": "Lire plus",
+    "categoriesAll": "Tous",
+    "categoriesTips": "Conseils",
+    "categoriesStories": "Histoires",
+    "categoriesNews": "Actualités"
+  },
+  "blogDetails": {
+    "backBtn": "Retour",
+    "author": "Auteur",
+    "related": "Articles liés"
+  },
+  "careers": {
+    "heroTitle": "Rejoignez l'équipe",
+    "heroDesc": "Construisez une carrière avec notre mission verte",
+    "openPositions": "Postes ouverts",
+    "apply": "Postuler"
+  },
+  "bookingPage": {
+    "heroTitle": "Réserver",
+    "heroDesc": "Commencez votre voyage de guérison",
+    "formName": "Nom",
+    "formEmail": "E-mail",
+    "formPhone": "Téléphone",
+    "formDate": "Date",
+    "formTime": "Heure",
+    "formTreatment": "Choisir un soin",
+    "formNotes": "Remarques",
+    "summaryTitle": "Récapitulatif",
+    "confirm": "Confirmer",
+    "ecoNote": "Chaque réservation = 1 arbre planté"
+  },
+  "contact": {
+    "heroTitle": "Contact",
+    "heroDesc": "Connectez-vous avec nous",
+    "infoAddress": "Adresse",
+    "infoPhone": "Téléphone",
+    "infoEmail": "E-mail",
+    "infoHours": "Horaires",
+    "formName": "Nom",
+    "formEmail": "E-mail",
+    "formSubject": "Sujet",
+    "formMessage": "Message",
+    "formSubmit": "Envoyer",
+    "mapTitle": "Localisation"
+  },
+  "offers": {
+    "heroTitle": "Offres spéciales",
+    "heroDesc": "Découvrez la forêt à prix spécial",
+    "validUntil": "Valide jusqu'au",
+    "claim": "Obtenir l'offre"
+  },
+  "feedback": {
+    "heroTitle": "Avis",
+    "heroDesc": "Partagez votre expérience",
+    "submit": "Envoyer l'avis",
+    "ratingsExcellent": "Excellent",
+    "ratingsGood": "Bon",
+    "ratingsAverage": "Moyen",
+    "ratingsPoor": "Médiocre"
+  },
+  "promotions": {
+    "heroTitle": "Promotions",
+    "heroDesc": "Offres de l'Amazonie",
+    "validFrom": "Du",
+    "validTo": "Au",
+    "terms": "Conditions"
+  },
+  "branches": {
+    "heroTitle": "Nos adresses",
+    "heroDesc": "Trouvez Spa 13 près de chez vous",
+    "visit": "Visiter",
+    "hours": "Horaires"
+  },
+  "account": {
+    "heroTitle": "Mon compte",
+    "heroDesc": "Gérez votre profil",
+    "profileTitle": "Profil",
+    "profileName": "Nom",
+    "profileEmail": "E-mail",
+    "profilePhone": "Téléphone",
+    "historyTitle": "Historique",
+    "historyDate": "Date",
+    "historyTreatment": "Soin",
+    "historyStatus": "Statut"
+  },
+  "partners": {
+    "heroTitle": "Nos partenaires",
+    "heroDesc": "Ensemble, protégeons la forêt",
+    "become": "Devenir partenaire",
+    "benefitsTitle": "Avantages"
+  },
+  "packages": {
+    "heroTitle": "Forfaits",
+    "heroDesc": "Expérience complète de l'Amazonie",
+    "perSession": "/séance",
+    "buyNow": "Acheter"
+  },
+  "beforeAfter": {
+    "heroTitle": "Résultats réels",
+    "heroDesc": "Voyez la transformation",
+    "treatment": "Soin",
+    "resultsAfter": "Après",
+    "resultsBefore": "Avant"
+  },
+  "faq": {
+    "heroTitle": "FAQ",
+    "heroDesc": "Réponses à vos questions",
+    "stillQuestion": "Des questions ? Contactez-nous"
+  },
+  "policy": {
+    "heroTitle": "Politiques",
+    "heroDesc": "Conditions générales",
+    "sectionsPrivacy": "Confidentialité",
+    "sectionsTerms": "Conditions",
+    "sectionsRefund": "Remboursement"
+  },
+  "gallery": {
+    "heroTitle": "Galerie",
+    "heroDesc": "Moments au Spa 13",
+    "viewMore": "Voir plus",
+    "categoriesAll": "Tous",
+    "categoriesSpa": "Spa",
+    "categoriesTreatments": "Soins",
+    "categoriesNature": "Nature"
+  }
+}

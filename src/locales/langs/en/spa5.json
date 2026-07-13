@@ -1,0 +1,58 @@
+{
+  "hero": {
+    "badge": "Lumière Balnéo",
+    "pretitle": "L'Art du Bien-Être",
+    "title1": "The art of",
+    "title2": "hydrotherapy",
+    "title3": "à la Française",
+    "description": "Discover an ultra-luxury balnéotherapy experience — combining thermal mineral therapy, vinotherapy and deep-sea thalassotherapy in the tradition of classic French spas.",
+    "bookNow": "Book an experience",
+    "discoverMenu": "View menu",
+    "openingHours": "Open daily",
+    "hoursValue": "9:00 — 21:00",
+    "tag1": "Hydrotherapy",
+    "tag2": "Vinotherapy",
+    "tag3": "Thalassotherapy"
+  },
+  "experience": {
+    "label": "Signature Rituals",
+    "title": "4 signature",
+    "titleHighlight": "rituals",
+    "description": "Each ritual is crafted following the philosophy of French balnéotherapy — where water, minerals and fragrance combine to create magic.",
+    "duration": "minutes",
+    "bookRitual": "Book ritual"
+  },
+  "treatments": {
+    "label": "Treatment menu",
+    "title": "Our full",
+    "titleHighlight": "spa menu",
+    "description": "From thermal water therapy to French clay wraps — each treatment is a unique journey of relaxation.",
+    "duration": "duration",
+    "price": "price"
+  },
+  "testimonials": {
+    "label": "Reviews",
+    "title": "Words from our",
+    "titleHighlight": "cherished guests"
+  },
+  "booking": {
+    "label": "Réservation",
+    "title": "Begin your",
+    "titleHighlight": "journey",
+    "description": "Book in advance to secure your spot. Receive 20% off your first visit.",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "phone": "Phone number",
+    "selectRitual": "Select a ritual",
+    "date": "Date",
+    "guests": "Number of guests",
+    "notes": "Special notes",
+    "notesPlaceholder": "Preferences, special requirements...",
+    "confirm": "Confirm booking",
+    "callUs": "Call to reserve",
+    "privateExperience": "Private experience",
+    "privateDesc": "Reserve the entire spa exclusively for your group (minimum 4 people)",
+    "guarantee": "100% refund if cancelled before 24 hours"
+  }
+}

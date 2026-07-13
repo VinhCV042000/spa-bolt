@@ -1,0 +1,62 @@
+{
+  "hero": {
+    "badge": "Soleil Méditerranée",
+    "tagline": "Retraite bien-être côtière",
+    "title1": "Soleil,",
+    "title2": "brises marines",
+    "title3": "& vitalité méditerranéenne",
+    "description": "Un voyage bien-être inspiré des côtes de Grèce et d'Italie — où huile d'olive, sel marin méditerranéen, soleil et souffle de l'océan régénèrent chaque cellule vivante.",
+    "startJourney": "Commencez votre voyage",
+    "viewDayPass": "Voir le Day Pass",
+    "openLabel": "Ouvert toute l'année",
+    "tempLabel": "Température de l'eau de la piscine",
+    "tempValue": "32°C — 38°C"
+  },
+  "pillars": {
+    "label": "Philosophie méditerranéenne",
+    "title": "Quatre éléments",
+    "titleHighlight": "du bien-être",
+    "description": "Les peuples méditerranéens furent autrefois les plus sains et les plus longévifs du monde. Leur secret réside dans l'équilibre de quatre éléments naturels.",
+    "p1Title": "Thalasso · Mer",
+    "p1Desc": "Sels minéraux des grands fonds, algues et hydrothérapie sous pression selon l'ancienne tradition grecque.",
+    "p2Title": "Elaia · Olive",
+    "p2Desc": "Huile d'olive pure de Crète — l'antioxydant polyphénolique le plus puissant que la nature puisse offrir.",
+    "p3Title": "Helios · Soleil",
+    "p3Desc": "La luminothérapie et la chaleur restaurent la vitamine D, stimulent la circulation et élèvent l'humeur.",
+    "p4Title": "Petra · Pierre",
+    "p4Desc": "Roche volcanique et minéraux de la mer Égée à chaleur profonde pour une détoxification intense."
+  },
+  "treatments": {
+    "label": "Carte des soins",
+    "title": "Saveurs",
+    "titleHighlight": "méditerranéennes",
+    "description": "Des bains romains au massage à l'huile d'olive — chaque soin est un voyage vers la côte turquoise.",
+    "duration": "minutes",
+    "bookTreatment": "Réserver le soin"
+  },
+  "daypass": {
+    "label": "Day Pass & Forfaits",
+    "title": "Choisissez votre",
+    "titleHighlight": "journée parfaite",
+    "description": "D'une matinée paisible à un coucher de soleil luxueux — chaque forfait Day Pass est une expérience méditerranéenne complète.",
+    "includes": "Comprend :",
+    "book": "Réserver ce forfait",
+    "perPerson": "/personne"
+  },
+  "booking": {
+    "label": "Réserver",
+    "title": "Gardez votre place",
+    "titleHighlight": "au soleil",
+    "description": "Réservez au moins 24 heures à l'avance pour une expérience optimale. Nous offrons un casier personnel et une serviette de bain à chaque invité.",
+    "name": "Nom",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "guests": "Nombre d'invités",
+    "date": "Date",
+    "package": "Sélectionnez un forfait Day Pass",
+    "notes": "Remarques",
+    "notesPlaceholder": "Demandes spéciales, occasions particulières...",
+    "confirm": "Confirmer la réservation",
+    "callLine": "Ou appelez notre ligne directe pour réserver"
+  }
+}

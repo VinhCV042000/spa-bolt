@@ -1,0 +1,212 @@
+{
+  "hero": {
+    "badge": "Amazônia Selvagem",
+    "tagline": "شفاء الأمازون البرازيلي",
+    "title1": "قوّة",
+    "title2": "الأمازون",
+    "title3": "— طبيعةٌ بكر",
+    "description": "نباتات الأمازون: زيت الأنديروبا، وزبدة التوكوما، والتقشير بالأساي، ولفائف طين الأرجيلا. أسرار الشفاء لدى السكّان الأصليين في البرازيل، ممزوجةً بالعلم الحديث.",
+    "startJourney": "ابدأ الرحلة",
+    "viewBotanicals": "عرض النباتات",
+    "rainforestNote": "مكوّنات أمازونية مستدامة 100%",
+    "certNote": "معتمد من IBAMA البرازيل"
+  },
+  "botanicals": {
+    "label": "كنوز الأمازون",
+    "title": "4 نباتات",
+    "titleHighlight": "أسطورية",
+    "description": "استخدم شعوب الكايابو واليانومامي والتيكونا هذه المكوّنات منذ آلاف السنين. نحن ننقل إليك أسرار الغابة.",
+    "learnMore": "اعرف المزيد"
+  },
+  "treatments": {
+    "label": "علاجات الأمازون",
+    "title": "شفاءٌ من",
+    "titleHighlight": "الغابة العظيمة",
+    "description": "من التقشير بالأساي إلى طين الأمازون الأبيض — كل علاج هو لقاءٌ مع قوّة الطبيعة الأولى.",
+    "duration": "دقيقة",
+    "book": "احجز علاجًا"
+  },
+  "booking": {
+    "label": "الحجز",
+    "title": "اغمر نفسك",
+    "titleHighlight": "في أعماق الغابة",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "phone": "الهاتف",
+    "date": "التاريخ",
+    "treatment": "اختر العلاج",
+    "notes": "ملاحظات",
+    "confirm": "احجز الآن",
+    "ecoNote": "كل حجز = شجرة واحدة تُزرع في الأمازون"
+  },
+  "about": {
+    "heroTitle": "قصتنا",
+    "heroDesc": "من الأمازون إلى منتجعك",
+    "storyTitle": "الرحلة من الأمازون",
+    "storyDesc": "تأسست Spa 13 على يد محبي الغابات المطيرة، وتجمع بين الحكمة الأصلية من البرازيل والعلوم الحديثة.",
+    "values1Title": "مستدام",
+    "values1Desc": "100% من مصادر مستدامة",
+    "values2Title": "أصيل",
+    "values2Desc": "أسرار من السكان الأصليين",
+    "values3Title": "علمي",
+    "values3Desc": "مدمج بالبحث الحديث",
+    "missionTitle": "المهمة",
+    "missionDesc": "نقل قوة الشفاء من الأمازون إلى الجميع مع حماية الغابة العظيمة.",
+    "stats1": "سنوات خبرة",
+    "stats2": "عملاء سعداء",
+    "stats3": "جوائز خضراء",
+    "stats4": "أشجار مزروعة",
+    "teamTitle": "فريق الخبراء",
+    "teamDesc": "معالجون مدربون على نباتات الأمازون"
+  },
+  "services": {
+    "heroTitle": "علاجات الأمازون",
+    "heroDesc": "اكتشف قوة نباتات الغابة",
+    "filterAll": "الكل",
+    "filterSignature": "مميز",
+    "filterBody": "الجسم",
+    "filterFace": "الوجه",
+    "filterRetreat": " retreat"
+  },
+  "serviceDetails": {
+    "backBtn": "رجوع للعلاجات",
+    "duration": "دقيقة",
+    "benefits": "الفوائد",
+    "includes": "يتضمن",
+    "bookNow": "احجز الآن"
+  },
+  "training": {
+    "heroTitle": "تدريب النباتات",
+    "heroDesc": "كن خبيرًا في علاج الأمازون",
+    "programsTitle": "البرامج",
+    "enroll": "سجّل الآن"
+  },
+  "blog": {
+    "heroTitle": "مجلة الغابة",
+    "heroDesc": "قصص من الأمازون",
+    "readMore": "اقرأ المزيد",
+    "categoriesAll": "الكل",
+    "categoriesTips": "نصائح",
+    "categoriesStories": "قصص",
+    "categoriesNews": "أخبار"
+  },
+  "blogDetails": {
+    "backBtn": "رجوع",
+    "author": "الكاتب",
+    "related": "مقالات ذات صلة"
+  },
+  "careers": {
+    "heroTitle": "انضم لفريق الغابة",
+    "heroDesc": "ابنِ مسيرتك مع مهمتنا الخضراء",
+    "openPositions": "الوظائف المتاحة",
+    "apply": "قدّم الآن"
+  },
+  "bookingPage": {
+    "heroTitle": "احجز",
+    "heroDesc": "ابدأ رحلة الشفاء",
+    "formName": "الاسم",
+    "formEmail": "البريد الإلكتروني",
+    "formPhone": "الهاتف",
+    "formDate": "التاريخ",
+    "formTime": "الوقت",
+    "formTreatment": "اختر العلاج",
+    "formNotes": "ملاحظات",
+    "summaryTitle": "ملخص الحجز",
+    "confirm": "تأكيد الحجز",
+    "ecoNote": "كل حجز = شجرة مزروعة"
+  },
+  "contact": {
+    "heroTitle": "اتصل بنا",
+    "heroDesc": "تواصل معنا",
+    "infoAddress": "العنوان",
+    "infoPhone": "الهاتف",
+    "infoEmail": "البريد الإلكتروني",
+    "infoHours": "ساعات العمل",
+    "formName": "الاسم",
+    "formEmail": "البريد الإلكتروني",
+    "formSubject": "الموضوع",
+    "formMessage": "الرسالة",
+    "formSubmit": "إرسال",
+    "mapTitle": "الموقع"
+  },
+  "offers": {
+    "heroTitle": "عروض خاصة",
+    "heroDesc": "اكتشف الغابة بأسعار مميزة",
+    "validUntil": "صالح حتى",
+    "claim": "احصل على العرض"
+  },
+  "feedback": {
+    "heroTitle": "التقييمات",
+    "heroDesc": "شارك تجربتك",
+    "submit": "أرسل التقييم",
+    "ratingsExcellent": "ممتاز",
+    "ratingsGood": "جيد",
+    "ratingsAverage": "متوسط",
+    "ratingsPoor": "ضعيف"
+  },
+  "promotions": {
+    "heroTitle": "التخفيضات",
+    "heroDesc": "عروض من الأمازون",
+    "validFrom": "من",
+    "validTo": "إلى",
+    "terms": "الشروط"
+  },
+  "branches": {
+    "heroTitle": "فروعنا",
+    "heroDesc": "اعثر على Spa 13 قربك",
+    "visit": "زُرنا",
+    "hours": "ساعات العمل"
+  },
+  "account": {
+    "heroTitle": "حسابي",
+    "heroDesc": "إدارة ملفك الشخصي",
+    "profileTitle": "الملف الشخصي",
+    "profileName": "الاسم",
+    "profileEmail": "البريد الإلكتروني",
+    "profilePhone": "الهاتف",
+    "historyTitle": "سجل الحجوزات",
+    "historyDate": "التاريخ",
+    "historyTreatment": "العلاج",
+    "historyStatus": "الحالة"
+  },
+  "partners": {
+    "heroTitle": "شركاؤنا",
+    "heroDesc": "معًا نحمي الغابة",
+    "become": "كن شريكًا",
+    "benefitsTitle": "المزايا"
+  },
+  "packages": {
+    "heroTitle": "باقات العلاج",
+    "heroDesc": "تجربة الأمازون الكاملة",
+    "perSession": "/جلسة",
+    "buyNow": "اشترِ الآن"
+  },
+  "beforeAfter": {
+    "heroTitle": "نتائج حقيقية",
+    "heroDesc": "شاهد التحول",
+    "treatment": "العلاج",
+    "resultsAfter": "بعد",
+    "resultsBefore": "قبل"
+  },
+  "faq": {
+    "heroTitle": "الأسئلة الشائعة",
+    "heroDesc": "إجابات على أسئلتك",
+    "stillQuestion": "لديك سؤال؟ تواصل معنا"
+  },
+  "policy": {
+    "heroTitle": "السياسات",
+    "heroDesc": "الشروط والأحكام",
+    "sectionsPrivacy": "الخصوصية",
+    "sectionsTerms": "الشروط",
+    "sectionsRefund": "الاسترداد"
+  },
+  "gallery": {
+    "heroTitle": "المعرض",
+    "heroDesc": "لحظات في Spa 13",
+    "viewMore": "شاهد المزيد",
+    "categoriesAll": "الكل",
+    "categoriesSpa": "Spa",
+    "categoriesTreatments": "العلاجات",
+    "categoriesNature": "الطبيعة"
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "hero": {
+    "badge": "Pearl Luminary",
+    "tagline": "Ultra-Luxury Beauty Sanctuary",
+    "title1": "Where luxury",
+    "title2": "knows no bounds",
+    "title3": "— pure beauty",
+    "description": "Pearl Luminary — a beauty sanctuary for the most discerning souls. Japanese pearl powder, 24K gold facial, diamond microdermabrasion and stem cell therapy.",
+    "bookPrivate": "Book private suite",
+    "viewMembership": "View Membership",
+    "byAppointment": "By appointment only",
+    "limitedSlots": "Max 8 guests per day"
+  },
+  "signature": {
+    "label": "Signature Treatments",
+    "title": "The four",
+    "titleHighlight": "pinnacle luxuries",
+    "description": "Four exclusive flagship treatments — nowhere else in Vietnam offers equivalent formulas and ingredients.",
+    "bookNow": "Book now",
+    "perSession": "/session"
+  },
+  "membership": {
+    "label": "Membership",
+    "title": "The Pearl",
+    "titleHighlight": "Members' Club",
+    "description": "Three membership tiers — each is a distinct world of privileges for those who are worthy.",
+    "perYear": "/year",
+    "joinNow": "Join"
+  },
+  "booking": {
+    "label": "Private Consultation",
+    "title": "Request a",
+    "titleHighlight": "private consultation",
+    "description": "Every Pearl Luminary guest receives a personalised 45-minute consultation before any treatment.",
+    "name": "Full name",
+    "email": "Email",
+    "phone": "Phone",
+    "interest": "Interested in",
+    "preferDate": "Preferred date",
+    "confirm": "Request consultation",
+    "confidential": "Information is fully confidential"
+  },
+  "tech": {
+    "label": "Technology",
+    "title": "Equipment that defines",
+    "titleHighlight": "the future of beauty",
+    "description": "Only FDA and CE approved devices. The same equipment trusted by top medical aesthetic clinics in Seoul, Tokyo and New York.",
+    "learnMore": "Learn more"
+  },
+  "about": {
+    "heroTitle": "About Us",
+    "heroSubtitle": "Pearl Mansion — the luxury beauty sanctuary founded from a passion for pure beauty and skincare artistry.",
+    "badge": "About Pearl Mansion",
+    "philosophy": "Pearl Philosophy",
+    "story": "Pearl Mansion was born from the vision to create Asia's premier ultra-luxury beauty space. With Japanese mikimoto pearl powder, 24K gold leaf, diamond and Swiss stem cells, each treatment is a transformational journey.",
+    "vision": "Our mission is to deliver an ultra-luxury spa experience for the most discerning guests. Every detail is designed to create absolute relaxation."
+  },
+  "services": {
+    "heroTitle": "Premium Services",
+    "heroSubtitle": "Exclusive flagship treatments with rare ingredients and the most advanced technology.",
+    "badge": "Services"
+  },
+  "serviceDetails": {
+    "title": "Treatment Details",
+    "description": "Detailed information about the selected treatment."
+  },
+  "training": {
+    "heroTitle": "Expert Training",
+    "heroSubtitle": "Advanced training programs with international certification for technicians.",
+    "badge": "Training",
+    "enroll": "Enroll"
+  },
+  "blog": {
+    "heroTitle": "Blog & News",
+    "heroSubtitle": "Beauty knowledge and spa trends updates from Pearl Mansion.",
+    "badge": "Blog"
+  },
+  "blogDetails": {
+    "title": "Article Details",
+    "content": "Full article content."
+  },
+  "careers": {
+    "heroTitle": "Careers",
+    "heroSubtitle": "Join the premium beauty expert team at Pearl Mansion.",
+    "badge": "Careers",
+    "apply": "Apply"
+  },
+  "bookingPage": {
+    "heroTitle": "Book Online",
+    "heroSubtitle": "Book an appointment with Pearl Mansion experts today.",
+    "badge": "Book Now",
+    "formTitle": "Booking Form",
+    "name": "Full Name",
+    "phone": "Phone Number",
+    "email": "Email",
+    "service": "Service",
+    "notes": "Notes",
+    "submit": "Submit Request"
+  },
+  "contact": {
+    "heroTitle": "Contact Us",
+    "heroSubtitle": "Contact Pearl Mansion for consultation and support.",
+    "badge": "Contact",
+    "info": "Contact Information",
+    "sendMessage": "Send Message",
+    "name": "Name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Message",
+    "send": "Send Message"
+  },
+  "offers": {
+    "heroTitle": "Special Offers",
+    "heroSubtitle": "Exclusive offers and promotions for our guests.",
+    "badge": "Offers"
+  },
+  "feedback": {
+    "heroTitle": "Guest Reviews",
+    "heroSubtitle": "Feedback from VIP guests who experienced our services.",
+    "badge": "Feedback"
+  },
+  "promotions": {
+    "heroTitle": "Promotions",
+    "heroSubtitle": "Latest promotions and special offers.",
+    "badge": "Promotions",
+    "validUntil": "Valid until"
+  },
+  "branches": {
+    "heroTitle": "Our Branches",
+    "heroSubtitle": "Pearl Mansion is present at the most prestigious locations.",
+    "badge": "Branches",
+    "flagship": "Flagship"
+  },
+  "account": {
+    "heroTitle": "Member Account",
+    "heroSubtitle": "Login or register to manage your membership account.",
+    "badge": "Account",
+    "loginTitle": "Login",
+    "email": "Email",
+    "password": "Password",
+    "login": "Login",
+    "forgot": "Forgot password?",
+    "or": "or",
+    "register": "Register new account"
+  },
+  "partners": {
+    "heroTitle": "Our Partners",
+    "heroSubtitle": "Premium brand partners of Pearl Mansion.",
+    "badge": "Partners"
+  },
+  "packages": {
+    "heroTitle": "Treatment Packages",
+    "heroSubtitle": "Complete treatment packages with special offers.",
+    "badge": "Packages",
+    "sessions": "sessions",
+    "book": "Book Package"
+  },
+  "beforeAfter": {
+    "heroTitle": "Before & After Results",
+    "heroSubtitle": "Real achievements from Pearl Mansion treatments.",
+    "badge": "Results",
+    "before": "Before",
+    "after": "After"
+  },
+  "faq": {
+    "heroTitle": "Frequently Asked Questions",
+    "heroSubtitle": "Answers to common questions about services and policies.",
+    "badge": "FAQ"
+  },
+  "policy": {
+    "heroTitle": "Policies",
+    "heroSubtitle": "Terms and policies of Pearl Mansion.",
+    "badge": "Policy",
+    "terms": "Terms of Use",
+    "termsContent": "By using Pearl Mansion services, you agree to comply with the terms and conditions stated in this document...",
+    "privacy": "Privacy Policy",
+    "privacyContent": "We are committed to protecting customer privacy. All personal information is processed and stored in accordance with legal regulations...",
+    "refund": "Refund Policy",
+    "refundContent": "Pearl Mansion applies a flexible refund policy for unused treatments. Please contact our customer service department for assistance..."
+  },
+  "gallery": {
+    "heroTitle": "Photo Gallery",
+    "heroSubtitle": "Explore Pearl Mansion's space and services through images.",
+    "badge": "Gallery"
+  }
+}

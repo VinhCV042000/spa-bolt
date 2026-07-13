@@ -1,0 +1,26 @@
+{
+  "hero": {
+    "eyebrow": "DƯỠNG SINH · 养生",
+    "title": "The Way of Nourishing Life",
+    "titleAccent": "the path back to origin",
+    "description": "Qigong, acupuncture, herbal soaking, and incense meditation — a wellness journey shaped by Vietnamese and East Asian healing traditions.",
+    "ctaPrimary": "Book Wellness",
+    "ctaSecondary": "Explore Qigong",
+    "stats": ["4 healing therapies", "8 herbal masters", "12 signature rituals"]
+  },
+  "booking": {
+    "eyebrow": "BOOK AN APPOINTMENT · 预约",
+    "title": "Begin your",
+    "titleHighlight": "wellness journey",
+    "description": "Leave your details and our practitioner will advise the right protocol and confirm your visit within 30 minutes.",
+    "name": "Full name",
+    "phone": "Phone number",
+    "email": "Email",
+    "therapy": "Therapy",
+    "date": "Date",
+    "time": "Time",
+    "notes": "Notes (health condition, symptoms)",
+    "submit": "Confirm booking",
+    "call": "Call the practitioner"
+  }
+}

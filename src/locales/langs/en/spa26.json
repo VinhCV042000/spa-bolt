@@ -1,0 +1,52 @@
+{
+  "hero": {
+    "tagline": "NORDIC MINIMAL · WELLNESS",
+    "title": "Calm",
+    "titleAccent": "rituals",
+    "subtitle": "Modern wellness experiences designed to slow time and restore balance.",
+    "description": "A restrained environment where every detail feels considered and every ritual is intentionally paced.",
+    "ctaPrimary": "Explore",
+    "ctaSecondary": "Book a visit"
+  },
+  "booking": {
+    "eyebrow": "GET IN TOUCH",
+    "title": "Start your",
+    "titleAccent": "journey",
+    "addressLabel": "Address",
+    "addressValue": "56 Quang Trung, District 11, Ho Chi Minh City",
+    "phoneLabel": "Hotline",
+    "phoneValue": "0918 262 626",
+    "hoursLabel": "Opening hours",
+    "hoursValue": "Tue — Sun 08:00 — 20:00",
+    "namePlaceholder": "Full name",
+    "emailPlaceholder": "Email",
+    "phonePlaceholder": "Phone number",
+    "messagePlaceholder": "Message (optional)",
+    "submit": "Send request"
+  },
+  "programs": {
+    "eyebrow": "WELLNESS PROGRAMS",
+    "title": "Chương trình",
+    "count": "{{count}} PROGRAMS"
+  },
+  "spaces": {
+    "eyebrow": "OUR SPACE",
+    "title": "Không gian thiền"
+  },
+  "team": {
+    "eyebrow": "OUR TEAM",
+    "title": "Con người"
+  },
+  "pricing": {
+    "eyebrow": "INVESTMENT",
+    "title": "Đầu tư cho bản thân",
+    "columnPackage": "Package",
+    "columnPrice": "Price",
+    "columnNote": "Note",
+    "note": "Prices include taxes and service fees. Flexible payment — cash, card, or bank transfer."
+  },
+  "treatments": {
+    "eyebrow": "TREATMENTS",
+    "title": "Liệu trình"
+  }
+}

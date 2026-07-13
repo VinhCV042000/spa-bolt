@@ -1,0 +1,252 @@
+{
+  "hero": {
+    "eyebrow": "旅館 · RYOKAN N°15",
+    "title": "Sakura Onsen",
+    "titleAccent": "nơi tâm trí",
+    "titleHighlight": "nở hoa",
+    "description": "Ryokan Nhật Bản giữa lòng Đà Lạt — bốn loại onsen khoáng nóng, sáu liệu trình shiatsu cổ truyền và những đêm ngắm tuyết bên bồn hinoki.",
+    "ctaPrimary": "Đặt phòng Ryokan",
+    "ctaSecondary": "Khám phá onsen",
+    "stats": ["4 onsen khoáng", "12 master Nhật", "9 món kaiseki"]
+  },
+  "philosophy": {
+    "eyebrow": "TRIẾT LÝ · WABI-SABI",
+    "title": "Bốn cột trụ của",
+    "titleHighlight": "wabi-sabi",
+    "description": "Mọi chi tiết tại Sakura Onsen đều được thiết kế quanh triết lý ngàn năm của Nhật Bản — vẻ đẹp của sự không hoàn hảo, vô thường và khiêm nhường.",
+    "items": ["Im lặng", "Cân bằng", "Hài hòa", "Hiện diện"]
+  },
+  "booking": {
+    "eyebrow": "ĐẶT CHỖ · ĐẶT PHÒNG",
+    "title": "Bước vào",
+    "titleHighlight": "Sakura Onsen",
+    "description": "Để lại thông tin — concierge sẽ liên hệ trong vòng 90 phút để sắp xếp ngày bạn mong muốn, ghép phòng tatami và lựa chọn liệu trình phù hợp.",
+    "name": "Họ tên",
+    "phone": "Số điện thoại",
+    "email": "Email",
+    "date": "Ngày đến",
+    "notes": "Yêu cầu đặc biệt",
+    "privacy": "Thông tin được mã hoá · không chia sẻ với bên thứ ba",
+    "submit": "Gửi yêu cầu"
+  },
+  "about": {
+    "pageTitle": "Giới thiệu",
+    "eyebrow": "VỀ CHÚNG TÔI",
+    "title": "Câu chuyện Sakura Onsen Ryokan",
+    "subtitle": "Mang trải nghiệm onsen Nhật Bản đích thực đến Việt Nam với tinh thần wabi-sabi.",
+    "storyEyebrow": "CÂU CHUYỆN",
+    "storyTitle": "Thương hiệu của chúng tôi",
+    "visionEyebrow": "ĐỊNH HƯỚNG",
+    "visionTitle": "Tầm nhìn & Sứ mệnh",
+    "certEyebrow": "VINH DANH",
+    "certTitle": "Chứng nhận & giải thưởng"
+  },
+  "services": {
+    "pageTitle": "Dịch vụ",
+    "eyebrow": "DỊCH VỤ",
+    "title": "Liệu trình từ xứ sở Phù Tang",
+    "subtitle": "Mỗi liệu trình là một hành trình cảm nhận — kết hợp tinh hoa shiatsu cổ truyền và nguyên liệu Nhật Bản.",
+    "searchPlaceholder": "Tìm kiếm dịch vụ...",
+    "categoryLabel": "Danh mục",
+    "sortLabel": "Sắp xếp",
+    "sortDefault": "Mặc định",
+    "sortPriceAsc": "Giá tăng dần",
+    "sortPriceDesc": "Giá giảm dần",
+    "noResults": "Không tìm thấy dịch vụ phù hợp.",
+    "viewDetails": "Xem chi tiết"
+  },
+  "serviceDetails": {
+    "pageTitle": "Chi tiết dịch vụ",
+    "eyebrow": "DỊCH VỤ",
+    "descEyebrow": "MÔ TẢ",
+    "descTitle": "Trải nghiệm của bạn",
+    "descText": "Liệu trình {name} kéo dài {duration} phút, được thiết kế để mang lại sự thư giãn sâu cho cơ thể và tinh thần. Mỗi bước được thực hiện bởi kỹ thuật viên được đào tạo bài bản tại Nhật Bản.",
+    "benefitsTitle": "Lợi ích chính",
+    "fromLabel": "Từ",
+    "bookNow": "Đặt lịch ngay"
+  },
+  "training": {
+    "pageTitle": "Đào tạo",
+    "eyebrow": "ĐÀO TẠO",
+    "title": "Học viện Shiatsu & Onsen Therapy",
+    "subtitle": "Khóa học chuyên sâu với master từ Nhật Bản.",
+    "programsEyebrow": "CHƯƠNG TRÌNH",
+    "programsTitle": "Lộ trình từ căn bản đến nâng cao",
+    "registerCta": "Đăng ký tư vấn"
+  },
+  "blog": {
+    "pageTitle": "Blog",
+    "eyebrow": "BLOG",
+    "title": "Tạp chí Wabi-Sabi",
+    "subtitle": "Câu chuyện từ onsen, trà đạo và văn hóa Nhật Bản.",
+    "allCategories": "Tất cả",
+    "readMore": "Đọc thêm"
+  },
+  "blogDetails": {
+    "pageTitle": "Chi tiết bài viết"
+  },
+  "careers": {
+    "pageTitle": "Tuyển dụng",
+    "eyebrow": "TUYỂN DỤNG",
+    "title": "Gia nhập đội ngũ Sakura",
+    "subtitle": "Xây dựng sự nghiệp trong môi trường wabi-sabi.",
+    "openingEyebrow": "VỊ TRÍ",
+    "openingTitle": "Cơ hội nghề nghiệp",
+    "applyCta": "Ứng tuyển"
+  },
+  "bookingPage": {
+    "pageTitle": "Đặt lịch",
+    "eyebrow": "ĐẶT LỊCH",
+    "title": "Đặt lịch onsen & shiatsu",
+    "subtitle": "Chọn gói phù hợp và đặt lịch ngay.",
+    "selectEyebrow": "CHỌN GÓI",
+    "selectTitle": "Gói liệu trình",
+    "popular": "Phổ biến",
+    "sessions": "buổi",
+    "formTitle": "Thông tin đặt lịch",
+    "nameLabel": "Họ tên",
+    "phoneLabel": "Điện thoại",
+    "noteLabel": "Ghi chú",
+    "submitCta": "Xác nhận đặt lịch"
+  },
+  "contact": {
+    "pageTitle": "Liên hệ",
+    "eyebrow": "LIÊN HỆ",
+    "title": "Kết nối với Sakura Onsen",
+    "subtitle": "Concierge sẵn sàng hỗ trợ bạn 10:00 – 22:00 mỗi ngày.",
+    "infoTitle": "Thông tin liên hệ",
+    "hotline": "Hotline",
+    "email": "Email",
+    "address": "Địa chỉ",
+    "hours": "Giờ làm việc",
+    "formTitle": "Gửi tin nhắn",
+    "nameLabel": "Họ tên",
+    "phoneLabel": "Điện thoại",
+    "messageLabel": "Tin nhắn",
+    "submitCta": "Gửi tin nhắn"
+  },
+  "offers": {
+    "pageTitle": "Ưu đãi",
+    "eyebrow": "ƯU ĐÃI",
+    "title": "Ưu đãi đặc biệt",
+    "subtitle": "Khám phá các ưu đãi và mã giảm giá.",
+    "expires": "Hết hạn",
+    "useCta": "Sử dụng ngay"
+  },
+  "feedback": {
+    "pageTitle": "Đánh giá",
+    "eyebrow": "ĐÁNH GIÁ",
+    "title": "Khách hàng nói gì",
+    "subtitle": "Trải nghiệm thực tế từ những vị khách đã đến."
+  },
+  "promotions": {
+    "pageTitle": "Khuyến mãi",
+    "eyebrow": "KHUYẾN MÃI",
+    "title": "Chương trình khuyến mãi",
+    "subtitle": "Ưu đãi theo mùa từ Sakura Onsen.",
+    "bookCta": "Đặt ngay"
+  },
+  "branches": {
+    "pageTitle": "Chi nhánh",
+    "eyebrow": "CHI NHÁNH",
+    "title": "Hệ thống Sakura Onsen",
+    "subtitle": "3 cơ sở tại Việt Nam và 1 ryokan tại Kyoto, Nhật Bản."
+  },
+  "account": {
+    "pageTitle": "Tài khoản",
+    "eyebrow": "TÀI KHOẢN",
+    "title": "Quản lý tài khoản",
+    "subtitle": "Đăng nhập để xem lịch sử và tích điểm.",
+    "loginTitle": "Đăng nhập",
+    "emailLabel": "Email",
+    "passwordLabel": "Mật khẩu",
+    "loginCta": "Đăng nhập",
+    "noAccount": "Chưa có tài khoản?",
+    "registerCta": "Đăng ký ngay"
+  },
+  "partners": {
+    "pageTitle": "Đối tác",
+    "eyebrow": "ĐỐI TÁC",
+    "title": "Đối tác chiến lược",
+    "subtitle": "Hợp tác cùng các thương hiệu Nhật Bản hàng đầu."
+  },
+  "packages": {
+    "pageTitle": "Gói liệu trình",
+    "eyebrow": "GÓI LIỆU TRÌNH",
+    "title": "Gói trải nghiệm onsen",
+    "subtitle": "Tiết kiệm hơn khi mua combo liệu trình.",
+    "popular": "Phổ biến",
+    "sessions": "{count} buổi",
+    "selectCta": "Chọn gói"
+  },
+  "beforeAfter": {
+    "pageTitle": "Kết quả",
+    "eyebrow": "KẾT QUẢ",
+    "title": "Hình ảnh trước & sau",
+    "subtitle": "Kết quả thực tế từ khách hàng.",
+    "before": "TRƯỚC",
+    "after": "SAU"
+  },
+  "faq": {
+    "pageTitle": "FAQ",
+    "eyebrow": "FAQ",
+    "title": "Câu hỏi thường gặp",
+    "subtitle": "Giải đáp thắc mắc của bạn."
+  },
+  "policy": {
+    "pageTitle": "Chính sách",
+    "eyebrow": "CHÍNH SÁCH",
+    "title": "Chính sách & điều khoản",
+    "subtitle": "Quy định và điều khoản sử dụng."
+  },
+  "gallery": {
+    "pageTitle": "Thư viện",
+    "eyebrow": "THƯ VIỆN",
+    "title": "Khoảnh khắc Sakura Onsen",
+    "subtitle": "Hình ảnh từ onsen, ryokan và vườn zen.",
+    "all": "Tất cả"
+  },
+  "onsen": {
+    "eyebrow": "温泉 · BỐN BỒN ONSEN",
+    "title": "Nước khoáng nóng",
+    "titleAccent": "chảy suốt 365 ngày",
+    "description": "Khoáng nóng được dẫn từ độ sâu 1.200m của cao nguyên Langbiang — bốn loại bồn với bốn cảnh quan, bốn nhiệt độ và bốn nghi lễ ngâm riêng biệt."
+  },
+  "rituals": {
+    "eyebrow": "施術 · NGHI LỄ",
+    "title": "Sáu liệu trình",
+    "titleAccent": "truyền thống",
+    "bookCta": "Đặt"
+  },
+  "suites": {
+    "eyebrow": "旅館 · LƯU TRÚ",
+    "title": "Ba dạng phòng",
+    "titleAccent": "tatami truyền thống",
+    "roomLabel": "PHÒNG",
+    "bookCta": "Đặt phòng"
+  },
+  "masters": {
+    "eyebrow": "職人 · NGHỆ NHÂN",
+    "title": "Bàn tay",
+    "titleAccent": "truyền nghề",
+    "titleSuffix": "từ Nhật Bản"
+  },
+  "tea": {
+    "eyebrow": "懐石 · ẨM THỰC & TRÀ ĐẠO",
+    "title": "Kaiseki chín món",
+    "titleAccent": "và chanoyu",
+    "description": "Mỗi tối, đầu bếp Yui Kobayashi từ Uji trình diễn nghi lễ kaiseki theo mùa — chín món nhỏ tinh tế ăn kèm matcha sủi bọt theo nghi thức trà đạo 400 năm.",
+    "courses": [
+      ["Sakizuke", "Khai vị mùa — đậu hũ vừng và rong biển wakame"],
+      ["Mukozuke", "Sashimi cá nóc fugu và cá ngừ chutoro"],
+      ["Yakimono", "Cá Saba nướng muối Setouchi trên than bạch dương"],
+      ["Mizumono", "Tráng miệng wagashi hình hoa anh đào"]
+    ]
+  },
+  "testimonials": {
+    "eyebrow": "お客様の声 · LỜI KHÁCH",
+    "title": "Những",
+    "titleAccent": "khoảnh khắc",
+    "titleSuffix": "được kể lại"
+  }
+}

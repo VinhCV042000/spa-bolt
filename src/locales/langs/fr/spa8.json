@@ -1,0 +1,48 @@
+{
+  "hero": {
+    "badge": "Amaya Onsen",
+    "kana": "あまや温泉",
+    "subtitle": "Retraite bien-être Ryokan",
+    "title1": "Sérénité",
+    "title2": "purement japonaise",
+    "title3": "— âme restaurée",
+    "description": "Vivez l'âme d'un Ryokan japonais traditionnel — où l'onsen minéral chaud, le shiatsu classique et la philosophie du « Ma » (le silence sacré) s'harmonisent pour restaurer l'esprit et le corps.",
+    "bookOmakase": "Réserver Omakase",
+    "viewSeasons": "Voir par saison",
+    "openDaily": "Ouvert tous les jours",
+    "hours": "8:00 — 22:00"
+  },
+  "seasons": {
+    "label": "Soins saisonniers",
+    "title": "Quatre saisons",
+    "titleHighlight": "de guérison",
+    "description": "La philosophie japonaise du « Shizen » — vivre en harmonie avec la nature. Chaque soin reflète la beauté unique de chaque saison.",
+    "duration": "minutes",
+    "bookSeason": "Réserver le soin"
+  },
+  "onsen": {
+    "label": "Onsen & Shiatsu",
+    "title": "L'authentique",
+    "titleHighlight": "expérience onsen",
+    "description": "Bains minéraux chauds dans le style d'un Ryokan traditionnel — conçus pour honorer le « Ma » (le silence sacré) et le « Wabi-sabi » (la beauté de l'imperfection).",
+    "privatePool": "Bassin privé",
+    "sharedOnsen": "Onsen partagé",
+    "includesLabel": "Comprend :",
+    "bookOnsen": "Réserver l'onsen"
+  },
+  "booking": {
+    "label": "Réservation Omakase",
+    "title": "Laissez-nous",
+    "titleHighlight": "tout gérer",
+    "description": "« Omakase » — confiez-nous tout. Indiquez-nous simplement l'heure et le nombre d'invités, le reste sera une merveilleuse surprise.",
+    "name": "Nom",
+    "guests": "Nombre d'invités",
+    "date": "Date",
+    "time": "Heure",
+    "duration": "Durée du séjour",
+    "special": "Demandes particulières",
+    "specialPlaceholder": "Sensibilités aux parfums, allergies, demandes personnelles...",
+    "confirm": "Confirmer l'Omakase",
+    "policy": "Annulation gratuite avant 48 heures · 30 % d'acompte"
+  }
+}

@@ -1,0 +1,453 @@
+export type Spa7Lang = 'en' | 'vi' | 'fr' | 'cn' | 'ar';
+
+export const SPA7_IMAGES = {
+  hero: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=1920&q=80',
+  tech1: 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=600&q=80',
+  tech2: 'https://images.unsplash.com/photo-1560750588-73207b1ef5b8?w=600&q=80',
+  tech3: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&q=80',
+  tech4: 'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=600&q=80',
+};
+
+export const SPA7_TECHNOLOGIES = [
+  {
+    name: {
+      vi: 'LED Photon Therapy',
+      en: 'LED Photon Therapy',
+      fr: 'LED Photon Therapy',
+      cn: 'LED Photon Therapy',
+      ar: 'LED Photon Therapy',
+    },
+    tagline: {
+      vi: 'Ánh sáng chữa lành',
+      en: 'Light that heals',
+      fr: 'La lumière qui guérit',
+      cn: '治愈之光',
+      ar: 'الضوء الذي يشفي',
+    },
+    description: {
+      vi: 'Liệu pháp ánh sáng LED 7 màu kích thích sinh tổng hợp collagen, giảm viêm và tái tạo tế bào da ở cấp độ tế bào. Red LED cho collagen, Blue LED diệt khuẩn mụn, Near-infrared cho phục hồi sâu.',
+      en: 'Multi-wavelength LED phototherapy stimulates collagen synthesis, reduces inflammation and regenerates skin cells at a cellular level. Red LED for collagen, Blue LED for acne-fighting bacteria, Near-infrared for deep restoration.',
+      fr: "La photothérapie LED multi-longueurs d'onde stimule la synthèse du collagène, réduit l'inflammation et régénère les cellules cutanées au niveau cellulaire. LED rouge pour le collagène, LED bleue contre les bactéries de l'acné, infrarouge proche pour une restauration profonde.",
+      cn: '多波长 LED 光疗可刺激胶原蛋白合成，减轻炎症，并在细胞层面再生皮肤细胞。红光 LED 促进胶原蛋白，蓝光 LED 杀灭痤疮细菌，近红外光实现深层修复。',
+      ar: 'يحفّز العلاج الضوئي بأطوال موجية متعددة من LED تكوين الكولاجين، ويقلل الالتهاب ويجدد خلايا البشرة على المستوى الخلوي. الضوء الأحمر للكولاجين، والأزرق لمكافحة بكتيريا حب الشباب، والأشعة تحت الحمراء القريبة للترميم العميق.',
+    },
+    badge: 'FDA Cleared',
+    color: '#FF6B9D',
+    icon: 'solar:sun-bold-duotone',
+    image: SPA7_IMAGES.tech1,
+  },
+  {
+    name: {
+      vi: 'RF Micro-Needling',
+      en: 'RF Micro-Needling',
+      fr: 'RF Micro-Needling',
+      cn: 'RF Micro-Needling',
+      ar: 'RF Micro-Needling',
+    },
+    tagline: {
+      vi: 'Collagen induction',
+      en: 'Collagen induction',
+      fr: 'Induction de collagène',
+      cn: '胶原蛋白诱导',
+      ar: 'تحفيز الكولاجين',
+    },
+    description: {
+      vi: 'Kết hợp vi kim và sóng radio frequency tạo ra "vết thương kiểm soát" kích thích sản sinh collagen và elastin tự nhiên. Làm đầy nếp nhăn, thu nhỏ lỗ chân lông và làm căng da tức thì.',
+      en: 'Combines microneedles and radio frequency to create "controlled injuries" stimulating natural collagen and elastin production. Fills wrinkles, minimises pores and tightens skin immediately.',
+      fr: "Associe micro-aiguilles et radiofréquence pour créer des « lésions contrôlées » stimulant la production naturelle de collagène et d'élastine. Comble les rides, resserre les pores et raffermit la peau immédiatement.",
+      cn: '结合微针与射频技术，制造“可控微损伤”，刺激天然胶原蛋白与弹性蛋白生成。即时填平皱纹、收缩毛孔并紧致肌肤。',
+      ar: 'يجمع بين الإبر الدقيقة والترددات الراديوية لإحداث «إصابات مُتحكَّم بها» تحفّز إنتاج الكولاجين والإيلاستين الطبيعي. يملأ التجاعيد ويصغّر المسام ويشدّ البشرة فوراً.',
+    },
+    badge: 'Gold Standard',
+    color: '#C9A84C',
+    icon: 'solar:stars-bold-duotone',
+    image: SPA7_IMAGES.tech2,
+  },
+  {
+    name: {
+      vi: 'Cryotherapy Facial',
+      en: 'Cryotherapy Facial',
+      fr: 'Cryotherapy Facial',
+      cn: 'Cryotherapy Facial',
+      ar: 'Cryotherapy Facial',
+    },
+    tagline: {
+      vi: 'Lạnh tái sinh',
+      en: 'Cold regeneration',
+      fr: 'Régénération par le froid',
+      cn: '冷疗再生',
+      ar: 'تجديد بالبرودة',
+    },
+    description: {
+      vi: 'Nitơ lỏng -196°C được phun lên bề mặt da trong 3 phút. Tăng tuần hoàn máu đột ngột, giảm phù nề, co khít lỗ chân lông và kích thích sản sinh collagen. Da sáng bừng sau một buổi duy nhất.',
+      en: 'Liquid nitrogen at -196°C applied to the skin surface for 3 minutes. Triggers a surge in blood circulation, reduces puffiness, tightens pores and stimulates collagen production. Luminous skin after a single session.',
+      fr: "De l'azote liquide à -196°C appliqué sur la surface de la peau pendant 3 minutes. Provoque une montée de la circulation sanguine, réduit les gonflements, resserre les pores et stimule la production de collagène. Une peau lumineuse après une seule séance.",
+      cn: '将 -196°C 的液氮喷洒于皮肤表面 3 分钟。瞬间促进血液循环，减轻浮肿，收缩毛孔并刺激胶原蛋白生成。单次护理即可焕发光彩。',
+      ar: 'يُرَش النيتروجين السائل عند -196°م على سطح البشرة لمدة 3 دقائق. يحفّز تدفق الدورة الدموية، ويقلل الانتفاخ، ويصغّر المسام ويحفّز إنتاج الكولاجين. بشرة مشرقة بعد جلسة واحدة.',
+    },
+    badge: 'K-Beauty Tech',
+    color: '#7ECEF4',
+    icon: 'solar:snowflake-bold-duotone',
+    image: SPA7_IMAGES.tech3,
+  },
+  {
+    name: {
+      vi: 'Ultrasound HIFU',
+      en: 'Ultrasound HIFU',
+      fr: 'Ultrasound HIFU',
+      cn: 'Ultrasound HIFU',
+      ar: 'Ultrasound HIFU',
+    },
+    tagline: {
+      vi: 'Nâng cơ không dao',
+      en: 'Non-surgical lifting',
+      fr: 'Lifting sans chirurgie',
+      cn: '无创提拉',
+      ar: 'شدّ دون جراحة',
+    },
+    description: {
+      vi: 'High-Intensity Focused Ultrasound tác động vào lớp SMAS (lớp cơ mặt) ở độ sâu 4.5mm — tương đương phẫu thuật căng da nhưng không xâm lấn. Kết quả nâng cơ mặt rõ rệt trong 90 ngày.',
+      en: 'High-Intensity Focused Ultrasound targets the SMAS layer (facial muscle) at 4.5mm depth — equivalent to a surgical face lift but non-invasive. Visible facial lifting results within 90 days.',
+      fr: 'Les ultrasons focalisés de haute intensité ciblent la couche SMAS (muscle facial) à 4,5 mm de profondeur — équivalent à un lifting chirurgical mais sans intervention. Résultats de lifting visibles en 90 jours.',
+      cn: '高强度聚焦超声作用于 4.5 毫米深的 SMAS 层（面部肌肉）——效果媲美外科拉皮但无创。90 天内呈现明显的面部提拉效果。',
+      ar: 'تستهدف الموجات فوق الصوتية المركّزة عالية الكثافة طبقة SMAS (عضلة الوجه) على عمق 4.5 مم — بما يعادل شدّ الوجه الجراحي لكن دون تدخل جراحي. نتائج شدّ مرئية خلال 90 يوماً.',
+    },
+    badge: 'Non-Invasive',
+    color: '#9B59B6',
+    icon: 'solar:pulse-bold-duotone',
+    image: SPA7_IMAGES.tech4,
+  },
+];
+
+export const SPA7_MENU_ITEMS = [
+  {
+    category: {
+      vi: 'Điều trị da căn bản',
+      en: 'Essential skin treatments',
+      fr: 'Soins essentiels de la peau',
+      cn: '基础肌肤护理',
+      ar: 'علاجات البشرة الأساسية',
+    },
+    color: '#FF6B9D',
+    items: [
+      {
+        name: {
+          vi: 'Glass Skin Facial (Cơ bản)',
+          en: 'Glass Skin Facial (Basic)',
+          fr: 'Soin Glass Skin (Basique)',
+          cn: '玻璃肌护理（基础）',
+          ar: 'عناية بشرة الزجاج (أساسي)',
+        },
+        duration: { vi: '60 phút', en: '60 min', fr: '60 min', cn: '60 分钟', ar: '60 دقيقة' },
+        price: {
+          vi: '890.000₫',
+          en: '890,000₫',
+          fr: '890,000₫',
+          cn: '890,000₫',
+          ar: '890,000₫',
+        },
+        badge: {
+          vi: 'Bestseller',
+          en: 'Bestseller',
+          fr: 'Meilleure vente',
+          cn: '热销',
+          ar: 'الأكثر مبيعاً',
+        },
+      },
+      {
+        name: {
+          vi: 'Deep Pore Cleansing + Extraction',
+          en: 'Deep Pore Cleansing + Extraction',
+          fr: 'Nettoyage en profondeur des pores + Extraction',
+          cn: '深层毛孔清洁 + 提取',
+          ar: 'تنظيف عميق للمسام + استخراج',
+        },
+        duration: { vi: '75 phút', en: '75 min', fr: '75 min', cn: '75 分钟', ar: '75 دقيقة' },
+        price: {
+          vi: '750.000₫',
+          en: '750,000₫',
+          fr: '750,000₫',
+          cn: '750,000₫',
+          ar: '750,000₫',
+        },
+        badge: null,
+      },
+      {
+        name: {
+          vi: 'Hydra Dermabrasion',
+          en: 'Hydra Dermabrasion',
+          fr: 'Hydra-dermabrasion',
+          cn: '水合微晶磨皮',
+          ar: 'تقشير هيدرا الجلدي',
+        },
+        duration: { vi: '50 phút', en: '50 min', fr: '50 min', cn: '50 分钟', ar: '50 دقيقة' },
+        price: {
+          vi: '690.000₫',
+          en: '690,000₫',
+          fr: '690,000₫',
+          cn: '690,000₫',
+          ar: '690,000₫',
+        },
+        badge: null,
+      },
+    ],
+  },
+  {
+    category: {
+      vi: 'Công nghệ cao',
+      en: 'Advanced technology',
+      fr: 'Technologie avancée',
+      cn: '高端科技',
+      ar: 'تقنية متقدمة',
+    },
+    color: '#C9A84C',
+    items: [
+      {
+        name: {
+          vi: 'LED Photon Therapy (Toàn mặt)',
+          en: 'LED Photon Therapy (Full face)',
+          fr: 'LED Photon Therapy (Visage entier)',
+          cn: 'LED 光子疗法（全脸）',
+          ar: 'علاج LED الضوئي (الوجه كامل)',
+        },
+        duration: { vi: '45 phút', en: '45 min', fr: '45 min', cn: '45 分钟', ar: '45 دقيقة' },
+        price: {
+          vi: '1.200.000₫',
+          en: '1,200,000₫',
+          fr: '1,200,000₫',
+          cn: '1,200,000₫',
+          ar: '1,200,000₫',
+        },
+        badge: null,
+      },
+      {
+        name: {
+          vi: 'RF Micro-Needling (1 vùng)',
+          en: 'RF Micro-Needling (1 area)',
+          fr: 'RF Micro-Needling (1 zone)',
+          cn: '射频微针（1 个部位）',
+          ar: 'الوخز الدقيق بالترددات الراديوية (منطقة واحدة)',
+        },
+        duration: { vi: '90 phút', en: '90 min', fr: '90 min', cn: '90 分钟', ar: '90 دقيقة' },
+        price: {
+          vi: '3.500.000₫',
+          en: '3,500,000₫',
+          fr: '3,500,000₫',
+          cn: '3,500,000₫',
+          ar: '3,500,000₫',
+        },
+        badge: { vi: 'Hot', en: 'Hot', fr: 'Tendance', cn: '热门', ar: 'رائج' },
+      },
+      {
+        name: {
+          vi: 'HIFU Nâng cơ toàn mặt',
+          en: 'HIFU Full-face lifting',
+          fr: 'Lifting HIFU du visage entier',
+          cn: 'HIFU 全脸提拉',
+          ar: 'شدّ الوجه كامل بتقنية HIFU',
+        },
+        duration: { vi: '60 phút', en: '60 min', fr: '60 min', cn: '60 分钟', ar: '60 دقيقة' },
+        price: {
+          vi: '5.500.000₫',
+          en: '5,500,000₫',
+          fr: '5,500,000₫',
+          cn: '5,500,000₫',
+          ar: '5,500,000₫',
+        },
+        badge: { vi: 'Cao cấp', en: 'Premium', fr: 'Premium', cn: '高端', ar: 'فاخر' },
+      },
+    ],
+  },
+  {
+    category: {
+      vi: 'Gói chăm sóc đặc biệt',
+      en: 'Special care packages',
+      fr: 'Forfaits de soins spéciaux',
+      cn: '特别护理套餐',
+      ar: 'باقات عناية خاصة',
+    },
+    color: '#7ECEF4',
+    items: [
+      {
+        name: {
+          vi: 'Anti-Acne Intensive Program (4 buổi)',
+          en: 'Anti-Acne Intensive Program (4 sessions)',
+          fr: 'Programme intensif anti-acné (4 séances)',
+          cn: '强效祛痘疗程（4 次）',
+          ar: 'برنامج مكافحة حب الشباب المكثف (4 جلسات)',
+        },
+        duration: {
+          vi: '4 × 75 phút',
+          en: '4 × 75 min',
+          fr: '4 × 75 min',
+          cn: '4 × 75 分钟',
+          ar: '4 × 75 دقيقة',
+        },
+        price: {
+          vi: '5.800.000₫',
+          en: '5,800,000₫',
+          fr: '5,800,000₫',
+          cn: '5,800,000₫',
+          ar: '5,800,000₫',
+        },
+        badge: { vi: 'Trọn gói', en: 'Package', fr: 'Forfait', cn: '套餐', ar: 'باقة' },
+      },
+      {
+        name: {
+          vi: 'Glass Skin Journey (6 buổi)',
+          en: 'Glass Skin Journey (6 sessions)',
+          fr: 'Parcours Glass Skin (6 séances)',
+          cn: '玻璃肌之旅（6 次）',
+          ar: 'رحلة بشرة الزجاج (6 جلسات)',
+        },
+        duration: {
+          vi: '6 × 60 phút',
+          en: '6 × 60 min',
+          fr: '6 × 60 min',
+          cn: '6 × 60 分钟',
+          ar: '6 × 60 دقيقة',
+        },
+        price: {
+          vi: '8.900.000₫',
+          en: '8,900,000₫',
+          fr: '8,900,000₫',
+          cn: '8,900,000₫',
+          ar: '8,900,000₫',
+        },
+        badge: {
+          vi: 'Tiết kiệm 20%',
+          en: 'Save 20%',
+          fr: 'Économisez 20 %',
+          cn: '节省 20%',
+          ar: 'وفّر 20%',
+        },
+      },
+      {
+        name: {
+          vi: 'Cryotherapy Facial (1 buổi)',
+          en: 'Cryotherapy Facial (1 session)',
+          fr: 'Soin Cryothérapie (1 séance)',
+          cn: '冷冻护理（1 次）',
+          ar: 'عناية بالعلاج بالتبريد (جلسة واحدة)',
+        },
+        duration: { vi: '30 phút', en: '30 min', fr: '30 min', cn: '30 分钟', ar: '30 دقيقة' },
+        price: {
+          vi: '1.800.000₫',
+          en: '1,800,000₫',
+          fr: '1,800,000₫',
+          cn: '1,800,000₫',
+          ar: '1,800,000₫',
+        },
+        badge: null,
+      },
+    ],
+  },
+];
+
+export const SPA7_RESULTS = [
+  {
+    concern: {
+      vi: 'Mụn & Sẹo thâm',
+      en: 'Acne & Dark scars',
+      fr: 'Acné & Cicatrices foncées',
+      cn: '痤疮与暗沉疤痕',
+      ar: 'حب الشباب والندوب الداكنة',
+    },
+    program: {
+      vi: 'Anti-Acne Program · 4 buổi',
+      en: 'Anti-Acne Program · 4 sessions',
+      fr: 'Programme anti-acné · 4 séances',
+      cn: '祛痘疗程 · 4 次',
+      ar: 'برنامج مكافحة حب الشباب · 4 جلسات',
+    },
+    improvement: {
+      vi: '85% giảm mụn hoạt tính',
+      en: '85% reduction in active acne',
+      fr: "85 % de réduction de l'acné active",
+      cn: '活跃痤疮减少 85%',
+      ar: 'انخفاض حب الشباب النشط بنسبة 85%',
+    },
+    avatar: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=120&q=80',
+  },
+  {
+    concern: {
+      vi: 'Nếp nhăn & Chảy xệ',
+      en: 'Wrinkles & Sagging',
+      fr: 'Rides & Relâchement',
+      cn: '皱纹与松弛',
+      ar: 'التجاعيد والترهل',
+    },
+    program: {
+      vi: 'HIFU + RF Micro · 2 buổi',
+      en: 'HIFU + RF Micro · 2 sessions',
+      fr: 'HIFU + RF Micro · 2 séances',
+      cn: 'HIFU + 射频微针 · 2 次',
+      ar: 'HIFU + الترددات الدقيقة · جلستان',
+    },
+    improvement: {
+      vi: '70% cải thiện đường viền mặt',
+      en: '70% improvement in facial contour',
+      fr: "70 % d'amélioration du contour du visage",
+      cn: '面部轮廓改善 70%',
+      ar: 'تحسّن ملامح الوجه بنسبة 70%',
+    },
+    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&q=80',
+  },
+  {
+    concern: {
+      vi: 'Lỗ chân lông to & Da thô ráp',
+      en: 'Large pores & Rough skin',
+      fr: 'Pores dilatés & Peau rugueuse',
+      cn: '毛孔粗大与肌肤粗糙',
+      ar: 'المسام الواسعة والبشرة الخشنة',
+    },
+    program: {
+      vi: 'Glass Skin Journey · 6 buổi',
+      en: 'Glass Skin Journey · 6 sessions',
+      fr: 'Parcours Glass Skin · 6 séances',
+      cn: '玻璃肌之旅 · 6 次',
+      ar: 'رحلة بشرة الزجاج · 6 جلسات',
+    },
+    improvement: {
+      vi: 'Da mịn như thủy tinh sau 6 tuần',
+      en: 'Glass-smooth skin after 6 weeks',
+      fr: 'Peau lisse comme du verre après 6 semaines',
+      cn: '6 周后肌肤如玻璃般光滑',
+      ar: 'بشرة ناعمة كالزجاج بعد 6 أسابيع',
+    },
+    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&q=80',
+  },
+];
+
+export const SPA7_TIME_SLOTS = {
+  vi: [
+    'Sáng (9:00 - 12:00)',
+    'Trưa (12:00 - 15:00)',
+    'Chiều (15:00 - 18:00)',
+    'Tối (18:00 - 21:00)',
+  ],
+  en: [
+    'Morning (9:00 - 12:00)',
+    'Midday (12:00 - 15:00)',
+    'Afternoon (15:00 - 18:00)',
+    'Evening (18:00 - 21:00)',
+  ],
+  fr: [
+    'Matin (9:00 - 12:00)',
+    'Midi (12:00 - 15:00)',
+    'Après-midi (15:00 - 18:00)',
+    'Soir (18:00 - 21:00)',
+  ],
+  cn: [
+    '上午 (9:00 - 12:00)',
+    '中午 (12:00 - 15:00)',
+    '下午 (15:00 - 18:00)',
+    '晚上 (18:00 - 21:00)',
+  ],
+  ar: [
+    'صباحاً (9:00 - 12:00)',
+    'ظُهراً (12:00 - 15:00)',
+    'بعد الظهر (15:00 - 18:00)',
+    'مساءً (18:00 - 21:00)',
+  ],
+};

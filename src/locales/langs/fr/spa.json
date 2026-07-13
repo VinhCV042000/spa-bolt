@@ -1,0 +1,233 @@
+{
+  "meta": {
+    "title": "Serenity Spa - Rechargez votre énergie, nourrissez votre âme",
+    "description": "Serenity Spa - Une expérience spa premium avec massages thérapeutiques, soins du visage, soins du corps et aromathérapie. Réservez votre rendez-vous dès aujourd'hui !"
+  },
+  "nav": {
+    "home": "Accueil",
+    "about": "À propos",
+    "services": "Services",
+    "offers": "Forfaits",
+    "explore": "Explorer",
+    "contact": "Contact",
+    "booking": "Réservation",
+    "subheaderServices": "Services",
+    "subheaderContent": "Contenu",
+    "servicesAll": "Tous les services",
+    "serviceMassage": "Massage thérapeutique",
+    "serviceFacial": "Soin du visage",
+    "serviceBody": "Soin du corps",
+    "serviceAroma": "Aromathérapie",
+    "serviceHair": "Cheveux et cuir chevelu",
+    "serviceCouple": "VIP en couple",
+    "training": "Formation",
+    "blog": "Blog",
+    "gallery": "Galerie",
+    "wellness": "Bibliothèque bien-être",
+    "membership": "Adhésion",
+    "careers": "Carrières"
+  },
+  "hero": {
+    "brand": "Serenity Spa",
+    "titleLead": "Rechargez votre énergie,",
+    "titleHighlight": "nourrissez votre âme",
+    "subtitle": "Une expérience spa premium avec des soins professionnels, une ambiance naturelle et des produits 100 % biologiques au cœur de la ville.",
+    "bookNow": "Réserver maintenant",
+    "exploreServices": "Découvrir les services",
+    "stats": [
+      { "value": "15+", "label": "Années d'expérience" },
+      { "value": "50+", "label": "Soins" },
+      { "value": "10k+", "label": "Clients satisfaits" }
+    ]
+  },
+  "about": {
+    "eyebrow": "À propos de nous",
+    "titleLead": "Une retraite paisible",
+    "titleRest": "au cœur de la ville",
+    "description": "Serenity Spa est né d'une passion pour le bien-être holistique. Avec une équipe d'experts formés à l'international et un espace conçu dans un style zen moderne, nous nous engageons à offrir une détente absolue à chaque client.",
+    "ratingCaption": "2 400+ avis",
+    "features": [
+      {
+        "title": "Soin attentionné",
+        "desc": "Chaque client bénéficie d'une consultation de soin personnalisée."
+      },
+      {
+        "title": "100 % biologique",
+        "desc": "Des produits naturels, sûrs et respectueux de l'environnement."
+      },
+      {
+        "title": "Standards internationaux",
+        "desc": "Des procédures d'hygiène et de sécurité aux normes des spas 5 étoiles."
+      }
+    ]
+  },
+  "services": {
+    "eyebrow": "Services",
+    "titleLead": "Soins",
+    "titleRest": "premium",
+    "subtitle": "Découvrez des soins conçus pour restaurer le corps, sublimer la peau et équilibrer l'esprit.",
+    "cta": "Réserver une consultation gratuite",
+    "items": [
+      {
+        "title": "Massage thérapeutique",
+        "description": "Massages thaï, shiatsu et aux pierres chaudes pour détendre les muscles, améliorer la circulation et soulager le stress.",
+        "duration": "60 - 90 min"
+      },
+      {
+        "title": "Soin du visage",
+        "description": "Soins du visage intensifs aux cosmétiques biologiques, adaptés à tous les types de peau pour un éclat radieux.",
+        "duration": "45 - 75 min"
+      },
+      {
+        "title": "Soin du corps",
+        "description": "Gommage corporel complet, enveloppements et détox pour une peau douce, ferme et revitalisée.",
+        "duration": "90 - 120 min"
+      },
+      {
+        "title": "Aromathérapie",
+        "description": "Huiles essentielles naturelles premium associées à l'aromathérapie pour équilibrer le corps et l'esprit.",
+        "duration": "60 min"
+      }
+    ]
+  },
+  "amenities": {
+    "eyebrow": "Équipements",
+    "titleLead": "Une expérience",
+    "titleRest": "complète",
+    "description": "Serenity Spa offre un espace de détente aux multiples équipements — du sauna au jacuzzi en passant par l'espace yoga — le tout dans une seule destination.",
+    "items": [
+      {
+        "title": "Sauna",
+        "description": "Saunas secs et humides modernes pour détoxifier et se détendre en profondeur."
+      },
+      {
+        "title": "Jacuzzi",
+        "description": "Un espace d'hydrothérapie privé avec eau chaude et huiles relaxantes."
+      },
+      {
+        "title": "Yoga et méditation",
+        "description": "Cours quotidiens de yoga et de méditation dans un espace calme."
+      },
+      {
+        "title": "Produits biologiques",
+        "description": "Ingrédients 100 % naturels, sans paraben et écologiques."
+      }
+    ]
+  },
+  "packages": {
+    "eyebrow": "Forfaits",
+    "titleLead": "Choisissez le forfait",
+    "titleRest": "qui vous convient",
+    "subtitle": "Des forfaits combinés conçus pour réduire les coûts tout en offrant l'expérience spa la plus complète.",
+    "popular": "Populaire",
+    "choose": "Choisir ce forfait",
+    "items": [
+      {
+        "name": "Forfait Détente",
+        "caption": "Pour une première visite",
+        "features": [
+          "Massage corporel 60 min",
+          "Sauna 30 min",
+          "Tisane offerte",
+          "Serviette froide à l'aromathérapie"
+        ]
+      },
+      {
+        "name": "Forfait Revitalisation",
+        "caption": "Le choix le plus populaire",
+        "features": [
+          "Massage corporel 90 min",
+          "Soin du visage 60 min",
+          "Gommage corporel complet",
+          "Jacuzzi 45 min",
+          "Boisson détox offerte"
+        ]
+      },
+      {
+        "name": "Forfait Premium",
+        "caption": "L'expérience parfaite",
+        "features": [
+          "Soin du corps 120 min",
+          "Soin du visage premium 90 min",
+          "Aromathérapie privée",
+          "Salle VIP privée",
+          "Déjeuner sain",
+          "Cadeau de produits biologiques"
+        ]
+      }
+    ]
+  },
+  "testimonials": {
+    "eyebrow": "Témoignages",
+    "titleLead": "Ce que disent",
+    "titleRest": "nos clients",
+    "items": [
+      {
+        "name": "Nguyen Minh Anh",
+        "role": "Entrepreneure",
+        "content": "Serenity Spa est l'endroit où je trouve la paix au milieu d'une vie trépidante. Le massage est merveilleux, le personnel professionnel et l'espace incroyablement relaxant."
+      },
+      {
+        "name": "Tran Hoang Long",
+        "role": "Ingénieur logiciel",
+        "content": "Le forfait Revitalisation en vaut vraiment la peine. Après le soin, mon corps se sentait léger et mon esprit rafraîchi. Je reviendrai sans hésiter !"
+      },
+      {
+        "name": "Le Thu Ha",
+        "role": "Enseignante",
+        "content": "Le soin du visage biologique a visiblement illuminé et lissé ma peau. Le spa est élégant, propre et très privé. Je le recommande vivement !"
+      },
+      {
+        "name": "Pham Quoc Bao",
+        "role": "Médecin",
+        "content": "J'oriente régulièrement mes patients vers Serenity Spa pour réduire le stress. La qualité du service est toujours fiable."
+      }
+    ]
+  },
+  "faqs": {
+    "eyebrow": "FAQ",
+    "titleLead": "Questions",
+    "titleRest": "fréquentes",
+    "items": [
+      {
+        "question": "Combien de temps à l'avance dois-je réserver ?",
+        "answer": "Nous recommandons de réserver au moins 24 heures à l'avance, surtout les week-ends et jours fériés. Vous pouvez réserver en ligne ou appeler notre hotline."
+      },
+      {
+        "question": "Le spa convient-il aux femmes enceintes ?",
+        "answer": "Oui, nous proposons un massage prénatal dédié à partir de la 13e semaine. Veuillez nous le préciser lors de la réservation afin que nous puissions vous conseiller correctement."
+      },
+      {
+        "question": "Combien de temps à l'avance dois-je arriver avant mon rendez-vous ?",
+        "answer": "Veuillez arriver 15 minutes en avance pour vous enregistrer, vous changer et vous détendre dans le salon avant votre soin."
+      },
+      {
+        "question": "Quelle est la politique d'annulation ?",
+        "answer": "Annulation gratuite jusqu'à 12 heures avant. Les annulations dans les 12 heures entraînent des frais de 50 %. Les absences entraînent la perte de l'acompte complet."
+      },
+      {
+        "question": "Le spa dispose-t-il d'un parking ?",
+        "answer": "Oui, un parking client gratuit est disponible au sous-sol du bâtiment. Notre réception vous guidera à votre arrivée."
+      }
+    ]
+  },
+  "booking": {
+    "eyebrow": "Prendre rendez-vous",
+    "title": "Prêt à vous détendre ?",
+    "description": "Réservez aujourd'hui et bénéficiez de 15 % de réduction sur votre première expérience. Notre équipe de conseil est toujours prête à vous accompagner.",
+    "hotlineLabel": "Hotline",
+    "addressLabel": "Adresse",
+    "addressValue": "123 Nguyen Hue, District 1, HCMV",
+    "hoursLabel": "Heures d'ouverture",
+    "hoursValue": "8h00 - 22h00 (Lun - Dim)",
+    "bookOnline": "Réserver en ligne",
+    "contactConsult": "Nous contacter"
+  },
+  "cta": {
+    "bookNow": "Réserver maintenant",
+    "contact": "Contact",
+    "title": "Prêt à commencer votre voyage bien-être ?",
+    "subtitle": "L'équipe de Serenity Spa est prête à vous accompagner dans votre voyage bien-être.",
+    "button": "Réserver en ligne"
+  }
+}

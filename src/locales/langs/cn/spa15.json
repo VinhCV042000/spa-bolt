@@ -1,0 +1,252 @@
+{
+  "hero": {
+    "eyebrow": "旅館 · RYOKAN N°15",
+    "title": "樱温泉",
+    "titleAccent": "心灵盛放",
+    "titleHighlight": "之地",
+    "description": "大叻高原上的日式旅店——四种矿物温泉、六种指压古法疗程，以及在桧木浴池旁赏雪的怀石料理之夜。",
+    "ctaPrimary": "预订旅店",
+    "ctaSecondary": "探索温泉",
+    "stats": ["4处温泉", "12位日本大师", "9道怀石料理"]
+  },
+  "philosophy": {
+    "eyebrow": "哲学 · 侘寂",
+    "title": "侘寂的",
+    "titleHighlight": "四大支柱",
+    "description": "樱温泉的每一个细节都围绕着日本千年哲学——美在于不完美、无常与谦逊。",
+    "items": ["静寂", "平衡", "和谐", "当下"]
+  },
+  "booking": {
+    "eyebrow": "预订 · 预约住宿",
+    "title": "走进",
+    "titleHighlight": "樱温泉",
+    "description": "留下您的信息，礼宾将在90分钟内联系您，安排您心仪的日期、榻榻米房间和疗程流程。",
+    "name": "姓名",
+    "phone": "电话号码",
+    "email": "邮箱",
+    "date": "到达日期",
+    "notes": "特殊要求",
+    "privacy": "您的信息已加密，绝不与第三方分享",
+    "submit": "发送请求"
+  },
+  "about": {
+    "pageTitle": "关于我们",
+    "eyebrow": "关于",
+    "title": "樱温泉旅馆的故事",
+    "subtitle": "以侘寂精神将正宗日式温泉体验带到越南。",
+    "storyEyebrow": "我们的故事",
+    "storyTitle": "品牌故事",
+    "visionEyebrow": "愿景",
+    "visionTitle": "愿景与使命",
+    "certEyebrow": "荣誉",
+    "certTitle": "认证与奖项"
+  },
+  "services": {
+    "pageTitle": "服务",
+    "eyebrow": "服务",
+    "title": "来自日出之国的疗程",
+    "subtitle": "每一个疗程都是一次旅程——结合传统指压与日本原料。",
+    "searchPlaceholder": "搜索服务...",
+    "categoryLabel": "分类",
+    "sortLabel": "排序",
+    "sortDefault": "默认",
+    "sortPriceAsc": "价格从低到高",
+    "sortPriceDesc": "价格从高到低",
+    "noResults": "未找到服务。",
+    "viewDetails": "查看详情"
+  },
+  "serviceDetails": {
+    "pageTitle": "服务详情",
+    "eyebrow": "服务",
+    "descEyebrow": "描述",
+    "descTitle": "您的体验",
+    "descText": "{name}疗程持续{duration}分钟，专为深层放松身心而设计。由在日本受训的治疗师执行。",
+    "benefitsTitle": "主要益处",
+    "fromLabel": "起价",
+    "bookNow": "立即预订"
+  },
+  "training": {
+    "pageTitle": "培训",
+    "eyebrow": "培训",
+    "title": "指压与温泉疗法学院",
+    "subtitle": "与来自日本的大师一起学习专业课程。",
+    "programsEyebrow": "课程",
+    "programsTitle": "从初学到进阶",
+    "registerCta": "咨询报名"
+  },
+  "blog": {
+    "pageTitle": "博客",
+    "eyebrow": "博客",
+    "title": "侘寂杂志",
+    "subtitle": "来自温泉、茶道和日本文化的故事。",
+    "allCategories": "全部",
+    "readMore": "阅读更多"
+  },
+  "blogDetails": {
+    "pageTitle": "文章详情"
+  },
+  "careers": {
+    "pageTitle": "招聘",
+    "eyebrow": "招聘",
+    "title": "加入樱团队",
+    "subtitle": "在侘寂环境中开创职业生涯。",
+    "openingEyebrow": "职位",
+    "openingTitle": "职业机会",
+    "applyCta": "立即申请"
+  },
+  "bookingPage": {
+    "pageTitle": "预订",
+    "eyebrow": "预订",
+    "title": "预订温泉与指压",
+    "subtitle": "选择套餐并立即预订。",
+    "selectEyebrow": "选择",
+    "selectTitle": "疗程套餐",
+    "popular": "热门",
+    "sessions": "次疗程",
+    "formTitle": "预订信息",
+    "nameLabel": "姓名",
+    "phoneLabel": "电话",
+    "noteLabel": "备注",
+    "submitCta": "确认预订"
+  },
+  "contact": {
+    "pageTitle": "联系",
+    "eyebrow": "联系",
+    "title": "联系樱温泉",
+    "subtitle": "礼宾服务每日10:00–22:00可用。",
+    "infoTitle": "联系方式",
+    "hotline": "热线",
+    "email": "邮箱",
+    "address": "地址",
+    "hours": "营业时间",
+    "formTitle": "发送消息",
+    "nameLabel": "姓名",
+    "phoneLabel": "电话",
+    "messageLabel": "消息",
+    "submitCta": "发送消息"
+  },
+  "offers": {
+    "pageTitle": "优惠",
+    "eyebrow": "优惠",
+    "title": "特别优惠",
+    "subtitle": "探索促销和折扣码。",
+    "expires": "有效期至",
+    "useCta": "立即使用"
+  },
+  "feedback": {
+    "pageTitle": "评价",
+    "eyebrow": "评价",
+    "title": "客人评价",
+    "subtitle": "来自客人的真实体验。"
+  },
+  "promotions": {
+    "pageTitle": "促销",
+    "eyebrow": "促销",
+    "title": "季节性促销",
+    "subtitle": "樱温泉的季节性优惠。",
+    "bookCta": "立即预订"
+  },
+  "branches": {
+    "pageTitle": "分店",
+    "eyebrow": "分店",
+    "title": "樱温泉网络",
+    "subtitle": "越南3家分店，日本京都1家旅店。"
+  },
+  "account": {
+    "pageTitle": "账户",
+    "eyebrow": "账户",
+    "title": "管理账户",
+    "subtitle": "登录查看历史记录和积分。",
+    "loginTitle": "登录",
+    "emailLabel": "邮箱",
+    "passwordLabel": "密码",
+    "loginCta": "登录",
+    "noAccount": "没有账户？",
+    "registerCta": "立即注册"
+  },
+  "partners": {
+    "pageTitle": "合作伙伴",
+    "eyebrow": "合作伙伴",
+    "title": "战略合作伙伴",
+    "subtitle": "与顶级日本品牌合作。"
+  },
+  "packages": {
+    "pageTitle": "套餐",
+    "eyebrow": "套餐",
+    "title": "温泉体验套餐",
+    "subtitle": "购买疗程组合更优惠。",
+    "popular": "热门",
+    "sessions": "{count}次疗程",
+    "selectCta": "选择套餐"
+  },
+  "beforeAfter": {
+    "pageTitle": "效果",
+    "eyebrow": "效果",
+    "title": "前后对比",
+    "subtitle": "客人的真实效果。",
+    "before": "之前",
+    "after": "之后"
+  },
+  "faq": {
+    "pageTitle": "常见问题",
+    "eyebrow": "常见问题",
+    "title": "常见问题解答",
+    "subtitle": "解答您的疑问。"
+  },
+  "policy": {
+    "pageTitle": "政策",
+    "eyebrow": "政策",
+    "title": "政策与条款",
+    "subtitle": "使用条款和条件。"
+  },
+  "gallery": {
+    "pageTitle": "相册",
+    "eyebrow": "相册",
+    "title": "樱温泉时光",
+    "subtitle": "温泉、旅店和禅园的照片。",
+    "all": "全部"
+  },
+  "onsen": {
+    "eyebrow": "温泉 · 四池温泉",
+    "title": "温热矿泉水",
+    "titleAccent": "全年 365 天涌流",
+    "description": "矿泉水取自朗比昂高原地下 1200 米深处——四种浴池，四种景观、四种温度和四种独特的沐浴仪式。"
+  },
+  "rituals": {
+    "eyebrow": "施術 · 仪式",
+    "title": "六项传统",
+    "titleAccent": "疗程",
+    "bookCta": "预约"
+  },
+  "suites": {
+    "eyebrow": "旅館 · 住宿",
+    "title": "三种榻榻米",
+    "titleAccent": "传统客房",
+    "roomLabel": "客房",
+    "bookCta": "预订客房"
+  },
+  "masters": {
+    "eyebrow": "職人 · 匠人",
+    "title": "双手",
+    "titleAccent": "传承",
+    "titleSuffix": "自日本"
+  },
+  "tea": {
+    "eyebrow": "懐石 · 料理与茶道",
+    "title": "九品怀石",
+    "titleAccent": "与茶之汤",
+    "description": "每晚，来自宇治的主厨小林结呈现应季怀石仪式——九道精致小菜搭配打起泡沫的抹茶，遵循传承 400 年的茶道礼仪。",
+    "courses": [
+      ["Sakizuke", "应季前菜——芝麻豆腐与若布海藻"],
+      ["Mukozuke", "河豚与中腹金枪鱼刺身"],
+      ["Yakimono", "濑户内海盐烤鲭鱼，以桦木炭火烤制"],
+      ["Mizumono", "樱花造型的和菓子甜点"]
+    ]
+  },
+  "testimonials": {
+    "eyebrow": "お客様の声 · 客声",
+    "title": "那些",
+    "titleAccent": "被讲述",
+    "titleSuffix": "的时刻"
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "hero": {
+    "badge": "Noir & Rose",
+    "tagline": "La clinique de beauté rencontre le spa",
+    "title1": "Peau de verre.",
+    "title2": "Technologie",
+    "title3": "de pointe.",
+    "description": "Là où la science de la beauté la plus avancée au monde rencontre l'art coréen du soin de la peau. Thérapie LED, RF haute fréquence, cryothérapie et induction de collagène dans un espace tout en noir luxueux.",
+    "bookConsult": "Consultation gratuite",
+    "viewTech": "Nos technologies",
+    "freeConsultBadge": "Consultation cutanée gratuite · 30 min",
+    "stat1": "Clients satisfaits",
+    "stat2": "Technologies exclusives",
+    "stat3": "Spécialistes certifiés"
+  },
+  "tech": {
+    "label": "Technologies de soin",
+    "title": "4 technologies de beauté",
+    "titleHighlight": "de pointe",
+    "description": "Nous investissons dans la technologie de beauté la plus avancée au monde pour offrir de vrais résultats — pas seulement des promesses.",
+    "learnMore": "En savoir plus"
+  },
+  "menu": {
+    "label": "Tarification des services",
+    "title": "Menu complet",
+    "titleHighlight": "des soins",
+    "description": "Chaque soin est personnalisé selon votre type de peau et vos objectifs personnels. Tarifs fixes — sans surprises.",
+    "duration": "durée",
+    "sessions": "séances",
+    "bookNow": "Réserver"
+  },
+  "results": {
+    "label": "Résultats réels",
+    "title": "Avant &",
+    "titleHighlight": "Après",
+    "description": "Des résultats réels de clients réels. Sans retouche, sans filtre — uniquement la technologie et la technique.",
+    "weeks": "semaines",
+    "sessions": "séances"
+  },
+  "booking": {
+    "label": "Réserver",
+    "title": "Commencez votre",
+    "titleHighlight": "voyage cutané",
+    "description": "Consultation cutanée gratuite de 30 minutes avec un spécialiste. Analyse de la peau, définition des objectifs et plan de soin personnalisé.",
+    "name": "Nom complet",
+    "phone": "Numéro de téléphone",
+    "email": "E-mail",
+    "concern": "Préoccupation cutanée",
+    "concernPlaceholder": "Acné, pigmentation, taches brunes, vieillissement, pores...",
+    "preferTime": "Horaire souhaité",
+    "submit": "Réserver une consultation gratuite",
+    "guarantee": "Résultats garantis ou remboursé à 100 %"
+  },
+  "pages": {
+    "about": {
+      "eyebrow": "À propos de Noir & Rose",
+      "title": "Faire entrer la nature dans chaque rituel",
+      "subtitle": "La vraie beauté naît de l'équilibre entre le corps, l'esprit et la nature."
+    },
+    "services": {
+      "eyebrow": "Services",
+      "title": "Une collection de soins inspirés par la nature",
+      "subtitle": "Chaque rituel est un voyage sensoriel — botanique vietnamienne et technologie européenne moderne."
+    },
+    "serviceDetails": {
+      "eyebrow": "Services",
+      "title": "",
+      "subtitle": ""
+    },
+    "training": {
+      "eyebrow": "Formation",
+      "title": "Noir & Rose Academy",
+      "subtitle": "Formations approfondies pour techniciens, spécialistes du soin et responsables de spa."
+    },
+    "blog": {
+      "eyebrow": "Blog",
+      "title": "Un guide pour prendre soin de soi",
+      "subtitle": "Conseils sur la peau, la nutrition, le yoga et l'art de vivre sainement."
+    },
+    "blogDetails": {
+      "eyebrow": "",
+      "title": "",
+      "subtitle": ""
+    },
+    "careers": {
+      "eyebrow": "Carrières",
+      "title": "Rejoignez l'équipe Noir & Rose",
+      "subtitle": "Nous cherchons des personnes qui aiment la nature et le soin des autres."
+    },
+    "careerDetails": {
+      "eyebrow": "Carrières",
+      "title": "",
+      "subtitle": ""
+    },
+    "bookingPage": {
+      "eyebrow": "Réservation",
+      "title": "Réservez en ligne en moins d'une minute",
+      "subtitle": "Choisissez soin, adresse et créneau — confirmation en moins de 15 minutes."
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "title": "Nous sommes toujours à l'écoute",
+      "subtitle": "Laissez-nous un message, notre équipe répond en 30 minutes (heures ouvrées)."
+    },
+    "offers": {
+      "eyebrow": "Offres",
+      "title": "Des offres pensées pour vous",
+      "subtitle": "Économisez plus et vivez des expériences plus complètes avec nos offres saisonnières."
+    },
+    "feedback": {
+      "eyebrow": "Avis clients",
+      "title": "Plus de 25 000 clientes conquises",
+      "subtitle": "Chaque avis nous pousse à nous améliorer."
+    },
+    "promotions": {
+      "eyebrow": "Promotions",
+      "title": "Événements & promotions saisonniers",
+      "subtitle": "Programmes à durée limitée et les meilleures offres de l'année."
+    },
+    "branches": {
+      "eyebrow": "Adresses",
+      "title": "4 adresses à travers le pays",
+      "subtitle": "Trouvez le Noir & Rose le plus proche — même standard partout."
+    },
+    "account": {
+      "eyebrow": "Compte",
+      "title": "Espace membre",
+      "subtitle": "Gérez vos rendez-vous, points de fidélité et programmes de soins."
+    },
+    "partners": {
+      "eyebrow": "Partenaires",
+      "title": "Partenaires de confiance",
+      "subtitle": "Nous collaborons avec les meilleures marques de cosmétique et d'équipement spa."
+    },
+    "treatments": {
+      "eyebrow": "Programmes de soins",
+      "title": "Programmes avancés",
+      "subtitle": "Des parcours personnalisés pour chaque problématique — résultats visibles garantis."
+    },
+    "beforeAfter": {
+      "eyebrow": "Avant & Après",
+      "title": "Résultats réels de vraies clientes",
+      "subtitle": "Photos partagées avec l'accord des clientes — sans aucune retouche."
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Questions fréquentes",
+      "subtitle": "Tout ce qu'il faut savoir avant de venir chez Noir & Rose."
+    },
+    "policy": {
+      "eyebrow": "Politiques",
+      "title": "Conditions & politiques",
+      "subtitle": "Transparence, équité et respect guident chacune de nos actions."
+    },
+    "gallery": {
+      "eyebrow": "Galerie",
+      "title": "Moments Noir & Rose",
+      "subtitle": "Espaces, produits et émotions capturés dans chaque image."
+    }
+  }
+}

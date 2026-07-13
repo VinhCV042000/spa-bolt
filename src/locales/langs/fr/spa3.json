@@ -1,0 +1,108 @@
+{
+  "hero": {
+    "brand": "Mediterranean Spa",
+    "titleLine1": "Ressentez la chaleur",
+    "titleLine2": "de la Méditerranée",
+    "subtitle": "Découvrez des soins de beauté inspirés de la Méditerranée, alliant ingrédients naturels et techniques ancestrales.",
+    "ctaPrimary": "Réserver",
+    "ctaSecondary": "Voir les services"
+  },
+  "about": {
+    "eyebrow": "Notre histoire",
+    "title": "L'art du soin méditerranéen",
+    "description": "Mediterranean Spa allie les plus belles traditions de la beauté méditerranéenne à la technologie moderne. Chaque soin est élaboré avec des ingrédients précieux issus de l'olive, de la lavande et des minéraux des profondeurs marines, offrant une expérience de détente holistique pour le corps et l'âme.",
+    "stat1": "Années d'activité",
+    "stat2": "Experts",
+    "stat3": "Clients servis"
+  },
+  "services": {
+    "eyebrow": "Nos services",
+    "title": "Soins méditerranéens",
+    "items": [
+      {
+        "title": "Massage aux pierres chaudes",
+        "desc": "Massage thérapeutique aux pierres de basalte chauffées pour une relaxation musculaire profonde et une meilleure circulation."
+      },
+      {
+        "title": "Masque visage à l'olive",
+        "desc": "Soin du visage premium à l'extrait d'olive grecque pure pour une hydratation intense et un effet anti-âge."
+      },
+      {
+        "title": "Bain au sel marin",
+        "desc": "Plongez dans les minéraux de la mer Méditerranée pour purifier et revitaliser votre peau."
+      },
+      {
+        "title": "Thérapie à la lavande",
+        "desc": "Aromathérapie aux huiles essentielles de lavande de Provence pour réduire le stress et améliorer le sommeil naturel."
+      }
+    ],
+    "viewAll": "Découvrir tous les services"
+  },
+  "packages": {
+    "eyebrow": "Tarifs",
+    "title": "Forfaits de soins",
+    "items": [
+      {
+        "name": "Forfait Olive",
+        "features": [
+          "Massage aux pierres chaudes de 60 min",
+          "Thé aux herbes méditerranéennes",
+          "Hammam aux herbes"
+        ]
+      },
+      {
+        "name": "Forfait Santorin",
+        "features": [
+          "Massage corporel complet de 90 min",
+          "Masque visage olive & miel",
+          "Bain au sel marin",
+          "Bar à rafraîchissements"
+        ]
+      },
+      {
+        "name": "Forfait Amalfi",
+        "features": [
+          "Soin corporel complet de 120 min",
+          "Soin du visage au collagène des profondeurs marines",
+          "Réflexologie plantaire",
+          "Salle VIP privée",
+          "Boisson de bienvenue & collation"
+        ]
+      }
+    ],
+    "cta": "Réserver"
+  },
+  "testimonials": {
+    "eyebrow": "Témoignages",
+    "title": "Ce que disent nos clients",
+    "items": [
+      {
+        "name": "Thanh Thao",
+        "role": "Cliente VIP",
+        "comment": "Un espace magnifique qui capture vraiment l'esprit méditerranéen. Très relaxant et professionnel."
+      },
+      {
+        "name": "Quoc Hung",
+        "role": "Membre Or",
+        "comment": "Le forfait Santorin est la meilleure expérience spa que j'aie vécue au Vietnam."
+      },
+      {
+        "name": "Mai Linh",
+        "role": "Cliente fidèle",
+        "comment": "Ma peau s'est nettement améliorée après le soin à l'olive. Je le recommanderai à mes amis."
+      }
+    ]
+  },
+  "gallery": {
+    "eyebrow": "Notre espace",
+    "title": "Découvrez Mediterranean Spa"
+  },
+  "contact": {
+    "title": "Vivez l'expérience dès aujourd'hui",
+    "subtitle": "Laissez-nous vous offrir un authentique voyage de détente méditerranéen, ici même à Saigon.",
+    "ctaBook": "Prendre rendez-vous",
+    "ctaCall": "Consultation gratuite",
+    "address": "123 Le Loi, District 1, HCMC",
+    "hours": "9h00 - 21h00, Lun - Dim"
+  }
+}

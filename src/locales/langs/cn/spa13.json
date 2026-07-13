@@ -1,0 +1,212 @@
+{
+  "hero": {
+    "badge": "Amazônia Selvagem",
+    "tagline": "巴西亚马逊疗愈",
+    "title1": "亚马逊的",
+    "title2": "力量",
+    "title3": "——原始自然",
+    "description": "亚马逊草本：安第罗巴油、图库玛果脂、阿萨伊去角质与argila黏土裹敷。巴西原住民的疗愈秘方，与现代科学相融合。",
+    "startJourney": "开启旅程",
+    "viewBotanicals": "查看草本",
+    "rainforestNote": "100%可持续亚马逊原料",
+    "certNote": "巴西IBAMA认证"
+  },
+  "botanicals": {
+    "label": "亚马逊珍宝",
+    "title": "4种传奇",
+    "titleHighlight": "草本",
+    "description": "卡雅波人、雅诺马米人和提库纳人使用这些原料已有数千年。我们将森林的秘密带给您。",
+    "learnMore": "了解更多"
+  },
+  "treatments": {
+    "label": "亚马逊护理",
+    "title": "源自",
+    "titleHighlight": "大森林的疗愈",
+    "description": "从阿萨伊去角质到亚马逊白黏土——每一项护理都是与自然原始力量的相遇。",
+    "duration": "分钟",
+    "book": "预订护理"
+  },
+  "booking": {
+    "label": "预约",
+    "title": "深入",
+    "titleHighlight": "森林深处",
+    "name": "姓名",
+    "email": "电子邮箱",
+    "phone": "电话",
+    "date": "日期",
+    "treatment": "选择护理",
+    "notes": "备注",
+    "confirm": "立即预订",
+    "ecoNote": "每次预订 = 在亚马逊种下1棵树"
+  },
+  "about": {
+    "heroTitle": "我们的故事",
+    "heroDesc": "从亚马逊到您的Spa",
+    "storyTitle": "来自亚马逊的旅程",
+    "storyDesc": "Spa 13由雨林爱好者创立，将巴西原住民的智慧与现代科学相结合。",
+    "values1Title": "可持续",
+    "values1Desc": "100%原料来自可持续来源",
+    "values2Title": "真实",
+    "values2Desc": "来自原住民的秘方",
+    "values3Title": "科学",
+    "values3Desc": "结合现代研究",
+    "missionTitle": "使命",
+    "missionDesc": "将亚马逊的疗愈力量带给每个人，同时保护大森林。",
+    "stats1": "年经验",
+    "stats2": "满意客户",
+    "stats3": "绿色奖项",
+    "stats4": "种植树木",
+    "teamTitle": "专家团队",
+    "teamDesc": "受过亚马逊草本培训的治疗师"
+  },
+  "services": {
+    "heroTitle": "亚马逊护理",
+    "heroDesc": "探索雨林草本的力量",
+    "filterAll": "全部",
+    "filterSignature": "特色",
+    "filterBody": "身体",
+    "filterFace": "面部",
+    "filterRetreat": "套餐"
+  },
+  "serviceDetails": {
+    "backBtn": "返回护理",
+    "duration": "分钟",
+    "benefits": "功效",
+    "includes": "包含",
+    "bookNow": "立即预订"
+  },
+  "training": {
+    "heroTitle": "草本培训",
+    "heroDesc": "成为亚马逊疗法专家",
+    "programsTitle": "课程",
+    "enroll": "报名"
+  },
+  "blog": {
+    "heroTitle": "森林杂志",
+    "heroDesc": "来自亚马逊的故事",
+    "readMore": "阅读更多",
+    "categoriesAll": "全部",
+    "categoriesTips": "技巧",
+    "categoriesStories": "故事",
+    "categoriesNews": "新闻"
+  },
+  "blogDetails": {
+    "backBtn": "返回",
+    "author": "作者",
+    "related": "相关文章"
+  },
+  "careers": {
+    "heroTitle": "加入森林团队",
+    "heroDesc": "与我们的绿色使命共同建立事业",
+    "openPositions": "招聘职位",
+    "apply": "申请"
+  },
+  "bookingPage": {
+    "heroTitle": "预约",
+    "heroDesc": "开启您的疗愈之旅",
+    "formName": "姓名",
+    "formEmail": "电子邮箱",
+    "formPhone": "电话",
+    "formDate": "日期",
+    "formTime": "时间",
+    "formTreatment": "选择护理",
+    "formNotes": "备注",
+    "summaryTitle": "预约摘要",
+    "confirm": "确认预约",
+    "ecoNote": "每次预约 = 种植1棵树"
+  },
+  "contact": {
+    "heroTitle": "联系我们",
+    "heroDesc": "与我们取得联系",
+    "infoAddress": "地址",
+    "infoPhone": "电话",
+    "infoEmail": "电子邮箱",
+    "infoHours": "营业时间",
+    "formName": "姓名",
+    "formEmail": "电子邮箱",
+    "formSubject": "主题",
+    "formMessage": "留言",
+    "formSubmit": "发送",
+    "mapTitle": "位置"
+  },
+  "offers": {
+    "heroTitle": "特别优惠",
+    "heroDesc": "以优惠价格探索森林",
+    "validUntil": "有效期至",
+    "claim": "领取优惠"
+  },
+  "feedback": {
+    "heroTitle": "评价",
+    "heroDesc": "分享您的体验",
+    "submit": "提交评价",
+    "ratingsExcellent": "极佳",
+    "ratingsGood": "良好",
+    "ratingsAverage": "一般",
+    "ratingsPoor": "较差"
+  },
+  "promotions": {
+    "heroTitle": "促销活动",
+    "heroDesc": "来自亚马逊的优惠",
+    "validFrom": "从",
+    "validTo": "至",
+    "terms": "条款"
+  },
+  "branches": {
+    "heroTitle": "分店",
+    "heroDesc": "在您附近找到Spa 13",
+    "visit": "参观",
+    "hours": "营业时间"
+  },
+  "account": {
+    "heroTitle": "我的账户",
+    "heroDesc": "管理您的个人资料",
+    "profileTitle": "资料",
+    "profileName": "姓名",
+    "profileEmail": "电子邮箱",
+    "profilePhone": "电话",
+    "historyTitle": "预约记录",
+    "historyDate": "日期",
+    "historyTreatment": "护理",
+    "historyStatus": "状态"
+  },
+  "partners": {
+    "heroTitle": "合作伙伴",
+    "heroDesc": "携手保护森林",
+    "become": "成为合作伙伴",
+    "benefitsTitle": "权益"
+  },
+  "packages": {
+    "heroTitle": "护理套餐",
+    "heroDesc": "完整亚马逊体验",
+    "perSession": "/次",
+    "buyNow": "立即购买"
+  },
+  "beforeAfter": {
+    "heroTitle": "真实效果",
+    "heroDesc": "见证蜕变",
+    "treatment": "护理",
+    "resultsAfter": "之后",
+    "resultsBefore": "之前"
+  },
+  "faq": {
+    "heroTitle": "常见问题",
+    "heroDesc": "解答您的疑问",
+    "stillQuestion": "还有问题？联系我们"
+  },
+  "policy": {
+    "heroTitle": "政策",
+    "heroDesc": "条款与条件",
+    "sectionsPrivacy": "隐私",
+    "sectionsTerms": "条款",
+    "sectionsRefund": "退款"
+  },
+  "gallery": {
+    "heroTitle": "画廊",
+    "heroDesc": "Spa 13的精彩时刻",
+    "viewMore": "查看更多",
+    "categoriesAll": "全部",
+    "categoriesSpa": "Spa",
+    "categoriesTreatments": "护理",
+    "categoriesNature": "自然"
+  }
+}

@@ -1,0 +1,164 @@
+{
+  "hero": {
+    "badge": "Aurora Nordic Spa",
+    "tagline": "Scandinavian Forest Wellness",
+    "title1": "Silence",
+    "title2": "of Nordic forests",
+    "title3": "— soul reborn",
+    "description": "Ancient Nordic rituals — birch sauna, cold plunge, 'Friluftsliv' forest bathing and Swedish steam therapy. Where the frozen cold and sauna warmth heal together.",
+    "bookRitual": "Book ritual",
+    "viewRituals": "Explore Nordic rituals",
+    "tempWarm": "Sauna 80°C",
+    "tempCold": "Cold Plunge 4°C"
+  },
+  "rituals": {
+    "label": "Nordic Rituals",
+    "title": "Three healing",
+    "titleHighlight": "Nordic rituals",
+    "description": "'Lagom' — just right, not too much, not too little. The Nordic philosophy of balance, reflected in three complete hot-cold-forest rituals.",
+    "duration": "minutes",
+    "bookRitual": "Book now"
+  },
+  "services": {
+    "label": "Service menu",
+    "title": "Authentic",
+    "titleHighlight": "Nordic care",
+    "description": "Ingredients from Scandinavian forests: birch, pine, cedar, oak bark and Baltic sea salt.",
+    "book": "Book service",
+    "title_page": "Our Services",
+    "subtitle": "Experience authentic Nordic wellness rituals"
+  },
+  "booking": {
+    "label": "Reservation",
+    "title": "Welcome",
+    "titleHighlight": "to Nordic forest",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "date": "Date",
+    "ritual": "Select ritual",
+    "guests": "Guests",
+    "notes": "Notes",
+    "confirm": "Confirm reservation",
+    "policy": "Free cancellation before 24h",
+    "title_page": "Book Online",
+    "subtitle": "Reserve your Nordic wellness experience",
+    "formTitle": "Booking Form",
+    "service": "Select service",
+    "submit": "Submit Booking"
+  },
+  "about": {
+    "title": "About Us",
+    "subtitle": "Discover the Nordic Spa story",
+    "storyLabel": "Our Story",
+    "storyTitle": "Where Nordic Traditions Meet Modern Wellness",
+    "storyDesc1": "Founded in 2020, Nordic Spa brings authentic Scandinavian wellness traditions to Vietnam. Our signature rituals combine the healing power of heat, cold, and nature — inspired by Finnish sauna culture, Norwegian 'Friluftsliv', and Swedish massage techniques.",
+    "storyDesc2": "Every detail is carefully crafted to transport you to the serene forests of Scandinavia, from our birch-wood sauna rooms to our natural cold plunge pools.",
+    "valuesTitle": "Our Nordic Values",
+    "value1Title": "Eldur — Fire",
+    "value1Desc": "Traditional Finnish sauna heated to 80°C for deep detoxification and relaxation.",
+    "value2Title": "Is — Ice",
+    "value2Desc": "Cold plunge therapy at 4°C for immune boost and circulation.",
+    "value3Title": "Skog — Forest",
+    "value3Desc": "Forest bathing and nature connection for mental clarity."
+  },
+  "serviceDetails": {
+    "description": "Description",
+    "benefits": "Benefits",
+    "bookNow": "Book Now",
+    "back": "Back to Services"
+  },
+  "training": {
+    "title": "Training Programs",
+    "subtitle": "Become a certified Nordic wellness specialist"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Nordic wellness insights and stories"
+  },
+  "careers": {
+    "title": "Careers",
+    "subtitle": "Join the Nordic Spa team",
+    "apply": "Apply Now"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Get in touch with Nordic Spa",
+    "phone": "Phone",
+    "email": "Email",
+    "hours": "Opening Hours",
+    "sendMessage": "Send a Message",
+    "name": "Name",
+    "subject": "Subject",
+    "message": "Message",
+    "send": "Send Message"
+  },
+  "offers": {
+    "title": "Special Offers",
+    "subtitle": "Exclusive deals for our guests"
+  },
+  "feedback": {
+    "title": "Guest Reviews",
+    "subtitle": "What our guests say about us"
+  },
+  "promotions": {
+    "title": "Promotions",
+    "subtitle": "Current promotions and discounts",
+    "valid": "Valid until"
+  },
+  "branches": {
+    "title": "Our Locations",
+    "subtitle": "Find a Nordic Spa near you"
+  },
+  "account": {
+    "title": "My Account",
+    "subtitle": "Manage your Nordic Spa account",
+    "login": "Login",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full Name",
+    "confirmPassword": "Confirm Password",
+    "loginBtn": "Sign In",
+    "registerBtn": "Create Account"
+  },
+  "partners": {
+    "title": "Our Partners",
+    "subtitle": "Trusted Nordic wellness partners"
+  },
+  "packages": {
+    "title": "Wellness Packages",
+    "subtitle": "Complete Nordic experience packages",
+    "treatments": "Treatments",
+    "validity": "Validity",
+    "includes": "Includes",
+    "bookNow": "Book Package"
+  },
+  "beforeAfter": {
+    "title": "Results",
+    "subtitle": "Before & After transformations"
+  },
+  "faq": {
+    "title": "FAQ",
+    "subtitle": "Frequently asked questions"
+  },
+  "policy": {
+    "title": "Policies",
+    "subtitle": "Terms, privacy and refund policies",
+    "termsTitle": "Terms of Service",
+    "termsContent": "By using Nordic Spa services, you agree to our terms of service. All services are subject to availability and may require advance booking.",
+    "privacyTitle": "Privacy Policy",
+    "privacyContent": "We protect your personal information and never share it with third parties without consent. Your data is stored securely following international standards.",
+    "refundTitle": "Refund Policy",
+    "refundContent": "Cancellations made 24 hours before appointment receive full refund. Late cancellations may incur a 50% fee. No-shows are charged full amount."
+  },
+  "gallery": {
+    "title": "Gallery",
+    "subtitle": "Explore Nordic Spa through images",
+    "all": "All",
+    "facilities": "Facilities",
+    "exterior": "Exterior",
+    "treatments": "Treatments",
+    "team": "Team"
+  }
+}

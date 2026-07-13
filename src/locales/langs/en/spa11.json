@@ -1,0 +1,140 @@
+{
+  "hero": {
+    "badge": "Hammam Marrakech",
+    "tagline": "Authentic Moroccan Hammam",
+    "title1": "The ritual",
+    "title2": "of Moroccan Hammam",
+    "title3": "5000 years of healing",
+    "description": "Traditional Moroccan hammam — Beldi black soap, kessa exfoliation, rhassoul clay wraps and argan oil nourishment. A body-mind-spirit cleansing ritual preserved across thousands of years.",
+    "bookHammam": "Book Hammam",
+    "viewMenu": "View menu",
+    "openHours": "Open 9:00 — 22:00",
+    "genderNote": "Private spaces for Men / Women"
+  },
+  "steps": {
+    "label": "4-step process",
+    "title": "The classic",
+    "titleHighlight": "Hammam ritual",
+    "description": "Hammam is not merely bathing — it is a social and spiritual ritual of the Arab world, preserved by communities across many centuries."
+  },
+  "products": {
+    "label": "Moroccan ingredients",
+    "title": "Treasures of",
+    "titleHighlight": "North African nature",
+    "description": "Every product is imported directly from Moroccan artisans — argan from Agadir, rhassoul from the Atlas, Beldi soap from Fes.",
+    "shopNow": "Shop now"
+  },
+  "booking": {
+    "label": "Book Hammam",
+    "title": "Step into",
+    "titleHighlight": "the world of Morocco",
+    "name": "Name",
+    "phone": "Phone",
+    "date": "Date",
+    "time": "Time",
+    "package": "Select package",
+    "gender": "Space",
+    "genderOptions": ["Women", "Men", "Couples (private)"],
+    "notes": "Notes",
+    "confirm": "Confirm Hammam",
+    "policy": "Please arrive 10 minutes early · No jewellery"
+  },
+  "pages": {
+    "about": {
+      "eyebrow": "About Hammam Marrakech",
+      "title": "A journey bringing Moroccan tradition into every ritual",
+      "subtitle": "True beauty comes from balance of body, mind and nature — preserved for thousands of years."
+    },
+    "services": {
+      "eyebrow": "Services",
+      "title": "A collection of Moroccan hammam therapies",
+      "subtitle": "Every ritual is a sensory journey — pairing authentic Moroccan ingredients with modern spa craft."
+    },
+    "serviceDetails": {
+      "eyebrow": "Service"
+    },
+    "training": {
+      "eyebrow": "Training",
+      "title": "Hammam Marrakech Academy",
+      "subtitle": "Intensive courses for technicians, skincare specialists and spa managers."
+    },
+    "blog": {
+      "eyebrow": "Blog",
+      "title": "A self-care handbook",
+      "subtitle": "Insights on skincare, nutrition, yoga and a mindful lifestyle."
+    },
+    "careers": {
+      "eyebrow": "Careers",
+      "title": "Grow the Moroccan hammam journey with us",
+      "subtitle": "Hammam Marrakech is always looking for people who love tradition and caring for others."
+    },
+    "careerDetails": {
+      "eyebrow": "Careers"
+    },
+    "bookingPage": {
+      "eyebrow": "Booking",
+      "title": "Book online in under a minute",
+      "subtitle": "Choose your service, branch and time — we will confirm within 15 minutes."
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "title": "We are always here to listen",
+      "subtitle": "Leave us a message, our team replies within 30 minutes on business hours."
+    },
+    "offers": {
+      "eyebrow": "Offers",
+      "title": "Curated packages just for you",
+      "subtitle": "Save more, enjoy more with our seasonal packages."
+    },
+    "feedback": {
+      "eyebrow": "Testimonials",
+      "title": "Trusted by 25,000+ guests",
+      "subtitle": "Every review inspires us to keep improving."
+    },
+    "promotions": {
+      "eyebrow": "Promotions",
+      "title": "Seasonal events & offers",
+      "subtitle": "Discover our limited-time programs and unbeatable deals of the year."
+    },
+    "branches": {
+      "eyebrow": "Locations",
+      "title": "4 branches nationwide",
+      "subtitle": "Find the nearest Hammam Marrakech — the same standard, wherever you are."
+    },
+    "account": {
+      "eyebrow": "Account",
+      "title": "Members area",
+      "subtitle": "Manage your appointments, rewards and treatments."
+    },
+    "partners": {
+      "eyebrow": "Partners",
+      "title": "Our trusted allies",
+      "subtitle": "We collaborate with the world’s leading spa cosmetic and equipment brands."
+    },
+    "treatments": {
+      "eyebrow": "Treatment packages",
+      "title": "Intensive treatment protocols",
+      "subtitle": "Personalised programs for every concern — with visible, lasting results."
+    },
+    "beforeAfter": {
+      "eyebrow": "Before & After",
+      "title": "Real results from real guests",
+      "subtitle": "Photos shared with guest consent — no retouching."
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Frequently asked questions",
+      "subtitle": "Everything you need to know before visiting Hammam Marrakech."
+    },
+    "policy": {
+      "eyebrow": "Policy",
+      "title": "Terms & policies",
+      "subtitle": "Transparency, fairness and respect for our guests — always."
+    },
+    "gallery": {
+      "eyebrow": "Gallery",
+      "title": "Moments at Hammam Marrakech",
+      "subtitle": "The spaces, the products and the feelings — captured in frames."
+    }
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "hero": {
+    "brand": "Nature Spa & Wellness",
+    "titleLine1": "Tìm lại sự cân bằng",
+    "titleLine2": "giữa thiên nhiên",
+    "subtitle": "Trải nghiệm liệu pháp spa kết hợp tinh hoa thiên nhiên, giúp cơ thể và tâm trí đạt trạng thái thư giãn hoàn hảo.",
+    "ctaPrimary": "Đặt lịch ngay",
+    "ctaSecondary": "Khám phá dịch vụ",
+    "stat1": "Năm kinh nghiệm",
+    "stat2": "Khách hàng",
+    "stat3": "Hài lòng",
+    "floatingTitle": "Đánh giá 4.9/5",
+    "floatingSub": "Từ 25.000+ khách hàng"
+  },
+  "about": {
+    "eyebrow": "Về chúng tôi",
+    "title": "Hành trình chăm sóc sức khỏe toàn diện",
+    "description": "Nature Spa ra đời với sứ mệnh mang thiên nhiên vào từng liệu trình chăm sóc. Chúng tôi sử dụng 100% nguyên liệu hữu cơ, kết hợp kỹ thuật massage truyền thống và công nghệ hiện đại để mang đến trải nghiệm thư giãn trọn vẹn.",
+    "features": [
+      { "title": "Nguyên liệu hữu cơ", "desc": "100% thảo dược và tinh dầu tự nhiên" },
+      { "title": "Chuyên gia giàu kinh nghiệm", "desc": "Đội ngũ được đào tạo quốc tế" },
+      { "title": "Công nghệ tiên tiến", "desc": "Thiết bị hiện đại từ châu Âu" }
+    ]
+  },
+  "services": {
+    "eyebrow": "Dịch vụ",
+    "title": "Liệu pháp thiên nhiên",
+    "subtitle": "Mỗi dịch vụ được thiết kế riêng, kết hợp giữa phương pháp truyền thống và công nghệ hiện đại.",
+    "items": [
+      {
+        "title": "Massage thảo dược",
+        "desc": "Liệu pháp massage kết hợp tinh dầu thảo dược quý, giúp giải tỏa căng thẳng sâu."
+      },
+      {
+        "title": "Chăm sóc da mặt",
+        "desc": "Phục hồi và tái tạo làn da với nguyên liệu organic từ thiên nhiên."
+      },
+      {
+        "title": "Trị liệu toàn thân",
+        "desc": "Liệu trình body wrap và scrub giúp da mềm mại, săn chắc tự nhiên."
+      },
+      {
+        "title": "Liệu pháp tinh dầu",
+        "desc": "Aromatherapy cao cấp với tinh dầu nhập khẩu từ Pháp và Nhật Bản."
+      },
+      {
+        "title": "Spa đôi",
+        "desc": "Trải nghiệm thư giãn dành cho cặp đôi trong không gian riêng tư lãng mạn."
+      },
+      {
+        "title": "Detox & Thanh lọc",
+        "desc": "Chương trình thanh lọc cơ thể, tăng cường sức đề kháng tự nhiên."
+      }
+    ],
+    "viewAll": "Xem tất cả dịch vụ"
+  },
+  "packages": {
+    "eyebrow": "Gói dịch vụ",
+    "title": "Chọn gói phù hợp",
+    "subtitle": "Tiết kiệm hơn khi đăng ký gói dịch vụ, tận hưởng ưu đãi đặc biệt dành riêng cho bạn.",
+    "popular": "Phổ biến",
+    "items": [
+      {
+        "name": "Gói Relaxing",
+        "features": ["Massage thảo dược 60 phút", "Trà thảo mộc miễn phí", "Khăn nóng & xông hơi"]
+      },
+      {
+        "name": "Gói Premium",
+        "features": [
+          "Massage toàn thân 90 phút",
+          "Chăm sóc da mặt organic",
+          "Xông hơi đá muối",
+          "Trà & bánh ngọt"
+        ]
+      },
+      {
+        "name": "Gói VIP",
+        "features": [
+          "Full-body treatment 120 phút",
+          "Facial nâng cơ Collagen",
+          "Foot spa",
+          "Phòng riêng VIP",
+          "Đồ uống detox"
+        ]
+      }
+    ],
+    "cta": "Đặt lịch"
+  },
+  "testimonials": {
+    "eyebrow": "Đánh giá",
+    "title": "Khách hàng nói gì?",
+    "items": [
+      {
+        "name": "Minh Anh",
+        "role": "Khách hàng VIP",
+        "comment": "Không gian thư giãn tuyệt vời, nhân viên rất chuyên nghiệp và tận tâm."
+      },
+      {
+        "name": "Thu Hà",
+        "role": "Thành viên Premium",
+        "comment": "Da mặt mình cải thiện rõ rệt sau 3 lần trị liệu. Rất hài lòng!"
+      },
+      {
+        "name": "Hoàng Nam",
+        "role": "Khách hàng mới",
+        "comment": "Lần đầu đến spa nhưng cảm giác rất thoải mái, sẽ quay lại nhiều lần nữa."
+      },
+      {
+        "name": "Bích Ngọc",
+        "role": "Khách hàng thân thiết",
+        "comment": "Gói VIP thực sự xứng đáng, được chăm sóc tận tình từ A đến Z."
+      }
+    ]
+  },
+  "gallery": {
+    "eyebrow": "Không gian",
+    "title": "Hình ảnh Nature Spa"
+  },
+  "contact": {
+    "title": "Sẵn sàng thư giãn?",
+    "subtitle": "Đặt lịch ngay hôm nay để trải nghiệm dịch vụ spa tốt nhất tại Nature Spa. Chúng tôi luôn sẵn sàng phục vụ bạn.",
+    "ctaBook": "Đặt lịch hẹn",
+    "ctaCall": "Gọi tư vấn",
+    "address": "45 Nguyễn Huệ, Quận 1, TP.HCM"
+  }
+}

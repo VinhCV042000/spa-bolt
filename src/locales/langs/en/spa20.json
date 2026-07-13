@@ -1,0 +1,24 @@
+{
+  "hero": {
+    "eyebrow": "BEAUTY SPA · GLOW",
+    "title": "Elevate",
+    "titleAccent": "your beauty",
+    "description": "Premium aesthetic treatments — laser, HIFU, filler, and PRP — blending modern technology with artistry to enhance your natural beauty.",
+    "ctaPrimary": "Book a consultation",
+    "ctaSecondary": "View treatments",
+    "stats": ["medical-grade devices", "certified specialists", "customized plans"]
+  },
+  "booking": {
+    "eyebrow": "BOOK A CONSULTATION",
+    "title": "Reserve your",
+    "titleHighlight": "beauty experience",
+    "description": "Share your goals and our specialists will create a tailored treatment plan for you.",
+    "name": "Full name",
+    "phone": "Phone number",
+    "email": "Email",
+    "service": "Service",
+    "date": "Preferred date",
+    "notes": "Your concerns",
+    "submit": "Book consultation"
+  }
+}

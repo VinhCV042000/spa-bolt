@@ -1,0 +1,186 @@
+{
+  "hero": {
+    "badge": "Pearl Luminary",
+    "tagline": "超奢华美容圣殿",
+    "title1": "在这里，奢华",
+    "title2": "永无止境",
+    "title3": "——纯粹之美",
+    "description": "Pearl Luminary——为最挑剔的灵魂打造的美容圣殿。日本珍珠粉、24K黄金面部护理、钻石微晶磨皮与干细胞疗法。",
+    "bookPrivate": "预订私人套房",
+    "viewMembership": "查看会员资格",
+    "byAppointment": "仅限预约",
+    "limitedSlots": "每日最多接待8位贵宾"
+  },
+  "signature": {
+    "label": "招牌护理",
+    "title": "四大",
+    "titleHighlight": "极致奢华",
+    "description": "四款独家旗舰护理——越南其他任何地方都无法提供同等的配方与成分。",
+    "bookNow": "立即预订",
+    "perSession": "/次"
+  },
+  "membership": {
+    "label": "会员资格",
+    "title": "Pearl",
+    "titleHighlight": "会员俱乐部",
+    "description": "三个会员等级——每一个都是为值得之人打造的专属特权世界。",
+    "perYear": "/年",
+    "joinNow": "加入"
+  },
+  "booking": {
+    "label": "私人咨询",
+    "title": "申请一次",
+    "titleHighlight": "私人咨询",
+    "description": "每位Pearl Luminary贵宾在任何护理之前，都将获得45分钟的个性化咨询。",
+    "name": "全名",
+    "email": "电子邮箱",
+    "phone": "电话",
+    "interest": "感兴趣的项目",
+    "preferDate": "首选日期",
+    "confirm": "申请咨询",
+    "confidential": "信息完全保密"
+  },
+  "tech": {
+    "label": "科技",
+    "title": "定义美丽未来的",
+    "titleHighlight": "尖端设备",
+    "description": "仅使用FDA和CE认证设备。首尔、东京和纽约顶尖医学美容诊所都在使用同样的设备。",
+    "learnMore": "了解更多"
+  },
+  "about": {
+    "heroTitle": "关于我们",
+    "heroSubtitle": "Pearl Mansion——源于对纯粹美丽和护肤艺术热情而创立的奢华美容圣殿。",
+    "badge": "关于Pearl Mansion",
+    "philosophy": "Pearl理念",
+    "story": "Pearl Mansion诞生于打造亚洲顶级超奢华美容空间的愿景。采用日本御木本珍珠粉、24K金箔、钻石和瑞士干细胞，每一次护理都是一场蜕变之旅。",
+    "vision": "我们的使命是为最挑剔的贵宾提供超奢华水疗体验。每个细节都旨在创造绝对的放松空间。"
+  },
+  "services": {
+    "heroTitle": "高端服务",
+    "heroSubtitle": "采用稀有成分和最先进技术的独家旗舰护理。",
+    "badge": "服务"
+  },
+  "serviceDetails": {
+    "title": "护理详情",
+    "description": "所选护理的详细信息。"
+  },
+  "training": {
+    "heroTitle": "专家培训",
+    "heroSubtitle": "为技术人员提供国际认证的高级培训课程。",
+    "badge": "培训",
+    "enroll": "报名"
+  },
+  "blog": {
+    "heroTitle": "博客与资讯",
+    "heroSubtitle": "来自Pearl Mansion的美容知识和水疗趋势更新。",
+    "badge": "博客"
+  },
+  "blogDetails": {
+    "title": "文章详情",
+    "content": "文章完整内容。"
+  },
+  "careers": {
+    "heroTitle": "招聘",
+    "heroSubtitle": "加入Pearl Mansion高端美容专家团队。",
+    "badge": "招聘",
+    "apply": "应聘"
+  },
+  "bookingPage": {
+    "heroTitle": "在线预约",
+    "heroSubtitle": "立即预约Pearl Mansion专家。",
+    "badge": "预约",
+    "formTitle": "预约表单",
+    "name": "全名",
+    "phone": "电话号码",
+    "email": "电子邮箱",
+    "service": "服务",
+    "notes": "备注",
+    "submit": "提交请求"
+  },
+  "contact": {
+    "heroTitle": "联系我们",
+    "heroSubtitle": "联系Pearl Mansion获取咨询和支持。",
+    "badge": "联系",
+    "info": "联系信息",
+    "sendMessage": "发送消息",
+    "name": "姓名",
+    "email": "电子邮箱",
+    "subject": "主题",
+    "message": "消息",
+    "send": "发送"
+  },
+  "offers": {
+    "heroTitle": "特别优惠",
+    "heroSubtitle": "为贵宾提供的独家优惠和促销。",
+    "badge": "优惠"
+  },
+  "feedback": {
+    "heroTitle": "贵宾评价",
+    "heroSubtitle": "体验过我们服务的VIP贵宾反馈。",
+    "badge": "评价"
+  },
+  "promotions": {
+    "heroTitle": "促销活动",
+    "heroSubtitle": "最新促销和特别优惠。",
+    "badge": "促销",
+    "validUntil": "有效期至"
+  },
+  "branches": {
+    "heroTitle": "分店网络",
+    "heroSubtitle": "Pearl Mansion在最尊贵的地段设有分店。",
+    "badge": "分店",
+    "flagship": "旗舰店"
+  },
+  "account": {
+    "heroTitle": "会员账户",
+    "heroSubtitle": "登录或注册以管理您的会员账户。",
+    "badge": "账户",
+    "loginTitle": "登录",
+    "email": "电子邮箱",
+    "password": "密码",
+    "login": "登录",
+    "forgot": "忘记密码？",
+    "or": "或",
+    "register": "注册新账户"
+  },
+  "partners": {
+    "heroTitle": "合作伙伴",
+    "heroSubtitle": "Pearl Mansion的高端品牌合作伙伴。",
+    "badge": "合作伙伴"
+  },
+  "packages": {
+    "heroTitle": "护理套餐",
+    "heroSubtitle": "附带特别优惠的完整护理套餐。",
+    "badge": "套餐",
+    "sessions": "次",
+    "book": "预订套餐"
+  },
+  "beforeAfter": {
+    "heroTitle": "前后对比效果",
+    "heroSubtitle": "Pearl Mansion护理的真实成果。",
+    "badge": "效果",
+    "before": "之前",
+    "after": "之后"
+  },
+  "faq": {
+    "heroTitle": "常见问题",
+    "heroSubtitle": "关于服务和政策的常见问题解答。",
+    "badge": "FAQ"
+  },
+  "policy": {
+    "heroTitle": "政策",
+    "heroSubtitle": "Pearl Mansion的条款和政策。",
+    "badge": "政策",
+    "terms": "使用条款",
+    "termsContent": "使用Pearl Mansion服务即表示您同意遵守本文档中规定的条款和条件...",
+    "privacy": "隐私政策",
+    "privacyContent": "我们致力于保护客户隐私。所有个人信息均按照法律规定处理和存储...",
+    "refund": "退款政策",
+    "refundContent": "Pearl Mansion对未使用的护理实行灵活的退款政策。请联系我们的客服部门获取帮助..."
+  },
+  "gallery": {
+    "heroTitle": "图片库",
+    "heroSubtitle": "通过图片探索Pearl Mansion的空间和服务。",
+    "badge": "图片库"
+  }
+}

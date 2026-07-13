@@ -1,0 +1,100 @@
+{
+  "hero": {
+    "cta": "BOOK AN APPOINTMENT",
+    "tagline": "l'art du bien-être",
+    "title": "Maison",
+    "titleAccent": "de Lumière",
+    "eyebrow": "HAUTE-COUTURE SPA · EST. 2014",
+    "nav": ["Maison", "Rituals", "Suites", "Masters", "Member", "Contact"],
+    "subtitle": "A quiet villa in the heart of Hanoi — where every ritual is tailored like haute-couture, and every guest is a unique story.",
+    "press": ["VOGUE", "CONDÉ NAST", "HARPER'S BAZAAR", "FORBES 5★", "TATLER ASIA"]
+  },
+  "manifesto": {
+    "eyebrow": "LE MANIFESTE",
+    "title": "Luxury is not material.",
+    "titleAccent": "It is attention.",
+    "description": "Maison de Lumière is not a spa — it is an art villa, where 22 artisans from Paris, Kyoto and Grasse craft each ritual as a personal masterpiece. We serve only 12 guests per day. And each guest, is a world.",
+    "quote": "— Madame Hélène Beaumont",
+    "role": "FOUNDER & CRÉATRICE",
+    "years": "11",
+    "yearsText": "YEARS OF CREATING BEAUTIFUL LIVING"
+  },
+  "pillars": {
+    "eyebrow": "FOUR MAISON PRINCIPLES",
+    "title": "Four pillars of",
+    "titleAccent": "refinement"
+  },
+  "signatures": {
+    "eyebrow": "SIGNATURE RITUALS",
+    "title": "Four rituals",
+    "titleAccent": "haute-couture",
+    "description": "Each ritual is personalized based on a 30-minute consultation with a Maître Spa. Ingredients are sourced directly from Paris maisons, Mikimoto Japan, and Grasse."
+  },
+  "gems": {
+    "eyebrow": "PRECIOUS STONE THERAPY ATELIER",
+    "title": "Precious stones —",
+    "titleAccent": "the soul of Maison"
+  },
+  "journey": {
+    "eyebrow": "LE PARCOURS",
+    "title": "An afternoon at",
+    "titleAccent": "Maison",
+    "description": "Every ritual is a meticulously orchestrated four-hour journey — from a champagne welcome to a crystal souvenir.",
+    "duration": "4 hours"
+  },
+  "suites": {
+    "eyebrow": "PRIVATE SUITES",
+    "title": "Three intimate",
+    "titleAccent": "suites"
+  },
+  "therapists": {
+    "eyebrow": "THE MASTERS",
+    "title": "22 global artisans,",
+    "titleAccent": "one Maison"
+  },
+  "membership": {
+    "eyebrow": "CIRCLE OF MEMBERS",
+    "title": "Membership",
+    "titleAccent": "by invitation only"
+  },
+  "testimonials": {
+    "eyebrow": "TESTIMONIALS",
+    "title": "Whispers from the",
+    "titleAccent": "Cercle Privé"
+  },
+  "faqs": {
+    "eyebrow": "QUESTIONS",
+    "title": "Frequently asked",
+    "titleAccent": "questions"
+  },
+  "reservation": {
+    "title": "private reservation",
+    "subtitle": "Book your private ritual",
+    "description": "Our concierge will contact you within 4 hours to confirm and invite you to a private video consultation with a Maître Spa.",
+    "name": "Your name",
+    "email": "Email",
+    "phone": "Phone number",
+    "date": "Preferred date",
+    "ritual": "Signature Ritual",
+    "notes": "Special requests",
+    "nda": "NDA signed · Absolute confidentiality",
+    "submit": "SEND REQUEST",
+    "cta1": "BOOK A PRIVATE RITUAL",
+    "cta2": "WATCH INTRODUCTION VIDEO"
+  },
+  "footer": {
+    "description": "Southeast Asia's first haute-couture spa villa — where luxury becomes the language of attention.",
+    "sections": {
+      "maison": ["Philosophy", "Artisans", "Press", "Events"],
+      "rituals": ["Signature", "Gems", "Sommelier", "Couple Royale"],
+      "contact": [
+        "concierge@maisondelumiere.vn",
+        "+84 24 1900 8888",
+        "88 Đặng Thái Mai, Tây Hồ, HN",
+        "Book 24/7"
+      ]
+    },
+    "copyright": "© 2026 MAISON DE LUMIÈRE · ALL RIGHTS RESERVED",
+    "badges": ["FORBES 5★", "LEADING HOTELS"]
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "hero": {
+    "badge": "Terra Heal",
+    "tagline": "Chữa lành từ đất mẹ",
+    "title1": "Trở về",
+    "title2": "với thiên nhiên",
+    "title3": "— chữa lành toàn diện",
+    "description": "Hành trình wellness lấy cảm hứng từ Ayurveda và triết lý Bali — nơi cây cỏ, đất và năng lượng tự nhiên phục hồi cơ thể, tâm trí và linh hồn.",
+    "startJourney": "Bắt đầu hành trình",
+    "viewRetreats": "Xem retreat",
+    "ratingText": "đánh giá xuất sắc",
+    "certifiedOrganic": "Chứng nhận organic",
+    "sustainableTag": "Bền vững",
+    "holisticTag": "Toàn diện",
+    "naturalbTag": "100% Thiên nhiên"
+  },
+  "about": {
+    "label": "Triết lý của chúng tôi",
+    "title": "Ba nguyên tắc",
+    "titleHighlight": "chữa lành tự nhiên",
+    "description": "Terra Heal kết hợp triết lý Ayurveda 5.000 năm tuổi với liệu pháp thảo dược bản địa Việt Nam và thực hành Bali truyền thống.",
+    "pillar1Title": "Cân Bằng Dosha",
+    "pillar1Desc": "Phân tích thể chất và điều chỉnh liệu trình theo 3 loại Dosha: Vata, Pitta, Kapha để đạt sự cân bằng hoàn hảo.",
+    "pillar2Title": "Thải Độc Tự Nhiên",
+    "pillar2Desc": "Sử dụng thảo dược và khoáng chất từ thiên nhiên để thanh lọc cơ thể sâu bên trong mà không cần hóa chất.",
+    "pillar3Title": "Phục Hồi Năng Lượng",
+    "pillar3Desc": "Kết hợp âm nhạc thiên nhiên, thiền định và liệu pháp chạm để khôi phục luồng năng lượng sống."
+  },
+  "rituals": {
+    "label": "Earth Rituals",
+    "title": "Các nghi lễ",
+    "titleHighlight": "chữa lành từ đất",
+    "description": "Mỗi nghi lễ là sự kết hợp giữa thảo dược, khoáng chất và kỹ thuật truyền thống được truyền qua nhiều thế hệ.",
+    "duration": "phút",
+    "fromPrice": "Từ",
+    "bookRitual": "Đặt nghi lễ"
+  },
+  "packages": {
+    "label": "Gói retreat",
+    "title": "Chọn hành trình",
+    "titleHighlight": "chữa lành của bạn",
+    "description": "Từ cuối tuần ngắn ngủi đến tuần dài đắm chìm — mỗi gói retreat là một cuộc hành trình biến đổi.",
+    "perPerson": "/người",
+    "nights": "đêm",
+    "includes": "Bao gồm:",
+    "bookRetreat": "Đặt retreat này",
+    "mostPopular": "Phổ biến nhất",
+    "perDay": "/ngày",
+    "inclusive": "Bao gồm toàn bộ"
+  },
+  "testimonials": {
+    "label": "Hành trình thực sự",
+    "title": "Câu chuyện",
+    "titleHighlight": "chữa lành"
+  },
+  "booking": {
+    "label": "Bắt đầu ngay",
+    "title": "Đặt buổi tư vấn",
+    "titleHighlight": "miễn phí",
+    "description": "Nói chuyện với chuyên gia wellness để được lên lịch trình phù hợp. Không cam kết, hoàn toàn miễn phí.",
+    "name": "Tên của bạn",
+    "email": "Email",
+    "phone": "Số điện thoại",
+    "concern": "Vấn đề bạn muốn cải thiện",
+    "concernPlaceholder": "Stress, mệt mỏi, da xấu, mất ngủ...",
+    "preferredDate": "Ngày mong muốn",
+    "howHear": "Bạn biết đến chúng tôi qua",
+    "submit": "Đặt tư vấn miễn phí",
+    "whatsapp": "Chat WhatsApp",
+    "step1": "Tư vấn miễn phí",
+    "step1Desc": "Gặp chuyên gia Ayurveda",
+    "step2": "Lên lịch trình",
+    "step2Desc": "Thiết kế riêng cho bạn",
+    "step3": "Bắt đầu trị liệu",
+    "step3Desc": "Trải nghiệm chữa lành"
+  }
+}

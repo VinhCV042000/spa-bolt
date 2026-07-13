@@ -1,0 +1,37 @@
+{
+  "hero": {
+    "eyebrow": "AURORA BEAUTY LAB · EST 2026",
+    "title": "Glass",
+    "titleAccent": "skin·lab",
+    "titleSuffix": "/ 2026",
+    "description": "Future beauty lab — where premium K-beauty protocols meet multi-spectrum LED, cryo therapy and exosome serum. Your skin reflects light in 90 minutes.",
+    "ctaPrimary": "Book a scan",
+    "ctaSecondary": "Explore protocols",
+    "locations": ["Seoul Flagship", "Tokyo Ginza", "Singapore Orchard", "Ho Chi Minh City"]
+  },
+  "protocols": {
+    "eyebrow": "SIGNATURE PROTOCOLS",
+    "title": "Four protocols. Infinite glow.",
+    "duration": "DURATION",
+    "price": "PRICE"
+  },
+  "lab": {
+    "eyebrow": "THE LAB",
+    "title": "Where science",
+    "titleAccent": "meets skin",
+    "description": "Aurora Beauty Lab operates with equipment trusted by leading dermatology clinics in Seoul, Tokyo and New York."
+  },
+  "timeline": {
+    "eyebrow": "YOUR JOURNEY",
+    "title": "90 minutes to glass skin"
+  },
+  "booking": {
+    "eyebrow": "THE FIRST SCAN IS FREE",
+    "title": "Book your",
+    "titleAccent": "skin scan",
+    "titleSuffix": "session",
+    "description": "Free of charge — 12-point VISIA mapping + a personalized protocol consultation from a Korean dermatologist.",
+    "placeholder": "Your phone number",
+    "submit": "Book now →"
+  }
+}

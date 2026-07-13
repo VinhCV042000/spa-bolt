@@ -1,0 +1,1 @@
+export * from 'src/sections/spa15/view/spa15-view';

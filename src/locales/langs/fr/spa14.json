@@ -1,0 +1,139 @@
+{
+  "hero": {
+    "badge": "Vienne impériale",
+    "tagline": "Bien-être Belle Époque",
+    "title1": "La splendeur",
+    "title2": "de l'empire austro-hongrois",
+    "title3": "— héritage des bains minéraux",
+    "description": "Sur les pas de l'empereur François-Joseph et de l'impératrice Sisi — vinothérapie au vin Grüner Veltliner, thérapie aux sources minérales autrichiennes et rituels des Habsbourg.",
+    "bookImperial": "Réservation impériale",
+    "viewWines": "Voir la vinothérapie",
+    "heritageBadge": "Patrimoine UNESCO · Bains minéraux viennois"
+  },
+  "heritage": {
+    "label": "300 ans d'héritage",
+    "title": "Tradition",
+    "titleHighlight": "royale autrichienne",
+    "description": "Depuis le XVIIIe siècle, la noblesse européenne se rendait à Bad Ischl et à Baden bei Wien pour se soigner. Nous faisons entrer cet héritage dans le XXIe siècle.",
+    "learnMore": "Explorer l'histoire"
+  },
+  "treatments": {
+    "label": "Soins impériaux",
+    "title": "Guérison",
+    "titleHighlight": "royale",
+    "description": "Vinothérapie aux vins autrichiens, thérapie aux sources minérales alcalines, massage à la manière des Habsbourg et masque à l'œuf de caille de l'impératrice Sisi.",
+    "duration": "minutes",
+    "book": "Réserver un soin"
+  },
+  "booking": {
+    "label": "Concierge impérial",
+    "title": "Vous êtes",
+    "titleHighlight": "invité au palais",
+    "name": "Titre / Nom",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "date": "Date d'arrivée",
+    "treatment": "Soin",
+    "notes": "Demandes spéciales",
+    "confirm": "Envoyer la demande impériale",
+    "conciergeNote": "Un concierge personnel vous contactera sous 2 heures"
+  },
+  "pages": {
+    "about": {
+      "eyebrow": "À propos",
+      "title": "Un voyage Belle Époque au cœur du wellness austro-hongrois",
+      "subtitle": "Sur les pas de François-Joseph et Sisi — les bains impériaux d'Europe centrale réinventés pour le XXIe siècle."
+    },
+    "services": {
+      "eyebrow": "Services",
+      "title": "Une carte de soins impériaux",
+      "subtitle": "Vinothérapie, sources minérales alcalines et rituels Habsbourg — chaque protocole signé par nos master thérapeutes."
+    },
+    "serviceDetails": {
+      "eyebrow": "Soin"
+    },
+    "training": {
+      "eyebrow": "Académie",
+      "title": "Imperial Vienna Academy",
+      "subtitle": "Formations master en vinothérapie, bains thermaux et savoir-faire spa européen classique."
+    },
+    "blog": {
+      "eyebrow": "Journal",
+      "title": "Le journal du bien-être",
+      "subtitle": "Notes Belle Époque, science de la longévité et art de vivre viennois."
+    },
+    "careers": {
+      "eyebrow": "Carrières",
+      "title": "Rejoignez l'atelier impérial",
+      "subtitle": "Nous cherchons thérapeutes, sommeliers et hôtes passionnés d'artisanat et d'hospitalité."
+    },
+    "careerDetails": {
+      "eyebrow": "Carrières"
+    },
+    "bookingPage": {
+      "eyebrow": "Réservation",
+      "title": "Réservez votre rituel impérial",
+      "subtitle": "Choisissez soin, horaire et palace suite — concierge confirme sous 15 minutes."
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "title": "Toujours à votre service",
+      "subtitle": "Envoyez-nous un message — notre concierge impérial répond sous 30 minutes."
+    },
+    "offers": {
+      "eyebrow": "Offres",
+      "title": "Coffrets impériaux",
+      "subtitle": "Offres saisonnières exclusives pour choyer nos hôtes."
+    },
+    "feedback": {
+      "eyebrow": "Témoignages",
+      "title": "La confiance de 25 000+ hôtes",
+      "subtitle": "Chaque compliment nous inspire à élever notre art."
+    },
+    "promotions": {
+      "eyebrow": "Promotions",
+      "title": "Événements impériaux",
+      "subtitle": "Découvrez nos programmes limités et bals de l'année."
+    },
+    "branches": {
+      "eyebrow": "Palaces",
+      "title": "4 palaces à travers le pays",
+      "subtitle": "Trouvez l'Imperial Vienna le plus proche — même standard royal partout."
+    },
+    "account": {
+      "eyebrow": "Membres",
+      "title": "Salon des membres impériaux",
+      "subtitle": "Gérez réservations, points et historique de soins."
+    },
+    "partners": {
+      "eyebrow": "Maisons",
+      "title": "Nos maisons impériales",
+      "subtitle": "Nous collaborons avec les meilleures maisons européennes de vin, sources et cosmétiques."
+    },
+    "treatments": {
+      "eyebrow": "Protocoles",
+      "title": "Protocoles impériaux",
+      "subtitle": "Programmes personnalisés multi-séances — résultats aristocratiques visibles."
+    },
+    "beforeAfter": {
+      "eyebrow": "Avant - Après",
+      "title": "Résultats authentiques",
+      "subtitle": "Photos partagées avec consentement — non retouchées."
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Questions fréquentes",
+      "subtitle": "Tout ce qu'il faut savoir avant votre visite au palais."
+    },
+    "policy": {
+      "eyebrow": "Politiques",
+      "title": "Conditions & protocole impérial",
+      "subtitle": "Transparence, élégance et respect — toujours."
+    },
+    "gallery": {
+      "eyebrow": "Galerie",
+      "title": "Instants à Imperial Vienna",
+      "subtitle": "Salons, rituels et émotions — capturés dans des cadres d'argent."
+    }
+  }
+}

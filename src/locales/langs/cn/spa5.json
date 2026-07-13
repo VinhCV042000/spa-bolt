@@ -1,0 +1,58 @@
+{
+  "hero": {
+    "badge": "Lumière Balnéo",
+    "pretitle": "养生艺术",
+    "title1": "水疗的",
+    "title2": "艺术",
+    "title3": "法式风情",
+    "description": "探索极致奢华的水疗体验——融合温泉矿物疗法、葡萄酒疗法与深海海洋疗法，传承经典法式水疗的精髓。",
+    "bookNow": "预约体验",
+    "discoverMenu": "查看菜单",
+    "openingHours": "每日营业",
+    "hoursValue": "9:00 — 21:00",
+    "tag1": "水疗法",
+    "tag2": "葡萄酒疗法",
+    "tag3": "海洋疗法"
+  },
+  "experience": {
+    "label": "招牌仪式",
+    "title": "4 大招牌",
+    "titleHighlight": "仪式",
+    "description": "每一项仪式都遵循法式水疗的理念精心打造——让水、矿物与芬芳交融，创造出神奇的疗愈魔力。",
+    "duration": "分钟",
+    "bookRitual": "预约仪式"
+  },
+  "treatments": {
+    "label": "护理菜单",
+    "title": "我们的完整",
+    "titleHighlight": "水疗菜单",
+    "description": "从温泉水疗到法式黏土裹敷——每一项护理都是独一无二的放松之旅。",
+    "duration": "时长",
+    "price": "价格"
+  },
+  "testimonials": {
+    "label": "评价",
+    "title": "来自我们",
+    "titleHighlight": "尊贵宾客的心声"
+  },
+  "booking": {
+    "label": "预订",
+    "title": "开启您的",
+    "titleHighlight": "旅程",
+    "description": "提前预订以确保您的名额。首次到访可享 8 折优惠。",
+    "firstName": "名字",
+    "lastName": "姓氏",
+    "email": "电子邮箱",
+    "phone": "电话号码",
+    "selectRitual": "选择一项仪式",
+    "date": "日期",
+    "guests": "宾客人数",
+    "notes": "特别备注",
+    "notesPlaceholder": "偏好、特殊要求……",
+    "confirm": "确认预订",
+    "callUs": "致电预订",
+    "privateExperience": "私人体验",
+    "privateDesc": "为您的团队独家预订整个水疗中心（最少 4 人）",
+    "guarantee": "24 小时前取消可全额退款"
+  }
+}

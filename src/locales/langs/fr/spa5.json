@@ -1,0 +1,58 @@
+{
+  "hero": {
+    "badge": "Lumière Balnéo",
+    "pretitle": "L'Art du Bien-Être",
+    "title1": "L'art de",
+    "title2": "l'hydrothérapie",
+    "title3": "à la Française",
+    "description": "Découvrez une expérience de balnéothérapie ultra-luxueuse — alliant thérapie thermale minérale, vinothérapie et thalassothérapie des grands fonds dans la tradition des spas français classiques.",
+    "bookNow": "Réserver une expérience",
+    "discoverMenu": "Voir le menu",
+    "openingHours": "Ouvert tous les jours",
+    "hoursValue": "9:00 — 21:00",
+    "tag1": "Hydrothérapie",
+    "tag2": "Vinothérapie",
+    "tag3": "Thalassothérapie"
+  },
+  "experience": {
+    "label": "Rituels signature",
+    "title": "4 rituels",
+    "titleHighlight": "signature",
+    "description": "Chaque rituel est conçu selon la philosophie de la balnéothérapie française — où l'eau, les minéraux et le parfum se conjuguent pour créer la magie.",
+    "duration": "minutes",
+    "bookRitual": "Réserver le rituel"
+  },
+  "treatments": {
+    "label": "Menu des soins",
+    "title": "Notre menu",
+    "titleHighlight": "spa complet",
+    "description": "De la thérapie par l'eau thermale aux enveloppements d'argile française — chaque soin est un voyage de détente unique.",
+    "duration": "durée",
+    "price": "prix"
+  },
+  "testimonials": {
+    "label": "Avis",
+    "title": "Les mots de nos",
+    "titleHighlight": "précieux clients"
+  },
+  "booking": {
+    "label": "Réservation",
+    "title": "Commencez votre",
+    "titleHighlight": "voyage",
+    "description": "Réservez à l'avance pour garantir votre place. Bénéficiez de 20 % de réduction sur votre première visite.",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "email": "E-mail",
+    "phone": "Numéro de téléphone",
+    "selectRitual": "Sélectionnez un rituel",
+    "date": "Date",
+    "guests": "Nombre d'invités",
+    "notes": "Notes particulières",
+    "notesPlaceholder": "Préférences, exigences particulières...",
+    "confirm": "Confirmer la réservation",
+    "callUs": "Appeler pour réserver",
+    "privateExperience": "Expérience privée",
+    "privateDesc": "Réservez l'intégralité du spa en exclusivité pour votre groupe (minimum 4 personnes)",
+    "guarantee": "Remboursement à 100 % en cas d'annulation avant 24 heures"
+  }
+}

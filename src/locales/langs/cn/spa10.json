@@ -1,0 +1,164 @@
+{
+  "hero": {
+    "badge": "极光北欧水疗",
+    "tagline": "斯堪的纳维亚森林养生",
+    "title1": "北欧森林",
+    "title2": "的静谧",
+    "title3": "——灵魂重生",
+    "description": "古老的北欧仪式——桦木桑拿、冷水浸浴、'Friluftsliv'森林浴与瑞典蒸汽疗法。在这里，冰封的寒冷与桑拿的温暖共同治愈身心。",
+    "bookRitual": "预约仪式",
+    "viewRituals": "探索北欧仪式",
+    "tempWarm": "桑拿 80°C",
+    "tempCold": "冷水浸浴 4°C"
+  },
+  "rituals": {
+    "label": "北欧仪式",
+    "title": "三大疗愈",
+    "titleHighlight": "北欧仪式",
+    "description": "'Lagom'——恰到好处，不多不少。北欧的平衡哲学，体现在三套完整的冷热森林仪式之中。",
+    "duration": "分钟",
+    "bookRitual": "立即预约"
+  },
+  "services": {
+    "label": "服务菜单",
+    "title": "纯正",
+    "titleHighlight": "北欧呵护",
+    "description": "源自斯堪的纳维亚森林的原料：桦木、松木、雪松、橡树皮与波罗的海海盐。",
+    "book": "预约服务",
+    "title_page": "服务项目",
+    "subtitle": "体验正宗北欧健康仪式"
+  },
+  "booking": {
+    "label": "预约",
+    "title": "欢迎来到",
+    "titleHighlight": "北欧森林",
+    "name": "姓名",
+    "email": "电子邮箱",
+    "phone": "电话",
+    "date": "日期",
+    "ritual": "选择仪式",
+    "guests": "宾客",
+    "notes": "备注",
+    "confirm": "确认预约",
+    "policy": "24小时前可免费取消",
+    "title_page": "在线预约",
+    "subtitle": "预约您的北欧健康体验",
+    "formTitle": "预约表单",
+    "service": "选择服务",
+    "submit": "提交预约"
+  },
+  "about": {
+    "title": "关于我们",
+    "subtitle": "探索北欧水疗的故事",
+    "storyLabel": "我们的故事",
+    "storyTitle": "北欧传统与现代健康相遇",
+    "storyDesc1": "成立于2020年，北欧水疗将正宗的斯堪的纳维亚健康传统带到越南。我们的标志性仪式结合了热、冷和自然的治愈力量——灵感来自芬兰桑拿文化、挪威'Friluftsliv'和瑞典按摩技术。",
+    "storyDesc2": "每一个细节都经过精心设计，带您进入斯堪的纳维亚宁静的森林，从我们的桦木桑拿房到天然冷水池。",
+    "valuesTitle": "北欧价值观",
+    "value1Title": "Eldur —— 火",
+    "value1Desc": "传统芬兰桑拿加热至 80°C，深度排毒和放松。",
+    "value2Title": "Is —— 冰",
+    "value2Desc": "4°C 冷水疗法，增强免疫力和循环。",
+    "value3Title": "Skog —— 森林",
+    "value3Desc": "森林浴和自然连接，获得清晰的头脑。"
+  },
+  "serviceDetails": {
+    "description": "描述",
+    "benefits": "益处",
+    "bookNow": "立即预约",
+    "back": "返回服务"
+  },
+  "training": {
+    "title": "培训项目",
+    "subtitle": "成为认证北欧健康专家"
+  },
+  "blog": {
+    "title": "博客",
+    "subtitle": "北欧健康见解和故事"
+  },
+  "careers": {
+    "title": "招聘",
+    "subtitle": "加入北欧水疗团队",
+    "apply": "立即申请"
+  },
+  "contact": {
+    "title": "联系我们",
+    "subtitle": "联系北欧水疗",
+    "phone": "电话",
+    "email": "电子邮箱",
+    "hours": "营业时间",
+    "sendMessage": "发送消息",
+    "name": "姓名",
+    "subject": "主题",
+    "message": "内容",
+    "send": "发送消息"
+  },
+  "offers": {
+    "title": "特别优惠",
+    "subtitle": "尊享优惠"
+  },
+  "feedback": {
+    "title": "客户评价",
+    "subtitle": "客户对我们的评价"
+  },
+  "promotions": {
+    "title": "促销活动",
+    "subtitle": "当前促销和折扣",
+    "valid": "有效期至"
+  },
+  "branches": {
+    "title": "分店",
+    "subtitle": "在您附近找到北欧水疗"
+  },
+  "account": {
+    "title": "我的账户",
+    "subtitle": "管理您的北欧水疗账户",
+    "login": "登录",
+    "register": "注册",
+    "email": "电子邮箱",
+    "password": "密码",
+    "fullName": "姓名",
+    "confirmPassword": "确认密码",
+    "loginBtn": "登录",
+    "registerBtn": "创建账户"
+  },
+  "partners": {
+    "title": "合作伙伴",
+    "subtitle": "值得信赖的北欧健康合作伙伴"
+  },
+  "packages": {
+    "title": "健康套餐",
+    "subtitle": "完整北欧体验套餐",
+    "treatments": "疗程",
+    "validity": "有效期",
+    "includes": "包含",
+    "bookNow": "预约套餐"
+  },
+  "beforeAfter": {
+    "title": "效果",
+    "subtitle": "前后对比转变"
+  },
+  "faq": {
+    "title": "常见问题",
+    "subtitle": "常见问题解答"
+  },
+  "policy": {
+    "title": "政策",
+    "subtitle": "条款、隐私和退款政策",
+    "termsTitle": "服务条款",
+    "termsContent": "使用北欧水疗服务即表示您同意我们的服务条款。所有服务视供应情况而定，可能需要提前预约。",
+    "privacyTitle": "隐私政策",
+    "privacyContent": "我们保护您的个人信息，未经同意绝不与第三方共享。您的数据按照国际标准安全存储。",
+    "refundTitle": "退款政策",
+    "refundContent": "预约前24小时取消可全额退款。延迟取消可能收取50%费用。未到将收取全款。"
+  },
+  "gallery": {
+    "title": "图片库",
+    "subtitle": "通过图片探索北欧水疗",
+    "all": "全部",
+    "facilities": "设施",
+    "exterior": "外观",
+    "treatments": "疗程",
+    "team": "团队"
+  }
+}

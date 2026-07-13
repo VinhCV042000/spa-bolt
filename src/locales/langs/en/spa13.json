@@ -1,0 +1,212 @@
+{
+  "hero": {
+    "badge": "Amazônia Selvagem",
+    "tagline": "Brazilian Amazon Healing",
+    "title1": "The power",
+    "title2": "of the Amazon",
+    "title3": "— raw nature",
+    "description": "Amazon botany: andiroba oil, tucumã butter, açaí exfoliation and argila clay wraps. The healing secrets of Brazil's indigenous people, combined with modern science.",
+    "startJourney": "Start the journey",
+    "viewBotanicals": "View botanicals",
+    "rainforestNote": "100% sustainable Amazon ingredients",
+    "certNote": "IBAMA Brazil certified"
+  },
+  "botanicals": {
+    "label": "Amazon treasures",
+    "title": "4 legendary",
+    "titleHighlight": "botanicals",
+    "description": "The Kayapó, Yanomami and Tikuna have used these ingredients for thousands of years. We bring the forest's secrets to you.",
+    "learnMore": "Learn more"
+  },
+  "treatments": {
+    "label": "Amazon treatments",
+    "title": "Healing from",
+    "titleHighlight": "the great forest",
+    "description": "From açaí exfoliation to white Amazon clay — each treatment is an encounter with the primordial power of nature.",
+    "duration": "minutes",
+    "book": "Book treatment"
+  },
+  "booking": {
+    "label": "Reservation",
+    "title": "Go deep",
+    "titleHighlight": "into the forest",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "date": "Date",
+    "treatment": "Select treatment",
+    "notes": "Notes",
+    "confirm": "Book now",
+    "ecoNote": "Each booking = 1 tree planted in the Amazon"
+  },
+  "about": {
+    "heroTitle": "Our Story",
+    "heroDesc": "From the Amazon to your Spa",
+    "storyTitle": "Journey from the Amazon",
+    "storyDesc": "Founded by rainforest enthusiasts, Spa 13 combines indigenous wisdom from Brazil with modern science.",
+    "values1Title": "Sustainable",
+    "values1Desc": "100% ingredients from sustainable sources",
+    "values2Title": "Authentic",
+    "values2Desc": "Secrets from indigenous people",
+    "values3Title": "Scientific",
+    "values3Desc": "Combined with modern research",
+    "missionTitle": "Mission",
+    "missionDesc": "Bringing the healing power of the Amazon to everyone while protecting the great forest.",
+    "stats1": "Years of experience",
+    "stats2": "Happy clients",
+    "stats3": "Green awards",
+    "stats4": "Trees planted",
+    "teamTitle": "Expert Team",
+    "teamDesc": "Terapeutas trained in Amazon botanicals"
+  },
+  "services": {
+    "heroTitle": "Amazon Treatments",
+    "heroDesc": "Discover the power of rainforest botanicals",
+    "filterAll": "All",
+    "filterSignature": "Signature",
+    "filterBody": "Body",
+    "filterFace": "Face",
+    "filterRetreat": "Retreat"
+  },
+  "serviceDetails": {
+    "backBtn": "Back to treatments",
+    "duration": "minutes",
+    "benefits": "Benefits",
+    "includes": "Includes",
+    "bookNow": "Book now"
+  },
+  "training": {
+    "heroTitle": "Botanical Training",
+    "heroDesc": "Become an Amazon therapy expert",
+    "programsTitle": "Programs",
+    "enroll": "Enroll now"
+  },
+  "blog": {
+    "heroTitle": "Forest Journal",
+    "heroDesc": "Stories from the Amazon",
+    "readMore": "Read more",
+    "categoriesAll": "All",
+    "categoriesTips": "Tips",
+    "categoriesStories": "Stories",
+    "categoriesNews": "News"
+  },
+  "blogDetails": {
+    "backBtn": "Back",
+    "author": "Author",
+    "related": "Related posts"
+  },
+  "careers": {
+    "heroTitle": "Join the Forest Team",
+    "heroDesc": "Build a career with our green mission",
+    "openPositions": "Open positions",
+    "apply": "Apply"
+  },
+  "bookingPage": {
+    "heroTitle": "Book Now",
+    "heroDesc": "Start your healing journey",
+    "formName": "Name",
+    "formEmail": "Email",
+    "formPhone": "Phone",
+    "formDate": "Date",
+    "formTime": "Time",
+    "formTreatment": "Select treatment",
+    "formNotes": "Notes",
+    "summaryTitle": "Booking Summary",
+    "confirm": "Confirm booking",
+    "ecoNote": "Every booking = 1 tree planted"
+  },
+  "contact": {
+    "heroTitle": "Contact Us",
+    "heroDesc": "Connect with us",
+    "infoAddress": "Address",
+    "infoPhone": "Phone",
+    "infoEmail": "Email",
+    "infoHours": "Opening hours",
+    "formName": "Name",
+    "formEmail": "Email",
+    "formSubject": "Subject",
+    "formMessage": "Message",
+    "formSubmit": "Send",
+    "mapTitle": "Location"
+  },
+  "offers": {
+    "heroTitle": "Special Offers",
+    "heroDesc": "Discover the forest at special prices",
+    "validUntil": "Valid until",
+    "claim": "Claim offer"
+  },
+  "feedback": {
+    "heroTitle": "Reviews",
+    "heroDesc": "Share your experience",
+    "submit": "Submit review",
+    "ratingsExcellent": "Excellent",
+    "ratingsGood": "Good",
+    "ratingsAverage": "Average",
+    "ratingsPoor": "Poor"
+  },
+  "promotions": {
+    "heroTitle": "Promotions",
+    "heroDesc": "Offers from the Amazon",
+    "validFrom": "From",
+    "validTo": "To",
+    "terms": "Terms apply"
+  },
+  "branches": {
+    "heroTitle": "Our Locations",
+    "heroDesc": "Find Spa 13 near you",
+    "visit": "Visit",
+    "hours": "Opening hours"
+  },
+  "account": {
+    "heroTitle": "My Account",
+    "heroDesc": "Manage your profile",
+    "profileTitle": "Profile",
+    "profileName": "Name",
+    "profileEmail": "Email",
+    "profilePhone": "Phone",
+    "historyTitle": "Booking History",
+    "historyDate": "Date",
+    "historyTreatment": "Treatment",
+    "historyStatus": "Status"
+  },
+  "partners": {
+    "heroTitle": "Our Partners",
+    "heroDesc": "Together we protect the forest",
+    "become": "Become a partner",
+    "benefitsTitle": "Benefits"
+  },
+  "packages": {
+    "heroTitle": "Treatment Packages",
+    "heroDesc": "Complete Amazon experience",
+    "perSession": "/session",
+    "buyNow": "Buy now"
+  },
+  "beforeAfter": {
+    "heroTitle": "Real Results",
+    "heroDesc": "See the transformation",
+    "treatment": "Treatment",
+    "resultsAfter": "After",
+    "resultsBefore": "Before"
+  },
+  "faq": {
+    "heroTitle": "FAQ",
+    "heroDesc": "Answers to your questions",
+    "stillQuestion": "Still have questions? Contact us"
+  },
+  "policy": {
+    "heroTitle": "Policies",
+    "heroDesc": "Terms and conditions",
+    "sectionsPrivacy": "Privacy",
+    "sectionsTerms": "Terms",
+    "sectionsRefund": "Refund"
+  },
+  "gallery": {
+    "heroTitle": "Gallery",
+    "heroDesc": "Moments at Spa 13",
+    "viewMore": "View more",
+    "categoriesAll": "All",
+    "categoriesSpa": "Spa",
+    "categoriesTreatments": "Treatments",
+    "categoriesNature": "Nature"
+  }
+}

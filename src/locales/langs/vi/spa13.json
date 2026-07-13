@@ -1,0 +1,212 @@
+{
+  "hero": {
+    "badge": "Amazônia Selvagem",
+    "tagline": "Brazilian Amazon Healing",
+    "title1": "Sức mạnh",
+    "title2": "rừng Amazon",
+    "title3": "— thiên nhiên nguyên sơ",
+    "description": "Thực vật học Amazon: dầu andiroba, bơ tucumã, tẩy da açaí và đắp bùn argila. Bí quyết chữa lành của người bản địa Brazil kết hợp khoa học hiện đại.",
+    "startJourney": "Bắt đầu hành trình",
+    "viewBotanicals": "Xem thảo dược",
+    "rainforestNote": "100% nguyên liệu Amazon bền vững",
+    "certNote": "Chứng nhận IBAMA Brazil"
+  },
+  "botanicals": {
+    "label": "Kho báu Amazon",
+    "title": "4 thảo dược",
+    "titleHighlight": "huyền thoại",
+    "description": "Người Kayapó, Yanomami và Tikuna đã sử dụng những nguyên liệu này hàng nghìn năm. Chúng tôi mang bí mật của rừng đến với bạn.",
+    "learnMore": "Tìm hiểu"
+  },
+  "treatments": {
+    "label": "Liệu trình Amazon",
+    "title": "Chữa lành",
+    "titleHighlight": "từ đại rừng",
+    "description": "Từ tẩy da açaí đến bùn đất sét trắng Amazon — mỗi liệu trình là cuộc gặp gỡ với sức mạnh nguyên thủy của thiên nhiên.",
+    "duration": "phút",
+    "book": "Đặt liệu trình"
+  },
+  "booking": {
+    "label": "Đặt lịch",
+    "title": "Vào sâu",
+    "titleHighlight": "trong rừng",
+    "name": "Tên",
+    "email": "Email",
+    "phone": "Điện thoại",
+    "date": "Ngày",
+    "treatment": "Chọn liệu trình",
+    "notes": "Ghi chú",
+    "confirm": "Đặt lịch ngay",
+    "ecoNote": "Mỗi booking = 1 cây được trồng tại Amazon"
+  },
+  "about": {
+    "heroTitle": "Câu chuyện của chúng tôi",
+    "heroDesc": "Từ rừng già Amazon đến Spa của bạn",
+    "storyTitle": "Hành trình từ Amazon",
+    "storyDesc": "Được thành lập bởi những người yêu rừng nhiệt đới, Spa 13 kết hợp tri thức bản địa Brazil với khoa học hiện đại.",
+    "values1Title": "Bền vững",
+    "values1Desc": "100% nguyên liệu từ nguồn bền vững",
+    "values2Title": "Chân thực",
+    "values2Desc": "Bí quyết từ người bản địa",
+    "values3Title": "Khoa học",
+    "values3Desc": "Kết hợp với nghiên cứu hiện đại",
+    "missionTitle": "Sứ mệnh",
+    "missionDesc": "Mang sức mạnh chữa lành của rừng Amazon đến mọi người, đồng thời bảo vệ đại ngàn.",
+    "stats1": "Năm kinh nghiệm",
+    "stats2": "Khách hàng",
+    "stats3": "Giải thưởng xanh",
+    "stats4": "Cây đã trồng",
+    "teamTitle": "Đội ngũ chuyên gia",
+    "teamDesc": "Terapeuta được đào tạo bài bản về thảo dược Amazon"
+  },
+  "services": {
+    "heroTitle": "Liệu trình Amazon",
+    "heroDesc": "Khám phá sức mạnh của thảo dược rừng già",
+    "filterAll": "Tất cả",
+    "filterSignature": "Đặc trưng",
+    "filterBody": "Cơ thể",
+    "filterFace": "Khuôn mặt",
+    "filter Retreat": "Trọn gói"
+  },
+  "serviceDetails": {
+    "backBtn": "Quay lại liệu trình",
+    "duration": "phút",
+    "benefits": "Lợi ích",
+    "includes": "Bao gồm",
+    "bookNow": "Đặt ngay"
+  },
+  "training": {
+    "heroTitle": "Đào tạo thảo dược",
+    "heroDesc": "Trở thành chuyên gia trị liệu Amazon",
+    "programsTitle": "Chương trình",
+    "enroll": "Đăng ký"
+  },
+  "blog": {
+    "heroTitle": "Tạp chí Rừng",
+    "heroDesc": "Câu chuyện từ Amazon",
+    "readMore": "Đọc thêm",
+    "categoriesAll": "Tất cả",
+    "categoriesTips": "Mẹo",
+    "categoriesStories": "Câu chuyện",
+    "categoriesNews": "Tin tức"
+  },
+  "blogDetails": {
+    "backBtn": "Quay lại",
+    "author": "Tác giả",
+    "related": "Bài liên quan"
+  },
+  "careers": {
+    "heroTitle": "Gia nhập đội rừng",
+    "heroDesc": "Xây dựng sự nghiệp cùng sứ mệnh xanh",
+    "openPositions": "Vị trí tuyển dụng",
+    "apply": "Ứng tuyển"
+  },
+  "bookingPage": {
+    "heroTitle": "Đặt lịch",
+    "heroDesc": "Bắt đầu hành trình chữa lành",
+    "formName": "Họ tên",
+    "formEmail": "Email",
+    "formPhone": "Điện thoại",
+    "formDate": "Ngày",
+    "formTime": "Giờ",
+    "formTreatment": "Chọn liệu trình",
+    "formNotes": "Ghi chú",
+    "summaryTitle": "Thông tin đặt lịch",
+    "confirm": "Xác nhận đặt lịch",
+    "ecoNote": "Mỗi booking = 1 cây được trồng"
+  },
+  "contact": {
+    "heroTitle": "Liên hệ",
+    "heroDesc": "Kết nối với chúng tôi",
+    "infoAddress": "Địa chỉ",
+    "infoPhone": "Điện thoại",
+    "infoEmail": "Email",
+    "infoHours": "Giờ mở cửa",
+    "formName": "Họ tên",
+    "formEmail": "Email",
+    "formSubject": "Chủ đề",
+    "formMessage": "Tin nhắn",
+    "formSubmit": "Gửi",
+    "mapTitle": "Vị trí"
+  },
+  "offers": {
+    "heroTitle": "Ưu đãi đặc biệt",
+    "heroDesc": "Khám phá rừng với giá ưu đãi",
+    "validUntil": "Có hiệu lực đến",
+    "claim": "Nhận ưu đãi"
+  },
+  "feedback": {
+    "heroTitle": "Đánh giá",
+    "heroDesc": "Chia sẻ trải nghiệm của bạn",
+    "submit": "Gửi đánh giá",
+    "ratingsExcellent": "Xuất sắc",
+    "ratingsGood": "Tốt",
+    "ratingsAverage": "Trung bình",
+    "ratingsPoor": "Kém"
+  },
+  "promotions": {
+    "heroTitle": "Khuyến mãi",
+    "heroDesc": "Ưu đãi từ rừng Amazon",
+    "validFrom": "Từ",
+    "validTo": "Đến",
+    "terms": "Điều khoản"
+  },
+  "branches": {
+    "heroTitle": "Chi nhánh",
+    "heroDesc": "Tìm Spa 13 gần bạn",
+    "visit": "Ghé thăm",
+    "hours": "Giờ mở cửa"
+  },
+  "account": {
+    "heroTitle": "Tài khoản",
+    "heroDesc": "Quản lý thông tin cá nhân",
+    "profileTitle": "Hồ sơ",
+    "profileName": "Họ tên",
+    "profileEmail": "Email",
+    "profilePhone": "Điện thoại",
+    "historyTitle": "Lịch sử đặt lịch",
+    "historyDate": "Ngày",
+    "historyTreatment": "Liệu trình",
+    "historyStatus": "Trạng thái"
+  },
+  "partners": {
+    "heroTitle": "Đối tác",
+    "heroDesc": "Hợp tác cùng bảo vệ rừng",
+    "become": "Trở thành đối tác",
+    "benefitsTitle": "Lợi ích"
+  },
+  "packages": {
+    "heroTitle": "Gói liệu trình",
+    "heroDesc": "Trải nghiệm trọn vẹn Amazon",
+    "perSession": "/buổi",
+    "buyNow": "Mua ngay"
+  },
+  "beforeAfter": {
+    "heroTitle": "Kết quả thực tế",
+    "heroDesc": "Xem sự thay đổi",
+    "treatment": "Liệu trình",
+    "resultsAfter": "Sau",
+    "resultsBefore": "Trước"
+  },
+  "faq": {
+    "heroTitle": "Câu hỏi thường gặp",
+    "heroDesc": "Giải đáp thắc mắc của bạn",
+    "stillQuestion": "Còn thắc mắc? Liên hệ chúng tôi"
+  },
+  "policy": {
+    "heroTitle": "Chính sách",
+    "heroDesc": "Điều khoản và quy định",
+    "sectionsPrivacy": "Quyền riêng tư",
+    "sectionsTerms": "Điều khoản",
+    "sectionsRefund": "Hoàn tiền"
+  },
+  "gallery": {
+    "heroTitle": "Thư viện",
+    "heroDesc": "Khoảnh khắc tại Spa 13",
+    "viewMore": "Xem thêm",
+    "categoriesAll": "Tất cả",
+    "categoriesSpa": "Spa",
+    "categoriesTreatments": "Liệu trình",
+    "categoriesNature": "Thiên nhiên"
+  }
+}

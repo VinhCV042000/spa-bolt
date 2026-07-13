@@ -1,0 +1,37 @@
+{
+  "hero": {
+    "eyebrow": "AURORA BEAUTY LAB · EST 2026",
+    "title": "Glass",
+    "titleAccent": "skin·lab",
+    "titleSuffix": "/ 2026",
+    "description": "Phòng lab vẻ đẹp tương lai — nơi protocol K-beauty cao cấp gặp công nghệ LED đa quang phổ, cryo therapy và serum exosome. Da phản chiếu ánh sáng trong 90 phút.",
+    "ctaPrimary": "Đặt lịch scan",
+    "ctaSecondary": "Khám phá protocol",
+    "locations": ["Seoul Flagship", "Tokyo Ginza", "Singapore Orchard", "Ho Chi Minh City"]
+  },
+  "protocols": {
+    "eyebrow": "SIGNATURE PROTOCOLS",
+    "title": "Bốn protocol. Rạng rỡ vô hạn.",
+    "duration": "THỜI LƯỢNG",
+    "price": "GIÁ"
+  },
+  "lab": {
+    "eyebrow": "THE LAB",
+    "title": "Nơi khoa học",
+    "titleAccent": "gặp làn da",
+    "description": "Aurora Beauty Lab sử dụng thiết bị được tin dùng bởi các phòng khám da liễu hàng đầu tại Seoul, Tokyo và New York."
+  },
+  "timeline": {
+    "eyebrow": "HÀNH TRÌNH CỦA BẠN",
+    "title": "90 phút đến glass skin"
+  },
+  "booking": {
+    "eyebrow": "BUỔI SCAN ĐẦU TIÊN MIỄN PHÍ",
+    "title": "Đặt buổi",
+    "titleAccent": "scan da",
+    "titleSuffix": "đầu tiên",
+    "description": "Hoàn toàn miễn phí — bản đồ VISIA 12 chỉ số + tư vấn protocol cá nhân hóa bởi bác sĩ Hàn.",
+    "placeholder": "Số điện thoại của bạn",
+    "submit": "ĐẶT NGAY →"
+  }
+}

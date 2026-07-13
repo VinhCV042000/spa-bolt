@@ -1,0 +1,228 @@
+{
+  "meta": {
+    "title": "Serenity Spa - 充能身心，滋养灵魂",
+    "description": "Serenity Spa - 提供理疗按摩、护肤、身体护理和芳香疗法的高端水疗体验。立即预约您的专属时刻！"
+  },
+  "nav": {
+    "home": "首页",
+    "about": "关于我们",
+    "services": "服务项目",
+    "offers": "套餐",
+    "explore": "探索",
+    "contact": "联系我们",
+    "booking": "预约",
+    "subheaderServices": "服务项目",
+    "subheaderContent": "内容",
+    "servicesAll": "全部服务",
+    "serviceMassage": "理疗按摩",
+    "serviceFacial": "面部护理",
+    "serviceBody": "身体护理",
+    "serviceAroma": "芳香疗法",
+    "serviceHair": "头发与头皮护理",
+    "serviceCouple": "情侣 VIP",
+    "training": "培训",
+    "blog": "博客",
+    "gallery": "图库",
+    "wellness": "健康知识库",
+    "membership": "会员",
+    "careers": "招聘"
+  },
+  "hero": {
+    "brand": "Serenity Spa",
+    "titleLead": "充能身心，",
+    "titleHighlight": "滋养灵魂",
+    "subtitle": "位于城市中心的高端水疗体验，专业护理、自然氛围与 100% 有机产品，带您远离喧嚣。",
+    "bookNow": "立即预约",
+    "exploreServices": "探索服务",
+    "stats": [
+      { "value": "15+", "label": "年专业经验" },
+      { "value": "50+", "label": "护理项目" },
+      { "value": "10k+", "label": "满意客户" }
+    ]
+  },
+  "about": {
+    "eyebrow": "关于我们",
+    "titleLead": "城市中心",
+    "titleRest": "的静谧之所",
+    "description": "Serenity Spa 源于对整体健康的热爱。凭借国际认证的专家团队和现代禅意风格的空间设计，我们致力于为每位客人带来极致放松。",
+    "ratingCaption": "2,400+ 条评价",
+    "features": [
+      {
+        "title": "贴心呵护",
+        "desc": "每位客人都将获得个性化的护理咨询。"
+      },
+      {
+        "title": "100% 有机",
+        "desc": "天然产品，安全且环保。"
+      },
+      {
+        "title": "国际标准",
+        "desc": "卫生与安全流程达到五星级水疗标准。"
+      }
+    ]
+  },
+  "services": {
+    "eyebrow": "服务项目",
+    "titleLead": "高端",
+    "titleRest": "护理疗程",
+    "subtitle": "探索专为修复身体、美化肌肤、平衡身心而设计的护理疗程。",
+    "cta": "预约免费咨询",
+    "items": [
+      {
+        "title": "理疗按摩",
+        "description": "泰式、指压及热石按摩，放松肌肉、改善循环、缓解压力。",
+        "duration": "60 - 90 分钟"
+      },
+      {
+        "title": "面部护理",
+        "description": "采用有机化妆品的强效面部护理，适合各种肤质，焕发光彩。",
+        "duration": "45 - 75 分钟"
+      },
+      {
+        "title": "身体护理",
+        "description": "全身去角质、身体包裹及排毒，让肌肤柔软、紧致、充满活力。",
+        "duration": "90 - 120 分钟"
+      },
+      {
+        "title": "芳香疗法",
+        "description": "高端天然精油结合芳香疗法，平衡身心。",
+        "duration": "60 分钟"
+      }
+    ]
+  },
+  "amenities": {
+    "eyebrow": "设施",
+    "titleLead": "完整的",
+    "titleRest": "体验",
+    "description": "Serenity Spa 提供多元化的放松空间——从桑拿、按摩浴缸到瑜伽区，一站式尽享。",
+    "items": [
+      {
+        "title": "桑拿房",
+        "description": "现代干湿桑拿，排毒并深度放松。"
+      },
+      {
+        "title": "按摩浴缸",
+        "description": "私密水疗空间，温水与放松精油相伴。"
+      },
+      {
+        "title": "瑜伽与冥想",
+        "description": "在静谧空间中每日开设瑜伽与冥想课程。"
+      },
+      {
+        "title": "有机产品",
+        "description": "100% 天然成分，不含对羟基苯甲酸酯且环保。"
+      }
+    ]
+  },
+  "packages": {
+    "eyebrow": "套餐",
+    "titleLead": "选择适合",
+    "titleRest": "您的套餐",
+    "subtitle": "精心设计的组合套餐，在节省费用的同时带来最完整的水疗体验。",
+    "popular": "热门",
+    "choose": "选择此套餐",
+    "items": [
+      {
+        "name": "放松套餐",
+        "caption": "适合首次体验",
+        "features": ["60 分钟身体按摩", "30 分钟桑拿", "赠送花草茶", "芳香冷敷毛巾"]
+      },
+      {
+        "name": "焕活套餐",
+        "caption": "最受欢迎之选",
+        "features": [
+          "90 分钟身体按摩",
+          "60 分钟面部护理",
+          "全身去角质",
+          "45 分钟按摩浴缸",
+          "赠送排毒饮品"
+        ]
+      },
+      {
+        "name": "尊享套餐",
+        "caption": "完美体验",
+        "features": [
+          "120 分钟身体护理",
+          "90 分钟高端面部护理",
+          "私人芳香疗法",
+          "私人 VIP 房间",
+          "健康午餐",
+          "有机产品礼品"
+        ]
+      }
+    ]
+  },
+  "testimonials": {
+    "eyebrow": "客户评价",
+    "titleLead": "我们的客户",
+    "titleRest": "如是说",
+    "items": [
+      {
+        "name": "Nguyen Minh Anh",
+        "role": "企业家",
+        "content": "在忙碌的生活中，Serenity Spa 是我寻得宁静的地方。按摩极佳，员工专业，空间令人无比放松。"
+      },
+      {
+        "name": "Tran Hoang Long",
+        "role": "软件工程师",
+        "content": "焕活套餐真的物超所值。护理之后，身体轻盈、心神清爽。我一定会再来！"
+      },
+      {
+        "name": "Le Thu Ha",
+        "role": "教师",
+        "content": "有机面部护理明显提亮并改善了我的肌肤。水疗中心优雅、洁净且十分私密。强烈推荐！"
+      },
+      {
+        "name": "Pham Quoc Bao",
+        "role": "医生",
+        "content": "我经常推荐患者来 Serenity Spa 减压。服务质量始终如一、值得信赖。"
+      }
+    ]
+  },
+  "faqs": {
+    "eyebrow": "常见问题",
+    "titleLead": "常见",
+    "titleRest": "问题",
+    "items": [
+      {
+        "question": "我应该提前多久预约？",
+        "answer": "我们建议至少提前 24 小时预约，尤其是周末和节假日。您可以在线预约或拨打我们的服务热线。"
+      },
+      {
+        "question": "水疗适合孕妇吗？",
+        "answer": "适合，我们从孕期第 13 周起提供专属孕期按摩。请在预约时告知我们，以便为您提供恰当建议。"
+      },
+      {
+        "question": "我应该提前多久到达？",
+        "answer": "请提前 15 分钟到达，以便办理登记、更衣，并在休息区放松后开始护理。"
+      },
+      {
+        "question": "取消政策是怎样的？",
+        "answer": "护理前 12 小时以上可免费取消。12 小时内取消将收取 50% 费用。未到场则没收全额定金。"
+      },
+      {
+        "question": "水疗中心有停车场吗？",
+        "answer": "有，大楼地下层设有免费客户停车场。您到达时，我们的前台会为您引导。"
+      }
+    ]
+  },
+  "booking": {
+    "eyebrow": "预约",
+    "title": "准备好放松了吗？",
+    "description": "今天预约，首次体验即享 85 折优惠。我们的咨询团队随时为您提供支持。",
+    "hotlineLabel": "热线",
+    "addressLabel": "地址",
+    "addressValue": "胡志明市第一郡阮惠街 123 号",
+    "hoursLabel": "营业时间",
+    "hoursValue": "8:00 - 22:00（周一至周日）",
+    "bookOnline": "在线预约",
+    "contactConsult": "联系我们"
+  },
+  "cta": {
+    "bookNow": "立即预约",
+    "contact": "联系我们",
+    "title": "准备好开启您的健康之旅了吗？",
+    "subtitle": "Serenity Spa 团队随时陪伴您踏上健康之旅。",
+    "button": "在线预约"
+  }
+}

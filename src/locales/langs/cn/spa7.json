@@ -1,0 +1,161 @@
+{
+  "hero": {
+    "badge": "Noir & Rose",
+    "tagline": "美容诊所与水疗的结合",
+    "title1": "玻璃肌。",
+    "title2": "尖端",
+    "title3": "科技。",
+    "description": "在这里，全球最先进的美容科学与韩式护肤艺术完美交汇。LED 疗法、高频射频、冷冻疗法与胶原蛋白诱导，尽在奢华的全黑空间之中。",
+    "bookConsult": "免费咨询",
+    "viewTech": "我们的技术",
+    "freeConsultBadge": "免费肌肤咨询 · 30 分钟",
+    "stat1": "满意客户",
+    "stat2": "独家技术",
+    "stat3": "认证专家"
+  },
+  "tech": {
+    "label": "护理技术",
+    "title": "4 项尖端",
+    "titleHighlight": "美容技术",
+    "description": "我们投入全球最先进的美容技术，只为带来真实效果——而非空头承诺。",
+    "learnMore": "了解更多"
+  },
+  "menu": {
+    "label": "服务定价",
+    "title": "完整护理",
+    "titleHighlight": "菜单",
+    "description": "每项护理均根据您的肤质与个人目标量身定制。固定价格——绝无意外。",
+    "duration": "时长",
+    "sessions": "疗程",
+    "bookNow": "立即预约"
+  },
+  "results": {
+    "label": "真实效果",
+    "title": "护理前 &",
+    "titleHighlight": "护理后",
+    "description": "源自真实客户的真实效果。无修图、无滤镜——只有科技与技艺。",
+    "weeks": "周",
+    "sessions": "疗程"
+  },
+  "booking": {
+    "label": "立即预约",
+    "title": "开启您的",
+    "titleHighlight": "肌肤之旅",
+    "description": "由专家提供 30 分钟免费肌肤咨询。肌肤分析、目标设定及个性化护理方案。",
+    "name": "全名",
+    "phone": "电话号码",
+    "email": "电子邮箱",
+    "concern": "肌肤困扰",
+    "concernPlaceholder": "痘痘、色素沉着、暗斑、老化、毛孔……",
+    "preferTime": "期望时间",
+    "submit": "预约免费咨询",
+    "guarantee": "效果保证，否则全额退款"
+  },
+  "pages": {
+    "about": {
+      "eyebrow": "关于 Noir & Rose",
+      "title": "将自然融入每一次仪式",
+      "subtitle": "真正的美源自身体、心灵与自然的平衡。"
+    },
+    "services": {
+      "eyebrow": "服务",
+      "title": "源自自然的护理系列",
+      "subtitle": "每次护理都是一段感官之旅——融合越南草本与欧洲现代科技。"
+    },
+    "serviceDetails": {
+      "eyebrow": "服务",
+      "title": "",
+      "subtitle": ""
+    },
+    "training": {
+      "eyebrow": "培训",
+      "title": "Noir & Rose 学院",
+      "subtitle": "面向技师、护肤专家和 SPA 管理者的深度课程。"
+    },
+    "blog": {
+      "eyebrow": "博客",
+      "title": "照顾自己的指南",
+      "subtitle": "分享护肤、营养、瑜伽与健康生活方式的见解。"
+    },
+    "blogDetails": {
+      "eyebrow": "",
+      "title": "",
+      "subtitle": ""
+    },
+    "careers": {
+      "eyebrow": "招聘",
+      "title": "加入 Noir & Rose 团队",
+      "subtitle": "我们始终在寻找热爱自然、乐于照顾他人的伙伴。"
+    },
+    "careerDetails": {
+      "eyebrow": "招聘",
+      "title": "",
+      "subtitle": ""
+    },
+    "bookingPage": {
+      "eyebrow": "预约",
+      "title": "1 分钟在线预约",
+      "subtitle": "选择服务、门店与时间——15 分钟内确认。"
+    },
+    "contact": {
+      "eyebrow": "联系",
+      "title": "我们始终倾听您",
+      "subtitle": "留下您的信息,我们将在 30 分钟内回复(工作时间)。"
+    },
+    "offers": {
+      "eyebrow": "优惠",
+      "title": "为您专属的优惠套餐",
+      "subtitle": "通过我们的季节性优惠,体验更完整,更省心。"
+    },
+    "feedback": {
+      "eyebrow": "客户反馈",
+      "title": "25,000+ 位客户的信赖",
+      "subtitle": "每一条评价都推动我们不断进步。"
+    },
+    "promotions": {
+      "eyebrow": "促销",
+      "title": "季节性活动与促销",
+      "subtitle": "限时项目与年度最大优惠。"
+    },
+    "branches": {
+      "eyebrow": "分店",
+      "title": "全国 4 家分店",
+      "subtitle": "寻找离您最近的 Noir & Rose——同样的高标准。"
+    },
+    "account": {
+      "eyebrow": "账户",
+      "title": "会员专区",
+      "subtitle": "管理您的预约、积分与护理计划。"
+    },
+    "partners": {
+      "eyebrow": "合作伙伴",
+      "title": "值得信赖的合作方",
+      "subtitle": "与全球领先的化妆品与 SPA 设备品牌合作。"
+    },
+    "treatments": {
+      "eyebrow": "疗程",
+      "title": "深度疗程方案",
+      "subtitle": "针对每一个问题量身定制——效果可见,保证如一。"
+    },
+    "beforeAfter": {
+      "eyebrow": "前后对比",
+      "title": "真实客户的真实结果",
+      "subtitle": "经客户同意分享——完全未经修饰。"
+    },
+    "faq": {
+      "eyebrow": "常见问题",
+      "title": "常见问答",
+      "subtitle": "来 Noir & Rose 之前您需要知道的一切。"
+    },
+    "policy": {
+      "eyebrow": "政策",
+      "title": "条款与政策",
+      "subtitle": "透明、公平、尊重指引我们所做的一切。"
+    },
+    "gallery": {
+      "eyebrow": "画廊",
+      "title": "Noir & Rose 的瞬间",
+      "subtitle": "空间、产品与情感,尽在每一帧。"
+    }
+  }
+}

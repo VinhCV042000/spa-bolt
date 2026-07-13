@@ -1,0 +1,186 @@
+{
+  "hero": {
+    "badge": "Pearl Luminary",
+    "tagline": "Ultra-Luxury Beauty Sanctuary",
+    "title1": "Nơi xa xỉ",
+    "title2": "không có giới hạn",
+    "title3": "— vẻ đẹp thuần khiết",
+    "description": "Pearl Luminary — thánh địa làm đẹp dành cho những tâm hồn tinh tế nhất. Bột ngọc trai Nhật Bản, 24K gold facial, kim cương microdermabrasion và liệu pháp tế bào gốc.",
+    "bookPrivate": "Đặt phòng riêng",
+    "viewMembership": "Xem Membership",
+    "byAppointment": "Chỉ theo lịch hẹn",
+    "limitedSlots": "Tối đa 8 khách/ngày"
+  },
+  "signature": {
+    "label": "Signature Treatments",
+    "title": "Bộ tứ",
+    "titleHighlight": "sang trọng tuyệt đỉnh",
+    "description": "Bốn liệu trình flagship độc quyền — không nơi nào khác tại Việt Nam có được công thức và nguyên liệu tương đương.",
+    "bookNow": "Đặt ngay",
+    "perSession": "/buổi"
+  },
+  "membership": {
+    "label": "Membership",
+    "title": "Câu lạc bộ",
+    "titleHighlight": "thành viên Pearl",
+    "description": "Ba tầng thành viên — mỗi tầng là một thế giới ưu đãi riêng biệt dành cho những ai xứng đáng.",
+    "perYear": "/năm",
+    "joinNow": "Tham gia"
+  },
+  "booking": {
+    "label": "Private Consultation",
+    "title": "Đặt lịch",
+    "titleHighlight": "tư vấn riêng tư",
+    "description": "Mỗi khách hàng Pearl Luminary nhận được một buổi tư vấn cá nhân hóa 45 phút trước mọi liệu trình.",
+    "name": "Họ và tên",
+    "email": "Email",
+    "phone": "Điện thoại",
+    "interest": "Quan tâm đến",
+    "preferDate": "Ngày ưa thích",
+    "confirm": "Yêu cầu tư vấn",
+    "confidential": "Thông tin được bảo mật hoàn toàn"
+  },
+  "tech": {
+    "label": "Công nghệ",
+    "title": "Thiết bị định nghĩa",
+    "titleHighlight": "tương lai làm đẹp",
+    "description": "Chỉ thiết bị FDA và CE approved. Cùng trang thiết bị được tin dùng bởi các phòng khám thẩm mỹ y khoa hàng đầu tại Seoul, Tokyo và New York.",
+    "learnMore": "Tìm hiểu thêm"
+  },
+  "about": {
+    "heroTitle": "Về chúng tôi",
+    "heroSubtitle": "Pearl Mansion — thánh địa làm đẹp cao cấp được thành lập từ đam mê về vẻ đẹp thuần khiết và nghệ thuật chăm sóc da.",
+    "badge": "Về Pearl Mansion",
+    "philosophy": "Triết lý Pearl",
+    "story": "Pearl Mansion ra đời từ tầm nhìn tạo ra không gian làm đẹp xa xỉ bậc nhất châu Á. Với bột ngọc trai mikimoto Nhật Bản, vàng lá 24K, kim cương và tế bào gốc Thụy Sĩ, mỗi liệu trình là một hành trình biến hóa.",
+    "vision": "Sứ mệnh của chúng tôi là mang đến trải nghiệm spa ultra-luxury cho những vị khách tinh tế nhất. Từng chi tiết được thiết kế để tạo nên không gian thư giãn tuyệt đối."
+  },
+  "services": {
+    "heroTitle": "Dịch vụ cao cấp",
+    "heroSubtitle": "Các liệu trình flagship độc quyền với nguyên liệu hiếm và công nghệ tiên tiến nhất.",
+    "badge": "Dịch vụ"
+  },
+  "serviceDetails": {
+    "title": "Chi tiết liệu trình",
+    "description": "Thông tin chi tiết về liệu trình được chọn."
+  },
+  "training": {
+    "heroTitle": "Đào tạo chuyên gia",
+    "heroSubtitle": "Chương trình đào tạo chuyên sâu với chứng chỉ quốc tế cho các kỹ thuật viên.",
+    "badge": "Đào tạo",
+    "enroll": "Đăng ký"
+  },
+  "blog": {
+    "heroTitle": "Blog & Tin tức",
+    "heroSubtitle": "Cập nhật kiến thức làm đẹp và xu hướng spa từ Pearl Mansion.",
+    "badge": "Blog"
+  },
+  "blogDetails": {
+    "title": "Chi tiết bài viết",
+    "content": "Nội dung đầy đủ của bài viết."
+  },
+  "careers": {
+    "heroTitle": "Tuyển dụng",
+    "heroSubtitle": "Gia nhập đội ngũ chuyên gia làm đẹp cao cấp tại Pearl Mansion.",
+    "badge": "Tuyển dụng",
+    "apply": "Ứng tuyển"
+  },
+  "bookingPage": {
+    "heroTitle": "Đặt lịch Online",
+    "heroSubtitle": "Đặt lịch hẹn với chuyên gia Pearl Mansion ngay hôm nay.",
+    "badge": "Đặt lịch",
+    "formTitle": "Form Đặt lịch",
+    "name": "Họ và tên",
+    "phone": "Số điện thoại",
+    "email": "Email",
+    "service": "Dịch vụ",
+    "notes": "Ghi chú",
+    "submit": "Gửi yêu cầu"
+  },
+  "contact": {
+    "heroTitle": "Liên hệ",
+    "heroSubtitle": "Liên hệ với Pearl Mansion để được tư vấn và hỗ trợ.",
+    "badge": "Liên hệ",
+    "info": "Thông tin liên hệ",
+    "sendMessage": "Gửi tin nhắn",
+    "name": "Họ tên",
+    "email": "Email",
+    "subject": "Chủ đề",
+    "message": "Nội dung",
+    "send": "Gửi tin nhắn"
+  },
+  "offers": {
+    "heroTitle": "Ưu đãi đặc biệt",
+    "heroSubtitle": "Các ưu đãi và khuyến mãi độc quyền dành cho khách hàng.",
+    "badge": "Ưu đãi"
+  },
+  "feedback": {
+    "heroTitle": "Đánh giá khách hàng",
+    "heroSubtitle": "Phản hồi từ những vị khách VIP đã trải nghiệm dịch vụ.",
+    "badge": "Feedback"
+  },
+  "promotions": {
+    "heroTitle": "Khuyến mãi",
+    "heroSubtitle": "Chương trình khuyến mãi và ưu đãi mới nhất.",
+    "badge": "Khuyến mãi",
+    "validUntil": "Có hiệu lực đến"
+  },
+  "branches": {
+    "heroTitle": "Hệ thống chi nhánh",
+    "heroSubtitle": "Pearl Mansion hiện diện tại các vị trí đắc địa nhất.",
+    "badge": "Chi nhánh",
+    "flagship": "Flagship"
+  },
+  "account": {
+    "heroTitle": "Tài khoản khách hàng",
+    "heroSubtitle": "Đăng nhập hoặc đăng ký để quản lý tài khoản thành viên.",
+    "badge": "Tài khoản",
+    "loginTitle": "Đăng nhập",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "login": "Đăng nhập",
+    "forgot": "Quên mật khẩu?",
+    "or": "hoặc",
+    "register": "Đăng ký tài khoản mới"
+  },
+  "partners": {
+    "heroTitle": "Đối tác",
+    "heroSubtitle": "Các thương hiệu đối tác cao cấp của Pearl Mansion.",
+    "badge": "Đối tác"
+  },
+  "packages": {
+    "heroTitle": "Gói liệu trình",
+    "heroSubtitle": "Các gói liệu trình trọn gói với ưu đãi đặc biệt.",
+    "badge": "Gói liệu trình",
+    "sessions": "buổi",
+    "book": "Đặt gói"
+  },
+  "beforeAfter": {
+    "heroTitle": "Kết quả trước-sau",
+    "heroSubtitle": "Thành tựu thực tế từ các liệu trình Pearl Mansion.",
+    "badge": "Kết quả",
+    "before": "Trước",
+    "after": "Sau"
+  },
+  "faq": {
+    "heroTitle": "Câu hỏi thường gặp",
+    "heroSubtitle": "Giải đáp các thắc mắc về dịch vụ và chính sách.",
+    "badge": "FAQ"
+  },
+  "policy": {
+    "heroTitle": "Chính sách",
+    "heroSubtitle": "Các điều khoản và chính sách của Pearl Mansion.",
+    "badge": "Chính sách",
+    "terms": "Điều khoản sử dụng",
+    "termsContent": "Bằng việc sử dụng dịch vụ của Pearl Mansion, bạn đồng ý tuân thủ các điều khoản và điều kiện được nêu trong tài liệu này...",
+    "privacy": "Chính sách bảo mật",
+    "privacyContent": "Chúng tôi cam kết bảo vệ quyền riêng tư của khách hàng. Mọi thông tin cá nhân được xử lý và lưu trữ theo quy định pháp luật...",
+    "refund": "Chính sách hoàn tiền",
+    "refundContent": "Pearl Mansion áp dụng chính sách hoàn tiền linh hoạt cho các liệu trình chưa sử dụng. Vui lòng liên hệ bộ phận CSKH để được hỗ trợ..."
+  },
+  "gallery": {
+    "heroTitle": "Thư viện ảnh",
+    "heroSubtitle": "Khám phá không gian và dịch vụ Pearl Mansion qua hình ảnh.",
+    "badge": "Gallery"
+  }
+}

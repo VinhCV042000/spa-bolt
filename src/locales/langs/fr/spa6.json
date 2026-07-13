@@ -1,0 +1,77 @@
+{
+  "hero": {
+    "badge": "Terra Heal",
+    "tagline": "La guérison par la terre",
+    "title1": "Retour",
+    "title2": "à la nature",
+    "title3": "— guérison du corps entier",
+    "description": "Un voyage de bien-être inspiré de l'Ayurveda et de la philosophie balinaise — où les plantes, la terre et l'énergie naturelle restaurent le corps, l'esprit et l'âme.",
+    "startJourney": "Commencez votre voyage",
+    "viewRetreats": "Voir les retraites",
+    "ratingText": "avis excellents",
+    "certifiedOrganic": "Certifié biologique",
+    "sustainableTag": "Durable",
+    "holisticTag": "Holistique",
+    "naturalbTag": "100 % naturel"
+  },
+  "about": {
+    "label": "Notre philosophie",
+    "title": "Trois principes de",
+    "titleHighlight": "guérison naturelle",
+    "description": "Terra Heal fusionne la philosophie ayurvédique vieille de 5 000 ans avec la phytothérapie indigène vietnamienne et les pratiques balinaises traditionnelles.",
+    "pillar1Title": "Équilibre des Doshas",
+    "pillar1Desc": "Nous analysons votre constitution et adaptons les soins à votre type de Dosha — Vata, Pitta ou Kapha — pour un équilibre parfait.",
+    "pillar2Title": "Détox naturelle",
+    "pillar2Desc": "Les herbes et minéraux issus de la nature purifient profondément votre corps de l'intérieur — sans produits chimiques, uniquement la pureté.",
+    "pillar3Title": "Restauration de l'énergie",
+    "pillar3Desc": "Les sons de la nature, la méditation et le toucher thérapeutique œuvrent ensemble pour rétablir votre flux d'énergie vitale."
+  },
+  "rituals": {
+    "label": "Rituels de la terre",
+    "title": "Rituels de guérison",
+    "titleHighlight": "inspirés de la terre",
+    "description": "Chaque rituel est un mélange d'herbes, de minéraux et de techniques traditionnelles transmises de génération en génération.",
+    "duration": "minutes",
+    "fromPrice": "À partir de",
+    "bookRitual": "Réserver le rituel"
+  },
+  "packages": {
+    "label": "Forfaits retraite",
+    "title": "Choisissez votre",
+    "titleHighlight": "voyage de guérison",
+    "description": "Des courtes escapades de week-end aux immersions d'une semaine complète — chaque forfait retraite est un voyage transformateur.",
+    "perPerson": "/personne",
+    "nights": "nuits",
+    "includes": "Comprend :",
+    "bookRetreat": "Réserver cette retraite",
+    "mostPopular": "Le plus populaire",
+    "perDay": "/jour",
+    "inclusive": "Tout compris"
+  },
+  "testimonials": {
+    "label": "Voyages authentiques",
+    "title": "Histoires de",
+    "titleHighlight": "guérison"
+  },
+  "booking": {
+    "label": "Commencer",
+    "title": "Réservez une",
+    "titleHighlight": "consultation gratuite",
+    "description": "Échangez avec un expert en bien-être pour planifier votre voyage. Sans engagement, entièrement gratuit.",
+    "name": "Votre nom",
+    "email": "E-mail",
+    "phone": "Numéro de téléphone",
+    "concern": "Ce que vous souhaitez améliorer",
+    "concernPlaceholder": "Stress, fatigue, peau, insomnie...",
+    "preferredDate": "Date souhaitée",
+    "howHear": "Comment avez-vous entendu parler de nous",
+    "submit": "Réserver une consultation gratuite",
+    "whatsapp": "Discuter sur WhatsApp",
+    "step1": "Consultation gratuite",
+    "step1Desc": "Rencontrez un expert en Ayurveda",
+    "step2": "Plan personnalisé",
+    "step2Desc": "Conçu rien que pour vous",
+    "step3": "Commencez la guérison",
+    "step3Desc": "Votre transformation commence"
+  }
+}

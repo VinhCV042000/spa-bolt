@@ -1,0 +1,59 @@
+{
+  "hero": {
+    "tagline": "NEON BEAUTY · FUTURE EDITION",
+    "title": "Future",
+    "titleAccent": "beauty",
+    "subtitle": "Liệu trình immersive và công nghệ làm đẹp tiên tiến được tái thiết kế cho thế hệ tiếp theo.",
+    "cta": "Đặt lịch"
+  },
+  "booking": {
+    "eyebrow": "ĐẶT LỊCH · FUTURE BEAUTY",
+    "title": "Tham gia",
+    "titleAccent": "tương lai",
+    "description": "Trải nghiệm beauty tech thế hệ mới ngay hôm nay.",
+    "hotlineLabel": "Hotline",
+    "addressLabel": "Địa chỉ",
+    "hoursLabel": "Giờ làm việc",
+    "namePlaceholder": "Họ và tên",
+    "phonePlaceholder": "Số điện thoại",
+    "packagePlaceholder": "Chọn gói điều trị",
+    "submit": "ĐẶT LỊCH NGAY"
+  },
+  "services": {
+    "eyebrow": "DỊCH VỤ · SERVICES",
+    "title": "Cyber",
+    "titleAccent": "Beauty"
+  },
+  "packages": {
+    "eyebrow": "GÓI ĐIỀU TRỊ · PACKAGES",
+    "title": "Neon",
+    "titleAccent": "Glow",
+    "popularBadge": "MOST POPULAR",
+    "bookNow": "ĐẶT LỊCH"
+  },
+  "results": {
+    "title": "Result",
+    "titleAccent": "Timeline",
+    "note": "Giá đã bao gồm thuế và phí dịch vụ. Thanh toán linh hoạt — tiền mặt, thẻ, hoặc chuyển khoản."
+  },
+  "technology": {
+    "eyebrow": "CÔNG NGHỆ · TECHNOLOGY",
+    "title": "Future",
+    "titleAccent": "Tech"
+  },
+  "specialists": {
+    "eyebrow": "ĐỘI NGŨ · SPECIALISTS",
+    "title": "Tech",
+    "titleAccent": "Experts"
+  },
+  "testimonials": {
+    "eyebrow": "ĐÁNH GIÁ · TESTIMONIALS",
+    "title": "Client",
+    "titleAccent": "Reviews"
+  },
+  "faq": {
+    "eyebrow": "CÂU HỎI · FAQ",
+    "title": "Q&A",
+    "titleAccent": "Tech"
+  }
+}

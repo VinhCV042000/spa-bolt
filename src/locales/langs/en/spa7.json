@@ -1,0 +1,161 @@
+{
+  "hero": {
+    "badge": "Noir & Rose",
+    "tagline": "Beauty clinic meets spa",
+    "title1": "Glass skin.",
+    "title2": "Cutting-edge",
+    "title3": "technology.",
+    "description": "Where the world's most advanced beauty science meets Korean skincare artistry. LED therapy, high-frequency RF, cryotherapy and collagen induction in a luxurious all-black space.",
+    "bookConsult": "Free consultation",
+    "viewTech": "Our technologies",
+    "freeConsultBadge": "Free skin consultation · 30 min",
+    "stat1": "Satisfied clients",
+    "stat2": "Exclusive technologies",
+    "stat3": "Certified specialists"
+  },
+  "tech": {
+    "label": "Treatment technologies",
+    "title": "4 cutting-edge",
+    "titleHighlight": "beauty technologies",
+    "description": "We invest in the world's most advanced beauty technology to deliver real results — not just promises.",
+    "learnMore": "Learn more"
+  },
+  "menu": {
+    "label": "Service pricing",
+    "title": "Full treatment",
+    "titleHighlight": "menu",
+    "description": "Every treatment is customised to your skin type and personal goals. Fixed pricing — no surprises.",
+    "duration": "duration",
+    "sessions": "sessions",
+    "bookNow": "Book now"
+  },
+  "results": {
+    "label": "Real results",
+    "title": "Before &",
+    "titleHighlight": "After",
+    "description": "Real results from real clients. No editing, no filters — only technology and technique.",
+    "weeks": "weeks",
+    "sessions": "sessions"
+  },
+  "booking": {
+    "label": "Book now",
+    "title": "Start your",
+    "titleHighlight": "skin journey",
+    "description": "Free 30-minute skin consultation with a specialist. Skin analysis, goal-setting and a personalised treatment plan.",
+    "name": "Full name",
+    "phone": "Phone number",
+    "email": "Email",
+    "concern": "Skin concern",
+    "concernPlaceholder": "Acne, pigmentation, dark spots, ageing, pores...",
+    "preferTime": "Preferred time",
+    "submit": "Book free consultation",
+    "guarantee": "Results guaranteed or 100% money back"
+  },
+  "pages": {
+    "about": {
+      "eyebrow": "About Noir & Rose",
+      "title": "Bringing nature into every ritual",
+      "subtitle": "We believe true beauty comes from the balance of body, mind and nature."
+    },
+    "services": {
+      "eyebrow": "Services",
+      "title": "A collection of nature-inspired treatments",
+      "subtitle": "Every ritual is a sensory journey — blending Vietnamese botanicals with modern European technology."
+    },
+    "serviceDetails": {
+      "eyebrow": "Services",
+      "title": "",
+      "subtitle": ""
+    },
+    "training": {
+      "eyebrow": "Training",
+      "title": "Noir & Rose Academy",
+      "subtitle": "In-depth courses for technicians, skincare specialists and spa managers."
+    },
+    "blog": {
+      "eyebrow": "Blog",
+      "title": "A guide to caring for yourself",
+      "subtitle": "Insights on skincare, nutrition, yoga and a healthy lifestyle."
+    },
+    "blogDetails": {
+      "eyebrow": "",
+      "title": "",
+      "subtitle": ""
+    },
+    "careers": {
+      "eyebrow": "Careers",
+      "title": "Join the Noir & Rose team",
+      "subtitle": "We are always looking for people who love nature and are passionate about caring for others."
+    },
+    "careerDetails": {
+      "eyebrow": "Careers",
+      "title": "",
+      "subtitle": ""
+    },
+    "bookingPage": {
+      "eyebrow": "Booking",
+      "title": "Book online in under a minute",
+      "subtitle": "Choose your treatment, branch and time — we confirm within 15 minutes."
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "title": "We are always listening",
+      "subtitle": "Leave us a message and our team will respond within 30 minutes (business hours)."
+    },
+    "offers": {
+      "eyebrow": "Offers",
+      "title": "Special packages made for you",
+      "subtitle": "Save more and enjoy fuller experiences with our seasonal offers."
+    },
+    "feedback": {
+      "eyebrow": "Client feedback",
+      "title": "Loved by 25,000+ clients",
+      "subtitle": "Every review inspires us to keep improving."
+    },
+    "promotions": {
+      "eyebrow": "Promotions",
+      "title": "Seasonal events & promotions",
+      "subtitle": "Discover our limited-time programs and biggest offers of the year."
+    },
+    "branches": {
+      "eyebrow": "Locations",
+      "title": "4 branches nationwide",
+      "subtitle": "Find the Noir & Rose branch nearest you — the same standard everywhere."
+    },
+    "account": {
+      "eyebrow": "Account",
+      "title": "Members area",
+      "subtitle": "Manage your bookings, reward points and treatment plans."
+    },
+    "partners": {
+      "eyebrow": "Partners",
+      "title": "Trusted collaborators",
+      "subtitle": "We partner with the world's leading cosmetics and spa technology brands."
+    },
+    "treatments": {
+      "eyebrow": "Treatment packages",
+      "title": "Advanced treatment programs",
+      "subtitle": "Personalised journeys designed for each concern — with visible results guaranteed."
+    },
+    "beforeAfter": {
+      "eyebrow": "Before & After",
+      "title": "Real results from real clients",
+      "subtitle": "Photos shared with client consent — completely unedited."
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Frequently asked questions",
+      "subtitle": "Everything you need to know before visiting Noir & Rose."
+    },
+    "policy": {
+      "eyebrow": "Policies",
+      "title": "Terms & policies",
+      "subtitle": "Transparency, fairness and respect guide everything we do at Noir & Rose."
+    },
+    "gallery": {
+      "eyebrow": "Gallery",
+      "title": "Moments at Noir & Rose",
+      "subtitle": "Spaces, products and emotions captured in every frame."
+    }
+  }
+}

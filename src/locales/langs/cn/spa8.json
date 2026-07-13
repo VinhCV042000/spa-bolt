@@ -1,0 +1,48 @@
+{
+  "hero": {
+    "badge": "Amaya Onsen",
+    "kana": "あまや温泉",
+    "subtitle": "旅馆养生疗养",
+    "title1": "宁静",
+    "title2": "纯粹日式",
+    "title3": "——灵魂焕新",
+    "description": "体验传统日式旅馆的灵魂——温热矿物温泉、经典指压按摩与「间」（神圣的静默）哲学相融合，修复身心。",
+    "bookOmakase": "预约 Omakase",
+    "viewSeasons": "按季节查看",
+    "openDaily": "每日营业",
+    "hours": "8:00 — 22:00"
+  },
+  "seasons": {
+    "label": "季节护理",
+    "title": "四季",
+    "titleHighlight": "疗愈",
+    "description": "日本「自然」哲学——与自然和谐共生。每一项护理都映照出每个季节独特的美。",
+    "duration": "分钟",
+    "bookSeason": "预约护理"
+  },
+  "onsen": {
+    "label": "温泉与指压",
+    "title": "正宗的",
+    "titleHighlight": "温泉体验",
+    "description": "以传统旅馆风格呈现的温热矿物浴——旨在致敬「间」（神圣的静默）与「侘寂」（不完美之美）。",
+    "privatePool": "私人汤池",
+    "sharedOnsen": "共用温泉",
+    "includesLabel": "包含：",
+    "bookOnsen": "预约温泉"
+  },
+  "booking": {
+    "label": "Omakase 预订",
+    "title": "一切",
+    "titleHighlight": "交由我们",
+    "description": "「Omakase」——将一切托付给我们。只需告诉我们时间与人数，其余皆是美妙的惊喜。",
+    "name": "姓名",
+    "guests": "宾客人数",
+    "date": "日期",
+    "time": "时间",
+    "duration": "停留时长",
+    "special": "特别要求",
+    "specialPlaceholder": "香味敏感、过敏、个人需求……",
+    "confirm": "确认 Omakase",
+    "policy": "48 小时前免费取消 · 30% 订金"
+  }
+}

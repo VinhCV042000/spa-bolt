@@ -1,0 +1,131 @@
+{
+  "hero": {
+    "eyebrow": "Riad · RIAD N°16",
+    "title": "Riad Al-Andalus",
+    "titleAccent": "hammam between",
+    "titleHighlight": "a thousand nights",
+    "description": "A Marrakech journey in the heart of Hoi An — four marble hammam suites, six argan rituals, and rooftop stargazing beneath Berber mint tea.",
+    "ctaPrimary": "Reserve the Sultan Ritual",
+    "ctaSecondary": "Explore the hammam",
+    "stats": ["4 hammam rooms", "16 Moroccan therapists", "24 Berber ingredients"]
+  },
+  "heritage": {
+    "eyebrow": "HERITAGE · BERBER LEGACY",
+    "title": "The four legacies of",
+    "titleHighlight": "ancient Maghreb",
+    "description": "Each zellige tile, each argan drop, and each saffron pinch at Al-Andalus tells the story of a thousand years between the Sahara and the Atlantic."
+  },
+  "booking": {
+    "eyebrow": "RESERVATION · BOOK A RITUAL",
+    "title": "Begin your",
+    "titleHighlight": "Maghreb journey",
+    "description": "Leave your details and our Berber concierge will contact you within 30 minutes to confirm your preferred time and prepare your riad.",
+    "name": "Full name",
+    "phone": "Phone number",
+    "email": "Email",
+    "ritual": "Ritual",
+    "date": "Date",
+    "time": "Time",
+    "notes": "Additional notes",
+    "submit": "Confirm booking",
+    "call": "Call concierge"
+  },
+  "pages": {
+    "about": {
+      "eyebrow": "About Imperial Vienna",
+      "title": "A Belle Époque journey through Austro-Hungarian wellness",
+      "subtitle": "In the footsteps of Emperor Franz Joseph and Empress Sisi — bathing rituals of Central Europe reborn for the 21st century."
+    },
+    "services": {
+      "eyebrow": "Services",
+      "title": "A curated menu of Imperial treatments",
+      "subtitle": "Vinotherapy, alkaline mineral springs and Habsburg rituals — each protocol crafted by our master therapists."
+    },
+    "serviceDetails": {
+      "eyebrow": "Service"
+    },
+    "training": {
+      "eyebrow": "Academy",
+      "title": "Imperial Vienna Academy",
+      "subtitle": "Master-level courses in vinotherapy, thermal bathing and classic European spa craft."
+    },
+    "blog": {
+      "eyebrow": "Journal",
+      "title": "The wellness journal",
+      "subtitle": "Notes on Belle Époque wellness, longevity science and mindful Vienna living."
+    },
+    "careers": {
+      "eyebrow": "Careers",
+      "title": "Join the imperial atelier",
+      "subtitle": "We seek passionate therapists, sommeliers and hosts who love craftsmanship and hospitality."
+    },
+    "careerDetails": {
+      "eyebrow": "Careers"
+    },
+    "bookingPage": {
+      "eyebrow": "Reservations",
+      "title": "Reserve your imperial ritual",
+      "subtitle": "Select treatment, time and palace suite — our concierge confirms within 15 minutes."
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "title": "At your service, always",
+      "subtitle": "Send us a message — our imperial concierge replies within 30 minutes during opening hours."
+    },
+    "offers": {
+      "eyebrow": "Offers",
+      "title": "Curated imperial packages",
+      "subtitle": "Exclusive seasonal offers designed to spoil our esteemed guests."
+    },
+    "feedback": {
+      "eyebrow": "Guest voices",
+      "title": "Trusted by 25,000+ noble guests",
+      "subtitle": "Every letter of praise inspires us to elevate our craft."
+    },
+    "promotions": {
+      "eyebrow": "Promotions",
+      "title": "Seasonal imperial events",
+      "subtitle": "Discover our limited engagements and grand-ball celebrations of the year."
+    },
+    "branches": {
+      "eyebrow": "Palaces",
+      "title": "4 palaces across the nation",
+      "subtitle": "Find your nearest Imperial Vienna — the same regal standard, wherever you are."
+    },
+    "account": {
+      "eyebrow": "Members",
+      "title": "Imperial members lounge",
+      "subtitle": "Manage your reservations, imperial points and personal treatment history."
+    },
+    "partners": {
+      "eyebrow": "Maisons",
+      "title": "Our imperial maisons",
+      "subtitle": "We partner with the finest European wineries, mineral springs and cosmetic ateliers."
+    },
+    "treatments": {
+      "eyebrow": "Protocols",
+      "title": "Imperial treatment protocols",
+      "subtitle": "Personalised multi-session programs — visible, aristocratic results."
+    },
+    "beforeAfter": {
+      "eyebrow": "Transformations",
+      "title": "Real results, noble guests",
+      "subtitle": "Photographs shared with guest consent — untouched, authentic."
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Frequently asked questions",
+      "subtitle": "Everything you should know before your visit to the palace."
+    },
+    "policy": {
+      "eyebrow": "Policy",
+      "title": "Terms & imperial protocol",
+      "subtitle": "Transparency, elegance and respect for our esteemed guests — always."
+    },
+    "gallery": {
+      "eyebrow": "Gallery",
+      "title": "Moments at Imperial Vienna",
+      "subtitle": "The salons, the rituals and the emotions — captured in silver frames."
+    }
+  }
+}

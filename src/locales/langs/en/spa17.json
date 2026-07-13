@@ -1,0 +1,116 @@
+{
+  "hero": {
+    "eyebrow": "Korean Crystal Spa · 수정 스파",
+    "title": "Crystal Glow",
+    "titleAccent": "Korean radiance",
+    "titleHighlight": "in motion",
+    "description": "Where K-Beauty technology meets crystal healing — 10-step glass skin ritual, gemstone gua sha, and a traditional jjimjilbang detox experience.",
+    "ctaPrimary": "Book Glass Skin",
+    "ctaSecondary": "Explore Crystal",
+    "stats": ["10 glass skin steps", "7 crystal chakras", "100+ K-beauty products"]
+  },
+  "philosophy": {
+    "eyebrow": "PHILOSOPHY · 철학",
+    "title": "The four pillars of",
+    "titleHighlight": "happiness",
+    "description": "A calming, restorative experience shaped by Korean wellness rituals and modern skin science."
+  },
+  "pages": {
+    "about": {
+      "eyebrow": "About Imperial Vienna",
+      "title": "A Belle Époque journey through Austro-Hungarian wellness",
+      "subtitle": "In the footsteps of Emperor Franz Joseph and Empress Sisi — bathing rituals of Central Europe reborn for the 21st century."
+    },
+    "services": {
+      "eyebrow": "Services",
+      "title": "A curated menu of Imperial treatments",
+      "subtitle": "Vinotherapy, alkaline mineral springs and Habsburg rituals — each protocol crafted by our master therapists."
+    },
+    "serviceDetails": {
+      "eyebrow": "Service"
+    },
+    "training": {
+      "eyebrow": "Academy",
+      "title": "Imperial Vienna Academy",
+      "subtitle": "Master-level courses in vinotherapy, thermal bathing and classic European spa craft."
+    },
+    "blog": {
+      "eyebrow": "Journal",
+      "title": "The wellness journal",
+      "subtitle": "Notes on Belle Époque wellness, longevity science and mindful Vienna living."
+    },
+    "careers": {
+      "eyebrow": "Careers",
+      "title": "Join the imperial atelier",
+      "subtitle": "We seek passionate therapists, sommeliers and hosts who love craftsmanship and hospitality."
+    },
+    "careerDetails": {
+      "eyebrow": "Careers"
+    },
+    "bookingPage": {
+      "eyebrow": "Reservations",
+      "title": "Reserve your imperial ritual",
+      "subtitle": "Select treatment, time and palace suite — our concierge confirms within 15 minutes."
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "title": "At your service, always",
+      "subtitle": "Send us a message — our imperial concierge replies within 30 minutes during opening hours."
+    },
+    "offers": {
+      "eyebrow": "Offers",
+      "title": "Curated imperial packages",
+      "subtitle": "Exclusive seasonal offers designed to spoil our esteemed guests."
+    },
+    "feedback": {
+      "eyebrow": "Guest voices",
+      "title": "Trusted by 25,000+ noble guests",
+      "subtitle": "Every letter of praise inspires us to elevate our craft."
+    },
+    "promotions": {
+      "eyebrow": "Promotions",
+      "title": "Seasonal imperial events",
+      "subtitle": "Discover our limited engagements and grand-ball celebrations of the year."
+    },
+    "branches": {
+      "eyebrow": "Palaces",
+      "title": "4 palaces across the nation",
+      "subtitle": "Find your nearest Imperial Vienna — the same regal standard, wherever you are."
+    },
+    "account": {
+      "eyebrow": "Members",
+      "title": "Imperial members lounge",
+      "subtitle": "Manage your reservations, imperial points and personal treatment history."
+    },
+    "partners": {
+      "eyebrow": "Maisons",
+      "title": "Our imperial maisons",
+      "subtitle": "We partner with the finest European wineries, mineral springs and cosmetic ateliers."
+    },
+    "treatments": {
+      "eyebrow": "Protocols",
+      "title": "Imperial treatment protocols",
+      "subtitle": "Personalised multi-session programs — visible, aristocratic results."
+    },
+    "beforeAfter": {
+      "eyebrow": "Transformations",
+      "title": "Real results, noble guests",
+      "subtitle": "Photographs shared with guest consent — untouched, authentic."
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Frequently asked questions",
+      "subtitle": "Everything you should know before your visit to the palace."
+    },
+    "policy": {
+      "eyebrow": "Policy",
+      "title": "Terms & imperial protocol",
+      "subtitle": "Transparency, elegance and respect for our esteemed guests — always."
+    },
+    "gallery": {
+      "eyebrow": "Gallery",
+      "title": "Moments at Imperial Vienna",
+      "subtitle": "The salons, the rituals and the emotions — captured in silver frames."
+    }
+  }
+}

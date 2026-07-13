@@ -1,0 +1,58 @@
+{
+  "hero": {
+    "badge": "Lumière Balnéo",
+    "pretitle": "L'Art du Bien-Être",
+    "title1": "Nghệ thuật",
+    "title2": "tắm liệu pháp",
+    "title3": "kiểu Pháp",
+    "description": "Khám phá trải nghiệm balnéothérapie thượng lưu — kết hợp liệu pháp khoáng chất nhiệt, rượu nho và biển sâu theo truyền thống spa Pháp cổ điển.",
+    "bookNow": "Đặt trải nghiệm",
+    "discoverMenu": "Xem menu",
+    "openingHours": "Mở cửa hàng ngày",
+    "hoursValue": "9:00 — 21:00",
+    "tag1": "Hydrotherapy",
+    "tag2": "Vinotherapy",
+    "tag3": "Thalassotherapy"
+  },
+  "experience": {
+    "label": "Signature Rituals",
+    "title": "4 liệu trình",
+    "titleHighlight": "đặc trưng",
+    "description": "Mỗi liệu trình được thiết kế riêng theo triết lý balnéothérapie Pháp — nơi nước, khoáng chất và hương thơm kết hợp tạo nên phép màu.",
+    "duration": "phút",
+    "bookRitual": "Đặt liệu trình"
+  },
+  "treatments": {
+    "label": "Menu liệu trình",
+    "title": "Toàn bộ",
+    "titleHighlight": "menu spa",
+    "description": "Từ liệu pháp nước nhiệt đến đắp bùn Pháp — mỗi liệu trình là một hành trình thư giãn độc đáo.",
+    "duration": "thời gian",
+    "price": "giá"
+  },
+  "testimonials": {
+    "label": "Cảm nhận",
+    "title": "Tiếng nói từ",
+    "titleHighlight": "những vị khách quý"
+  },
+  "booking": {
+    "label": "Réservation",
+    "title": "Bắt đầu hành trình",
+    "titleHighlight": "của bạn",
+    "description": "Đặt lịch trước để đảm bảo vị trí. Nhận ưu đãi 20% khi đặt lần đầu.",
+    "firstName": "Họ",
+    "lastName": "Tên",
+    "email": "Email",
+    "phone": "Số điện thoại",
+    "selectRitual": "Chọn liệu trình",
+    "date": "Ngày hẹn",
+    "guests": "Số người",
+    "notes": "Ghi chú đặc biệt",
+    "notesPlaceholder": "Sở thích, yêu cầu đặc biệt...",
+    "confirm": "Xác nhận đặt lịch",
+    "callUs": "Gọi đặt chỗ",
+    "privateExperience": "Trải nghiệm riêng tư",
+    "privateDesc": "Dành riêng toàn bộ spa cho nhóm của bạn (tối thiểu 4 người)",
+    "guarantee": "Hoàn tiền 100% nếu hủy trước 24 giờ"
+  }
+}

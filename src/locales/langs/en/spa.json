@@ -1,0 +1,233 @@
+{
+  "meta": {
+    "title": "Serenity Spa - Recharge your energy, nurture your soul",
+    "description": "Serenity Spa - A premium spa experience with therapeutic massage, skincare, body therapies and aromatherapy. Book your appointment today!"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "offers": "Packages",
+    "explore": "Explore",
+    "contact": "Contact",
+    "booking": "Booking",
+    "subheaderServices": "Services",
+    "subheaderContent": "Content",
+    "servicesAll": "All services",
+    "serviceMassage": "Therapeutic massage",
+    "serviceFacial": "Facial care",
+    "serviceBody": "Body therapy",
+    "serviceAroma": "Aromatherapy",
+    "serviceHair": "Hair & scalp",
+    "serviceCouple": "Couple VIP",
+    "training": "Training",
+    "blog": "Blog",
+    "gallery": "Gallery EN/VI",
+    "wellness": "Wellness library",
+    "membership": "Membership",
+    "careers": "Careers"
+  },
+  "hero": {
+    "brand": "Serenity Spa",
+    "titleLead": "Recharge your energy,",
+    "titleHighlight": "nurture your soul",
+    "subtitle": "A premium spa experience with professional therapies, a natural ambiance, and 100% organic products in the heart of the city.",
+    "bookNow": "Book now",
+    "exploreServices": "Explore services",
+    "stats": [
+      { "value": "15+", "label": "Years of experience" },
+      { "value": "50+", "label": "Treatments" },
+      { "value": "10k+", "label": "Happy clients" }
+    ]
+  },
+  "about": {
+    "eyebrow": "About us",
+    "titleLead": "A peaceful retreat",
+    "titleRest": "in the heart of the city",
+    "description": "Serenity Spa was born from a passion for holistic wellbeing. With an internationally trained team of experts and a space designed in a modern Zen style, we are committed to delivering absolute relaxation for every guest.",
+    "ratingCaption": "2,400+ reviews",
+    "features": [
+      {
+        "title": "Dedicated care",
+        "desc": "Every guest receives a personalized treatment consultation."
+      },
+      {
+        "title": "100% Organic",
+        "desc": "Natural products that are safe and eco-friendly."
+      },
+      {
+        "title": "International standards",
+        "desc": "Hygiene and safety procedures meet 5-star spa standards."
+      }
+    ]
+  },
+  "services": {
+    "eyebrow": "Services",
+    "titleLead": "Premium",
+    "titleRest": "care treatments",
+    "subtitle": "Discover treatments tailored to restore the body, beautify the skin, and balance the mind.",
+    "cta": "Book a free consultation",
+    "items": [
+      {
+        "title": "Therapeutic Massage",
+        "description": "Thai, Shiatsu, and hot stone massage to relax muscles, improve circulation, and relieve stress.",
+        "duration": "60 - 90 min"
+      },
+      {
+        "title": "Facial Care",
+        "description": "Intensive facial treatments with organic cosmetics, suitable for all skin types for a radiant glow.",
+        "duration": "45 - 75 min"
+      },
+      {
+        "title": "Body Therapy",
+        "description": "Full-body exfoliation, body wraps, and detox for soft, firm, and energized skin.",
+        "duration": "90 - 120 min"
+      },
+      {
+        "title": "Aromatherapy",
+        "description": "Premium natural essential oils combined with aromatherapy to balance body and mind.",
+        "duration": "60 min"
+      }
+    ]
+  },
+  "amenities": {
+    "eyebrow": "Amenities",
+    "titleLead": "A complete",
+    "titleRest": "experience",
+    "description": "Serenity Spa offers a multi-amenity relaxation space — from sauna and jacuzzi to a yoga area — all in one destination.",
+    "items": [
+      {
+        "title": "Sauna Room",
+        "description": "Modern dry and wet saunas to detox and deeply relax."
+      },
+      {
+        "title": "Jacuzzi",
+        "description": "A private hydrotherapy space with warm water and relaxing oils."
+      },
+      {
+        "title": "Yoga & Meditation",
+        "description": "Daily yoga and meditation classes in a quiet space."
+      },
+      {
+        "title": "Organic Products",
+        "description": "100% natural ingredients, paraben-free and eco-friendly."
+      }
+    ]
+  },
+  "packages": {
+    "eyebrow": "Packages",
+    "titleLead": "Choose the package",
+    "titleRest": "that fits you",
+    "subtitle": "Combo packages designed to save costs while delivering the most complete spa experience.",
+    "popular": "Popular",
+    "choose": "Choose this package",
+    "items": [
+      {
+        "name": "Relaxation Package",
+        "caption": "For first-timers",
+        "features": [
+          "60-min body massage",
+          "30-min sauna",
+          "Complimentary herbal tea",
+          "Aromatherapy cold towel"
+        ]
+      },
+      {
+        "name": "Revitalize Package",
+        "caption": "Most popular choice",
+        "features": [
+          "90-min body massage",
+          "60-min facial treatment",
+          "Full-body scrub",
+          "45-min jacuzzi",
+          "Complimentary detox drink"
+        ]
+      },
+      {
+        "name": "Premium Package",
+        "caption": "The perfect experience",
+        "features": [
+          "120-min body treatment",
+          "90-min premium facial",
+          "Private aromatherapy",
+          "Private VIP room",
+          "Healthy lunch",
+          "Organic product gift"
+        ]
+      }
+    ]
+  },
+  "testimonials": {
+    "eyebrow": "Testimonials",
+    "titleLead": "What our clients",
+    "titleRest": "say",
+    "items": [
+      {
+        "name": "Nguyen Minh Anh",
+        "role": "Entrepreneur",
+        "content": "Serenity Spa is where I find peace amid a busy life. The massage is wonderful, the staff professional, and the space incredibly relaxing."
+      },
+      {
+        "name": "Tran Hoang Long",
+        "role": "Software engineer",
+        "content": "The Revitalize Package is truly worth it. After the treatment, my body felt light and my mind refreshed. I'll definitely return!"
+      },
+      {
+        "name": "Le Thu Ha",
+        "role": "Teacher",
+        "content": "The organic facial visibly brightened and smoothed my skin. The spa is elegant, clean, and very private. Highly recommended!"
+      },
+      {
+        "name": "Pham Quoc Bao",
+        "role": "Doctor",
+        "content": "I regularly refer my patients to Serenity Spa to reduce stress. The service quality is consistently reliable."
+      }
+    ]
+  },
+  "faqs": {
+    "eyebrow": "FAQ",
+    "titleLead": "Frequently asked",
+    "titleRest": "questions",
+    "items": [
+      {
+        "question": "How far in advance should I book?",
+        "answer": "We recommend booking at least 24 hours in advance, especially on weekends and holidays. You can book online or call our hotline."
+      },
+      {
+        "question": "Is the spa suitable for pregnant women?",
+        "answer": "Yes, we offer dedicated prenatal massage from week 13 onward. Please let us know when booking so we can advise you properly."
+      },
+      {
+        "question": "How early should I arrive before my appointment?",
+        "answer": "Please arrive 15 minutes early to check in, change, and relax in the lounge before your treatment."
+      },
+      {
+        "question": "What is the cancellation policy?",
+        "answer": "Free cancellation up to 12 hours before. Cancellations within 12 hours incur a 50% fee. No-shows forfeit the full deposit."
+      },
+      {
+        "question": "Does the spa have parking?",
+        "answer": "Yes, free customer parking is available in the building's basement. Our reception will guide you when you arrive."
+      }
+    ]
+  },
+  "booking": {
+    "eyebrow": "Make an appointment",
+    "title": "Ready to relax?",
+    "description": "Book today and receive 15% off your first experience. Our consulting team is always ready to support you.",
+    "hotlineLabel": "Hotline",
+    "addressLabel": "Address",
+    "addressValue": "123 Nguyen Hue, District 1, HCMC",
+    "hoursLabel": "Opening hours",
+    "hoursValue": "8:00 - 22:00 (Mon - Sun)",
+    "bookOnline": "Book online",
+    "contactConsult": "Contact us"
+  },
+  "cta": {
+    "bookNow": "Book now",
+    "contact": "Contact",
+    "title": "Ready to start your wellness journey?",
+    "subtitle": "The Serenity Spa team is ready to accompany you on your wellness journey.",
+    "button": "Book online"
+  }
+}

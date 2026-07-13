@@ -1,0 +1,140 @@
+{
+  "hero": {
+    "badge": "马拉喀什哈曼浴",
+    "tagline": "正宗摩洛哥哈曼浴",
+    "title1": "摩洛哥哈曼浴",
+    "title2": "的仪式",
+    "title3": "五千年的疗愈",
+    "description": "传统摩洛哥哈曼浴——Beldi黑皂、kessa去角质、rhassoul黏土包裹与阿甘油滋养。一场历经数千年传承的身、心、灵净化仪式。",
+    "bookHammam": "预约哈曼浴",
+    "viewMenu": "查看菜单",
+    "openHours": "营业时间 9:00 — 22:00",
+    "genderNote": "男 / 女私密空间"
+  },
+  "steps": {
+    "label": "四步流程",
+    "title": "经典的",
+    "titleHighlight": "哈曼浴仪式",
+    "description": "哈曼浴不仅仅是沐浴——它是阿拉伯世界的一种社交与精神仪式，历经数个世纪由各个社群代代相传。"
+  },
+  "products": {
+    "label": "摩洛哥原料",
+    "title": "北非自然的",
+    "titleHighlight": "珍宝",
+    "description": "每一款产品均直接从摩洛哥工匠处进口——阿加迪尔的阿甘、阿特拉斯的rhassoul、菲斯的Beldi黑皂。",
+    "shopNow": "立即选购"
+  },
+  "booking": {
+    "label": "预约哈曼浴",
+    "title": "步入",
+    "titleHighlight": "摩洛哥的世界",
+    "name": "姓名",
+    "phone": "电话",
+    "date": "日期",
+    "time": "时间",
+    "package": "选择套餐",
+    "gender": "空间",
+    "genderOptions": ["女士", "男士", "情侣（私密）"],
+    "notes": "备注",
+    "confirm": "确认哈曼浴",
+    "policy": "请提前10分钟到达 · 请勿佩戴首饰"
+  },
+  "pages": {
+    "about": {
+      "eyebrow": "关于哈马姆·马拉喀什",
+      "title": "将摩洛哥传统融入每一次仪式的旅程",
+      "subtitle": "真正的美源于身心与自然的平衡——传承数千年。"
+    },
+    "services": {
+      "eyebrow": "服务项目",
+      "title": "摩洛哥哈马姆疗程精选",
+      "subtitle": "每一次仪式都是感官之旅——融合正宗摩洛哥原料与现代 SPA 工艺。"
+    },
+    "serviceDetails": {
+      "eyebrow": "服务"
+    },
+    "training": {
+      "eyebrow": "培训",
+      "title": "哈马姆·马拉喀什学院",
+      "subtitle": "为技师、护肤专家和 SPA 管理者开设的深度课程。"
+    },
+    "blog": {
+      "eyebrow": "博客",
+      "title": "自我关怀手册",
+      "subtitle": "关于护肤、营养、瑜伽与静心生活的知识分享。"
+    },
+    "careers": {
+      "eyebrow": "招聘",
+      "title": "与我们一同成长",
+      "subtitle": "哈马姆·马拉喀什始终寻找热爱传统、乐于服务他人的伙伴。"
+    },
+    "careerDetails": {
+      "eyebrow": "招聘"
+    },
+    "bookingPage": {
+      "eyebrow": "预约",
+      "title": "一分钟在线预约",
+      "subtitle": "选择服务、门店与时间——15 分钟内确认。"
+    },
+    "contact": {
+      "eyebrow": "联系",
+      "title": "我们随时倾听",
+      "subtitle": "留下讯息，团队将在工作时间 30 分钟内回覆。"
+    },
+    "offers": {
+      "eyebrow": "优惠",
+      "title": "为您精选的套餐",
+      "subtitle": "搭配季节优惠，省更多，享更多。"
+    },
+    "feedback": {
+      "eyebrow": "客户评价",
+      "title": "25,000+ 位客户的信赖",
+      "subtitle": "每一条评价都是我们前进的动力。"
+    },
+    "promotions": {
+      "eyebrow": "促销",
+      "title": "季节活动与优惠",
+      "subtitle": "发现限时项目与全年最超值方案。"
+    },
+    "branches": {
+      "eyebrow": "门店",
+      "title": "全国 4 家门店",
+      "subtitle": "就近选择哈马姆·马拉喀什门店，服务标准始终如一。"
+    },
+    "account": {
+      "eyebrow": "账户",
+      "title": "会员中心",
+      "subtitle": "管理您的预约、积分与疗程。"
+    },
+    "partners": {
+      "eyebrow": "合作伙伴",
+      "title": "值得信赖的伙伴",
+      "subtitle": "与全球顶尖 SPA 化妆品与设备品牌合作。"
+    },
+    "treatments": {
+      "eyebrow": "疗程套装",
+      "title": "深度疗程方案",
+      "subtitle": "针对每一种需求量身定制——效果可见、持久。"
+    },
+    "beforeAfter": {
+      "eyebrow": "前后对比",
+      "title": "客户真实成果",
+      "subtitle": "经客户授权分享的照片——未经修饰。"
+    },
+    "faq": {
+      "eyebrow": "常见问题",
+      "title": "您可能想问的",
+      "subtitle": "来店前需要了解的一切。"
+    },
+    "policy": {
+      "eyebrow": "政策",
+      "title": "条款与政策",
+      "subtitle": "透明、公正、尊重客户，是我们的准则。"
+    },
+    "gallery": {
+      "eyebrow": "画廊",
+      "title": "哈马姆·马拉喀什的瞬间",
+      "subtitle": "空间、产品与情感——凝驻画面。"
+    }
+  }
+}

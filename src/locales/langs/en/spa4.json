@@ -1,0 +1,75 @@
+{
+  "hero": {
+    "badge": "✦ Jade Blossom Wellness",
+    "title1": "Pure beauty",
+    "title2": "from",
+    "title3": "Asian nature",
+    "description": "A beauty journey inspired by K-Beauty and Japanese Zen philosophy — where modern science meets the essence of nature, caring for you inside and out.",
+    "bookNow": "Book an experience",
+    "watchVideo": "Watch video",
+    "yearsExp": "Years of experience",
+    "clients": "Happy clients",
+    "exclusiveTreatments": "Exclusive treatments",
+    "ratingLabel": "reviews",
+    "availableToday": "Available today",
+    "slotsLeft": "time slots"
+  },
+  "philosophy": {
+    "label": "Our philosophy",
+    "title": "Three pillars of",
+    "titleHighlight": "lasting beauty",
+    "pillar1Title": "Pure Nature",
+    "pillar1Desc": "Every product is carefully selected from natural herbs — preservative-free and completely safe for sensitive skin.",
+    "pillar2Title": "Modern Science",
+    "pillar2Desc": "Powered by advanced K-Beauty technology: skin type analysis and next-generation nutrient formulas for optimal results.",
+    "pillar3Title": "Mental Balance",
+    "pillar3Desc": "Inspired by Japanese Wabi-sabi — appreciating natural beauty, finding peace in every breath."
+  },
+  "treatments": {
+    "label": "Signature treatments",
+    "title": "Signature Treatments",
+    "viewAll": "View all treatments",
+    "bookNow": "Book now"
+  },
+  "specialists": {
+    "label": "Our specialists",
+    "title": "The golden hands",
+    "titleHighlight": "of Jade Blossom",
+    "description": "Each specialist is intensively trained in South Korea and Japan, delivering world-class beauty experiences.",
+    "experience": "experience"
+  },
+  "membership": {
+    "label": "Membership plans",
+    "title": "Choose your perfect plan",
+    "description": "Save more, get pampered more. Jade Blossom members enjoy exclusive benefits every month.",
+    "mostPopular": "✦ MOST POPULAR",
+    "perMonth": "/month",
+    "registerNow": "Register now",
+    "noContract": "All memberships can be cancelled at any time. No binding contracts."
+  },
+  "testimonials": {
+    "label": "Guest reviews",
+    "title": "What they say about us"
+  },
+  "booking": {
+    "label": "Book online",
+    "title": "Start your",
+    "titleHighlight": "beauty journey",
+    "description": "Free booking, instant SMS confirmation. Change or cancel anytime.",
+    "fullName": "Full name",
+    "fullNamePlaceholder": "Enter your name",
+    "phone": "Phone number",
+    "phonePlaceholder": "0xxx xxx xxx",
+    "selectTreatment": "Select treatment",
+    "appointmentDate": "Appointment date",
+    "timeSlot": "Time slot",
+    "specialRequest": "Special requests (optional)",
+    "specialRequestPlaceholder": "Allergies, special health conditions...",
+    "confirmBooking": "Confirm booking",
+    "refund": "Money-back guarantee",
+    "refundDesc": "100% refund if you are not satisfied after your first session.",
+    "badge1": "Secure information",
+    "badge2": "Response in 5 minutes",
+    "badge3": "100% Refund"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "hero": {
+    "badge": "Amaya Onsen",
+    "kana": "あまや温泉",
+    "subtitle": "Ryokan Wellness Retreat",
+    "title1": "Tĩnh lặng",
+    "title2": "thuần Nhật",
+    "title3": "— Tâm hồn được nghỉ ngơi",
+    "description": "Trải nghiệm linh hồn của Ryokan truyền thống Nhật Bản — nơi onsen khoáng nóng, shiatsu cổ điển và triết lý 'Ma' (khoảng lặng) hòa quyện để phục hồi tâm trí và cơ thể.",
+    "bookOmakase": "Đặt Omakase",
+    "viewSeasons": "Xem theo mùa",
+    "openDaily": "Mở cửa hàng ngày",
+    "hours": "8:00 — 22:00"
+  },
+  "seasons": {
+    "label": "Liệu trình theo mùa",
+    "title": "Bốn mùa",
+    "titleHighlight": "chữa lành",
+    "description": "Triết lý Nhật Bản 'Shizen' — sống hài hoà với thiên nhiên. Mỗi liệu trình phản ánh vẻ đẹp độc đáo của từng mùa trong năm.",
+    "duration": "phút",
+    "bookSeason": "Đặt liệu trình"
+  },
+  "onsen": {
+    "label": "Onsen & Shiatsu",
+    "title": "Trải nghiệm",
+    "titleHighlight": "onsen đích thực",
+    "description": "Bể tắm khoáng nhiệt theo phong cách Ryokan truyền thống — được thiết kế tôn trọng 'Ma' (khoảng lặng thiêng liêng) và 'Wabi-sabi' (vẻ đẹp của sự không hoàn hảo).",
+    "privatePool": "Bể riêng tư",
+    "sharedOnsen": "Onsen chung",
+    "includesLabel": "Bao gồm:",
+    "bookOnsen": "Đặt onsen"
+  },
+  "booking": {
+    "label": "Omakase Booking",
+    "title": "Để chúng tôi",
+    "titleHighlight": "lo tất cả",
+    "description": "'Omakase' — trao hoàn toàn cho chúng tôi. Chỉ cho chúng tôi biết thời gian và số người, phần còn lại là sự bất ngờ tuyệt vời.",
+    "name": "Tên",
+    "guests": "Số người",
+    "date": "Ngày",
+    "time": "Giờ",
+    "duration": "Thời gian ở",
+    "special": "Yêu cầu đặc biệt",
+    "specialPlaceholder": "Kỵ mùi hương, dị ứng, yêu cầu riêng...",
+    "confirm": "Xác nhận Omakase",
+    "policy": "Hủy miễn phí trước 48 giờ · Đặt cọc 30%"
+  }
+}

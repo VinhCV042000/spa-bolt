@@ -1,0 +1,140 @@
+{
+  "hero": {
+    "badge": "Hammam Marrakech",
+    "tagline": "Authentic Moroccan Hammam",
+    "title1": "Nghi lễ",
+    "title2": "Hammam Morocco",
+    "title3": "5000 năm chữa lành",
+    "description": "Hammam truyền thống Morocco — đen xà phòng Beldi, tẩy da kessa, đắp rhassoul và dưỡng dầu argan. Nghi lễ làm sạch thân-tâm-trí được gìn giữ qua hàng nghìn năm.",
+    "bookHammam": "Đặt Hammam",
+    "viewMenu": "Xem menu",
+    "openHours": "Mở cửa 9:00 — 22:00",
+    "genderNote": "Không gian riêng Nam / Nữ"
+  },
+  "steps": {
+    "label": "Quy trình 4 bước",
+    "title": "Nghi lễ Hammam",
+    "titleHighlight": "cổ điển",
+    "description": "Hammam không chỉ là tắm — đó là nghi lễ xã hội và tâm linh của thế giới Ả Rập, được cộng đồng gìn giữ qua nhiều thế kỷ."
+  },
+  "products": {
+    "label": "Nguyên liệu Morocco",
+    "title": "Kho báu",
+    "titleHighlight": "thiên nhiên Bắc Phi",
+    "description": "Mỗi sản phẩm được nhập trực tiếp từ các thợ thủ công Morocco — argan Agadir, rhassoul Atlat, xà phòng Beldi Fes.",
+    "shopNow": "Mua ngay"
+  },
+  "booking": {
+    "label": "Đặt Hammam",
+    "title": "Bước vào",
+    "titleHighlight": "thế giới Morocco",
+    "name": "Tên",
+    "phone": "Điện thoại",
+    "date": "Ngày",
+    "time": "Giờ",
+    "package": "Chọn gói",
+    "gender": "Không gian",
+    "genderOptions": ["Nữ", "Nam", "Cặp đôi (riêng tư)"],
+    "notes": "Ghi chú",
+    "confirm": "Xác nhận Hammam",
+    "policy": "Vui lòng đến trước 10 phút · Không mang đồ trang sức"
+  },
+  "pages": {
+    "about": {
+      "eyebrow": "Về Hammam Marrakech",
+      "title": "Hành trình mang truyền thống Ma-rốc vào từng nghi thức",
+      "subtitle": "Vẻ đẹp đích thực đến từ sự cân bằng cơ thể, tâm trí và thiên nhiên — được gìn giữ qua hàng nghìn năm."
+    },
+    "services": {
+      "eyebrow": "Dịch vụ",
+      "title": "Bộ sưu tập liệu pháp Hammam Ma-rốc",
+      "subtitle": "Mỗi nghi thức là một hành trình cảm nhận — hòa quyện nguyên liệu Ma-rốc nguyên bản và tinh hoa spa hiện đại."
+    },
+    "serviceDetails": {
+      "eyebrow": "Dịch vụ"
+    },
+    "training": {
+      "eyebrow": "Đào tạo",
+      "title": "Học viện Hammam Marrakech Academy",
+      "subtitle": "Khóa học chuyên sâu cho kỹ thuật viên, chuyên gia chăm sóc da và quản lý spa."
+    },
+    "blog": {
+      "eyebrow": "Blog",
+      "title": "Cẩm nang chăm sóc bản thân",
+      "subtitle": "Chia sẻ kiến thức về dưỡng da, dinh dưỡng, yoga và lối sống lành mạnh."
+    },
+    "careers": {
+      "eyebrow": "Tuyển dụng",
+      "title": "Cùng vun đắp hành trình Hammam Ma-rốc",
+      "subtitle": "Hammam Marrakech luôn tìm kiếm những người yêu truyền thống và đam mê chăm sóc con người."
+    },
+    "careerDetails": {
+      "eyebrow": "Tuyển dụng"
+    },
+    "bookingPage": {
+      "eyebrow": "Đặt lịch",
+      "title": "Đặt lịch online trong 1 phút",
+      "subtitle": "Chọn dịch vụ, chi nhánh và thời gian phù hợp — chúng tôi sẽ xác nhận trong vòng 15 phút."
+    },
+    "contact": {
+      "eyebrow": "Liên hệ",
+      "title": "Chúng tôi luôn lắng nghe bạn",
+      "subtitle": "Để lại lời nhắn, đội ngũ tư vấn sẽ phản hồi trong 30 phút (giờ hành chính)."
+    },
+    "offers": {
+      "eyebrow": "Ưu đãi",
+      "title": "Gói ưu đãi dành riêng cho bạn",
+      "subtitle": "Tiết kiệm hơn, trải nghiệm trọn vẹn hơn với các ưu đãi thường niên."
+    },
+    "feedback": {
+      "eyebrow": "Cảm nhận khách hàng",
+      "title": "25.000+ khách hàng tin yêu",
+      "subtitle": "Mỗi đánh giá là động lực để chúng tôi không ngừng hoàn thiện."
+    },
+    "promotions": {
+      "eyebrow": "Khuyến mãi",
+      "title": "Sự kiện & khuyến mãi theo mùa",
+      "subtitle": "Cập nhật các chương trình giới hạn thời gian, ưu đãi cực sốc trong năm."
+    },
+    "branches": {
+      "eyebrow": "Hệ thống",
+      "title": "4 chi nhánh trên toàn quốc",
+      "subtitle": "Tìm chi nhánh Hammam Marrakech gần bạn nhất — mọi nơi đều cùng một chuẩn dịch vụ."
+    },
+    "account": {
+      "eyebrow": "Tài khoản",
+      "title": "Khu vực thành viên",
+      "subtitle": "Quản lý lịch hẹn, điểm thưởng và liệu trình của bạn."
+    },
+    "partners": {
+      "eyebrow": "Cộng sự",
+      "title": "Đối tác đồng hành",
+      "subtitle": "Hợp tác cùng các thương hiệu mỹ phẩm và thiết bị spa hàng đầu thế giới."
+    },
+    "treatments": {
+      "eyebrow": "Gói liệu trình",
+      "title": "Liệu trình chuyên sâu",
+      "subtitle": "Lộ trình được thiết kế cá nhân hóa cho từng vấn đề — đảm bảo kết quả rõ rệt."
+    },
+    "beforeAfter": {
+      "eyebrow": "Trước & Sau",
+      "title": "Kết quả thực tế từ khách hàng",
+      "subtitle": "Hình ảnh được chia sẻ với sự đồng thuận của khách hàng — không qua chỉnh sửa."
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Câu hỏi thường gặp",
+      "subtitle": "Mọi điều bạn cần biết trước khi đến với Hammam Marrakech."
+    },
+    "policy": {
+      "eyebrow": "Chính sách",
+      "title": "Quy định & chính sách",
+      "subtitle": "Minh bạch — công bằng — tôn trọng khách hàng là kim chỉ nam của Hammam Marrakech."
+    },
+    "gallery": {
+      "eyebrow": "Gallery",
+      "title": "Khoảnh khắc tại Hammam Marrakech",
+      "subtitle": "Không gian, sản phẩm và những cảm xúc được lưu giữ qua khung hình."
+    }
+  }
+}

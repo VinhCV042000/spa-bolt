@@ -1,0 +1,23 @@
+{
+  "hero": {
+    "eyebrow": "DERMATOLOGY · SKIN",
+    "title": "Science-led skin care",
+    "titleAccent": "for confident skin",
+    "description": "Clinical skin analysis, personalized treatment plans, and non-invasive therapies to restore balance and glow.",
+    "ctaPrimary": "Book a skin scan",
+    "ctaSecondary": "Meet our specialists",
+    "stats": ["AI-assisted analysis", "specialist consultations", "customized care"]
+  },
+  "booking": {
+    "eyebrow": "BOOKING · SKIN CONSULT",
+    "title": "Book your",
+    "titleHighlight": "skin consultation",
+    "description": "Skin examination and free consultation with a specialist to build the right treatment plan.",
+    "name": "Full name",
+    "phone": "Phone number",
+    "service": "Service",
+    "date": "Preferred date",
+    "notes": "Current skin concerns",
+    "submit": "Book a free skin scan"
+  }
+}

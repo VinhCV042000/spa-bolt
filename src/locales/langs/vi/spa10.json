@@ -1,0 +1,164 @@
+{
+  "hero": {
+    "badge": "Aurora Nordic Spa",
+    "tagline": "Scandinavian Forest Wellness",
+    "title1": "Tĩnh lặng",
+    "title2": "rừng Bắc Âu",
+    "title3": "— linh hồn được hồi sinh",
+    "description": "Nghi lễ Nordic cổ truyền — sauna bạch dương, cold plunge, tắm rừng 'Friluftsliv' và liệu pháp hơi nước Thụy Điển. Nơi tuyết lạnh và hơi ấm sauna cùng nhau chữa lành.",
+    "bookRitual": "Đặt nghi lễ",
+    "viewRituals": "Khám phá Nordic rituals",
+    "tempWarm": "Sauna 80°C",
+    "tempCold": "Cold Plunge 4°C"
+  },
+  "rituals": {
+    "label": "Nordic Rituals",
+    "title": "Ba nghi lễ",
+    "titleHighlight": "chữa lành Nordic",
+    "description": "'Lagom' — vừa đủ, không thừa không thiếu. Triết lý Bắc Âu về sự cân bằng được phản ánh qua ba nghi lễ nóng-lạnh-rừng hoàn chỉnh.",
+    "duration": "phút",
+    "bookRitual": "Đặt ngay"
+  },
+  "services": {
+    "label": "Menu dịch vụ",
+    "title": "Chăm sóc",
+    "titleHighlight": "Nordic đích thực",
+    "description": "Nguyên liệu từ rừng Scandinavia: bạch dương, thông, tuyết tùng, vỏ sồi và muối biển Baltic.",
+    "book": "Đặt dịch vụ",
+    "title_page": "Dịch Vụ",
+    "subtitle": "Trải nghiệm các nghi lễ sức khỏe Bắc Âu"
+  },
+  "booking": {
+    "label": "Đặt lịch",
+    "title": "Chào đón bạn",
+    "titleHighlight": "đến rừng Bắc Âu",
+    "name": "Tên",
+    "email": "Email",
+    "phone": "Điện thoại",
+    "date": "Ngày",
+    "ritual": "Chọn nghi lễ",
+    "guests": "Số người",
+    "notes": "Ghi chú",
+    "confirm": "Xác nhận đặt chỗ",
+    "policy": "Hủy miễn phí trước 24h",
+    "title_page": "Đặt Lịch Online",
+    "subtitle": "Đặt chỗ cho trải nghiệm sức khỏe Bắc Âu",
+    "formTitle": "Form Đặt Lịch",
+    "service": "Chọn dịch vụ",
+    "submit": "Gửi Đặt Lịch"
+  },
+  "about": {
+    "title": "Giới Thiệu",
+    "subtitle": "Khám phá câu chuyện Nordic Spa",
+    "storyLabel": "Câu Chuyện",
+    "storyTitle": "Nơi Truyền Thống Bắc Âu Gặp Gỡ Sức Khỏe Hiện Đại",
+    "storyDesc1": "Được thành lập năm 2020, Nordic Spa mang đến Việt Nam các nghi lễ sức khỏe Bắc Âu đích thực. Các nghi lễ đặc trưng của chúng tôi kết hợp sức mạnh chữa lành của nhiệt, lạnh và thiên nhiên — lấy cảm hứng từ văn hóa sauna Phần Lan, 'Friluftsliv' Na Uy và kỹ thuật massage Thụy Điển.",
+    "storyDesc2": "Mọi chi tiết được chăm chút kỹ lưỡng để đưa bạn đến những khu rừng tĩnh lặng của Scandinavia, từ phòng sauna gỗ bạch dương đến bồn ngâm lạnh tự nhiên.",
+    "valuesTitle": "Giá Trị Bắc Âu",
+    "value1Title": "Eldur — Lửa",
+    "value1Desc": "Sauna Phần Lan truyền thống nung nóng đến 80°C để thải độc sâu và thư giãn.",
+    "value2Title": "Is — Băng",
+    "value2Desc": "Liệu pháp ngâm lạnh 4°C giúp tăng miễn dịch và tuần hoàn.",
+    "value3Title": "Skog — Rừng",
+    "value3Desc": "Tắm rừng và kết nối thiên nhiên để tâm trí minh mạch."
+  },
+  "serviceDetails": {
+    "description": "Mô tả",
+    "benefits": "Lợi ích",
+    "bookNow": "Đặt Ngay",
+    "back": "Quay lại Dịch vụ"
+  },
+  "training": {
+    "title": "Đào Tạo",
+    "subtitle": "Trở thành chuyên gia sức khỏe Bắc Âu"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Kiến thức và câu chuyện sức khỏe Bắc Âu"
+  },
+  "careers": {
+    "title": "Tuyển Dụng",
+    "subtitle": "Tham gia đội ngũ Nordic Spa",
+    "apply": "Ứng tuyển"
+  },
+  "contact": {
+    "title": "Liên Hệ",
+    "subtitle": "Liên hệ với Nordic Spa",
+    "phone": "Điện thoại",
+    "email": "Email",
+    "hours": "Giờ mở cửa",
+    "sendMessage": "Gửi Tin Nhắn",
+    "name": "Tên",
+    "subject": "Chủ đề",
+    "message": "Nội dung",
+    "send": "Gửi Tin Nhắn"
+  },
+  "offers": {
+    "title": "Ưu Đãi",
+    "subtitle": "Ưu đãi đặc biệt cho khách hàng"
+  },
+  "feedback": {
+    "title": "Đánh Giá",
+    "subtitle": "Khách hàng nói gì về chúng tôi"
+  },
+  "promotions": {
+    "title": "Khuyến Mãi",
+    "subtitle": "Các chương trình khuyến mãi hiện tại",
+    "valid": "Có hiệu lực đến"
+  },
+  "branches": {
+    "title": "Chi Nhánh",
+    "subtitle": "Tìm Nordic Spa gần bạn"
+  },
+  "account": {
+    "title": "Tài Khoản",
+    "subtitle": "Quản lý tài khoản Nordic Spa",
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "fullName": "Họ và tên",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "loginBtn": "Đăng Nhập",
+    "registerBtn": "Tạo Tài Khoản"
+  },
+  "partners": {
+    "title": "Đối Tác",
+    "subtitle": "Các đối tác sức khỏe Bắc Âu"
+  },
+  "packages": {
+    "title": "Gói Liệu Trình",
+    "subtitle": "Gói trải nghiệm Bắc Âu trọn vẹn",
+    "treatments": "Điều trị",
+    "validity": "Hiệu lực",
+    "includes": "Bao gồm",
+    "bookNow": "Đặt Gói"
+  },
+  "beforeAfter": {
+    "title": "Kết Quả",
+    "subtitle": "Kết quả trước và sau liệu trình"
+  },
+  "faq": {
+    "title": "FAQ",
+    "subtitle": "Các câu hỏi thường gặp"
+  },
+  "policy": {
+    "title": "Chính Sách",
+    "subtitle": "Điều khoản, quyền riêng tư và hoàn tiền",
+    "termsTitle": "Điều Khoản Dịch Vụ",
+    "termsContent": "Khi sử dụng dịch vụ Nordic Spa, bạn đồng ý với các điều khoản dịch vụ. Tất cả dịch vụ phụ thuộc vào khả dụng và có thể yêu cầu đặt lịch trước.",
+    "privacyTitle": "Chính Sách Quyền Riêng Tư",
+    "privacyContent": "Chúng tôi bảo vệ thông tin cá nhân của bạn và không bao giờ chia sẻ với bên thứ ba khi chưa có sự đồng ý. Dữ liệu được lưu trữ an toàn theo tiêu chuẩn quốc tế.",
+    "refundTitle": "Chính Sách Hoàn Tiền",
+    "refundContent": "Hủy lịch trước 24 giờ được hoàn tiền 100%. Hủy muộn có thể chịu phí 50%. Không đến sẽ bị tính toàn bộ."
+  },
+  "gallery": {
+    "title": "Thư Viện Ảnh",
+    "subtitle": "Khám phá Nordic Spa qua hình ảnh",
+    "all": "Tất cả",
+    "facilities": "Cơ sở vật chất",
+    "exterior": "Ngoại cảnh",
+    "treatments": "Điều trị",
+    "team": "Đội ngũ"
+  }
+}

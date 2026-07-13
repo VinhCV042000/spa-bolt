@@ -1,0 +1,52 @@
+{
+  "hero": {
+    "tagline": "NORDIC MINIMAL · WELLNESS",
+    "title": "Calm",
+    "titleAccent": "rituals",
+    "subtitle": "Trải nghiệm wellness hiện đại được thiết kế để chậm lại và khôi phục sự cân bằng.",
+    "description": "Một không gian tối giản nơi mọi chi tiết đều được chăm chút và mỗi nghi lễ đều diễn ra có chủ ý.",
+    "ctaPrimary": "Khám phá",
+    "ctaSecondary": "Đặt lịch"
+  },
+  "booking": {
+    "eyebrow": "LIÊN HỆ",
+    "title": "Bắt đầu",
+    "titleAccent": "hành trình",
+    "addressLabel": "Địa chỉ",
+    "addressValue": "56 Quang Trung, Quận 11, TP.HCM",
+    "phoneLabel": "Hotline",
+    "phoneValue": "0918 262 626",
+    "hoursLabel": "Giờ mở cửa",
+    "hoursValue": "Thứ 3 — Chủ Nhật 08:00 — 20:00",
+    "namePlaceholder": "Họ và tên",
+    "emailPlaceholder": "Email",
+    "phonePlaceholder": "Số điện thoại",
+    "messagePlaceholder": "Tin nhắn (tùy chọn)",
+    "submit": "Gửi yêu cầu"
+  },
+  "programs": {
+    "eyebrow": "CHƯƠNG TRÌNH WELLNESS",
+    "title": "Chương trình",
+    "count": "{{count}} chương trình"
+  },
+  "spaces": {
+    "eyebrow": "KHÔNG GIAN",
+    "title": "Không gian thiền"
+  },
+  "team": {
+    "eyebrow": "ĐỘI NGŨ",
+    "title": "Con người"
+  },
+  "pricing": {
+    "eyebrow": "ĐẦU TƯ",
+    "title": "Đầu tư cho bản thân",
+    "columnPackage": "Gói",
+    "columnPrice": "Giá",
+    "columnNote": "Ghi chú",
+    "note": "Giá đã bao gồm thuế và phí dịch vụ. Thanh toán linh hoạt — tiền mặt, thẻ, hoặc chuyển khoản."
+  },
+  "treatments": {
+    "eyebrow": "LIỆU TRÌNH",
+    "title": "Liệu trình"
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "meta": {
+    "title": "Lumière Spa - The art of modern wellness",
+    "description": "Lumière Spa - A contemporary sanctuary blending signature rituals, expert therapists and pure botanical care. Reserve your private escape today."
+  },
+  "hero": {
+    "tagline": "Est. 2010 — Modern wellness atelier",
+    "brand": "Lumière Spa",
+    "titleLine1": "The art of",
+    "titleLine2": "modern wellness",
+    "subtitle": "A contemporary sanctuary where signature rituals, master therapists and pure botanicals come together to restore body and mind.",
+    "ctaPrimary": "Reserve a ritual",
+    "ctaSecondary": "View the menu",
+    "scroll": "Scroll to explore"
+  },
+  "intro": {
+    "eyebrow": "01 — The house",
+    "title": "A quiet sanctuary, designed around you",
+    "paragraph": "Lumière was created for those who treat self-care as a discipline, not a luxury. Every detail — from the architecture of light to the temperature of the towels — is composed to dissolve the noise of the day and return you to yourself.",
+    "signature": "Founder & Creative Director",
+    "stats": [
+      { "value": "15", "label": "Years of craft" },
+      { "value": "40", "label": "Signature rituals" },
+      { "value": "12k", "label": "Guests restored" }
+    ]
+  },
+  "services": {
+    "eyebrow": "02 — Signature rituals",
+    "title": "Treatments, reimagined",
+    "subtitle": "A curated menu of therapies, each refined over years of practice and tailored to the rhythm of your body.",
+    "cta": "Explore full menu",
+    "items": [
+      {
+        "index": "01",
+        "title": "Therapeutic Massage",
+        "description": "Thai, Shiatsu and hot-stone work to release tension, restore circulation and quiet the nervous system.",
+        "duration": "60 — 90 min"
+      },
+      {
+        "index": "02",
+        "title": "Facial Rituals",
+        "description": "Intensive botanical facials calibrated to your skin for a luminous, rebalanced complexion.",
+        "duration": "45 — 75 min"
+      },
+      {
+        "index": "03",
+        "title": "Body Therapy",
+        "description": "Full-body exfoliation, wraps and detox rituals for skin that feels soft, firm and renewed.",
+        "duration": "90 — 120 min"
+      },
+      {
+        "index": "04",
+        "title": "Aromatherapy",
+        "description": "Pure essential oils paired with breathwork to bring body and mind back into balance.",
+        "duration": "60 min"
+      }
+    ]
+  },
+  "experience": {
+    "eyebrow": "03 — The experience",
+    "title": "More than a treatment",
+    "description": "Arrive early and stay late. The Lumière journey extends well beyond the treatment room.",
+    "items": [
+      {
+        "title": "Thermal Suite",
+        "description": "Dry and wet saunas designed to detox and deeply relax before your ritual."
+      },
+      {
+        "title": "Hydrotherapy",
+        "description": "A private jacuzzi space with warm water and bespoke aromatic blends."
+      },
+      {
+        "title": "Stillness Studio",
+        "description": "Daily guided meditation and breathwork in an acoustically calm space."
+      },
+      {
+        "title": "Botanical Bar",
+        "description": "100% natural, paraben-free elixirs and teas crafted in-house."
+      }
+    ]
+  },
+  "packages": {
+    "eyebrow": "04 — Membership & journeys",
+    "title": "Choose your journey",
+    "subtitle": "Considered packages that deepen your practice and reward your loyalty.",
+    "popular": "Most loved",
+    "choose": "Reserve this journey",
+    "items": [
+      {
+        "name": "The Escape",
+        "caption": "An introduction to Lumière",
+        "features": [
+          "60-min signature massage",
+          "30-min thermal suite",
+          "House botanical tea",
+          "Aromatherapy cold towel"
+        ]
+      },
+      {
+        "name": "The Renewal",
+        "caption": "Our most chosen journey",
+        "features": [
+          "90-min signature massage",
+          "60-min botanical facial",
+          "Full-body ritual scrub",
+          "45-min hydrotherapy",
+          "House detox elixir"
+        ]
+      },
+      {
+        "name": "The Sanctuary",
+        "caption": "The complete Lumière experience",
+        "features": [
+          "120-min body ritual",
+          "90-min premium facial",
+          "Private aromatherapy",
+          "Private VIP suite",
+          "Curated healthy lunch",
+          "Botanical gift set"
+        ]
+      }
+    ]
+  },
+  "testimonials": {
+    "eyebrow": "05 — In their words",
+    "title": "Loved by those who return",
+    "items": [
+      {
+        "name": "Nguyen Minh Anh",
+        "role": "Entrepreneur",
+        "content": "Lumière is where I find stillness amid a relentless schedule. The ritual is faultless, the therapists masterful, the space utterly calming."
+      },
+      {
+        "name": "Tran Hoang Long",
+        "role": "Software engineer",
+        "content": "The Renewal journey is worth every minute. I left feeling weightless and clear-headed. I'll absolutely be back."
+      },
+      {
+        "name": "Le Thu Ha",
+        "role": "Teacher",
+        "content": "The botanical facial visibly brightened my skin. Elegant, immaculate and deeply private — exactly what I needed."
+      },
+      {
+        "name": "Pham Quoc Bao",
+        "role": "Doctor",
+        "content": "I send my own patients to Lumière to manage stress. The consistency of the experience is remarkable."
+      }
+    ]
+  },
+  "contact": {
+    "eyebrow": "06 — Reserve",
+    "title": "Begin your ritual",
+    "description": "Reserve today and receive 15% off your first journey. Our concierge is ready to compose the perfect experience for you.",
+    "hotlineLabel": "Concierge",
+    "addressLabel": "Atelier",
+    "addressValue": "123 Nguyen Hue, District 1, HCMC",
+    "hoursLabel": "Open daily",
+    "hoursValue": "8:00 — 22:00 (Mon — Sun)",
+    "cta": "Reserve online",
+    "secondary": "Speak to concierge"
+  }
+}

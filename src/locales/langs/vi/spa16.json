@@ -1,0 +1,131 @@
+{
+  "hero": {
+    "eyebrow": "رياض · RIAD N°16",
+    "title": "Riad Al-Andalus",
+    "titleAccent": "hammam giữa",
+    "titleHighlight": "nghìn lẻ một đêm",
+    "description": "Hành trình Marrakech giữa lòng Hội An — bốn phòng hammam đá cẩm thạch, sáu nghi lễ argan, và sân thượng ngắm sao bên trà bạc hà Berber.",
+    "ctaPrimary": "Đặt nghi lễ Sultan",
+    "ctaSecondary": "Khám phá hammam",
+    "stats": ["4 phòng hammam", "16 therapist Maroc", "24 nguyên liệu Berber"]
+  },
+  "heritage": {
+    "eyebrow": "TRUYỀN THỐNG · DI SẢN BERBER",
+    "title": "Bốn di sản của",
+    "titleHighlight": "Maghreb cổ đại",
+    "description": "Mỗi viên gạch zellige, mỗi giọt dầu argan, mỗi nhúm nhụy nghệ tây tại Al-Andalus đều kể câu chuyện ngàn năm của vùng đất giữa sa mạc Sahara và Đại Tây Dương."
+  },
+  "booking": {
+    "eyebrow": "ĐẶT NGHI LỄ · ĐẶT LỊCH",
+    "title": "Bắt đầu hành trình",
+    "titleHighlight": "Maghreb",
+    "description": "Để lại thông tin, đội ngữ Berber concierge sẽ liên hệ trong 30 phút để xác nhận thời gian và chuẩn bị riad cho bạn.",
+    "name": "Họ và tên",
+    "phone": "Số điện thoại",
+    "email": "Email",
+    "ritual": "Nghi lễ",
+    "date": "Ngày",
+    "time": "Giờ",
+    "notes": "Ghi chú thêm",
+    "submit": "Xác nhận đặt lịch",
+    "call": "Gọi concierge"
+  },
+  "pages": {
+    "about": {
+      "eyebrow": "Về Imperial Vienna",
+      "title": "Hành trình Belle Époque của wellness hoàng gia Áo-Hung",
+      "subtitle": "Theo dấu Hoàng đế Franz Joseph và Hoàng hậu Sisi — nghi thức tắm khoáng Trung Âu tái sinh trong thế kỷ 21."
+    },
+    "services": {
+      "eyebrow": "Dịch vụ",
+      "title": "Bộ sưu tập liệu trình hoàng gia",
+      "subtitle": "Vinotherapy, suối khoáng kiềm và nghi lễ Habsburg — mỗi quy trình được chăm chút bởi master therapist."
+    },
+    "serviceDetails": {
+      "eyebrow": "Dịch vụ"
+    },
+    "training": {
+      "eyebrow": "Học viện",
+      "title": "Imperial Vienna Academy",
+      "subtitle": "Khóa đào tạo bậc master về vinotherapy, tắm khoáng và spa craft châu Âu cổ điển."
+    },
+    "blog": {
+      "eyebrow": "Nhật ký",
+      "title": "Nhật ký wellness",
+      "subtitle": "Câu chuyện về Belle Époque, khoa học trường thọ và lối sống Vienna tinh tế."
+    },
+    "careers": {
+      "eyebrow": "Tuyển dụng",
+      "title": "Gia nhập atelier hoàng gia",
+      "subtitle": "Chúng tôi tìm therapist, sommelier và host đam mê thủ công và nghệ thuật phục vụ."
+    },
+    "careerDetails": {
+      "eyebrow": "Tuyển dụng"
+    },
+    "bookingPage": {
+      "eyebrow": "Đặt lịch",
+      "title": "Đặt liệu trình hoàng gia",
+      "subtitle": "Chọn liệu trình, giờ và palace suite — concierge xác nhận trong 15 phút."
+    },
+    "contact": {
+      "eyebrow": "Liên hệ",
+      "title": "Luôn sẵn lòng phục vụ",
+      "subtitle": "Gửi tin nhắn — imperial concierge phản hồi trong 30 phút giờ hành chính."
+    },
+    "offers": {
+      "eyebrow": "Ưu đãi",
+      "title": "Gói ưu đãi hoàng gia",
+      "subtitle": "Ưu đãi theo mùa dành riêng cho quý khách."
+    },
+    "feedback": {
+      "eyebrow": "Cảm nhận",
+      "title": "Được 25.000+ quý khách tin chọn",
+      "subtitle": "Mỗi lời khen là động lực để chúng tôi nâng tầm."
+    },
+    "promotions": {
+      "eyebrow": "Khuyến mãi",
+      "title": "Sự kiện hoàng gia theo mùa",
+      "subtitle": "Khám phá các chương trình giới hạn và dạ tiệc hoành tráng trong năm."
+    },
+    "branches": {
+      "eyebrow": "Palaces",
+      "title": "4 palace toàn quốc",
+      "subtitle": "Tìm Imperial Vienna gần nhất — cùng chuẩn hoàng gia mọi nơi."
+    },
+    "account": {
+      "eyebrow": "Thành viên",
+      "title": "Imperial members lounge",
+      "subtitle": "Quản lý đặt lịch, điểm thưởng và lịch sử liệu trình."
+    },
+    "partners": {
+      "eyebrow": "Đối tác",
+      "title": "Maisons hoàng gia",
+      "subtitle": "Chúng tôi hợp tác với các winery, suối khoáng và atelier mỹ phẩm châu Âu tinh hoa."
+    },
+    "treatments": {
+      "eyebrow": "Liệu trình",
+      "title": "Liệu trình hoàng gia",
+      "subtitle": "Chương trình đa buổi cá nhân hóa — kết quả rõ nét, quý phái."
+    },
+    "beforeAfter": {
+      "eyebrow": "Trước - Sau",
+      "title": "Kết quả thật từ quý khách",
+      "subtitle": "Hình ảnh chia sẻ với sự đồng ý — không chỉnh sửa."
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Câu hỏi thường gặp",
+      "subtitle": "Mọi điều bạn cần biết trước khi ghé palace."
+    },
+    "policy": {
+      "eyebrow": "Chính sách",
+      "title": "Điều khoản & nghi thức hoàng gia",
+      "subtitle": "Minh bạch, thanh lịch và tôn trọng quý khách — luôn luôn."
+    },
+    "gallery": {
+      "eyebrow": "Gallery",
+      "title": "Khoảnh khắc tại Imperial Vienna",
+      "subtitle": "Không gian salon, nghi lễ và cảm xúc — trong khung hình bạc."
+    }
+  }
+}

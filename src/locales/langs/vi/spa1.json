@@ -1,0 +1,162 @@
+{
+  "meta": {
+    "title": "Lumière Spa - Nghệ thuật trị liệu hiện đại",
+    "description": "Lumière Spa - Không gian trị liệu hiện đại kết hợp các liệu trình đặc trưng, đội ngũ chuyên gia và sản phẩm thảo mộc tinh khiết. Đặt lịch riêng tư ngay hôm nay."
+  },
+  "hero": {
+    "tagline": "Thành lập 2010 — Atelier trị liệu hiện đại",
+    "brand": "Lumière Spa",
+    "titleLine1": "Nghệ thuật",
+    "titleLine2": "trị liệu hiện đại",
+    "subtitle": "Không gian an yên hiện đại, nơi các liệu trình đặc trưng, chuyên gia bậc thầy và dược liệu thiên nhiên hòa quyện để phục hồi cả thân và tâm.",
+    "ctaPrimary": "Đặt liệu trình",
+    "ctaSecondary": "Xem thực đơn",
+    "scroll": "Cuộn để khám phá"
+  },
+  "intro": {
+    "eyebrow": "01 — Về Lumière",
+    "title": "Một chốn an yên, thiết kế dành riêng cho bạn",
+    "paragraph": "Lumière ra đời cho những ai xem việc chăm sóc bản thân là một kỷ luật, không chỉ là sự xa xỉ. Từng chi tiết — từ cách ánh sáng được sắp đặt đến nhiệt độ của chiếc khăn — đều được tinh chỉnh để xua tan ồn ào thường nhật và đưa bạn trở về với chính mình.",
+    "signature": "Nhà sáng lập & Giám đốc Sáng tạo",
+    "stats": [
+      { "value": "15", "label": "Năm tinh hoa" },
+      { "value": "40", "label": "Liệu trình đặc trưng" },
+      { "value": "12k", "label": "Khách được hồi phục" }
+    ]
+  },
+  "services": {
+    "eyebrow": "02 — Liệu trình đặc trưng",
+    "title": "Trị liệu được tái định nghĩa",
+    "subtitle": "Thực đơn trị liệu được tuyển chọn kỹ lưỡng, hoàn thiện qua nhiều năm và điều chỉnh theo nhịp điệu của cơ thể bạn.",
+    "cta": "Khám phá toàn bộ thực đơn",
+    "items": [
+      {
+        "index": "01",
+        "title": "Massage trị liệu",
+        "description": "Massage Thái, Shiatsu và đá nóng giúp giải tỏa căng thẳng, lưu thông khí huyết và làm dịu hệ thần kinh.",
+        "duration": "60 — 90 phút"
+      },
+      {
+        "index": "02",
+        "title": "Liệu trình chăm sóc da",
+        "description": "Chăm sóc da chuyên sâu bằng dược liệu thực vật, điều chỉnh theo làn da để mang lại vẻ rạng rỡ, cân bằng.",
+        "duration": "45 — 75 phút"
+      },
+      {
+        "index": "03",
+        "title": "Trị liệu cơ thể",
+        "description": "Tẩy tế bào chết toàn thân, ủ dưỡng và thải độc cho làn da mềm mại, săn chắc và tươi mới.",
+        "duration": "90 — 120 phút"
+      },
+      {
+        "index": "04",
+        "title": "Trị liệu hương thơm",
+        "description": "Tinh dầu nguyên chất kết hợp cùng hơi thở để đưa thân và tâm trở về trạng thái cân bằng.",
+        "duration": "60 phút"
+      }
+    ]
+  },
+  "experience": {
+    "eyebrow": "03 — Trải nghiệm",
+    "title": "Hơn cả một liệu trình",
+    "description": "Đến sớm và ở lại lâu hơn. Hành trình Lumière vượt xa khỏi phòng trị liệu.",
+    "items": [
+      {
+        "title": "Phòng xông hơi",
+        "description": "Xông hơi khô và ướt giúp thải độc và thư giãn sâu trước liệu trình."
+      },
+      {
+        "title": "Thủy trị liệu",
+        "description": "Không gian jacuzzi riêng tư với nước ấm và hương liệu pha chế riêng."
+      },
+      {
+        "title": "Phòng tĩnh tâm",
+        "description": "Thiền và luyện thở mỗi ngày trong không gian yên tĩnh, cách âm."
+      },
+      {
+        "title": "Quầy thảo mộc",
+        "description": "Trà và tinh chất 100% thiên nhiên, không paraben, pha chế tại chỗ."
+      }
+    ]
+  },
+  "packages": {
+    "eyebrow": "04 — Thành viên & hành trình",
+    "title": "Chọn hành trình của bạn",
+    "subtitle": "Những gói trị liệu được thiết kế chu đáo, đào sâu trải nghiệm và tri ân sự gắn bó.",
+    "popular": "Được yêu thích nhất",
+    "choose": "Đặt hành trình này",
+    "items": [
+      {
+        "name": "The Escape",
+        "caption": "Khởi đầu cùng Lumière",
+        "features": [
+          "Massage đặc trưng 60 phút",
+          "Xông hơi 30 phút",
+          "Trà thảo mộc của nhà",
+          "Khăn lạnh hương liệu"
+        ]
+      },
+      {
+        "name": "The Renewal",
+        "caption": "Hành trình được chọn nhiều nhất",
+        "features": [
+          "Massage đặc trưng 90 phút",
+          "Chăm sóc da thảo mộc 60 phút",
+          "Tẩy tế bào chết toàn thân",
+          "Thủy trị liệu 45 phút",
+          "Tinh chất thải độc của nhà"
+        ]
+      },
+      {
+        "name": "The Sanctuary",
+        "caption": "Trải nghiệm Lumière trọn vẹn",
+        "features": [
+          "Liệu trình cơ thể 120 phút",
+          "Chăm sóc da cao cấp 90 phút",
+          "Trị liệu hương thơm riêng tư",
+          "Phòng VIP riêng",
+          "Bữa trưa healthy được tuyển chọn",
+          "Bộ quà tặng thảo mộc"
+        ]
+      }
+    ]
+  },
+  "testimonials": {
+    "eyebrow": "05 — Khách hàng nói gì",
+    "title": "Được yêu mến bởi những người quay lại",
+    "items": [
+      {
+        "name": "Nguyễn Minh Anh",
+        "role": "Doanh nhân",
+        "content": "Lumière là nơi tôi tìm thấy sự tĩnh lặng giữa lịch trình bộn bề. Liệu trình hoàn hảo, chuyên gia bậc thầy, không gian vô cùng thư thái."
+      },
+      {
+        "name": "Trần Hoàng Long",
+        "role": "Kỹ sư phần mềm",
+        "content": "Hành trình The Renewal xứng đáng từng phút. Tôi rời đi với cảm giác nhẹ bẫng và đầu óc minh mẫn. Chắc chắn sẽ quay lại."
+      },
+      {
+        "name": "Lê Thu Hà",
+        "role": "Giáo viên",
+        "content": "Liệu trình chăm sóc da thảo mộc làm làn da tôi sáng lên thấy rõ. Tinh tế, sạch sẽ và rất riêng tư — đúng điều tôi cần."
+      },
+      {
+        "name": "Phạm Quốc Bảo",
+        "role": "Bác sĩ",
+        "content": "Tôi giới thiệu chính bệnh nhân của mình đến Lumière để giảm căng thẳng. Sự ổn định trong trải nghiệm thật đáng nể."
+      }
+    ]
+  },
+  "contact": {
+    "eyebrow": "06 — Đặt lịch",
+    "title": "Bắt đầu liệu trình của bạn",
+    "description": "Đặt lịch hôm nay và nhận ưu đãi 15% cho hành trình đầu tiên. Đội ngũ concierge luôn sẵn sàng kiến tạo trải nghiệm hoàn hảo cho bạn.",
+    "hotlineLabel": "Concierge",
+    "addressLabel": "Atelier",
+    "addressValue": "123 Nguyễn Huệ, Quận 1, TP.HCM",
+    "hoursLabel": "Mở cửa hằng ngày",
+    "hoursValue": "8:00 — 22:00 (T2 — CN)",
+    "cta": "Đặt lịch trực tuyến",
+    "secondary": "Trò chuyện với concierge"
+  }
+}

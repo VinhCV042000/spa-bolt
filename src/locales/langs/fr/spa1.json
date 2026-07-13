@@ -1,0 +1,162 @@
+{
+  "meta": {
+    "title": "Lumière Spa - L'art du bien-être moderne",
+    "description": "Lumière Spa - Un sanctuaire contemporain alliant rituels signature, thérapeutes experts et soins botaniques purs. Réservez votre évasion privée dès aujourd'hui."
+  },
+  "hero": {
+    "tagline": "Fondé en 2010 — Atelier de bien-être moderne",
+    "brand": "Lumière Spa",
+    "titleLine1": "L'art du",
+    "titleLine2": "bien-être moderne",
+    "subtitle": "Un sanctuaire contemporain où rituels signature, thérapeutes d'exception et purs botaniques s'unissent pour restaurer le corps et l'esprit.",
+    "ctaPrimary": "Réserver un rituel",
+    "ctaSecondary": "Voir le menu",
+    "scroll": "Faites défiler pour explorer"
+  },
+  "intro": {
+    "eyebrow": "01 — La maison",
+    "title": "Un sanctuaire paisible, conçu pour vous",
+    "paragraph": "Lumière a été créé pour celles et ceux qui considèrent le soin de soi comme une discipline, et non un luxe. Chaque détail — de l'architecture de la lumière à la température des serviettes — est composé pour dissoudre le bruit du quotidien et vous ramener à vous-même.",
+    "signature": "Fondatrice & Directrice de la création",
+    "stats": [
+      { "value": "15", "label": "Années de savoir-faire" },
+      { "value": "40", "label": "Rituels signature" },
+      { "value": "12k", "label": "Invités ressourcés" }
+    ]
+  },
+  "services": {
+    "eyebrow": "02 — Rituels signature",
+    "title": "Les soins, réinventés",
+    "subtitle": "Un menu de thérapies soigneusement sélectionnées, chacune affinée au fil des années et adaptée au rythme de votre corps.",
+    "cta": "Découvrir le menu complet",
+    "items": [
+      {
+        "index": "01",
+        "title": "Massage thérapeutique",
+        "description": "Techniques thaï, shiatsu et pierres chaudes pour relâcher les tensions, restaurer la circulation et apaiser le système nerveux.",
+        "duration": "60 — 90 min"
+      },
+      {
+        "index": "02",
+        "title": "Rituels du visage",
+        "description": "Soins du visage botaniques intensifs calibrés à votre peau pour un teint lumineux et rééquilibré.",
+        "duration": "45 — 75 min"
+      },
+      {
+        "index": "03",
+        "title": "Thérapie corporelle",
+        "description": "Exfoliation intégrale, enveloppements et rituels détox pour une peau douce, ferme et renouvelée.",
+        "duration": "90 — 120 min"
+      },
+      {
+        "index": "04",
+        "title": "Aromathérapie",
+        "description": "Huiles essentielles pures associées à la respiration pour rétablir l'équilibre du corps et de l'esprit.",
+        "duration": "60 min"
+      }
+    ]
+  },
+  "experience": {
+    "eyebrow": "03 — L'expérience",
+    "title": "Bien plus qu'un soin",
+    "description": "Arrivez tôt et restez tard. Le voyage Lumière s'étend bien au-delà de la salle de soin.",
+    "items": [
+      {
+        "title": "Suite thermale",
+        "description": "Saunas secs et humides conçus pour détoxifier et détendre profondément avant votre rituel."
+      },
+      {
+        "title": "Hydrothérapie",
+        "description": "Un espace jacuzzi privé avec eau chaude et mélanges aromatiques sur mesure."
+      },
+      {
+        "title": "Studio du silence",
+        "description": "Méditation guidée et respiration quotidiennes dans un espace acoustiquement apaisant."
+      },
+      {
+        "title": "Bar botanique",
+        "description": "Élixirs et thés 100 % naturels, sans paraben, élaborés sur place."
+      }
+    ]
+  },
+  "packages": {
+    "eyebrow": "04 — Abonnements & parcours",
+    "title": "Choisissez votre parcours",
+    "subtitle": "Des forfaits réfléchis qui approfondissent votre pratique et récompensent votre fidélité.",
+    "popular": "Le plus apprécié",
+    "choose": "Réserver ce parcours",
+    "items": [
+      {
+        "name": "L'Évasion",
+        "caption": "Une introduction à Lumière",
+        "features": [
+          "Massage signature de 60 min",
+          "Suite thermale de 30 min",
+          "Thé botanique maison",
+          "Serviette froide d'aromathérapie"
+        ]
+      },
+      {
+        "name": "Le Renouveau",
+        "caption": "Notre parcours le plus choisi",
+        "features": [
+          "Massage signature de 90 min",
+          "Soin du visage botanique de 60 min",
+          "Gommage corporel complet",
+          "Hydrothérapie de 45 min",
+          "Élixir détox maison"
+        ]
+      },
+      {
+        "name": "Le Sanctuaire",
+        "caption": "L'expérience Lumière complète",
+        "features": [
+          "Rituel corporel de 120 min",
+          "Soin du visage premium de 90 min",
+          "Aromathérapie privée",
+          "Suite VIP privée",
+          "Déjeuner sain sélectionné",
+          "Coffret cadeau botanique"
+        ]
+      }
+    ]
+  },
+  "testimonials": {
+    "eyebrow": "05 — En leurs mots",
+    "title": "Adoré par ceux qui reviennent",
+    "items": [
+      {
+        "name": "Nguyen Minh Anh",
+        "role": "Entrepreneuse",
+        "content": "Lumière est l'endroit où je trouve le calme au cœur d'un emploi du temps effréné. Le rituel est irréprochable, les thérapeutes magistraux, l'espace profondément apaisant."
+      },
+      {
+        "name": "Tran Hoang Long",
+        "role": "Ingénieur logiciel",
+        "content": "Le parcours Renouveau vaut chaque minute. Je suis reparti léger et l'esprit clair. Je reviendrai sans hésiter."
+      },
+      {
+        "name": "Le Thu Ha",
+        "role": "Enseignante",
+        "content": "Le soin du visage botanique a visiblement illuminé ma peau. Élégant, impeccable et d'une grande intimité — exactement ce dont j'avais besoin."
+      },
+      {
+        "name": "Pham Quoc Bao",
+        "role": "Médecin",
+        "content": "J'envoie mes propres patients à Lumière pour gérer le stress. La constance de l'expérience est remarquable."
+      }
+    ]
+  },
+  "contact": {
+    "eyebrow": "06 — Réserver",
+    "title": "Commencez votre rituel",
+    "description": "Réservez aujourd'hui et bénéficiez de 15 % de réduction sur votre premier parcours. Notre conciergerie est prête à composer l'expérience parfaite pour vous.",
+    "hotlineLabel": "Conciergerie",
+    "addressLabel": "Atelier",
+    "addressValue": "123 Nguyen Hue, District 1, HCMC",
+    "hoursLabel": "Ouvert tous les jours",
+    "hoursValue": "8:00 — 22:00 (Lun — Dim)",
+    "cta": "Réserver en ligne",
+    "secondary": "Parler à la conciergerie"
+  }
+}

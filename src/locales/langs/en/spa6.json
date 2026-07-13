@@ -1,0 +1,77 @@
+{
+  "hero": {
+    "badge": "Terra Heal",
+    "tagline": "Healing from the earth",
+    "title1": "Return",
+    "title2": "to nature",
+    "title3": "— whole-body healing",
+    "description": "A wellness journey inspired by Ayurveda and Balinese philosophy — where plants, earth and natural energy restore body, mind and soul.",
+    "startJourney": "Start your journey",
+    "viewRetreats": "View retreats",
+    "ratingText": "excellent reviews",
+    "certifiedOrganic": "Certified organic",
+    "sustainableTag": "Sustainable",
+    "holisticTag": "Holistic",
+    "naturalbTag": "100% Natural"
+  },
+  "about": {
+    "label": "Our philosophy",
+    "title": "Three principles of",
+    "titleHighlight": "natural healing",
+    "description": "Terra Heal fuses 5,000-year-old Ayurveda philosophy with indigenous Vietnamese herbal therapy and traditional Balinese practices.",
+    "pillar1Title": "Dosha Balance",
+    "pillar1Desc": "We analyse your constitution and tailor treatments to your Dosha type — Vata, Pitta or Kapha — for perfect equilibrium.",
+    "pillar2Title": "Natural Detox",
+    "pillar2Desc": "Herbs and minerals sourced from nature deeply cleanse your body from within — no chemicals, only purity.",
+    "pillar3Title": "Energy Restoration",
+    "pillar3Desc": "Nature sounds, meditation and therapeutic touch work together to restore your vital energy flow."
+  },
+  "rituals": {
+    "label": "Earth Rituals",
+    "title": "Earth-inspired",
+    "titleHighlight": "healing rituals",
+    "description": "Each ritual is a blend of herbs, minerals and traditional techniques passed down through generations.",
+    "duration": "minutes",
+    "fromPrice": "From",
+    "bookRitual": "Book ritual"
+  },
+  "packages": {
+    "label": "Retreat packages",
+    "title": "Choose your",
+    "titleHighlight": "healing journey",
+    "description": "From short weekend escapes to full-week immersions — each retreat package is a transformative journey.",
+    "perPerson": "/person",
+    "nights": "nights",
+    "includes": "Includes:",
+    "bookRetreat": "Book this retreat",
+    "mostPopular": "Most popular",
+    "perDay": "/day",
+    "inclusive": "All inclusive"
+  },
+  "testimonials": {
+    "label": "Real journeys",
+    "title": "Healing",
+    "titleHighlight": "stories"
+  },
+  "booking": {
+    "label": "Get started",
+    "title": "Book a free",
+    "titleHighlight": "consultation",
+    "description": "Talk with a wellness expert to plan your journey. No commitment, completely free.",
+    "name": "Your name",
+    "email": "Email",
+    "phone": "Phone number",
+    "concern": "What you'd like to improve",
+    "concernPlaceholder": "Stress, fatigue, skin, insomnia...",
+    "preferredDate": "Preferred date",
+    "howHear": "How did you hear about us",
+    "submit": "Book free consultation",
+    "whatsapp": "Chat on WhatsApp",
+    "step1": "Free consultation",
+    "step1Desc": "Meet an Ayurveda expert",
+    "step2": "Custom plan",
+    "step2Desc": "Designed just for you",
+    "step3": "Begin healing",
+    "step3Desc": "Your transformation starts"
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "hero": {
+    "brand": "Mediterranean Spa",
+    "titleLine1": "Cảm nhận sự ấm áp",
+    "titleLine2": "từ Địa Trung Hải",
+    "subtitle": "Trải nghiệm liệu pháp chăm sóc sắc đẹp lấy cảm hứng từ vùng Địa Trung Hải, kết hợp nguyên liệu tự nhiên và kỹ thuật cổ truyền.",
+    "ctaPrimary": "Đặt lịch ngay",
+    "ctaSecondary": "Xem dịch vụ"
+  },
+  "about": {
+    "eyebrow": "Câu chuyện của chúng tôi",
+    "title": "Nghệ thuật chăm sóc từ Địa Trung Hải",
+    "description": "Mediterranean Spa kết hợp tinh hoa truyền thống chăm sóc sắc đẹp vùng Địa Trung Hải với công nghệ hiện đại. Mỗi liệu trình được thiết kế với nguyên liệu quý từ olive, lavender và khoáng chất biển sâu, mang đến trải nghiệm thư giãn toàn diện cho cơ thể và tâm hồn.",
+    "stat1": "Năm hoạt động",
+    "stat2": "Chuyên gia",
+    "stat3": "Khách hàng"
+  },
+  "services": {
+    "eyebrow": "Dịch vụ của chúng tôi",
+    "title": "Liệu pháp Địa Trung Hải",
+    "items": [
+      {
+        "title": "Massage đá nóng",
+        "desc": "Liệu pháp massage với đá bazan nóng, giúp thư giãn cơ bắp sâu và cải thiện tuần hoàn máu."
+      },
+      {
+        "title": "Mặt nạ olive",
+        "desc": "Chăm sóc da mặt cao cấp với tinh chất olive nguyên chất từ Hy Lạp, dưỡng ẩm và chống lão hóa."
+      },
+      {
+        "title": "Tắm muối biển",
+        "desc": "Ngâm mình trong bồn khoáng chất biển Địa Trung Hải, thanh lọc và tái tạo làn da."
+      },
+      {
+        "title": "Liệu pháp Lavender",
+        "desc": "Aromatherapy với tinh dầu lavender Provence, giảm stress và cải thiện giấc ngủ tự nhiên."
+      }
+    ],
+    "viewAll": "Khám phá tất cả dịch vụ"
+  },
+  "packages": {
+    "eyebrow": "Bảng giá",
+    "title": "Gói liệu trình",
+    "items": [
+      {
+        "name": "Gói Olive",
+        "features": ["Massage đá nóng 60 phút", "Trà thảo mộc Địa Trung Hải", "Xông hơi thảo dược"]
+      },
+      {
+        "name": "Gói Santorini",
+        "features": [
+          "Full-body massage 90 phút",
+          "Mặt nạ olive & mật ong",
+          "Tắm muối biển",
+          "Refreshment bar"
+        ]
+      },
+      {
+        "name": "Gói Amalfi",
+        "features": [
+          "Liệu trình toàn thân 120 phút",
+          "Facial collagen biển sâu",
+          "Foot reflexology",
+          "Phòng VIP riêng",
+          "Welcome drink & snack"
+        ]
+      }
+    ],
+    "cta": "Đặt lịch"
+  },
+  "testimonials": {
+    "eyebrow": "Khách hàng nói gì",
+    "title": "Đánh giá từ khách hàng",
+    "items": [
+      {
+        "name": "Thanh Thảo",
+        "role": "Khách hàng VIP",
+        "comment": "Không gian tuyệt đẹp, mang đúng cảm giác nghỉ dưỡng Địa Trung Hải. Rất thư giãn và chuyên nghiệp."
+      },
+      {
+        "name": "Quốc Hưng",
+        "role": "Thành viên Gold",
+        "comment": "Gói Santorini là trải nghiệm tuyệt vời nhất mà tôi từng có tại một spa ở Việt Nam."
+      },
+      {
+        "name": "Mai Linh",
+        "role": "Khách hàng thân thiết",
+        "comment": "Da mình cải thiện rõ rệt sau liệu trình olive. Sẽ giới thiệu cho bạn bè."
+      }
+    ]
+  },
+  "gallery": {
+    "eyebrow": "Không gian",
+    "title": "Khám phá Mediterranean Spa"
+  },
+  "contact": {
+    "title": "Trải nghiệm ngay hôm nay",
+    "subtitle": "Hãy để chúng tôi mang đến cho bạn hành trình thư giãn đích thực từ Địa Trung Hải, ngay tại Sài Gòn.",
+    "ctaBook": "Đặt lịch hẹn",
+    "ctaCall": "Tư vấn miễn phí",
+    "address": "123 Lê Lợi, Quận 1, TP.HCM",
+    "hours": "9:00 - 21:00, T2 - CN"
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "hero": {
+    "badge": "Pearl Luminary",
+    "tagline": "Sanctuaire de beauté ultra-luxueux",
+    "title1": "Où le luxe",
+    "title2": "ne connaît aucune limite",
+    "title3": "— pure beauté",
+    "description": "Pearl Luminary — un sanctuaire de beauté pour les âmes les plus exigeantes. Poudre de perle japonaise, soin du visage à l'or 24 carats, microdermabrasion au diamant et thérapie aux cellules souches.",
+    "bookPrivate": "Réserver une suite privée",
+    "viewMembership": "Voir l'adhésion",
+    "byAppointment": "Uniquement sur rendez-vous",
+    "limitedSlots": "Maximum 8 invités par jour"
+  },
+  "signature": {
+    "label": "Soins signature",
+    "title": "Les quatre",
+    "titleHighlight": "summums du luxe",
+    "description": "Quatre soins phares exclusifs — nulle part ailleurs au Vietnam vous ne trouverez des formules et des ingrédients équivalents.",
+    "bookNow": "Réserver",
+    "perSession": "/séance"
+  },
+  "membership": {
+    "label": "Adhésion",
+    "title": "Le Pearl",
+    "titleHighlight": "Members' Club",
+    "description": "Trois niveaux d'adhésion — chacun est un monde de privilèges à part pour ceux qui en sont dignes.",
+    "perYear": "/an",
+    "joinNow": "Rejoindre"
+  },
+  "booking": {
+    "label": "Consultation privée",
+    "title": "Demander une",
+    "titleHighlight": "consultation privée",
+    "description": "Chaque invité de Pearl Luminary bénéficie d'une consultation personnalisée de 45 minutes avant tout soin.",
+    "name": "Nom complet",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "interest": "Intéressé par",
+    "preferDate": "Date souhaitée",
+    "confirm": "Demander une consultation",
+    "confidential": "Les informations sont entièrement confidentielles"
+  },
+  "tech": {
+    "label": "Technologie",
+    "title": "Équipements qui définissent",
+    "titleHighlight": "l'avenir de la beauté",
+    "description": "Uniquement des appareils approuvés FDA et CE. Les mêmes équipements utilisés par les meilleures cliniques d'esthétique médicale de Séoul, Tokyo et New York.",
+    "learnMore": "En savoir plus"
+  },
+  "about": {
+    "heroTitle": "À propos",
+    "heroSubtitle": "Pearl Mansion — le sanctuaire de beauté de luxe fondé sur une passion pour la beauté pure et l'art des soins de la peau.",
+    "badge": "À propos de Pearl Mansion",
+    "philosophy": "Philosophie Pearl",
+    "story": "Pearl Mansion est née de la vision de créer l'espace de beauté ultra-luxe le plus prestigieux d'Asie. Avec la poudre de perle mikimoto japonaise, la feuille d'or 24K, le diamant et les cellules souches suisses, chaque soin est un voyage de transformation.",
+    "vision": "Notre mission est d'offrir une expérience spa ultra-luxe aux invités les plus exigeants. Chaque détail est conçu pour créer une détente absolue."
+  },
+  "services": {
+    "heroTitle": "Services Premium",
+    "heroSubtitle": "Soins phares exclusifs avec des ingrédients rares et la technologie la plus avancée.",
+    "badge": "Services"
+  },
+  "serviceDetails": {
+    "title": "Détails du soin",
+    "description": "Informations détaillées sur le soin sélectionné."
+  },
+  "training": {
+    "heroTitle": "Formation Expert",
+    "heroSubtitle": "Programmes de formation avancée avec certification internationale pour les techniciens.",
+    "badge": "Formation",
+    "enroll": "S'inscrire"
+  },
+  "blog": {
+    "heroTitle": "Blog & Actualités",
+    "heroSubtitle": "Connaissances beauté et tendances spa de Pearl Mansion.",
+    "badge": "Blog"
+  },
+  "blogDetails": {
+    "title": "Détails de l'article",
+    "content": "Contenu complet de l'article."
+  },
+  "careers": {
+    "heroTitle": "Carrières",
+    "heroSubtitle": "Rejoignez l'équipe d'experts beauté haut de gamme de Pearl Mansion.",
+    "badge": "Carrières",
+    "apply": "Postuler"
+  },
+  "bookingPage": {
+    "heroTitle": "Réserver en ligne",
+    "heroSubtitle": "Prenez rendez-vous avec les experts Pearl Mansion aujourd'hui.",
+    "badge": "Réserver",
+    "formTitle": "Formulaire de réservation",
+    "name": "Nom complet",
+    "phone": "Téléphone",
+    "email": "E-mail",
+    "service": "Service",
+    "notes": "Remarques",
+    "submit": "Envoyer la demande"
+  },
+  "contact": {
+    "heroTitle": "Contactez-nous",
+    "heroSubtitle": "Contactez Pearl Mansion pour consultation et assistance.",
+    "badge": "Contact",
+    "info": "Informations de contact",
+    "sendMessage": "Envoyer un message",
+    "name": "Nom",
+    "email": "E-mail",
+    "subject": "Sujet",
+    "message": "Message",
+    "send": "Envoyer"
+  },
+  "offers": {
+    "heroTitle": "Offres spéciales",
+    "heroSubtitle": "Offres et promotions exclusives pour nos invités.",
+    "badge": "Offres"
+  },
+  "feedback": {
+    "heroTitle": "Avis des invités",
+    "heroSubtitle": "Retours des invités VIP ayant vécu nos services.",
+    "badge": "Avis"
+  },
+  "promotions": {
+    "heroTitle": "Promotions",
+    "heroSubtitle": "Dernières promotions et offres spéciales.",
+    "badge": "Promotions",
+    "validUntil": "Valable jusqu'au"
+  },
+  "branches": {
+    "heroTitle": "Nos succursales",
+    "heroSubtitle": "Pearl Mansion est présent dans les emplacements les plus prestigieux.",
+    "badge": "Succursales",
+    "flagship": "Flagship"
+  },
+  "account": {
+    "heroTitle": "Compte membre",
+    "heroSubtitle": "Connectez-vous ou inscrivez-vous pour gérer votre compte d'adhésion.",
+    "badge": "Compte",
+    "loginTitle": "Connexion",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "login": "Se connecter",
+    "forgot": "Mot de passe oublié ?",
+    "or": "ou",
+    "register": "Créer un nouveau compte"
+  },
+  "partners": {
+    "heroTitle": "Nos partenaires",
+    "heroSubtitle": "Marques partenaires premium de Pearl Mansion.",
+    "badge": "Partenaires"
+  },
+  "packages": {
+    "heroTitle": "Forfaits de soins",
+    "heroSubtitle": "Forfaits de soins complets avec offres spéciales.",
+    "badge": "Forfaits",
+    "sessions": "séances",
+    "book": "Réserver le forfait"
+  },
+  "beforeAfter": {
+    "heroTitle": "Résultats Avant-Après",
+    "heroSubtitle": "Réalisations réelles des soins Pearl Mansion.",
+    "badge": "Résultats",
+    "before": "Avant",
+    "after": "Après"
+  },
+  "faq": {
+    "heroTitle": "Questions fréquentes",
+    "heroSubtitle": "Réponses aux questions courantes sur les services et politiques.",
+    "badge": "FAQ"
+  },
+  "policy": {
+    "heroTitle": "Politiques",
+    "heroSubtitle": "Conditions et politiques de Pearl Mansion.",
+    "badge": "Politique",
+    "terms": "Conditions d'utilisation",
+    "termsContent": "En utilisant les services de Pearl Mansion, vous acceptez de vous conformer aux conditions énoncées dans ce document...",
+    "privacy": "Politique de confidentialité",
+    "privacyContent": "Nous nous engageons à protéger la vie privée des clients. Toutes les informations personnelles sont traitées et stockées conformément aux réglementations légales...",
+    "refund": "Politique de remboursement",
+    "refundContent": "Pearl Mansion applique une politique de remboursement flexible pour les soins non utilisés. Veuillez contacter notre service client pour assistance..."
+  },
+  "gallery": {
+    "heroTitle": "Galerie photos",
+    "heroSubtitle": "Explorez l'espace et les services de Pearl Mansion à travers des images.",
+    "badge": "Galerie"
+  }
+}

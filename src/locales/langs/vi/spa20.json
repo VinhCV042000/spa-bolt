@@ -1,0 +1,24 @@
+{
+  "hero": {
+    "eyebrow": "BEAUTY SPA · GLOW",
+    "title": "Nâng Tầm",
+    "titleAccent": "Vẻ Đẹp",
+    "description": "Trị liệu thẩm mỹ cao cấp — laser, HIFU, filler, PRP. Công nghệ hiện đại kết hợp nghệ thuật làm đẹp, tôn vinh nét đẹp riêng biệt của bạn.",
+    "ctaPrimary": "Đặt Lịch Tư Vấn",
+    "ctaSecondary": "Xem liệu trình",
+    "stats": ["thiết bị chuẩn y khoa", "chuyên gia chứng nhận", "phác đồ cá nhân hóa"]
+  },
+  "booking": {
+    "eyebrow": "ĐẶT LỊCH TƯ VẤN",
+    "title": "Đặt lịch",
+    "titleHighlight": "trải nghiệm làm đẹp",
+    "description": "Chia sẻ mục tiêu của bạn và chuyên gia sẽ xây dựng phác đồ điều trị phù hợp nhất.",
+    "name": "Họ và tên",
+    "phone": "Số điện thoại",
+    "email": "Email",
+    "service": "Dịch vụ",
+    "date": "Ngày mong muốn",
+    "notes": "Vấn đề bạn quan tâm",
+    "submit": "Đặt lịch tư vấn"
+  }
+}

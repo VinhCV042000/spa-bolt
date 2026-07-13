@@ -1,0 +1,233 @@
+{
+  "meta": {
+    "title": "Serenity Spa - Tái tạo năng lượng, nuôi dưỡng tâm hồn",
+    "description": "Serenity Spa - Trải nghiệm spa cao cấp với massage trị liệu, chăm sóc da, liệu pháp body và aromatherapy. Đặt lịch ngay hôm nay!"
+  },
+  "nav": {
+    "home": "Trang chủ",
+    "about": "Giới thiệu",
+    "services": "Dịch vụ",
+    "offers": "Gói ưu đãi",
+    "explore": "Khám phá",
+    "contact": "Liên hệ",
+    "booking": "Đặt lịch",
+    "subheaderServices": "Dịch vụ",
+    "subheaderContent": "Nội dung",
+    "servicesAll": "Tất cả dịch vụ",
+    "serviceMassage": "Massage trị liệu",
+    "serviceFacial": "Chăm sóc da mặt",
+    "serviceBody": "Liệu pháp body",
+    "serviceAroma": "Aromatherapy",
+    "serviceHair": "Tóc & da đầu",
+    "serviceCouple": "Couple VIP",
+    "training": "Đào tạo",
+    "blog": "Blog",
+    "gallery": "Gallery EN/VI",
+    "wellness": "Thư viện wellness",
+    "membership": "Hội viên",
+    "careers": "Tuyển dụng"
+  },
+  "hero": {
+    "brand": "Serenity Spa",
+    "titleLead": "Tái tạo năng lượng,",
+    "titleHighlight": "nuôi dưỡng tâm hồn",
+    "subtitle": "Trải nghiệm spa cao cấp với liệu pháp trị liệu chuyên nghiệp, không gian thiên nhiên và sản phẩm organic 100% tại trung tâm thành phố.",
+    "bookNow": "Đặt lịch ngay",
+    "exploreServices": "Khám phá dịch vụ",
+    "stats": [
+      { "value": "15+", "label": "Năm kinh nghiệm" },
+      { "value": "50+", "label": "Liệu trình" },
+      { "value": "10k+", "label": "Khách hàng" }
+    ]
+  },
+  "about": {
+    "eyebrow": "Về chúng tôi",
+    "titleLead": "Không gian bình yên",
+    "titleRest": "giữa lòng thành phố",
+    "description": "Serenity Spa ra đời từ niềm đam mê mang đến trải nghiệm chăm sóc sức khỏe toàn diện. Với đội ngũ chuyên gia được đào tạo quốc tế và không gian thiết kế theo phong cách Zen hiện đại, chúng tôi cam kết mang đến sự thư giãn tuyệt đối cho mỗi khách hàng.",
+    "ratingCaption": "2,400+ đánh giá",
+    "features": [
+      {
+        "title": "Chăm sóc tận tâm",
+        "desc": "Mỗi khách hàng đều được tư vấn liệu trình riêng biệt."
+      },
+      {
+        "title": "100% Organic",
+        "desc": "Sản phẩm tự nhiên, an toàn và thân thiện môi trường."
+      },
+      {
+        "title": "Chuẩn quốc tế",
+        "desc": "Quy trình vệ sinh và an toàn đạt tiêu chuẩn spa 5 sao."
+      }
+    ]
+  },
+  "services": {
+    "eyebrow": "Dịch vụ",
+    "titleLead": "Liệu trình",
+    "titleRest": "chăm sóc cao cấp",
+    "subtitle": "Khám phá các liệu trình được thiết kế riêng để phục hồi cơ thể, làm đẹp da và cân bằng tinh thần.",
+    "cta": "Đặt lịch tư vấn miễn phí",
+    "items": [
+      {
+        "title": "Massage Trị Liệu",
+        "description": "Massage Thái, Shiatsu và đá nóng giúp thư giãn cơ bắp, cải thiện tuần hoàn và giảm căng thẳng.",
+        "duration": "60 - 90 phút"
+      },
+      {
+        "title": "Chăm Sóc Da Mặt",
+        "description": "Liệu trình facial chuyên sâu với mỹ phẩm organic, phù hợp mọi loại da và mang lại làn da rạng rỡ.",
+        "duration": "45 - 75 phút"
+      },
+      {
+        "title": "Liệu Pháp Body",
+        "description": "Tẩy tế bào chết toàn thân, body wrap và detox giúp làn da mềm mại, săn chắc và tràn đầy năng lượng.",
+        "duration": "90 - 120 phút"
+      },
+      {
+        "title": "Aromatherapy",
+        "description": "Tinh dầu thiên nhiên cao cấp kết hợp liệu pháp hương thơm, cân bằng cơ thể và tinh thần.",
+        "duration": "60 phút"
+      }
+    ]
+  },
+  "amenities": {
+    "eyebrow": "Tiện ích",
+    "titleLead": "Trải nghiệm",
+    "titleRest": "trọn vẹn",
+    "description": "Serenity Spa mang đến không gian thư giãn đa tiện ích, từ xông hơi, jacuzzi đến khu vực yoga — tất cả trong một điểm đến.",
+    "items": [
+      {
+        "title": "Phòng Xông Hơi",
+        "description": "Xông hơi khô và ướt hiện đại, giúp thải độc và thư giãn sâu."
+      },
+      {
+        "title": "Bể Jacuzzi",
+        "description": "Không gian thủy liệu riêng tư với nước ấm và tinh dầu thư giãn."
+      },
+      {
+        "title": "Yoga & Thiền",
+        "description": "Lớp yoga và thiền định hàng ngày trong không gian yên tĩnh."
+      },
+      {
+        "title": "Sản Phẩm Organic",
+        "description": "100% nguyên liệu tự nhiên, không paraben, thân thiện môi trường."
+      }
+    ]
+  },
+  "packages": {
+    "eyebrow": "Gói ưu đãi",
+    "titleLead": "Chọn gói",
+    "titleRest": "phù hợp với bạn",
+    "subtitle": "Các gói combo được thiết kế để tiết kiệm chi phí mà vẫn mang đến trải nghiệm spa trọn vẹn nhất.",
+    "popular": "Phổ biến",
+    "choose": "Chọn gói này",
+    "items": [
+      {
+        "name": "Gói Thư Giãn",
+        "caption": "Dành cho người mới bắt đầu",
+        "features": [
+          "Massage body 60 phút",
+          "Xông hơi 30 phút",
+          "Trà thảo mộc miễn phí",
+          "Khăn lạnh aromatherapy"
+        ]
+      },
+      {
+        "name": "Gói Tái Tạo",
+        "caption": "Lựa chọn phổ biến nhất",
+        "features": [
+          "Massage body 90 phút",
+          "Facial chăm sóc da 60 phút",
+          "Body scrub toàn thân",
+          "Jacuzzi 45 phút",
+          "Đồ uống detox miễn phí"
+        ]
+      },
+      {
+        "name": "Gói Premium",
+        "caption": "Trải nghiệm hoàn hảo",
+        "features": [
+          "Liệu trình body 120 phút",
+          "Facial cao cấp 90 phút",
+          "Aromatherapy riêng tư",
+          "Phòng VIP riêng biệt",
+          "Bữa trưa healthy",
+          "Quà tặng sản phẩm organic"
+        ]
+      }
+    ]
+  },
+  "testimonials": {
+    "eyebrow": "Đánh giá",
+    "titleLead": "Khách hàng",
+    "titleRest": "nói gì?",
+    "items": [
+      {
+        "name": "Nguyễn Minh Anh",
+        "role": "Doanh nhân",
+        "content": "Serenity Spa là nơi tôi tìm thấy sự bình yên giữa cuộc sống bận rộn. Dịch vụ massage tuyệt vời, nhân viên chuyên nghiệp và không gian cực kỳ thư giãn."
+      },
+      {
+        "name": "Trần Hoàng Long",
+        "role": "Kỹ sư phần mềm",
+        "content": "Gói Tái Tạo thực sự đáng giá. Sau buổi trị liệu, cơ thể nhẹ nhõm và tinh thần sảng khoái. Chắc chắn sẽ quay lại!"
+      },
+      {
+        "name": "Lê Thu Hà",
+        "role": "Giáo viên",
+        "content": "Facial organic ở đây làm da tôi sáng mịn rõ rệt. Không gian spa sang trọng, sạch sẽ và rất riêng tư. Highly recommended!"
+      },
+      {
+        "name": "Phạm Quốc Bảo",
+        "role": "Bác sĩ",
+        "content": "Tôi thường xuyên giới thiệu bệnh nhân đến Serenity Spa để giảm stress. Chất lượng dịch vụ luôn ổn định và đáng tin cậy."
+      }
+    ]
+  },
+  "faqs": {
+    "eyebrow": "FAQ",
+    "titleLead": "Câu hỏi",
+    "titleRest": "thường gặp",
+    "items": [
+      {
+        "question": "Tôi cần đặt lịch trước bao lâu?",
+        "answer": "Chúng tôi khuyến khích đặt lịch trước ít nhất 24 giờ, đặc biệt vào cuối tuần và dịp lễ. Bạn có thể đặt online hoặc gọi hotline."
+      },
+      {
+        "question": "Spa có phù hợp cho phụ nữ mang thai không?",
+        "answer": "Có, chúng tôi có liệu trình massage riêng cho bà bầu từ tuần thứ 13 trở đi. Vui lòng thông báo khi đặt lịch để được tư vấn phù hợp."
+      },
+      {
+        "question": "Tôi nên đến trước giờ hẹn bao lâu?",
+        "answer": "Vui lòng đến trước 15 phút để làm thủ tục, thay đồ và thư giãn trong khu vực lounge trước khi bắt đầu liệu trình."
+      },
+      {
+        "question": "Chính sách hủy lịch như thế nào?",
+        "answer": "Hủy miễn phí trước 12 giờ. Hủy trong vòng 12 giờ sẽ tính phí 50%. Không đến mà không thông báo sẽ mất toàn bộ tiền cọc."
+      },
+      {
+        "question": "Spa có chỗ đậu xe không?",
+        "answer": "Có bãi đậu xe miễn phí cho khách hàng tại tầng hầm tòa nhà. Nhân viên lễ tân sẽ hướng dẫn chi tiết khi bạn đến."
+      }
+    ]
+  },
+  "booking": {
+    "eyebrow": "Đặt lịch hẹn",
+    "title": "Sẵn sàng thư giãn?",
+    "description": "Đặt lịch ngay hôm nay và nhận ưu đãi 15% cho lần trải nghiệm đầu tiên. Đội ngũ tư vấn của chúng tôi luôn sẵn sàng hỗ trợ bạn.",
+    "hotlineLabel": "Hotline",
+    "addressLabel": "Địa chỉ",
+    "addressValue": "123 Nguyễn Huệ, Quận 1, TP.HCM",
+    "hoursLabel": "Giờ mở cửa",
+    "hoursValue": "8:00 - 22:00 (Thứ 2 - Chủ nhật)",
+    "bookOnline": "Đặt lịch online",
+    "contactConsult": "Liên hệ tư vấn"
+  },
+  "cta": {
+    "bookNow": "Đặt lịch ngay",
+    "contact": "Liên hệ",
+    "title": "Sẵn sàng bắt đầu hành trình thư giãn?",
+    "subtitle": "Đội ngũ Serenity Spa luôn sẵn sàng đồng hành cùng bạn trên hành trình chăm sóc sức khỏe.",
+    "button": "Đặt lịch online"
+  }
+}

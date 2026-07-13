@@ -1,0 +1,48 @@
+{
+  "hero": {
+    "badge": "Amaya Onsen",
+    "kana": "あまや温泉",
+    "subtitle": "Ryokan Wellness Retreat",
+    "title1": "Stillness",
+    "title2": "purely Japanese",
+    "title3": "— soul restored",
+    "description": "Experience the soul of a traditional Japanese Ryokan — where hot mineral onsen, classic shiatsu and the philosophy of 'Ma' (sacred silence) harmonise to restore mind and body.",
+    "bookOmakase": "Book Omakase",
+    "viewSeasons": "View by season",
+    "openDaily": "Open daily",
+    "hours": "8:00 — 22:00"
+  },
+  "seasons": {
+    "label": "Seasonal treatments",
+    "title": "Four seasons",
+    "titleHighlight": "of healing",
+    "description": "The Japanese philosophy of 'Shizen' — living in harmony with nature. Each treatment reflects the unique beauty of each season.",
+    "duration": "minutes",
+    "bookSeason": "Book treatment"
+  },
+  "onsen": {
+    "label": "Onsen & Shiatsu",
+    "title": "The authentic",
+    "titleHighlight": "onsen experience",
+    "description": "Hot mineral baths in the style of a traditional Ryokan — designed to honour 'Ma' (sacred silence) and 'Wabi-sabi' (the beauty of imperfection).",
+    "privatePool": "Private pool",
+    "sharedOnsen": "Shared onsen",
+    "includesLabel": "Includes:",
+    "bookOnsen": "Book onsen"
+  },
+  "booking": {
+    "label": "Omakase Booking",
+    "title": "Leave it all",
+    "titleHighlight": "to us",
+    "description": "'Omakase' — entrust everything to us. Just tell us the time and number of guests, the rest is a wonderful surprise.",
+    "name": "Name",
+    "guests": "Number of guests",
+    "date": "Date",
+    "time": "Time",
+    "duration": "Duration of stay",
+    "special": "Special requests",
+    "specialPlaceholder": "Fragrance sensitivities, allergies, personal requests...",
+    "confirm": "Confirm Omakase",
+    "policy": "Free cancellation before 48 hours · 30% deposit"
+  }
+}

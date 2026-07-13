@@ -1,0 +1,62 @@
+{
+  "hero": {
+    "badge": "Soleil Méditerranée",
+    "tagline": "Coastal Wellness Retreat",
+    "title1": "Sunshine,",
+    "title2": "sea breezes",
+    "title3": "& Mediterranean vitality",
+    "description": "A wellness journey inspired by the coasts of Greece and Italy — where olive oil, Mediterranean sea salt, sunshine and ocean breath restore every living cell.",
+    "startJourney": "Start your journey",
+    "viewDayPass": "View Day Pass",
+    "openLabel": "Open year-round",
+    "tempLabel": "Pool water temperature",
+    "tempValue": "32°C — 38°C"
+  },
+  "pillars": {
+    "label": "Mediterranean philosophy",
+    "title": "Four elements",
+    "titleHighlight": "of wellness",
+    "description": "Mediterranean people were once the world's healthiest and longest-lived. Their secret lies in the balance of four natural elements.",
+    "p1Title": "Thalasso · Sea",
+    "p1Desc": "Deep-sea mineral salts, seaweed and hydro-pressure therapy following ancient Greek tradition.",
+    "p2Title": "Elaia · Olive",
+    "p2Desc": "Pure olive oil from Crete — the most powerful polyphenol antioxidant nature has to offer.",
+    "p3Title": "Helios · Sun",
+    "p3Desc": "Light and heat therapy restores vitamin D, stimulates circulation and uplifts the mood.",
+    "p4Title": "Petra · Stone",
+    "p4Desc": "Volcanic rock and Aegean sea minerals with deep-held heat for profound detoxification."
+  },
+  "treatments": {
+    "label": "Treatment menu",
+    "title": "Mediterranean",
+    "titleHighlight": "flavours",
+    "description": "From Roman baths to olive oil massage — each treatment is a journey to the turquoise coast.",
+    "duration": "minutes",
+    "bookTreatment": "Book treatment"
+  },
+  "daypass": {
+    "label": "Day Pass & Packages",
+    "title": "Choose your",
+    "titleHighlight": "perfect day",
+    "description": "From a quiet morning to a luxurious sunset — each Day Pass package is a complete Mediterranean experience.",
+    "includes": "Includes:",
+    "book": "Book this package",
+    "perPerson": "/person"
+  },
+  "booking": {
+    "label": "Reserve",
+    "title": "Hold your spot",
+    "titleHighlight": "in the sun",
+    "description": "Book at least 24 hours in advance for the best experience. We provide a personal locker and bath towel for every guest.",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "guests": "Number of guests",
+    "date": "Date",
+    "package": "Select Day Pass package",
+    "notes": "Notes",
+    "notesPlaceholder": "Special requests, special occasions...",
+    "confirm": "Confirm reservation",
+    "callLine": "Or call our hotline to reserve"
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "pages": {
+    "about": {
+      "eyebrow": "关于帝国维也纳",
+      "title": "一场穿越奥匈美好年代的养生之旅",
+      "subtitle": "追随弗朗茨·约瑟夫皇帝与茜茜公主的足迹——中欧沐浴仪式在21世纪重生。"
+    },
+    "services": {
+      "eyebrow": "服务",
+      "title": "精选帝国护理菜单",
+      "subtitle": "葡萄酒疗法、碱性矿泉与哈布斯堡仪式——每一项由大师级理疗师精心呈现。"
+    },
+    "serviceDetails": {
+      "eyebrow": "服务"
+    },
+    "training": {
+      "eyebrow": "学院",
+      "title": "帝国维也纳学院",
+      "subtitle": "葡萄酒疗法、温泉浴与欧洲古典水疗手艺的大师课程。"
+    },
+    "blog": {
+      "eyebrow": "日志",
+      "title": "养生日志",
+      "subtitle": "关于美好年代、长寿科学与维也纳精致生活的笔记。"
+    },
+    "careers": {
+      "eyebrow": "招聘",
+      "title": "加入帝国工坊",
+      "subtitle": "我们寻找热爱工艺与服务的理疗师、侍酒师与迎宾员。"
+    },
+    "careerDetails": {
+      "eyebrow": "招聘"
+    },
+    "bookingPage": {
+      "eyebrow": "预约",
+      "title": "预约您的帝国仪式",
+      "subtitle": "选择项目、时间与宫殿套房——礼宾15分钟内确认。"
+    },
+    "contact": {
+      "eyebrow": "联系",
+      "title": "随时为您服务",
+      "subtitle": "给我们留言——帝国礼宾在营业时间30分钟内回复。"
+    },
+    "offers": {
+      "eyebrow": "优惠",
+      "title": "精选帝国套餐",
+      "subtitle": "为尊贵宾客量身定制的季节性尊享礼遇。"
+    },
+    "feedback": {
+      "eyebrow": "宾客之声",
+      "title": "获得25,000+尊贵宾客信赖",
+      "subtitle": "每一封赞誉都激励我们精益求精。"
+    },
+    "promotions": {
+      "eyebrow": "促销",
+      "title": "季节性帝国活动",
+      "subtitle": "探索本年度限时项目与盛大舞会庆典。"
+    },
+    "branches": {
+      "eyebrow": "宫殿",
+      "title": "全国4座宫殿",
+      "subtitle": "寻找最近的帝国维也纳——皇家标准，处处如一。"
+    },
+    "account": {
+      "eyebrow": "会员",
+      "title": "帝国会员厅",
+      "subtitle": "管理您的预约、积分与理疗记录。"
+    },
+    "partners": {
+      "eyebrow": "世家",
+      "title": "我们的帝国世家",
+      "subtitle": "携手欧洲顶级酒庄、矿泉与化妆品世家。"
+    },
+    "treatments": {
+      "eyebrow": "疗程",
+      "title": "帝国疗程方案",
+      "subtitle": "个性化多次疗程——显著、贵族般的效果。"
+    },
+    "beforeAfter": {
+      "eyebrow": "前后对比",
+      "title": "真实宾客真实效果",
+      "subtitle": "经宾客同意分享的照片——原始未修饰。"
+    },
+    "faq": {
+      "eyebrow": "常见问题",
+      "title": "常见问题解答",
+      "subtitle": "造访宫殿前您需要了解的一切。"
+    },
+    "policy": {
+      "eyebrow": "政策",
+      "title": "条款与帝国礼仪",
+      "subtitle": "透明、优雅、尊重——始终如一。"
+    },
+    "gallery": {
+      "eyebrow": "画廊",
+      "title": "帝国维也纳的瞬间",
+      "subtitle": "沙龙、仪式与情感——定格于银色相框。"
+    }
+  }
+}

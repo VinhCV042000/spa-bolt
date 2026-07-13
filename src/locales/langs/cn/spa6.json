@@ -1,0 +1,77 @@
+{
+  "hero": {
+    "badge": "Terra Heal",
+    "tagline": "源自大地的疗愈",
+    "title1": "回归",
+    "title2": "自然",
+    "title3": "——全身疗愈",
+    "description": "一段灵感源自阿育吠陀与巴厘岛哲学的养生之旅——让植物、大地与自然能量修复身体、心灵与灵魂。",
+    "startJourney": "开启您的旅程",
+    "viewRetreats": "查看疗养项目",
+    "ratingText": "优质评价",
+    "certifiedOrganic": "有机认证",
+    "sustainableTag": "可持续",
+    "holisticTag": "整体疗法",
+    "naturalbTag": "100% 天然"
+  },
+  "about": {
+    "label": "我们的理念",
+    "title": "自然疗愈的",
+    "titleHighlight": "三大原则",
+    "description": "Terra Heal 将拥有 5000 年历史的阿育吠陀哲学，与越南本土草药疗法及传统巴厘岛技艺融为一体。",
+    "pillar1Title": "督夏平衡",
+    "pillar1Desc": "我们分析您的体质，并根据您的督夏类型——瓦塔、皮塔或卡法——量身定制护理，以达到完美平衡。",
+    "pillar2Title": "天然排毒",
+    "pillar2Desc": "取自天然的草本与矿物从内而外深层净化您的身体——不含化学成分，只有纯净。",
+    "pillar3Title": "能量修复",
+    "pillar3Desc": "自然之声、冥想与疗愈触碰共同作用，恢复您的生命能量流动。"
+  },
+  "rituals": {
+    "label": "大地仪式",
+    "title": "源自大地的",
+    "titleHighlight": "疗愈仪式",
+    "description": "每一项仪式都融合了草本、矿物与世代相传的传统技艺。",
+    "duration": "分钟",
+    "fromPrice": "起",
+    "bookRitual": "预约仪式"
+  },
+  "packages": {
+    "label": "疗养套餐",
+    "title": "选择您的",
+    "titleHighlight": "疗愈旅程",
+    "description": "从短暂的周末逃离到完整的一周沉浸——每一款疗养套餐都是一段焕新蜕变的旅程。",
+    "perPerson": "/人",
+    "nights": "晚",
+    "includes": "包含：",
+    "bookRetreat": "预订此疗养",
+    "mostPopular": "最受欢迎",
+    "perDay": "/天",
+    "inclusive": "全包"
+  },
+  "testimonials": {
+    "label": "真实旅程",
+    "title": "疗愈",
+    "titleHighlight": "故事"
+  },
+  "booking": {
+    "label": "立即开始",
+    "title": "预约免费",
+    "titleHighlight": "咨询",
+    "description": "与养生专家交流，规划您的旅程。无需承诺，完全免费。",
+    "name": "您的姓名",
+    "email": "电子邮箱",
+    "phone": "电话号码",
+    "concern": "您希望改善的方面",
+    "concernPlaceholder": "压力、疲劳、肌肤、失眠……",
+    "preferredDate": "期望日期",
+    "howHear": "您是如何了解到我们的",
+    "submit": "预约免费咨询",
+    "whatsapp": "在 WhatsApp 上咨询",
+    "step1": "免费咨询",
+    "step1Desc": "会见阿育吠陀专家",
+    "step2": "定制方案",
+    "step2Desc": "专为您量身打造",
+    "step3": "开启疗愈",
+    "step3Desc": "您的蜕变就此开始"
+  }
+}

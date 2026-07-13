@@ -1,0 +1,75 @@
+{
+  "hero": {
+    "badge": "✦ Jade Blossom Wellness",
+    "title1": "Vẻ đẹp thuần",
+    "title2": "khiết",
+    "title3": "từ thiên nhiên Á Đông",
+    "description": "Hành trình làm đẹp lấy cảm hứng từ K-Beauty và triết lý Thiền Nhật Bản — nơi khoa học hiện đại gặp gỡ tinh hoa thiên nhiên, chăm sóc bạn từ trong ra ngoài.",
+    "bookNow": "Đặt lịch trải nghiệm",
+    "watchVideo": "Xem video",
+    "yearsExp": "Năm kinh nghiệm",
+    "clients": "Khách hàng hài lòng",
+    "exclusiveTreatments": "Liệu trình độc quyền",
+    "ratingLabel": "đánh giá",
+    "availableToday": "Hôm nay còn",
+    "slotsLeft": "khung giờ trống"
+  },
+  "philosophy": {
+    "label": "Triết lý của chúng tôi",
+    "title": "Ba trụ cột tạo nên",
+    "titleHighlight": "vẻ đẹp bền vững",
+    "pillar1Title": "Thiên Nhiên Thuần Khiết",
+    "pillar1Desc": "Mọi sản phẩm đều được chọn lọc từ thảo dược thiên nhiên, không chất bảo quản, an toàn tuyệt đối cho da nhạy cảm.",
+    "pillar2Title": "Khoa Học Hiện Đại",
+    "pillar2Desc": "Ứng dụng công nghệ K-Beauty tiên tiến: phân tích loại da, công thức dưỡng chất thế hệ mới cho kết quả tối ưu.",
+    "pillar3Title": "Cân Bằng Tinh Thần",
+    "pillar3Desc": "Lấy cảm hứng từ Wabi-sabi Nhật Bản — trân trọng vẻ đẹp tự nhiên, tìm sự bình an trong từng hơi thở."
+  },
+  "treatments": {
+    "label": "Liệu trình đặc trưng",
+    "title": "Signature Treatments",
+    "viewAll": "Xem tất cả liệu trình",
+    "bookNow": "Đặt lịch ngay"
+  },
+  "specialists": {
+    "label": "Đội ngũ chuyên gia",
+    "title": "Những bàn tay vàng",
+    "titleHighlight": "của Jade Blossom",
+    "description": "Mỗi chuyên gia đều được đào tạo chuyên sâu tại Hàn Quốc và Nhật Bản, mang đến trải nghiệm làm đẹp chuẩn quốc tế.",
+    "experience": "kinh nghiệm"
+  },
+  "membership": {
+    "label": "Gói thành viên",
+    "title": "Chọn gói phù hợp với bạn",
+    "description": "Tiết kiệm hơn, được chăm sóc nhiều hơn. Thành viên Jade Blossom nhận ưu đãi độc quyền mỗi tháng.",
+    "mostPopular": "✦ PHỔ BIẾN NHẤT",
+    "perMonth": "/tháng",
+    "registerNow": "Đăng ký ngay",
+    "noContract": "Tất cả gói thành viên có thể hủy bất kỳ lúc nào. Không ràng buộc hợp đồng."
+  },
+  "testimonials": {
+    "label": "Cảm nhận khách hàng",
+    "title": "Họ nói gì về chúng tôi?"
+  },
+  "booking": {
+    "label": "Đặt lịch online",
+    "title": "Bắt đầu hành trình",
+    "titleHighlight": "làm đẹp của bạn",
+    "description": "Đặt lịch miễn phí, xác nhận ngay qua SMS. Thay đổi hoặc hủy bất cứ lúc nào.",
+    "fullName": "Họ và tên",
+    "fullNamePlaceholder": "Nhập tên của bạn",
+    "phone": "Số điện thoại",
+    "phonePlaceholder": "0xxx xxx xxx",
+    "selectTreatment": "Chọn liệu trình",
+    "appointmentDate": "Ngày hẹn",
+    "timeSlot": "Khung giờ",
+    "specialRequest": "Yêu cầu đặc biệt (tùy chọn)",
+    "specialRequestPlaceholder": "Dị ứng, tình trạng sức khỏe đặc biệt...",
+    "confirmBooking": "Xác nhận đặt lịch",
+    "refund": "Cam kết hoàn tiền",
+    "refundDesc": "100% hoàn tiền nếu bạn không hài lòng sau buổi đầu tiên.",
+    "badge1": "Bảo mật thông tin",
+    "badge2": "Phản hồi trong 5 phút",
+    "badge3": "Hoàn tiền 100%"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "hero": {
+    "eyebrow": "DERMATOLOGY · SKIN",
+    "title": "Chăm sóc da",
+    "titleAccent": "dựa trên khoa học",
+    "description": "Soi da lâm sàng, phác đồ điều trị cá nhân hóa và liệu pháp không xâm lấn để phục hồi làn da và sức khỏe của bạn.",
+    "ctaPrimary": "Đặt lịch soi da",
+    "ctaSecondary": "Gặp chuyên gia",
+    "stats": ["phân tích hỗ trợ bằng AI", "tư vấn chuyên khoa", "phác đồ cá nhân hóa"]
+  },
+  "booking": {
+    "eyebrow": "ĐẶT LỊCH · BOOKING",
+    "title": "Đặt lịch",
+    "titleHighlight": "khám da",
+    "description": "Soi da, tư vấn miễn phí với bác sĩ chuyên khoa — xây dựng phác đồ điều trị cá nhân hóa.",
+    "name": "Họ và tên",
+    "phone": "Số điện thoại",
+    "service": "Dịch vụ quan tâm",
+    "date": "Ngày mong muốn",
+    "notes": "Vấn đề da hiện tại",
+    "submit": "Đặt lịch soi da miễn phí"
+  }
+}

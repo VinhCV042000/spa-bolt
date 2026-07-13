@@ -1,0 +1,59 @@
+{
+  "hero": {
+    "tagline": "NEON BEAUTY · FUTURE EDITION",
+    "title": "Future",
+    "titleAccent": "beauty",
+    "subtitle": "Immersive treatments and advanced skin technology reimagined for the next generation.",
+    "cta": "Book a session"
+  },
+  "booking": {
+    "eyebrow": "BOOKING · FUTURE BEAUTY",
+    "title": "Join the",
+    "titleAccent": "future",
+    "description": "Experience the new generation of beauty tech today.",
+    "hotlineLabel": "Hotline",
+    "addressLabel": "Address",
+    "hoursLabel": "Opening hours",
+    "namePlaceholder": "Full name",
+    "phonePlaceholder": "Phone number",
+    "packagePlaceholder": "Choose a treatment",
+    "submit": "BOOK NOW"
+  },
+  "services": {
+    "eyebrow": "SERVICES",
+    "title": "Cyber",
+    "titleAccent": "Beauty"
+  },
+  "packages": {
+    "eyebrow": "TREATMENT PACKAGES",
+    "title": "Neon",
+    "titleAccent": "Glow",
+    "popularBadge": "MOST POPULAR",
+    "bookNow": "BOOK NOW"
+  },
+  "results": {
+    "title": "Result",
+    "titleAccent": "Timeline",
+    "note": "Prices include taxes and service fees. Flexible payment — cash, card, or bank transfer."
+  },
+  "technology": {
+    "eyebrow": "TECHNOLOGY",
+    "title": "Future",
+    "titleAccent": "Tech"
+  },
+  "specialists": {
+    "eyebrow": "SPECIALISTS",
+    "title": "Tech",
+    "titleAccent": "Experts"
+  },
+  "testimonials": {
+    "eyebrow": "TESTIMONIALS",
+    "title": "Client",
+    "titleAccent": "Reviews"
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "Q&A",
+    "titleAccent": "Tech"
+  }
+}

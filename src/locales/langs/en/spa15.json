@@ -1,0 +1,252 @@
+{
+  "hero": {
+    "eyebrow": "Ryokan · RYOKAN N°15",
+    "title": "Sakura Onsen",
+    "titleAccent": "where the mind",
+    "titleHighlight": "blooms",
+    "description": "A Japanese ryokan in the highlands of Da Lat — four mineral hot springs, six shiatsu rituals, and snow-view kaiseki evenings.",
+    "ctaPrimary": "Reserve the Ryokan",
+    "ctaSecondary": "Explore the onsen",
+    "stats": ["4 mineral onsen", "12 Japanese masters", "9 kaiseki courses"]
+  },
+  "philosophy": {
+    "eyebrow": "PHILOSOPHY · WABI-SABI",
+    "title": "The four pillars of",
+    "titleHighlight": "wabi-sabi",
+    "description": "Every detail in Sakura Onsen is designed around the timeless Japanese philosophy of beauty, imperfection, and humility.",
+    "items": ["Quiet", "Balance", "Harmony", "Presence"]
+  },
+  "booking": {
+    "eyebrow": "RESERVATION · BOOK A STAY",
+    "title": "Step into",
+    "titleHighlight": "Sakura Onsen",
+    "description": "Leave your details and our concierge will contact you within 90 minutes to arrange your preferred dates, tatami room, and ritual flow.",
+    "name": "Full name",
+    "phone": "Phone number",
+    "email": "Email",
+    "date": "Arrival date",
+    "notes": "Special requests",
+    "privacy": "Your information is encrypted and never shared with third parties",
+    "submit": "Send request"
+  },
+  "about": {
+    "pageTitle": "About",
+    "eyebrow": "ABOUT US",
+    "title": "The Story of Sakura Onsen Ryokan",
+    "subtitle": "Bringing authentic Japanese onsen experience to Vietnam with wabi-sabi spirit.",
+    "storyEyebrow": "OUR STORY",
+    "storyTitle": "Our Brand",
+    "visionEyebrow": "VISION",
+    "visionTitle": "Vision & Mission",
+    "certEyebrow": "HONORS",
+    "certTitle": "Certifications & Awards"
+  },
+  "services": {
+    "pageTitle": "Services",
+    "eyebrow": "SERVICES",
+    "title": "Treatments from the Land of the Rising Sun",
+    "subtitle": "Each treatment is a journey — combining traditional shiatsu and Japanese ingredients.",
+    "searchPlaceholder": "Search services...",
+    "categoryLabel": "Category",
+    "sortLabel": "Sort",
+    "sortDefault": "Default",
+    "sortPriceAsc": "Price: Low to High",
+    "sortPriceDesc": "Price: High to Low",
+    "noResults": "No services found.",
+    "viewDetails": "View details"
+  },
+  "serviceDetails": {
+    "pageTitle": "Service Details",
+    "eyebrow": "SERVICES",
+    "descEyebrow": "DESCRIPTION",
+    "descTitle": "Your Experience",
+    "descText": "The {name} treatment lasts {duration} minutes, designed for deep relaxation of body and mind. Performed by therapists trained in Japan.",
+    "benefitsTitle": "Key Benefits",
+    "fromLabel": "From",
+    "bookNow": "Book Now"
+  },
+  "training": {
+    "pageTitle": "Training",
+    "eyebrow": "TRAINING",
+    "title": "Shiatsu & Onsen Therapy Academy",
+    "subtitle": "Professional courses with masters from Japan.",
+    "programsEyebrow": "PROGRAMS",
+    "programsTitle": "From Beginner to Advanced",
+    "registerCta": "Register for Consultation"
+  },
+  "blog": {
+    "pageTitle": "Blog",
+    "eyebrow": "BLOG",
+    "title": "Wabi-Sabi Journal",
+    "subtitle": "Stories from onsen, tea ceremony and Japanese culture.",
+    "allCategories": "All",
+    "readMore": "Read more"
+  },
+  "blogDetails": {
+    "pageTitle": "Article Details"
+  },
+  "careers": {
+    "pageTitle": "Careers",
+    "eyebrow": "CAREERS",
+    "title": "Join the Sakura Team",
+    "subtitle": "Build your career in a wabi-sabi environment.",
+    "openingEyebrow": "POSITIONS",
+    "openingTitle": "Career Opportunities",
+    "applyCta": "Apply Now"
+  },
+  "bookingPage": {
+    "pageTitle": "Booking",
+    "eyebrow": "BOOKING",
+    "title": "Book Onsen & Shiatsu",
+    "subtitle": "Choose your package and book now.",
+    "selectEyebrow": "SELECT",
+    "selectTitle": "Treatment Packages",
+    "popular": "Popular",
+    "sessions": "sessions",
+    "formTitle": "Booking Information",
+    "nameLabel": "Full Name",
+    "phoneLabel": "Phone",
+    "noteLabel": "Notes",
+    "submitCta": "Confirm Booking"
+  },
+  "contact": {
+    "pageTitle": "Contact",
+    "eyebrow": "CONTACT",
+    "title": "Connect with Sakura Onsen",
+    "subtitle": "Concierge available 10AM – 10PM daily.",
+    "infoTitle": "Contact Information",
+    "hotline": "Hotline",
+    "email": "Email",
+    "address": "Address",
+    "hours": "Working Hours",
+    "formTitle": "Send a Message",
+    "nameLabel": "Full Name",
+    "phoneLabel": "Phone",
+    "messageLabel": "Message",
+    "submitCta": "Send Message"
+  },
+  "offers": {
+    "pageTitle": "Offers",
+    "eyebrow": "OFFERS",
+    "title": "Special Offers",
+    "subtitle": "Discover promotions and discount codes.",
+    "expires": "Expires",
+    "useCta": "Use Now"
+  },
+  "feedback": {
+    "pageTitle": "Reviews",
+    "eyebrow": "REVIEWS",
+    "title": "What Our Guests Say",
+    "subtitle": "Real experiences from our guests."
+  },
+  "promotions": {
+    "pageTitle": "Promotions",
+    "eyebrow": "PROMOTIONS",
+    "title": "Seasonal Promotions",
+    "subtitle": "Seasonal offers from Sakura Onsen.",
+    "bookCta": "Book Now"
+  },
+  "branches": {
+    "pageTitle": "Branches",
+    "eyebrow": "BRANCHES",
+    "title": "Sakura Onsen Network",
+    "subtitle": "3 locations in Vietnam and 1 ryokan in Kyoto, Japan."
+  },
+  "account": {
+    "pageTitle": "Account",
+    "eyebrow": "ACCOUNT",
+    "title": "Manage Your Account",
+    "subtitle": "Log in to view history and reward points.",
+    "loginTitle": "Login",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "loginCta": "Login",
+    "noAccount": "Don't have an account?",
+    "registerCta": "Register Now"
+  },
+  "partners": {
+    "pageTitle": "Partners",
+    "eyebrow": "PARTNERS",
+    "title": "Strategic Partners",
+    "subtitle": "Collaborating with top Japanese brands."
+  },
+  "packages": {
+    "pageTitle": "Packages",
+    "eyebrow": "PACKAGES",
+    "title": "Onsen Experience Packages",
+    "subtitle": "Save more with combo treatments.",
+    "popular": "Popular",
+    "sessions": "{count} sessions",
+    "selectCta": "Select Package"
+  },
+  "beforeAfter": {
+    "pageTitle": "Results",
+    "eyebrow": "RESULTS",
+    "title": "Before & After",
+    "subtitle": "Real results from our guests.",
+    "before": "BEFORE",
+    "after": "AFTER"
+  },
+  "faq": {
+    "pageTitle": "FAQ",
+    "eyebrow": "FAQ",
+    "title": "Frequently Asked Questions",
+    "subtitle": "Answers to your questions."
+  },
+  "policy": {
+    "pageTitle": "Policy",
+    "eyebrow": "POLICY",
+    "title": "Policies & Terms",
+    "subtitle": "Terms and conditions of use."
+  },
+  "gallery": {
+    "pageTitle": "Gallery",
+    "eyebrow": "GALLERY",
+    "title": "Moments at Sakura Onsen",
+    "subtitle": "Photos from onsen, ryokan and zen gardens.",
+    "all": "All"
+  },
+  "onsen": {
+    "eyebrow": "温泉 · FOUR ONSEN",
+    "title": "Hot mineral water",
+    "titleAccent": "flowing 365 days a year",
+    "description": "Mineral water drawn from 1,200m beneath the Langbiang plateau — four baths with four landscapes, four temperatures and four distinct bathing rituals."
+  },
+  "rituals": {
+    "eyebrow": "施術 · RITUALS",
+    "title": "Six traditional",
+    "titleAccent": "treatments",
+    "bookCta": "Book"
+  },
+  "suites": {
+    "eyebrow": "旅館 · STAY",
+    "title": "Three tatami",
+    "titleAccent": "traditional rooms",
+    "roomLabel": "ROOM",
+    "bookCta": "Reserve room"
+  },
+  "masters": {
+    "eyebrow": "職人 · ARTISANS",
+    "title": "Hands trained",
+    "titleAccent": "the Japanese way",
+    "titleSuffix": ""
+  },
+  "tea": {
+    "eyebrow": "懐石 · CUISINE & TEA CEREMONY",
+    "title": "Nine-course kaiseki",
+    "titleAccent": "and chanoyu",
+    "description": "Each evening, chef Yui Kobayashi from Uji performs a seasonal kaiseki ritual — nine delicate small dishes paired with frothed matcha in the 400-year-old tea-ceremony tradition.",
+    "courses": [
+      ["Sakizuke", "Seasonal starter — sesame tofu and wakame seaweed"],
+      ["Mukozuke", "Fugu and chutoro tuna sashimi"],
+      ["Yakimono", "Saba grilled with Setouchi salt over birch charcoal"],
+      ["Mizumono", "Wagashi dessert in cherry-blossom shapes"]
+    ]
+  },
+  "testimonials": {
+    "eyebrow": "お客様の声 · GUEST VOICES",
+    "title": "Moments",
+    "titleAccent": "quietly",
+    "titleSuffix": "retold"
+  }
+}

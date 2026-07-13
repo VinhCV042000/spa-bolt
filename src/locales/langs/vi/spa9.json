@@ -1,0 +1,62 @@
+{
+  "hero": {
+    "badge": "Soleil Méditerranée",
+    "tagline": "Coastal Wellness Retreat",
+    "title1": "Ánh nắng,",
+    "title2": "làn sóng biển",
+    "title3": "& sức sống Địa Trung Hải",
+    "description": "Hành trình wellness lấy cảm hứng từ bờ biển Hy Lạp và Ý — nơi dầu olive, muối biển Địa Trung Hải, nắng và hơi thở của biển cả phục hồi từng tế bào sống.",
+    "startJourney": "Bắt đầu hành trình",
+    "viewDayPass": "Xem Day Pass",
+    "openLabel": "Mở cửa quanh năm",
+    "tempLabel": "Nhiệt độ nước bể",
+    "tempValue": "32°C — 38°C"
+  },
+  "pillars": {
+    "label": "Triết lý Địa Trung Hải",
+    "title": "Bốn yếu tố",
+    "titleHighlight": "của sức khỏe",
+    "description": "Người Địa Trung Hải từng là những người sống thọ và khỏe mạnh nhất thế giới. Bí quyết của họ là sự cân bằng giữa 4 yếu tố thiên nhiên.",
+    "p1Title": "Thalasso · Biển",
+    "p1Desc": "Muối khoáng biển sâu, rong biển và áp lực nước trị liệu theo truyền thống Hy Lạp cổ đại.",
+    "p2Title": "Elaia · Olive",
+    "p2Desc": "Dầu olive nguyên chất từ vùng Crete — polyphenol chống oxy hóa mạnh nhất được thiên nhiên ban tặng.",
+    "p3Title": "Helios · Nắng",
+    "p3Desc": "Liệu pháp ánh sáng và nhiệt phục hồi vitamin D, kích thích tuần hoàn và nâng cao tâm trạng.",
+    "p4Title": "Petra · Khoáng thạch",
+    "p4Desc": "Đá núi lửa và khoáng thạch từ lòng biển Aegean với nhiệt nội tại để thải độc sâu."
+  },
+  "treatments": {
+    "label": "Menu liệu trình",
+    "title": "Hương vị",
+    "titleHighlight": "Địa Trung Hải",
+    "description": "Từ Roman Bath đến massage dầu olive — mỗi liệu trình là một cuộc du hành về vùng biển xanh ngọc.",
+    "duration": "phút",
+    "bookTreatment": "Đặt liệu trình"
+  },
+  "daypass": {
+    "label": "Day Pass & Gói",
+    "title": "Chọn ngày",
+    "titleHighlight": "hoàn hảo của bạn",
+    "description": "Từ buổi sáng tĩnh lặng đến hoàng hôn sang trọng — mỗi gói Day Pass là một trải nghiệm Địa Trung Hải trọn vẹn.",
+    "includes": "Bao gồm:",
+    "book": "Đặt gói này",
+    "perPerson": "/người"
+  },
+  "booking": {
+    "label": "Đặt bàn",
+    "title": "Giữ chỗ",
+    "titleHighlight": "dưới nắng",
+    "description": "Đặt trước ít nhất 24 giờ để đảm bảo trải nghiệm tốt nhất. Chúng tôi có locker riêng và khăn tắm cho mỗi khách.",
+    "name": "Tên",
+    "email": "Email",
+    "phone": "Điện thoại",
+    "guests": "Số người",
+    "date": "Ngày",
+    "package": "Chọn gói Day Pass",
+    "notes": "Ghi chú",
+    "notesPlaceholder": "Yêu cầu đặc biệt, kỷ niệm đặc biệt...",
+    "confirm": "Xác nhận đặt chỗ",
+    "callLine": "Hoặc gọi đặt qua hotline"
+  }
+}

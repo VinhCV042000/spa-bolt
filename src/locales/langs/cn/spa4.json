@@ -1,0 +1,75 @@
+{
+  "hero": {
+    "badge": "✦ Jade Blossom Wellness",
+    "title1": "纯净之美",
+    "title2": "源自",
+    "title3": "亚洲自然",
+    "description": "一场灵感源自韩式美妆与日式禅意哲学的美丽之旅——现代科学与自然精粹在此交融，由内而外呵护您。",
+    "bookNow": "预订体验",
+    "watchVideo": "观看视频",
+    "yearsExp": "多年经验",
+    "clients": "满意顾客",
+    "exclusiveTreatments": "专属护理",
+    "ratingLabel": "条评价",
+    "availableToday": "今日可预约",
+    "slotsLeft": "个时段"
+  },
+  "philosophy": {
+    "label": "我们的理念",
+    "title": "持久之美的",
+    "titleHighlight": "三大支柱",
+    "pillar1Title": "纯净自然",
+    "pillar1Desc": "每款产品均精选自天然草本——不含防腐剂，对敏感肌肤完全安全。",
+    "pillar2Title": "现代科学",
+    "pillar2Desc": "由先进韩式美妆科技驱动：肤质分析与新一代营养配方，带来最佳效果。",
+    "pillar3Title": "心灵平衡",
+    "pillar3Desc": "灵感源自日式侘寂——欣赏自然之美，于每一次呼吸中觅得宁静。"
+  },
+  "treatments": {
+    "label": "招牌护理",
+    "title": "招牌护理",
+    "viewAll": "查看所有护理",
+    "bookNow": "立即预订"
+  },
+  "specialists": {
+    "label": "我们的专家",
+    "title": "Jade Blossom",
+    "titleHighlight": "的黄金之手",
+    "description": "每位专家均在韩国与日本接受强化培训，呈献世界级的美丽体验。",
+    "experience": "经验"
+  },
+  "membership": {
+    "label": "会员方案",
+    "title": "选择最适合您的方案",
+    "description": "更省更多，宠爱更多。Jade Blossom 会员每月畅享专属礼遇。",
+    "mostPopular": "✦ 最受欢迎",
+    "perMonth": "/月",
+    "registerNow": "立即注册",
+    "noContract": "所有会员均可随时取消，无绑定合约。"
+  },
+  "testimonials": {
+    "label": "顾客评价",
+    "title": "顾客如何评价我们"
+  },
+  "booking": {
+    "label": "在线预订",
+    "title": "开启您的",
+    "titleHighlight": "美丽之旅",
+    "description": "免费预订，即时短信确认。随时更改或取消。",
+    "fullName": "姓名",
+    "fullNamePlaceholder": "请输入您的姓名",
+    "phone": "电话号码",
+    "phonePlaceholder": "0xxx xxx xxx",
+    "selectTreatment": "选择护理",
+    "appointmentDate": "预约日期",
+    "timeSlot": "时段",
+    "specialRequest": "特殊需求（选填）",
+    "specialRequestPlaceholder": "过敏、特殊健康状况……",
+    "confirmBooking": "确认预订",
+    "refund": "退款保证",
+    "refundDesc": "首次护理后如不满意，100% 退款。",
+    "badge1": "信息安全",
+    "badge2": "5 分钟内回复",
+    "badge3": "100% 退款"
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "hero": {
+    "brand": "Nature Spa & Wellness",
+    "titleLine1": "Trouvez votre équilibre",
+    "titleLine2": "avec la nature",
+    "subtitle": "Découvrez des soins spa enrichis des meilleurs ingrédients de la nature, pour amener votre corps et votre esprit à un état de détente parfaite.",
+    "ctaPrimary": "Réserver",
+    "ctaSecondary": "Découvrir les services",
+    "stat1": "Années d'expérience",
+    "stat2": "Clients satisfaits",
+    "stat3": "Satisfaction",
+    "floatingTitle": "Noté 4,9/5",
+    "floatingSub": "Par plus de 25 000 clients"
+  },
+  "about": {
+    "eyebrow": "À propos",
+    "title": "Un parcours de bien-être holistique",
+    "description": "Nature Spa est né avec la mission d'apporter la nature dans chaque soin. Nous utilisons des ingrédients 100 % biologiques, alliant techniques de massage traditionnelles et technologie moderne pour offrir une expérience de détente complète.",
+    "features": [
+      {
+        "title": "Ingrédients biologiques",
+        "desc": "Herbes et huiles essentielles 100 % naturelles"
+      },
+      { "title": "Thérapeutes experts", "desc": "Équipe formée à l'international" },
+      { "title": "Technologie de pointe", "desc": "Équipements de qualité européenne" }
+    ]
+  },
+  "services": {
+    "eyebrow": "Services",
+    "title": "Des soins inspirés de la nature",
+    "subtitle": "Chaque service est conçu sur mesure, alliant méthodes traditionnelles et technologie de pointe.",
+    "items": [
+      {
+        "title": "Massage aux herbes",
+        "desc": "Massage thérapeutique aux huiles essentielles d'herbes premium pour un relâchement profond des tensions."
+      },
+      {
+        "title": "Soin du visage",
+        "desc": "Restaurez et rajeunissez votre peau grâce aux ingrédients biologiques issus de la nature."
+      },
+      {
+        "title": "Thérapie corporelle",
+        "desc": "Enveloppements et gommages corporels pour une peau naturellement lisse et ferme."
+      },
+      {
+        "title": "Aromathérapie",
+        "desc": "Aromathérapie premium aux huiles essentielles importées de France et du Japon."
+      },
+      {
+        "title": "Spa en duo",
+        "desc": "Une expérience de détente pour les couples dans un cadre privé et romantique."
+      },
+      {
+        "title": "Détox & Purification",
+        "desc": "Programme de purification du corps pour renforcer naturellement l'immunité et la vitalité."
+      }
+    ],
+    "viewAll": "Voir tous les services"
+  },
+  "packages": {
+    "eyebrow": "Forfaits",
+    "title": "Choisissez votre formule",
+    "subtitle": "Économisez davantage avec les forfaits de soins et profitez d'avantages exclusifs conçus pour vous.",
+    "popular": "Populaire",
+    "items": [
+      {
+        "name": "Détente",
+        "features": [
+          "Massage aux herbes de 60 min",
+          "Thé aux herbes offert",
+          "Serviette chaude & hammam"
+        ]
+      },
+      {
+        "name": "Premium",
+        "features": [
+          "Massage corporel complet de 90 min",
+          "Soin du visage biologique",
+          "Bain de vapeur au sel de l'Himalaya",
+          "Thé & pâtisseries"
+        ]
+      },
+      {
+        "name": "VIP",
+        "features": [
+          "Soin corporel complet de 120 min",
+          "Soin du visage liftant au collagène",
+          "Spa des pieds",
+          "Salle VIP privée",
+          "Boisson détox"
+        ]
+      }
+    ],
+    "cta": "Réserver"
+  },
+  "testimonials": {
+    "eyebrow": "Témoignages",
+    "title": "Ce que disent nos clients",
+    "items": [
+      {
+        "name": "Minh Anh",
+        "role": "Cliente VIP",
+        "comment": "Un espace de détente merveilleux, un personnel très professionnel et dévoué."
+      },
+      {
+        "name": "Thu Ha",
+        "role": "Membre Premium",
+        "comment": "Ma peau s'est nettement améliorée après seulement 3 soins. Très satisfaite !"
+      },
+      {
+        "name": "Hoang Nam",
+        "role": "Nouveau client",
+        "comment": "Première fois dans un spa mais je me suis senti très à l'aise, je reviendrai sans aucun doute."
+      },
+      {
+        "name": "Bich Ngoc",
+        "role": "Cliente fidèle",
+        "comment": "Le forfait VIP en vaut vraiment la peine — une attention soignée du début à la fin."
+      }
+    ]
+  },
+  "gallery": {
+    "eyebrow": "Notre espace",
+    "title": "Galerie Nature Spa"
+  },
+  "contact": {
+    "title": "Prêt à vous détendre ?",
+    "subtitle": "Réservez aujourd'hui et découvrez les meilleurs services spa chez Nature Spa. Nous sommes toujours prêts à vous servir.",
+    "ctaBook": "Prendre rendez-vous",
+    "ctaCall": "Appelez-nous",
+    "address": "45 Nguyen Hue, District 1, HCMC"
+  }
+}

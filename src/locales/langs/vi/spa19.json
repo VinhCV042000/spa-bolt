@@ -1,0 +1,26 @@
+{
+  "hero": {
+    "eyebrow": "DƯỠNG SINH · 养生",
+    "title": "Dưỡng Sinh Đạo",
+    "titleAccent": "Đường về bản nguyên",
+    "description": "Khí công, châm cứu, tắm dược thảo Nam, trầm hương thiền — hành trình dưỡng sinh theo tinh hoa y học cổ truyền Việt Nam và Á Đông.",
+    "ctaPrimary": "Đặt Dưỡng Sinh",
+    "ctaSecondary": "Khám phá Khí Công",
+    "stats": ["4 liệu pháp chữa lành", "8 master thảo dược", "12 nghi lễ signature"]
+  },
+  "booking": {
+    "eyebrow": "ĐẶT LỊCH · 预约",
+    "title": "Bắt đầu hành trình",
+    "titleHighlight": "dưỡng sinh",
+    "description": "Để lại thông tin, đông y sư sẽ tư vấn liệu trình phù hợp — gọi xác nhận trong 30 phút.",
+    "name": "Họ và tên",
+    "phone": "Số điện thoại",
+    "email": "Email",
+    "therapy": "Liệu pháp",
+    "date": "Ngày",
+    "time": "Giờ",
+    "notes": "Ghi chú (tình trạng sức khỏe, triệu chứng)",
+    "submit": "Xác nhận đặt lịch",
+    "call": "Gọi đông y sư"
+  }
+}

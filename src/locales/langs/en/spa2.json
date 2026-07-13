@@ -1,0 +1,126 @@
+{
+  "hero": {
+    "brand": "Nature Spa & Wellness",
+    "titleLine1": "Find your balance",
+    "titleLine2": "with nature",
+    "subtitle": "Experience spa therapies infused with nature's finest ingredients, bringing your body and mind to a state of perfect relaxation.",
+    "ctaPrimary": "Book now",
+    "ctaSecondary": "Explore services",
+    "stat1": "Years of experience",
+    "stat2": "Happy clients",
+    "stat3": "Satisfaction",
+    "floatingTitle": "Rated 4.9/5",
+    "floatingSub": "From 25,000+ clients"
+  },
+  "about": {
+    "eyebrow": "About us",
+    "title": "A holistic wellness journey",
+    "description": "Nature Spa was born with the mission of bringing nature into every treatment. We use 100% organic ingredients, combining traditional massage techniques and modern technology to deliver a complete relaxation experience.",
+    "features": [
+      { "title": "Organic ingredients", "desc": "100% natural herbs and essential oils" },
+      { "title": "Expert therapists", "desc": "Internationally trained team" },
+      { "title": "Advanced technology", "desc": "European-grade equipment" }
+    ]
+  },
+  "services": {
+    "eyebrow": "Services",
+    "title": "Nature-inspired therapies",
+    "subtitle": "Each service is custom-designed, blending traditional methods with cutting-edge technology.",
+    "items": [
+      {
+        "title": "Herbal massage",
+        "desc": "Therapeutic massage with premium herbal essential oils for deep tension relief."
+      },
+      {
+        "title": "Facial care",
+        "desc": "Restore and rejuvenate your skin with organic ingredients from nature."
+      },
+      {
+        "title": "Full-body therapy",
+        "desc": "Body wrap and scrub treatments for naturally smooth and firm skin."
+      },
+      {
+        "title": "Aromatherapy",
+        "desc": "Premium aromatherapy with essential oils imported from France and Japan."
+      },
+      {
+        "title": "Couples spa",
+        "desc": "A relaxation experience for couples in a private, romantic setting."
+      },
+      {
+        "title": "Detox & Cleanse",
+        "desc": "Body cleansing program to naturally boost immunity and vitality."
+      }
+    ],
+    "viewAll": "View all services"
+  },
+  "packages": {
+    "eyebrow": "Packages",
+    "title": "Choose your plan",
+    "subtitle": "Save more with service packages and enjoy exclusive benefits designed just for you.",
+    "popular": "Popular",
+    "items": [
+      {
+        "name": "Relaxing",
+        "features": ["60-min herbal massage", "Complimentary herbal tea", "Hot towel & steam room"]
+      },
+      {
+        "name": "Premium",
+        "features": [
+          "90-min full-body massage",
+          "Organic facial care",
+          "Himalayan salt steam",
+          "Tea & pastries"
+        ]
+      },
+      {
+        "name": "VIP",
+        "features": [
+          "120-min full-body treatment",
+          "Collagen lifting facial",
+          "Foot spa",
+          "Private VIP room",
+          "Detox beverage"
+        ]
+      }
+    ],
+    "cta": "Book now"
+  },
+  "testimonials": {
+    "eyebrow": "Testimonials",
+    "title": "What our clients say",
+    "items": [
+      {
+        "name": "Minh Anh",
+        "role": "VIP client",
+        "comment": "Wonderful relaxation space, very professional and dedicated staff."
+      },
+      {
+        "name": "Thu Ha",
+        "role": "Premium member",
+        "comment": "My skin improved significantly after just 3 treatments. Very satisfied!"
+      },
+      {
+        "name": "Hoang Nam",
+        "role": "New client",
+        "comment": "First time at a spa but felt very comfortable, will definitely come back."
+      },
+      {
+        "name": "Bich Ngoc",
+        "role": "Loyal client",
+        "comment": "The VIP package is truly worth it — attentive care from start to finish."
+      }
+    ]
+  },
+  "gallery": {
+    "eyebrow": "Our space",
+    "title": "Nature Spa gallery"
+  },
+  "contact": {
+    "title": "Ready to relax?",
+    "subtitle": "Book today and experience the finest spa services at Nature Spa. We are always ready to serve you.",
+    "ctaBook": "Book appointment",
+    "ctaCall": "Call us",
+    "address": "45 Nguyen Hue, District 1, HCMC"
+  }
+}
