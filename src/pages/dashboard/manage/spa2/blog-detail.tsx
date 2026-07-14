@@ -15,10 +15,11 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
 
 import { CONFIG } from 'src/config-global';
+import { SPA2_POSTS, findSpa2Post, type Spa2BlogPost } from 'src/_mock/_spa2';
 
-import { findSpa2Post, SPA2_POSTS, type Spa2BlogPost } from 'src/_mock/_spa2';
-import { SPA2_TEAL } from 'src/sections/spa2/spa2-data';
 import { Iconify } from 'src/components/iconify';
+
+import { SPA2_TEAL } from 'src/sections/spa2/spa2-data';
 import { Spa2ManageShell } from 'src/sections/dashboard/spa2/manage/spa2-manage-shell';
 
 const metadata = { title: `Chi tiết Bài viết | Spa2 - ${CONFIG.appName}` };

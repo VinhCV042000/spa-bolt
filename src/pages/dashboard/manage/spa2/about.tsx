@@ -5,10 +5,11 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import { CONFIG } from 'src/config-global';
-
 import { SPA2_ABOUT_CONTENT } from 'src/_mock/_spa2';
-import { SPA2_TEAL, SPA2_TEAL_LIGHT } from 'src/sections/spa2/spa2-data';
+
 import { Iconify } from 'src/components/iconify';
+
+import { SPA2_TEAL, SPA2_TEAL_LIGHT } from 'src/sections/spa2/spa2-data';
 import { Spa2SingletonEditor } from 'src/sections/dashboard/spa2/manage/spa2-singleton-editor';
 
 const metadata = { title: `Quản lý Giới thiệu | Spa2 - ${CONFIG.appName}` };

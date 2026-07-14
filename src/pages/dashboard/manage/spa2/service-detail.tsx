@@ -15,10 +15,11 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
 
 import { CONFIG } from 'src/config-global';
+import { SPA2_SERVICES, findSpa2Service, type Spa2ServiceItem } from 'src/_mock/_spa2';
 
-import { findSpa2Service, SPA2_SERVICES, type Spa2ServiceItem } from 'src/_mock/_spa2';
-import { SPA2_TEAL } from 'src/sections/spa2/spa2-data';
 import { Iconify } from 'src/components/iconify';
+
+import { SPA2_TEAL } from 'src/sections/spa2/spa2-data';
 import { Spa2ManageShell } from 'src/sections/dashboard/spa2/manage/spa2-manage-shell';
 
 // ----------------------------------------------------------------------
@@ -90,7 +91,11 @@ export default function Page() {
           <Stack spacing={2.5}>
             <Card sx={{ p: 3, borderRadius: 3 }}>
               <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
-                <Iconify icon="solar:hand-stars-bold-duotone" width={22} sx={{ color: SPA2_TEAL }} />
+                <Iconify
+                  icon="solar:hand-stars-bold-duotone"
+                  width={22}
+                  sx={{ color: SPA2_TEAL }}
+                />
                 <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
                   Thông tin dịch vụ
                 </Typography>
@@ -153,7 +158,10 @@ export default function Page() {
                   onChange={(e) =>
                     update(
                       'benefits',
-                      e.target.value.split(',').map((s) => s.trim()).filter(Boolean)
+                      e.target.value
+                        .split(',')
+                        .map((s) => s.trim())
+                        .filter(Boolean)
                     )
                   }
                 />

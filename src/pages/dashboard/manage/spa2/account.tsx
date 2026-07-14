@@ -7,10 +7,11 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 
 import { CONFIG } from 'src/config-global';
-
 import { SPA2_ACCOUNT_CONTENT } from 'src/_mock/_spa2';
-import { SPA2_TEAL, SPA2_CREAM } from 'src/sections/spa2/spa2-data';
+
 import { Iconify } from 'src/components/iconify';
+
+import { SPA2_TEAL, SPA2_CREAM } from 'src/sections/spa2/spa2-data';
 import { Spa2SingletonEditor } from 'src/sections/dashboard/spa2/manage/spa2-singleton-editor';
 
 const metadata = { title: `Quản lý Tài khoản | Spa2 - ${CONFIG.appName}` };

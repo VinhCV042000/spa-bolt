@@ -19,8 +19,8 @@ import TableHead from '@mui/material/TableHead';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import IconButton from '@mui/material/IconButton';
-import FormControl from '@mui/material/FormControl';
 import Typography from '@mui/material/Typography';
+import FormControl from '@mui/material/FormControl';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -47,7 +47,10 @@ export type ManageField = {
   showInTable?: boolean;
 };
 
-export type ManageStatus = { value: string; color: 'default' | 'primary' | 'success' | 'warning' | 'error' | 'info' };
+export type ManageStatus = {
+  value: string;
+  color: 'default' | 'primary' | 'success' | 'warning' | 'error' | 'info';
+};
 
 export type Spa2ManageConfig = {
   title: string;
@@ -85,15 +88,16 @@ export function Spa2GenericManageView({ config }: { config: Spa2ManageConfig }) 
   const filtered = items.filter((row) => {
     const q = search.trim().toLowerCase();
     const matchQ =
-      !q ||
-      Object.values(row).some((v) => typeof v === 'string' && v.toLowerCase().includes(q));
+      !q || Object.values(row).some((v) => typeof v === 'string' && v.toLowerCase().includes(q));
     const matchS = statusFilter === 'all' || row.status === statusFilter;
     return matchQ && matchS;
   });
 
   const emptyForm = useMemo(() => {
     const f: Record<string, any> = {};
-    config.fields.forEach((x) => (f[x.key] = ''));
+    config.fields.forEach((x) => {
+      f[x.key] = '';
+    });
     if (config.statuses?.length) f.status = config.statuses[0].value;
     return f;
   }, [config]);
@@ -106,7 +110,9 @@ export function Spa2GenericManageView({ config }: { config: Spa2ManageConfig }) 
 
   const openEdit = (row: Row) => {
     const f: Record<string, any> = { ...emptyForm };
-    config.fields.forEach((x) => (f[x.key] = row[x.key] ?? ''));
+    config.fields.forEach((x) => {
+      f[x.key] = row[x.key] ?? '';
+    });
     f.status = row.status ?? emptyForm.status;
     setForm(f);
     setEditId(row.id);
@@ -177,7 +183,6 @@ export function Spa2GenericManageView({ config }: { config: Spa2ManageConfig }) 
       }
     >
       <Card sx={{ borderRadius: 3 }}>
-
         <Stack direction="row" spacing={2} sx={{ p: 2 }} alignItems="center">
           <TextField
             placeholder="Tìm kiếm..."
@@ -359,7 +364,13 @@ export function Spa2GenericManageView({ config }: { config: Spa2ManageConfig }) 
                       component="img"
                       src={viewRow[f.key]}
                       alt=""
-                      sx={{ width: '100%', maxHeight: 240, objectFit: 'cover', borderRadius: 1, mt: 0.5 }}
+                      sx={{
+                        width: '100%',
+                        maxHeight: 240,
+                        objectFit: 'cover',
+                        borderRadius: 1,
+                        mt: 0.5,
+                      }}
                     />
                   ) : (
                     <Typography variant="body2">{String(viewRow[f.key] ?? '')}</Typography>
@@ -383,13 +394,12 @@ export function Spa2GenericManageView({ config }: { config: Spa2ManageConfig }) 
       </Dialog>
 
       {/* Approve menu */}
-      <Menu
-        anchorEl={menuAnchor?.el}
-        open={!!menuAnchor}
-        onClose={() => setMenuAnchor(null)}
-      >
+      <Menu anchorEl={menuAnchor?.el} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
         {config.statuses?.map((s) => (
-          <MenuItem key={s.value} onClick={() => menuAnchor && handleApprove(menuAnchor.row, s.value)}>
+          <MenuItem
+            key={s.value}
+            onClick={() => menuAnchor && handleApprove(menuAnchor.row, s.value)}
+          >
             <Iconify icon="solar:check-circle-bold" sx={{ mr: 1, color: `${s.color}.main` }} />
             {s.value}
           </MenuItem>
