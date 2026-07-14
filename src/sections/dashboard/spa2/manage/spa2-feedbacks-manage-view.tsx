@@ -25,6 +25,7 @@ import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
@@ -46,14 +47,16 @@ const STATUS_COLOR: Record<FeedbackStatus, 'warning' | 'success' | 'error'> = {
 };
 
 const STATUS_LABEL: Record<FeedbackStatus, string> = {
-  pending: 'Chờ duyệt',
-  approved: 'Đã duyệt',
-  rejected: 'Từ chối',
+  pending: 'feedbacks.status_pending',
+  approved: 'feedbacks.status_approved',
+  rejected: 'feedbacks.status_rejected',
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function Spa2FeedbacksManageView() {
+  const { t } = useTranslate('spa2-manage');
+  const statusLabel = (s: FeedbackStatus) => t(STATUS_LABEL[s]);
   const [items, setItems] = useState<Feedback[]>(
     spa2Feedbacks.map((f, i) => ({
       ...f,
@@ -99,11 +102,11 @@ export function Spa2FeedbacksManageView() {
   return (
     <DashboardContent maxWidth="xl">
       <CustomBreadcrumbs
-        heading="Quản lý Đánh giá"
+        heading={t('feedbacks.page_title')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Spa2', href: paths.dashboard.spa2.root },
-          { name: 'Đánh giá' },
+          { name: t('common.dashboard'), href: paths.dashboard.root },
+          { name: t('common.spa2'), href: paths.dashboard.spa2.root },
+          { name: t('nav.feedbacks') },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
@@ -112,7 +115,7 @@ export function Spa2FeedbacksManageView() {
         {(['all', 'pending', 'approved', 'rejected'] as const).map((s) => (
           <Chip
             key={s}
-            label={`${s === 'all' ? 'Tất cả' : STATUS_LABEL[s]} (${counts[s]})`}
+            label={`${s === 'all' ? t('common.all') : statusLabel(s)} (${counts[s]})`}
             variant={filterStatus === s ? 'filled' : 'outlined'}
             color={s === 'all' ? 'default' : STATUS_COLOR[s]}
             onClick={() => setFilterStatus(s)}
@@ -124,7 +127,7 @@ export function Spa2FeedbacksManageView() {
       <Card>
         <Box sx={{ p: 2 }}>
           <TextField
-            placeholder="Tìm khách hàng, dịch vụ..."
+            placeholder={t('feedbacks.search_placeholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             size="small"
@@ -143,12 +146,12 @@ export function Spa2FeedbacksManageView() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Khách hàng</TableCell>
-                <TableCell>Dịch vụ</TableCell>
-                <TableCell>Sao</TableCell>
-                <TableCell sx={{ maxWidth: 240 }}>Nội dung</TableCell>
-                <TableCell>Trạng thái</TableCell>
-                <TableCell align="right">Hành động</TableCell>
+                <TableCell>{t('feedbacks.col_customer')}</TableCell>
+                <TableCell>{t('feedbacks.col_service')}</TableCell>
+                <TableCell>{t('feedbacks.col_rating')}</TableCell>
+                <TableCell sx={{ maxWidth: 240 }}>{t('feedbacks.col_content')}</TableCell>
+                <TableCell>{t('common.status')}</TableCell>
+                <TableCell align="right">{t('common.actions')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -177,7 +180,7 @@ export function Spa2FeedbacksManageView() {
                   <TableCell>
                     <Chip
                       size="small"
-                      label={STATUS_LABEL[item.status]}
+                      label={statusLabel(item.status)}
                       color={STATUS_COLOR[item.status]}
                       variant="soft"
                     />
@@ -186,7 +189,7 @@ export function Spa2FeedbacksManageView() {
                     <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
                       {item.status === 'pending' && (
                         <>
-                          <Tooltip title="Duyệt">
+                          <Tooltip title={t('common.approve')}>
                             <IconButton
                               size="small"
                               color="success"
@@ -195,7 +198,7 @@ export function Spa2FeedbacksManageView() {
                               <Iconify icon="solar:check-circle-bold" />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip title="Từ chối">
+                          <Tooltip title={t('common.reject')}>
                             <IconButton
                               size="small"
                               color="error"
@@ -207,7 +210,7 @@ export function Spa2FeedbacksManageView() {
                         </>
                       )}
                       {item.status === 'rejected' && (
-                        <Tooltip title="Duyệt lại">
+                        <Tooltip title={t('common.approve')}>
                           <IconButton
                             size="small"
                             color="success"
@@ -217,12 +220,12 @@ export function Spa2FeedbacksManageView() {
                           </IconButton>
                         </Tooltip>
                       )}
-                      <Tooltip title="Xem chi tiết">
+                      <Tooltip title={t('common.view')}>
                         <IconButton size="small" onClick={() => setViewItem(item)}>
                           <Iconify icon="solar:eye-bold" />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Xóa">
+                      <Tooltip title={t('common.delete')}>
                         <IconButton size="small" color="error" onClick={() => setDeleteId(item.id)}>
                           <Iconify icon="solar:trash-bin-trash-bold" />
                         </IconButton>
@@ -238,7 +241,7 @@ export function Spa2FeedbacksManageView() {
 
       {/* View detail */}
       <Dialog open={!!viewItem} onClose={() => setViewItem(null)} maxWidth="xs" fullWidth>
-        <DialogTitle>Chi tiết đánh giá</DialogTitle>
+        <DialogTitle>{t('feedbacks.detail_title')}</DialogTitle>
         <DialogContent dividers>
           {viewItem && (
             <Stack spacing={2}>
@@ -254,24 +257,24 @@ export function Spa2FeedbacksManageView() {
               </Stack>
               <Box>
                 <Typography variant="caption" color="text.secondary">
-                  Dịch vụ:
+                  {t('feedbacks.detail_service')}:
                 </Typography>
                 <Typography variant="body2">{viewItem.service}</Typography>
               </Box>
               <Box>
                 <Typography variant="caption" color="text.secondary">
-                  Nhận xét:
+                  {t('feedbacks.detail_comment')}:
                 </Typography>
                 <Typography variant="body2">{viewItem.comment}</Typography>
               </Box>
               <Box>
                 <Typography variant="caption" color="text.secondary">
-                  Trạng thái:
+                  {t('feedbacks.detail_status')}:
                 </Typography>
                 <Box sx={{ mt: 0.5 }}>
                   <Chip
                     size="small"
-                    label={STATUS_LABEL[viewItem.status]}
+                    label={statusLabel(viewItem.status)}
                     color={STATUS_COLOR[viewItem.status]}
                     variant="soft"
                   />
@@ -290,7 +293,7 @@ export function Spa2FeedbacksManageView() {
                   setViewItem(null);
                 }}
               >
-                Từ chối
+                {t('common.reject')}
               </Button>
               <Button
                 variant="contained"
@@ -300,22 +303,22 @@ export function Spa2FeedbacksManageView() {
                   setViewItem(null);
                 }}
               >
-                Duyệt
+                {t('common.approve')}
               </Button>
             </>
           )}
-          <Button onClick={() => setViewItem(null)}>Đóng</Button>
+          <Button onClick={() => setViewItem(null)}>{t('common.close')}</Button>
         </DialogActions>
       </Dialog>
 
       <ConfirmDialog
         open={!!deleteId}
         onClose={() => setDeleteId(null)}
-        title="Xóa đánh giá"
-        content="Bạn có chắc muốn xóa đánh giá này?"
+        title={t('feedbacks.delete_title')}
+        content={t('feedbacks.delete_content')}
         action={
           <Button variant="contained" color="error" onClick={handleDelete}>
-            Xóa
+            {t('common.delete')}
           </Button>
         }
       />

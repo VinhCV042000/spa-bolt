@@ -24,6 +24,7 @@ import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
@@ -49,6 +50,7 @@ const EMPTY_FORM = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function Spa2PartnersManageView() {
+  const { t } = useTranslate('spa2-manage');
   const [items, setItems] = useState<Partner[]>(
     spa2PartnerProfiles.map((p, i) => ({ ...p, id: i + 1 }))
   );
@@ -106,11 +108,11 @@ export function Spa2PartnersManageView() {
   return (
     <DashboardContent maxWidth="xl">
       <CustomBreadcrumbs
-        heading="Quản lý Đối tác"
+        heading={t('partners.page_title')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Spa2', href: paths.dashboard.spa2.root },
-          { name: 'Đối tác' },
+          { name: t('common.dashboard'), href: paths.dashboard.root },
+          { name: t('common.spa2'), href: paths.dashboard.spa2.root },
+          { name: t('nav.partners') },
         ]}
         action={
           <Button
@@ -118,7 +120,7 @@ export function Spa2PartnersManageView() {
             startIcon={<Iconify icon="mingcute:add-line" />}
             onClick={openCreate}
           >
-            Thêm đối tác
+            {t('partners.add_btn')}
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}
@@ -127,7 +129,7 @@ export function Spa2PartnersManageView() {
       <Card>
         <Box sx={{ p: 2 }}>
           <TextField
-            placeholder="Tìm theo tên, quốc gia..."
+            placeholder={t('partners.search_placeholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             size="small"
@@ -145,12 +147,12 @@ export function Spa2PartnersManageView() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Đối tác</TableCell>
-                <TableCell>Quốc gia</TableCell>
-                <TableCell>Chuyên môn</TableCell>
-                <TableCell>Hợp tác từ</TableCell>
-                <TableCell>Chuyên viên phụ trách</TableCell>
-                <TableCell align="right">Hành động</TableCell>
+                <TableCell>{t('partners.col_partner')}</TableCell>
+                <TableCell>{t('partners.col_country')}</TableCell>
+                <TableCell>{t('partners.col_specialty')}</TableCell>
+                <TableCell>{t('partners.col_since')}</TableCell>
+                <TableCell>{t('partners.col_expert')}</TableCell>
+                <TableCell align="right">{t('common.actions')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -190,12 +192,12 @@ export function Spa2PartnersManageView() {
                   <TableCell>{item.expert}</TableCell>
                   <TableCell align="right">
                     <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
-                      <Tooltip title="Chỉnh sửa">
+                      <Tooltip title={t('common.edit')}>
                         <IconButton size="small" onClick={() => openEdit(item)}>
                           <Iconify icon="solar:pen-bold" />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Xóa">
+                      <Tooltip title={t('common.delete')}>
                         <IconButton size="small" color="error" onClick={() => setDeleteId(item.id)}>
                           <Iconify icon="solar:trash-bin-trash-bold" />
                         </IconButton>
@@ -210,18 +212,18 @@ export function Spa2PartnersManageView() {
       </Card>
 
       <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{editId !== null ? 'Cập nhật đối tác' : 'Thêm đối tác mới'}</DialogTitle>
+        <DialogTitle>{editId !== null ? t('partners.form_edit') : t('partners.form_create')}</DialogTitle>
         <DialogContent dividers>
           <Stack spacing={2} sx={{ pt: 1 }}>
             <Stack direction="row" spacing={2}>
               <TextField
-                label="Tên đối tác *"
+                label={t('partners.form_name')}
                 value={form.name}
                 onChange={handleChange('name')}
                 fullWidth
               />
               <TextField
-                label="Viết tắt (logo)"
+                label={t('partners.form_abbr')}
                 value={form.logo}
                 onChange={handleChange('logo')}
                 sx={{ width: 120 }}
@@ -229,26 +231,26 @@ export function Spa2PartnersManageView() {
             </Stack>
             <Stack direction="row" spacing={2}>
               <TextField
-                label="Quốc gia"
+                label={t('partners.form_country')}
                 value={form.country}
                 onChange={handleChange('country')}
                 fullWidth
               />
               <TextField
-                label="Hợp tác từ năm"
+                label={t('partners.form_since')}
                 value={form.since}
                 onChange={handleChange('since')}
                 fullWidth
               />
             </Stack>
             <TextField
-              label="Chuyên môn"
+              label={t('partners.form_specialty')}
               value={form.specialty}
               onChange={handleChange('specialty')}
               fullWidth
             />
             <TextField
-              label="Mô tả"
+              label={t('partners.form_desc')}
               value={form.desc}
               onChange={handleChange('desc')}
               fullWidth
@@ -256,7 +258,7 @@ export function Spa2PartnersManageView() {
               rows={2}
             />
             <TextField
-              label="Chuyên viên phụ trách"
+              label={t('partners.form_expert')}
               value={form.expert}
               onChange={handleChange('expert')}
               fullWidth
@@ -264,9 +266,9 @@ export function Spa2PartnersManageView() {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenForm(false)}>Huỷ</Button>
+          <Button onClick={() => setOpenForm(false)}>{t('common.cancel')}</Button>
           <Button variant="contained" onClick={handleSubmit} disabled={!form.name}>
-            {editId !== null ? 'Cập nhật' : 'Thêm mới'}
+            {editId !== null ? t('partners.form_edit') : t('partners.form_create')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -274,11 +276,11 @@ export function Spa2PartnersManageView() {
       <ConfirmDialog
         open={!!deleteId}
         onClose={() => setDeleteId(null)}
-        title="Xóa đối tác"
-        content="Bạn có chắc muốn xóa đối tác này?"
+        title={t('partners.delete_title')}
+        content={t('partners.delete_content')}
         action={
           <Button variant="contained" color="error" onClick={handleDelete}>
-            Xóa
+            {t('common.delete')}
           </Button>
         }
       />

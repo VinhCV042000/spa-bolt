@@ -23,6 +23,7 @@ import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
@@ -40,6 +41,7 @@ const EMPTY_FORM = { name: '', role: '', image: '', bio: '' };
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function Spa2StaffManageView() {
+  const { t } = useTranslate('spa2-manage');
   const [items, setItems] = useState<Staff[]>(spa2Team.map((s, i) => ({ ...s, id: i + 1 })));
   const [search, setSearch] = useState('');
   const [openForm, setOpenForm] = useState(false);
@@ -87,11 +89,11 @@ export function Spa2StaffManageView() {
   return (
     <DashboardContent maxWidth="xl">
       <CustomBreadcrumbs
-        heading="Quản lý Đội ngũ"
+        heading={t('staff.page_title')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Spa2', href: paths.dashboard.spa2.root },
-          { name: 'Đội ngũ' },
+          { name: t('common.dashboard'), href: paths.dashboard.root },
+          { name: t('common.spa2'), href: paths.dashboard.spa2.root },
+          { name: t('nav.staff') },
         ]}
         action={
           <Button
@@ -99,7 +101,7 @@ export function Spa2StaffManageView() {
             startIcon={<Iconify icon="mingcute:add-line" />}
             onClick={openCreate}
           >
-            Thêm nhân viên
+            {t('staff.add_btn')}
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}
@@ -108,7 +110,7 @@ export function Spa2StaffManageView() {
       <Card>
         <Box sx={{ p: 2 }}>
           <TextField
-            placeholder="Tìm theo tên, chức vụ..."
+            placeholder={t('staff.search_placeholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             size="small"
@@ -126,10 +128,10 @@ export function Spa2StaffManageView() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Nhân viên</TableCell>
-                <TableCell>Chức vụ</TableCell>
-                <TableCell>Tiểu sử</TableCell>
-                <TableCell align="right">Hành động</TableCell>
+                <TableCell>{t('staff.col_staff')}</TableCell>
+                <TableCell>{t('staff.col_role')}</TableCell>
+                <TableCell>{t('staff.col_bio')}</TableCell>
+                <TableCell align="right">{t('common.actions')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -149,12 +151,12 @@ export function Spa2StaffManageView() {
                   </TableCell>
                   <TableCell align="right">
                     <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
-                      <Tooltip title="Chỉnh sửa">
+                      <Tooltip title={t('common.edit')}>
                         <IconButton size="small" onClick={() => openEdit(item)}>
                           <Iconify icon="solar:pen-bold" />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Xóa">
+                      <Tooltip title={t('common.delete')}>
                         <IconButton size="small" color="error" onClick={() => setDeleteId(item.id)}>
                           <Iconify icon="solar:trash-bin-trash-bold" />
                         </IconButton>
@@ -169,29 +171,29 @@ export function Spa2StaffManageView() {
       </Card>
 
       <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{editId !== null ? 'Cập nhật nhân viên' : 'Thêm nhân viên mới'}</DialogTitle>
+        <DialogTitle>{editId !== null ? t('staff.form_edit') : t('staff.form_create')}</DialogTitle>
         <DialogContent dividers>
           <Stack spacing={2} sx={{ pt: 1 }}>
             <TextField
-              label="Họ và tên *"
+              label={t('staff.form_name')}
               value={form.name}
               onChange={handleChange('name')}
               fullWidth
             />
             <TextField
-              label="Chức vụ"
+              label={t('staff.form_role')}
               value={form.role}
               onChange={handleChange('role')}
               fullWidth
             />
             <TextField
-              label="URL ảnh đại diện"
+              label={t('staff.form_image')}
               value={form.image}
               onChange={handleChange('image')}
               fullWidth
             />
             <TextField
-              label="Tiểu sử"
+              label={t('staff.form_bio')}
               value={form.bio}
               onChange={handleChange('bio')}
               fullWidth
@@ -201,9 +203,9 @@ export function Spa2StaffManageView() {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenForm(false)}>Huỷ</Button>
+          <Button onClick={() => setOpenForm(false)}>{t('common.cancel')}</Button>
           <Button variant="contained" onClick={handleSubmit} disabled={!form.name}>
-            {editId !== null ? 'Cập nhật' : 'Thêm mới'}
+            {editId !== null ? t('staff.form_edit') : t('staff.form_create')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -211,11 +213,11 @@ export function Spa2StaffManageView() {
       <ConfirmDialog
         open={!!deleteId}
         onClose={() => setDeleteId(null)}
-        title="Xóa nhân viên"
-        content="Bạn có chắc muốn xóa nhân viên này?"
+        title={t('staff.delete_title')}
+        content={t('staff.delete_content')}
         action={
           <Button variant="contained" color="error" onClick={handleDelete}>
-            Xóa
+            {t('common.delete')}
           </Button>
         }
       />

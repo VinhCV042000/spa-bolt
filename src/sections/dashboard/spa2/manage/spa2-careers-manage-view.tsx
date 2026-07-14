@@ -24,6 +24,7 @@ import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
@@ -49,6 +50,7 @@ const EMPTY_FORM = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function Spa2CareersManageView() {
+  const { t } = useTranslate('spa2-manage');
   const [items, setItems] = useState<Career[]>(
     spa2Careers.map((c) => ({
       ...c,
@@ -124,11 +126,11 @@ export function Spa2CareersManageView() {
   return (
     <DashboardContent maxWidth="xl">
       <CustomBreadcrumbs
-        heading="Quản lý Tuyển dụng"
+        heading={t('careers.page_title')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Spa2', href: paths.dashboard.spa2.root },
-          { name: 'Tuyển dụng' },
+          { name: t('common.dashboard'), href: paths.dashboard.root },
+          { name: t('common.spa2'), href: paths.dashboard.spa2.root },
+          { name: t('nav.careers') },
         ]}
         action={
           <Button
@@ -136,7 +138,7 @@ export function Spa2CareersManageView() {
             startIcon={<Iconify icon="mingcute:add-line" />}
             onClick={openCreate}
           >
-            Đăng tin tuyển dụng
+            {t('careers.add_btn')}
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}
@@ -145,7 +147,7 @@ export function Spa2CareersManageView() {
       <Card>
         <Box sx={{ p: 2 }}>
           <TextField
-            placeholder="Tìm kiếm vị trí..."
+            placeholder={t('careers.search_placeholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             size="small"
@@ -164,13 +166,13 @@ export function Spa2CareersManageView() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Vị trí</TableCell>
-                <TableCell>Địa điểm</TableCell>
-                <TableCell>Loại hình</TableCell>
-                <TableCell>Mức lương</TableCell>
-                <TableCell align="center">Đơn ứng tuyển</TableCell>
-                <TableCell>Trạng thái</TableCell>
-                <TableCell align="right">Hành động</TableCell>
+                <TableCell>{t('careers.col_position')}</TableCell>
+                <TableCell>{t('careers.col_location')}</TableCell>
+                <TableCell>{t('careers.col_type')}</TableCell>
+                <TableCell>{t('careers.col_salary')}</TableCell>
+                <TableCell align="center">{t('careers.col_applications')}</TableCell>
+                <TableCell>{t('common.status')}</TableCell>
+                <TableCell align="right">{t('common.actions')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -197,14 +199,14 @@ export function Spa2CareersManageView() {
                   <TableCell>
                     <Chip
                       size="small"
-                      label={item.status === 'open' ? 'Đang tuyển' : 'Đã đóng'}
+                      label={item.status === 'open' ? t('careers.status_open') : t('careers.status_closed')}
                       color={item.status === 'open' ? 'success' : 'default'}
                       variant="soft"
                     />
                   </TableCell>
                   <TableCell align="right">
                     <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
-                      <Tooltip title={item.status === 'open' ? 'Đóng tuyển dụng' : 'Mở lại'}>
+                      <Tooltip title={item.status === 'open' ? t('common.disable') : t('common.enable')}>
                         <IconButton size="small" onClick={() => handleToggleStatus(item.id)}>
                           <Iconify
                             icon={
@@ -216,12 +218,12 @@ export function Spa2CareersManageView() {
                           />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Chỉnh sửa">
+                      <Tooltip title={t('common.edit')}>
                         <IconButton size="small" onClick={() => openEdit(item)}>
                           <Iconify icon="solar:pen-bold" />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Xóa">
+                      <Tooltip title={t('common.delete')}>
                         <IconButton size="small" color="error" onClick={() => setDeleteId(item.id)}>
                           <Iconify icon="solar:trash-bin-trash-bold" />
                         </IconButton>
@@ -237,45 +239,45 @@ export function Spa2CareersManageView() {
 
       <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="sm" fullWidth>
         <DialogTitle>
-          {editId !== null ? 'Cập nhật tin tuyển dụng' : 'Đăng tin tuyển dụng mới'}
+          {editId !== null ? t('careers.form_edit') : t('careers.form_create')}
         </DialogTitle>
         <DialogContent dividers>
           <Stack spacing={2} sx={{ pt: 1 }}>
             <TextField
-              label="Vị trí tuyển dụng *"
+              label={t('careers.form_title')}
               value={form.title}
               onChange={handleChange('title')}
               fullWidth
             />
             <Stack direction="row" spacing={2}>
               <TextField
-                label="Địa điểm"
+                label={t('careers.form_location')}
                 value={form.location}
                 onChange={handleChange('location')}
                 fullWidth
               />
               <TextField
                 select
-                label="Loại hình"
+                label={t('careers.form_type')}
                 value={form.type}
                 onChange={handleChange('type')}
                 fullWidth
               >
-                {JOB_TYPES.map((t) => (
-                  <MenuItem key={t} value={t}>
-                    {t}
+                {JOB_TYPES.map((jobType) => (
+                  <MenuItem key={jobType} value={jobType}>
+                    {jobType}
                   </MenuItem>
                 ))}
               </TextField>
             </Stack>
             <TextField
-              label="Mức lương"
+              label={t('careers.form_salary')}
               value={form.salary}
               onChange={handleChange('salary')}
               fullWidth
             />
             <TextField
-              label="Quyền lợi (cách nhau bởi dấu phẩy)"
+              label={t('careers.form_benefits')}
               value={form.benefits}
               onChange={handleChange('benefits')}
               fullWidth
@@ -285,9 +287,9 @@ export function Spa2CareersManageView() {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenForm(false)}>Huỷ</Button>
+          <Button onClick={() => setOpenForm(false)}>{t('common.cancel')}</Button>
           <Button variant="contained" onClick={handleSubmit} disabled={!form.title}>
-            {editId !== null ? 'Cập nhật' : 'Đăng tin'}
+            {editId !== null ? t('careers.form_edit') : t('careers.form_create')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -295,11 +297,11 @@ export function Spa2CareersManageView() {
       <ConfirmDialog
         open={!!deleteId}
         onClose={() => setDeleteId(null)}
-        title="Xóa tin tuyển dụng"
-        content="Bạn có chắc muốn xóa tin tuyển dụng này?"
+        title={t('careers.delete_title')}
+        content={t('careers.delete_content')}
         action={
           <Button variant="contained" color="error" onClick={handleDelete}>
-            Xóa
+            {t('common.delete')}
           </Button>
         }
       />

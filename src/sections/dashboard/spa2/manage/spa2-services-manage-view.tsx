@@ -25,6 +25,7 @@ import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
@@ -54,6 +55,7 @@ const EMPTY_FORM = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function Spa2ServicesManageView() {
+  const { t } = useTranslate("spa2-manage");
   const [items, setItems] = useState<Service[]>(spa2Services.map((s) => ({ ...s, active: true })));
   const [search, setSearch] = useState('');
   const [openForm, setOpenForm] = useState(false);
@@ -129,11 +131,11 @@ export function Spa2ServicesManageView() {
   return (
     <DashboardContent maxWidth="xl">
       <CustomBreadcrumbs
-        heading="Quản lý Dịch vụ"
+        heading={t('services.page_title')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Spa2', href: paths.dashboard.spa2.root },
-          { name: 'Dịch vụ' },
+          { name: t('common.dashboard'), href: paths.dashboard.root },
+          { name: t('common.spa2'), href: paths.dashboard.spa2.root },
+          { name: t('nav.services') },
         ]}
         action={
           <Button
@@ -141,7 +143,7 @@ export function Spa2ServicesManageView() {
             startIcon={<Iconify icon="mingcute:add-line" />}
             onClick={openCreate}
           >
-            Thêm dịch vụ
+            {t('services.add_btn')}
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}
@@ -150,7 +152,7 @@ export function Spa2ServicesManageView() {
       <Card>
         <Box sx={{ p: 2 }}>
           <TextField
-            placeholder="Tìm kiếm dịch vụ..."
+            placeholder={t('services.search_placeholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             size="small"
@@ -169,12 +171,12 @@ export function Spa2ServicesManageView() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Dịch vụ</TableCell>
-                <TableCell>Danh mục</TableCell>
-                <TableCell>Thời gian</TableCell>
-                <TableCell align="right">Giá (đ)</TableCell>
-                <TableCell>Trạng thái</TableCell>
-                <TableCell align="right">Hành động</TableCell>
+                <TableCell>{t('services.col_service')}</TableCell>
+                <TableCell>{t('services.col_category')}</TableCell>
+                <TableCell>{t('services.col_duration')}</TableCell>
+                <TableCell align="right">{t('services.col_price')}</TableCell>
+                <TableCell>{t('common.status')}</TableCell>
+                <TableCell align="right">{t('common.actions')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -208,14 +210,14 @@ export function Spa2ServicesManageView() {
                   <TableCell>
                     <Chip
                       size="small"
-                      label={item.active ? 'Hoạt động' : 'Dừng'}
+                      label={item.active ? t('common.active') : t('common.inactive')}
                       color={item.active ? 'success' : 'default'}
                       variant="soft"
                     />
                   </TableCell>
                   <TableCell align="right">
                     <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
-                      <Tooltip title={item.active ? 'Dừng hoạt động' : 'Kích hoạt'}>
+                      <Tooltip title={item.active ? t('common.disable') : t('common.enable')}>
                         <IconButton size="small" onClick={() => handleToggle(item.slug)}>
                           <Iconify
                             icon={item.active ? 'solar:eye-closed-bold' : 'solar:eye-bold'}
@@ -223,12 +225,12 @@ export function Spa2ServicesManageView() {
                           />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Chỉnh sửa">
+                      <Tooltip title={t('common.edit')}>
                         <IconButton size="small" onClick={() => openEdit(item)}>
                           <Iconify icon="solar:pen-bold" />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Xóa">
+                      <Tooltip title={t('common.delete')}>
                         <IconButton
                           size="small"
                           color="error"
@@ -244,7 +246,7 @@ export function Spa2ServicesManageView() {
               {filtered.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={6} align="center" sx={{ py: 4, color: 'text.secondary' }}>
-                    Không có dịch vụ nào
+                    {t('common.no_data')}
                   </TableCell>
                 </TableRow>
               )}
@@ -255,18 +257,18 @@ export function Spa2ServicesManageView() {
 
       {/* Form dialog */}
       <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{editSlug ? 'Cập nhật dịch vụ' : 'Thêm dịch vụ mới'}</DialogTitle>
+        <DialogTitle>{editSlug ? t('services.form_edit') : t('services.form_create')}</DialogTitle>
         <DialogContent dividers>
           <Stack spacing={2} sx={{ pt: 1 }}>
             <TextField
-              label="Tên dịch vụ *"
+              label={t('services.form_name')}
               value={form.name}
               onChange={handleChange('name')}
               fullWidth
             />
             <TextField
               select
-              label="Danh mục *"
+              label={t('services.form_category')}
               value={form.category}
               onChange={handleChange('category')}
               fullWidth
@@ -278,20 +280,20 @@ export function Spa2ServicesManageView() {
               ))}
             </TextField>
             <TextField
-              label="Mô tả ngắn"
+              label={t('services.form_short')}
               value={form.short}
               onChange={handleChange('short')}
               fullWidth
             />
             <Stack direction="row" spacing={2}>
               <TextField
-                label="Thời gian (vd: 60 phút)"
+                label={t('services.form_duration')}
                 value={form.duration}
                 onChange={handleChange('duration')}
                 fullWidth
               />
               <TextField
-                label="Giá (đ)"
+                label={t('services.col_price')}
                 type="number"
                 value={form.price}
                 onChange={handleChange('price')}
@@ -299,13 +301,13 @@ export function Spa2ServicesManageView() {
               />
             </Stack>
             <TextField
-              label="URL ảnh"
+              label={t('common.image_url')}
               value={form.image}
               onChange={handleChange('image')}
               fullWidth
             />
             <TextField
-              label="Lợi ích (cách nhau bởi dấu phẩy)"
+              label={t('services.form_benefits')}
               value={form.benefits}
               onChange={handleChange('benefits')}
               fullWidth
@@ -315,9 +317,9 @@ export function Spa2ServicesManageView() {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenForm(false)}>Huỷ</Button>
+          <Button onClick={() => setOpenForm(false)}>{t('common.cancel')}</Button>
           <Button variant="contained" onClick={handleSubmit} disabled={!form.name}>
-            {editSlug ? 'Cập nhật' : 'Thêm mới'}
+            {editSlug ? t('services.form_edit') : t('services.add_btn')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -326,11 +328,11 @@ export function Spa2ServicesManageView() {
       <ConfirmDialog
         open={!!deleteSlug}
         onClose={() => setDeleteSlug(null)}
-        title="Xóa dịch vụ"
-        content="Bạn có chắc chắn muốn xóa dịch vụ này?"
+        title={t('services.delete_title')}
+        content={t('services.delete_content')}
         action={
           <Button variant="contained" color="error" onClick={handleDelete}>
-            Xóa
+            {t('common.delete')}
           </Button>
         }
       />

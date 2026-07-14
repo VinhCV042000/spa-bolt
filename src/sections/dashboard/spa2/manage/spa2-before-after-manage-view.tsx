@@ -24,6 +24,7 @@ import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
@@ -46,14 +47,16 @@ const STATUS_COLOR: Record<BAStatus, 'warning' | 'success' | 'error'> = {
   rejected: 'error',
 };
 const STATUS_LABEL: Record<BAStatus, string> = {
-  pending: 'Chờ duyệt',
-  approved: 'Đã duyệt',
-  rejected: 'Từ chối',
+  pending: 'common.pending',
+  approved: 'common.approved',
+  rejected: 'common.rejected',
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function Spa2BeforeAfterManageView() {
+  const { t } = useTranslate('spa2-manage');
+  const statusLabel = (s: BAStatus) => t(STATUS_LABEL[s]);
   const [items, setItems] = useState<BeforeAfter[]>(
     spa2BeforeAfters.map((b, i) => ({
       ...b,
@@ -115,11 +118,11 @@ export function Spa2BeforeAfterManageView() {
   return (
     <DashboardContent maxWidth="xl">
       <CustomBreadcrumbs
-        heading="Quản lý Before & After"
+        heading={t('before_after.page_title')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Spa2', href: paths.dashboard.spa2.root },
-          { name: 'Before & After' },
+          { name: t('common.dashboard'), href: paths.dashboard.root },
+          { name: t('common.spa2'), href: paths.dashboard.spa2.root },
+          { name: t('nav.before_after') },
         ]}
         action={
           <Button
@@ -127,7 +130,7 @@ export function Spa2BeforeAfterManageView() {
             startIcon={<Iconify icon="mingcute:add-line" />}
             onClick={openCreate}
           >
-            Thêm case
+            {t('before_after.add_btn')}
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}
@@ -136,7 +139,7 @@ export function Spa2BeforeAfterManageView() {
       <Card>
         <Box sx={{ p: 2 }}>
           <TextField
-            placeholder="Tìm kiếm..."
+            placeholder={t('before_after.search_placeholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             size="small"
@@ -154,11 +157,11 @@ export function Spa2BeforeAfterManageView() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Liệu trình</TableCell>
-                <TableCell>Thời gian</TableCell>
-                <TableCell>Ghi chú</TableCell>
-                <TableCell>Trạng thái</TableCell>
-                <TableCell align="right">Hành động</TableCell>
+                <TableCell>{t('before_after.col_case')}</TableCell>
+                <TableCell>{t('before_after.col_duration')}</TableCell>
+                <TableCell>{t('before_after.col_note')}</TableCell>
+                <TableCell>{t('common.status')}</TableCell>
+                <TableCell align="right">{t('common.actions')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -195,7 +198,7 @@ export function Spa2BeforeAfterManageView() {
                   <TableCell>
                     <Chip
                       size="small"
-                      label={STATUS_LABEL[item.status]}
+                      label={statusLabel(item.status)}
                       color={STATUS_COLOR[item.status]}
                       variant="soft"
                     />
@@ -204,7 +207,7 @@ export function Spa2BeforeAfterManageView() {
                     <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
                       {item.status === 'pending' && (
                         <>
-                          <Tooltip title="Duyệt">
+                          <Tooltip title={t('common.approve')}>
                             <IconButton
                               size="small"
                               color="success"
@@ -213,7 +216,7 @@ export function Spa2BeforeAfterManageView() {
                               <Iconify icon="solar:check-circle-bold" />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip title="Từ chối">
+                          <Tooltip title={t('common.reject')}>
                             <IconButton
                               size="small"
                               color="error"
@@ -224,17 +227,17 @@ export function Spa2BeforeAfterManageView() {
                           </Tooltip>
                         </>
                       )}
-                      <Tooltip title="Xem">
+                      <Tooltip title={t('common.view')}>
                         <IconButton size="small" onClick={() => setViewItem(item)}>
                           <Iconify icon="solar:eye-bold" />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Sửa">
+                      <Tooltip title={t('common.edit')}>
                         <IconButton size="small" onClick={() => openEdit(item)}>
                           <Iconify icon="solar:pen-bold" />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Xóa">
+                      <Tooltip title={t('common.delete')}>
                         <IconButton size="small" color="error" onClick={() => setDeleteId(item.id)}>
                           <Iconify icon="solar:trash-bin-trash-bold" />
                         </IconButton>
@@ -250,13 +253,13 @@ export function Spa2BeforeAfterManageView() {
 
       {/* View dialog */}
       <Dialog open={!!viewItem} onClose={() => setViewItem(null)} maxWidth="md" fullWidth>
-        <DialogTitle>{viewItem?.title}</DialogTitle>
+        <DialogTitle>{t('before_after.detail_title')}</DialogTitle>
         <DialogContent dividers>
           {viewItem && (
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <Typography variant="caption" color="text.secondary" gutterBottom display="block">
-                  Trước
+                  {t('common.before')}
                 </Typography>
                 <Box
                   component="img"
@@ -266,7 +269,7 @@ export function Spa2BeforeAfterManageView() {
               </Grid>
               <Grid item xs={6}>
                 <Typography variant="caption" color="text.secondary" gutterBottom display="block">
-                  Sau
+                  {t('common.after')}
                 </Typography>
                 <Box component="img" src={viewItem.after} sx={{ width: '100%', borderRadius: 1 }} />
               </Grid>
@@ -291,7 +294,7 @@ export function Spa2BeforeAfterManageView() {
                   setViewItem(null);
                 }}
               >
-                Từ chối
+                {t('common.reject')}
               </Button>
               <Button
                 variant="contained"
@@ -301,45 +304,45 @@ export function Spa2BeforeAfterManageView() {
                   setViewItem(null);
                 }}
               >
-                Duyệt
+                {t('common.approve')}
               </Button>
             </>
           )}
-          <Button onClick={() => setViewItem(null)}>Đóng</Button>
+          <Button onClick={() => setViewItem(null)}>{t('common.close')}</Button>
         </DialogActions>
       </Dialog>
 
       {/* Form dialog */}
       <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{editId !== null ? 'Cập nhật case' : 'Thêm case Before & After'}</DialogTitle>
+        <DialogTitle>{editId !== null ? t('before_after.form_edit') : t('before_after.form_create')}</DialogTitle>
         <DialogContent dividers>
           <Stack spacing={2} sx={{ pt: 1 }}>
             <TextField
-              label="Tiêu đề *"
+              label={t('before_after.form_title')}
               value={form.title}
               onChange={handleChange('title')}
               fullWidth
             />
             <TextField
-              label="URL ảnh trước"
+              label={t('before_after.form_before')}
               value={form.before}
               onChange={handleChange('before')}
               fullWidth
             />
             <TextField
-              label="URL ảnh sau"
+              label={t('before_after.form_after')}
               value={form.after}
               onChange={handleChange('after')}
               fullWidth
             />
             <TextField
-              label="Thời gian liệu trình"
+              label={t('before_after.form_duration')}
               value={form.duration}
               onChange={handleChange('duration')}
               fullWidth
             />
             <TextField
-              label="Ghi chú kết quả"
+              label={t('before_after.form_note')}
               value={form.note}
               onChange={handleChange('note')}
               fullWidth
@@ -349,9 +352,9 @@ export function Spa2BeforeAfterManageView() {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenForm(false)}>Huỷ</Button>
+          <Button onClick={() => setOpenForm(false)}>{t('common.cancel')}</Button>
           <Button variant="contained" onClick={handleSubmit} disabled={!form.title}>
-            {editId !== null ? 'Cập nhật' : 'Thêm mới'}
+            {editId !== null ? t('before_after.form_edit') : t('before_after.form_create')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -359,11 +362,11 @@ export function Spa2BeforeAfterManageView() {
       <ConfirmDialog
         open={!!deleteId}
         onClose={() => setDeleteId(null)}
-        title="Xóa case Before & After"
-        content="Bạn có chắc muốn xóa case này?"
+        title={t('before_after.delete_title')}
+        content={t('before_after.delete_content')}
         action={
           <Button variant="contained" color="error" onClick={handleDelete}>
-            Xóa
+            {t('common.delete')}
           </Button>
         }
       />

@@ -25,6 +25,7 @@ import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
@@ -54,6 +55,7 @@ const EMPTY_FORM = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function Spa2BlogManageView() {
+  const { t } = useTranslate('spa2-manage');
   const [items, setItems] = useState<BlogPost[]>(
     spa2BlogPosts.map((p, i) => ({ ...p, id: i + 1, status: 'published' as const }))
   );
@@ -130,11 +132,11 @@ export function Spa2BlogManageView() {
   return (
     <DashboardContent maxWidth="xl">
       <CustomBreadcrumbs
-        heading="Quản lý Blog"
+        heading={t('blog.page_title')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Spa2', href: paths.dashboard.spa2.root },
-          { name: 'Blog' },
+          { name: t('common.dashboard'), href: paths.dashboard.root },
+          { name: t('common.spa2'), href: paths.dashboard.spa2.root },
+          { name: t('nav.blog') },
         ]}
         action={
           <Button
@@ -142,7 +144,7 @@ export function Spa2BlogManageView() {
             startIcon={<Iconify icon="mingcute:add-line" />}
             onClick={openCreate}
           >
-            Viết bài mới
+            {t('blog.add_btn')}
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}
@@ -151,7 +153,7 @@ export function Spa2BlogManageView() {
       <Card>
         <Box sx={{ p: 2 }}>
           <TextField
-            placeholder="Tìm kiếm bài viết..."
+            placeholder={t('blog.search_placeholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             size="small"
@@ -170,13 +172,13 @@ export function Spa2BlogManageView() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Bài viết</TableCell>
-                <TableCell>Danh mục</TableCell>
-                <TableCell>Tác giả</TableCell>
-                <TableCell>Ngày đăng</TableCell>
-                <TableCell>Đọc</TableCell>
-                <TableCell>Trạng thái</TableCell>
-                <TableCell align="right">Hành động</TableCell>
+                <TableCell>{t('blog.col_post')}</TableCell>
+                <TableCell>{t('blog.col_category')}</TableCell>
+                <TableCell>{t('blog.col_author')}</TableCell>
+                <TableCell>{t('blog.col_date')}</TableCell>
+                <TableCell>{t('blog.col_read_time')}</TableCell>
+                <TableCell>{t('common.status')}</TableCell>
+                <TableCell align="right">{t('common.actions')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -203,14 +205,14 @@ export function Spa2BlogManageView() {
                   <TableCell>
                     <Chip
                       size="small"
-                      label={item.status === 'published' ? 'Đã đăng' : 'Nháp'}
+                      label={item.status === 'published' ? t('common.published') : t('common.draft')}
                       color={item.status === 'published' ? 'success' : 'default'}
                       variant="soft"
                     />
                   </TableCell>
                   <TableCell align="right">
                     <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
-                      <Tooltip title={item.status === 'published' ? 'Chuyển nháp' : 'Đăng bài'}>
+                      <Tooltip title={item.status === 'published' ? t('common.unpublish') : t('common.publish')}>
                         <IconButton size="small" onClick={() => handleToggleStatus(item.id)}>
                           <Iconify
                             icon={
@@ -222,12 +224,12 @@ export function Spa2BlogManageView() {
                           />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Chỉnh sửa">
+                      <Tooltip title={t('common.edit')}>
                         <IconButton size="small" onClick={() => openEdit(item)}>
                           <Iconify icon="solar:pen-bold" />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Xóa">
+                      <Tooltip title={t('common.delete')}>
                         <IconButton size="small" color="error" onClick={() => setDeleteId(item.id)}>
                           <Iconify icon="solar:trash-bin-trash-bold" />
                         </IconButton>
@@ -242,17 +244,17 @@ export function Spa2BlogManageView() {
       </Card>
 
       <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{editId !== null ? 'Cập nhật bài viết' : 'Viết bài mới'}</DialogTitle>
+        <DialogTitle>{editId !== null ? t('blog.form_edit') : t('blog.form_create')}</DialogTitle>
         <DialogContent dividers>
           <Stack spacing={2} sx={{ pt: 1 }}>
             <TextField
-              label="Tiêu đề *"
+              label={t('blog.form_title')}
               value={form.title}
               onChange={handleChange('title')}
               fullWidth
             />
             <TextField
-              label="Tóm tắt"
+              label={t('blog.form_excerpt')}
               value={form.excerpt}
               onChange={handleChange('excerpt')}
               fullWidth
@@ -261,14 +263,14 @@ export function Spa2BlogManageView() {
             />
             <Stack direction="row" spacing={2}>
               <TextField
-                label="Tác giả"
+                label={t('blog.form_author')}
                 value={form.author}
                 onChange={handleChange('author')}
                 fullWidth
               />
               <TextField
                 select
-                label="Danh mục"
+                label={t('blog.form_category')}
                 value={form.category}
                 onChange={handleChange('category')}
                 fullWidth
@@ -282,20 +284,20 @@ export function Spa2BlogManageView() {
             </Stack>
             <Stack direction="row" spacing={2}>
               <TextField
-                label="Ngày đăng"
+                label={t('blog.form_date')}
                 value={form.date}
                 onChange={handleChange('date')}
                 fullWidth
               />
               <TextField
-                label="Thời gian đọc"
+                label={t('blog.form_read_time')}
                 value={form.readTime}
                 onChange={handleChange('readTime')}
                 fullWidth
               />
             </Stack>
             <TextField
-              label="URL ảnh bìa"
+              label={t('blog.form_cover')}
               value={form.cover}
               onChange={handleChange('cover')}
               fullWidth
@@ -303,9 +305,9 @@ export function Spa2BlogManageView() {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenForm(false)}>Huỷ</Button>
+          <Button onClick={() => setOpenForm(false)}>{t('common.cancel')}</Button>
           <Button variant="contained" onClick={handleSubmit} disabled={!form.title}>
-            {editId !== null ? 'Cập nhật' : 'Lưu bản nháp'}
+            {editId !== null ? t('blog.form_edit') : t('blog.form_create')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -313,11 +315,11 @@ export function Spa2BlogManageView() {
       <ConfirmDialog
         open={!!deleteId}
         onClose={() => setDeleteId(null)}
-        title="Xóa bài viết"
-        content="Bài viết này sẽ bị xóa vĩnh viễn."
+        title={t('blog.delete_title')}
+        content={t('blog.delete_content')}
         action={
           <Button variant="contained" color="error" onClick={handleDelete}>
-            Xóa
+            {t('common.delete')}
           </Button>
         }
       />

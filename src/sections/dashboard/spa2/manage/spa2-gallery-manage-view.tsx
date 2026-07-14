@@ -17,6 +17,7 @@ import DialogContent from '@mui/material/DialogContent';
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
@@ -36,6 +37,7 @@ interface GalleryImage {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function Spa2GalleryManageView() {
+  const { t } = useTranslate('spa2-manage');
   const [items, setItems] = useState<GalleryImage[]>(
     spa2Gallery.map((url, i) => ({ id: i + 1, url, caption: `Ảnh ${i + 1}` }))
   );
@@ -65,11 +67,11 @@ export function Spa2GalleryManageView() {
   return (
     <DashboardContent maxWidth="xl">
       <CustomBreadcrumbs
-        heading="Quản lý Thư viện ảnh"
+        heading={t('gallery.page_title')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Spa2', href: paths.dashboard.spa2.root },
-          { name: 'Thư viện ảnh' },
+          { name: t('common.dashboard'), href: paths.dashboard.root },
+          { name: t('common.spa2'), href: paths.dashboard.spa2.root },
+          { name: t('nav.gallery') },
         ]}
         action={
           <Button
@@ -77,7 +79,7 @@ export function Spa2GalleryManageView() {
             startIcon={<Iconify icon="solar:gallery-add-bold" />}
             onClick={() => setOpenAdd(true)}
           >
-            Thêm ảnh
+            {t('gallery.add_btn')}
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}
@@ -85,7 +87,7 @@ export function Spa2GalleryManageView() {
 
       <Box sx={{ mb: 2 }}>
         <Typography variant="body2" color="text.secondary">
-          {items.length} ảnh trong thư viện
+          {t('gallery.count', { count: items.length })}
         </Typography>
       </Box>
 
@@ -118,7 +120,7 @@ export function Spa2GalleryManageView() {
                   transition: 'opacity 0.2s',
                 }}
               >
-                <Tooltip title="Xem lớn">
+                <Tooltip title={t('common.view')}>
                   <IconButton
                     sx={{ bgcolor: 'white', '&:hover': { bgcolor: 'white' } }}
                     size="small"
@@ -127,7 +129,7 @@ export function Spa2GalleryManageView() {
                     <Iconify icon="solar:eye-bold" />
                   </IconButton>
                 </Tooltip>
-                <Tooltip title="Xóa">
+                <Tooltip title={t('common.delete')}>
                   <IconButton
                     sx={{ bgcolor: 'white', '&:hover': { bgcolor: 'white' } }}
                     size="small"
@@ -149,18 +151,18 @@ export function Spa2GalleryManageView() {
 
       {/* Add dialog */}
       <Dialog open={openAdd} onClose={() => setOpenAdd(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Thêm ảnh mới</DialogTitle>
+        <DialogTitle>{t('gallery.form_create')}</DialogTitle>
         <DialogContent dividers>
           <Stack spacing={2} sx={{ pt: 1 }}>
             <TextField
-              label="URL ảnh *"
+              label={t('gallery.form_url')}
               value={addUrl}
               onChange={(e) => setAddUrl(e.target.value)}
               fullWidth
               placeholder="https://images.unsplash.com/..."
             />
             <TextField
-              label="Chú thích"
+              label={t('gallery.form_caption')}
               value={addCaption}
               onChange={(e) => setAddCaption(e.target.value)}
               fullWidth
@@ -179,9 +181,9 @@ export function Spa2GalleryManageView() {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenAdd(false)}>Huỷ</Button>
+          <Button onClick={() => setOpenAdd(false)}>{t('common.cancel')}</Button>
           <Button variant="contained" onClick={handleAdd} disabled={!addUrl.trim()}>
-            Thêm ảnh
+            {t('gallery.add_btn')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -197,18 +199,18 @@ export function Spa2GalleryManageView() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setViewUrl(null)}>Đóng</Button>
+          <Button onClick={() => setViewUrl(null)}>{t('common.close')}</Button>
         </DialogActions>
       </Dialog>
 
       <ConfirmDialog
         open={!!deleteId}
         onClose={() => setDeleteId(null)}
-        title="Xóa ảnh"
-        content="Bạn có chắc muốn xóa ảnh này khỏi thư viện?"
+        title={t('gallery.delete_title')}
+        content={t('gallery.delete_content')}
         action={
           <Button variant="contained" color="error" onClick={handleDelete}>
-            Xóa
+            {t('common.delete')}
           </Button>
         }
       />

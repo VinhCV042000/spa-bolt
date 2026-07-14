@@ -23,6 +23,7 @@ import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
@@ -40,6 +41,7 @@ const EMPTY_FORM = { q: '', a: '' };
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function Spa2FaqManageView() {
+  const { t } = useTranslate('spa2-manage');
   const [items, setItems] = useState<FAQ[]>(
     spa2Faqs.map((f, i) => ({ ...f, id: i + 1, published: true }))
   );
@@ -113,11 +115,11 @@ export function Spa2FaqManageView() {
   return (
     <DashboardContent maxWidth="xl">
       <CustomBreadcrumbs
-        heading="Quản lý FAQ"
+        heading={t('faq.page_title')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Spa2', href: paths.dashboard.spa2.root },
-          { name: 'FAQ' },
+          { name: t('common.dashboard'), href: paths.dashboard.root },
+          { name: t('common.spa2'), href: paths.dashboard.spa2.root },
+          { name: t('nav.faq') },
         ]}
         action={
           <Button
@@ -125,7 +127,7 @@ export function Spa2FaqManageView() {
             startIcon={<Iconify icon="mingcute:add-line" />}
             onClick={openCreate}
           >
-            Thêm câu hỏi
+            {t('faq.add_btn')}
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}
@@ -134,7 +136,7 @@ export function Spa2FaqManageView() {
       <Card>
         <Box sx={{ p: 2 }}>
           <TextField
-            placeholder="Tìm câu hỏi..."
+            placeholder={t('faq.search_placeholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             size="small"
@@ -153,11 +155,11 @@ export function Spa2FaqManageView() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell width={40}>#</TableCell>
-                <TableCell>Câu hỏi</TableCell>
-                <TableCell sx={{ maxWidth: 320 }}>Trả lời</TableCell>
-                <TableCell>Hiển thị</TableCell>
-                <TableCell align="right">Hành động</TableCell>
+                <TableCell width={40}>{t('faq.col_order')}</TableCell>
+                <TableCell>{t('faq.col_question')}</TableCell>
+                <TableCell sx={{ maxWidth: 320 }}>{t('faq.col_answer')}</TableCell>
+                <TableCell>{t('faq.col_visible')}</TableCell>
+                <TableCell align="right">{t('common.actions')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -197,14 +199,14 @@ export function Spa2FaqManageView() {
                   <TableCell>
                     <Chip
                       size="small"
-                      label={item.published ? 'Hiển thị' : 'Ẩn'}
+                      label={item.published ? t('faq.status_visible') : t('faq.status_hidden')}
                       color={item.published ? 'success' : 'default'}
                       variant="soft"
                     />
                   </TableCell>
                   <TableCell align="right">
                     <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
-                      <Tooltip title={item.published ? 'Ẩn' : 'Hiển thị'}>
+                      <Tooltip title={item.published ? t('common.hidden') : t('common.visible')}>
                         <IconButton size="small" onClick={() => handleToggle(item.id)}>
                           <Iconify
                             icon={item.published ? 'solar:eye-closed-bold' : 'solar:eye-bold'}
@@ -212,12 +214,12 @@ export function Spa2FaqManageView() {
                           />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Chỉnh sửa">
+                      <Tooltip title={t('common.edit')}>
                         <IconButton size="small" onClick={() => openEdit(item)}>
                           <Iconify icon="solar:pen-bold" />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Xóa">
+                      <Tooltip title={t('common.delete')}>
                         <IconButton size="small" color="error" onClick={() => setDeleteId(item.id)}>
                           <Iconify icon="solar:trash-bin-trash-bold" />
                         </IconButton>
@@ -232,11 +234,11 @@ export function Spa2FaqManageView() {
       </Card>
 
       <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{editId !== null ? 'Cập nhật câu hỏi' : 'Thêm câu hỏi mới'}</DialogTitle>
+        <DialogTitle>{editId !== null ? t('faq.form_edit') : t('faq.form_create')}</DialogTitle>
         <DialogContent dividers>
           <Stack spacing={2} sx={{ pt: 1 }}>
             <TextField
-              label="Câu hỏi *"
+              label={t('faq.form_question')}
               value={form.q}
               onChange={handleChange('q')}
               fullWidth
@@ -244,7 +246,7 @@ export function Spa2FaqManageView() {
               rows={2}
             />
             <TextField
-              label="Câu trả lời *"
+              label={t('faq.form_answer')}
               value={form.a}
               onChange={handleChange('a')}
               fullWidth
@@ -254,9 +256,9 @@ export function Spa2FaqManageView() {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenForm(false)}>Huỷ</Button>
+          <Button onClick={() => setOpenForm(false)}>{t('common.cancel')}</Button>
           <Button variant="contained" onClick={handleSubmit} disabled={!form.q || !form.a}>
-            {editId !== null ? 'Cập nhật' : 'Thêm mới'}
+            {editId !== null ? t('faq.form_edit') : t('faq.form_create')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -264,11 +266,11 @@ export function Spa2FaqManageView() {
       <ConfirmDialog
         open={!!deleteId}
         onClose={() => setDeleteId(null)}
-        title="Xóa câu hỏi"
-        content="Bạn có chắc muốn xóa câu hỏi này?"
+        title={t('faq.delete_title')}
+        content={t('faq.delete_content')}
         action={
           <Button variant="contained" color="error" onClick={handleDelete}>
-            Xóa
+            {t('common.delete')}
           </Button>
         }
       />

@@ -25,6 +25,7 @@ import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
@@ -145,10 +146,10 @@ const STATUS_COLOR: Record<BookingStatus, 'warning' | 'success' | 'error' | 'def
 };
 
 const STATUS_LABEL: Record<BookingStatus, string> = {
-  pending: 'Chờ xác nhận',
-  confirmed: 'Đã xác nhận',
-  cancelled: 'Đã huỷ',
-  completed: 'Hoàn thành',
+  pending: 'bookings.status_pending',
+  confirmed: 'bookings.status_confirmed',
+  cancelled: 'bookings.status_cancelled',
+  completed: 'bookings.status_completed',
 };
 
 const STATUS_OPTIONS: BookingStatus[] = ['pending', 'confirmed', 'cancelled', 'completed'];
@@ -156,6 +157,8 @@ const STATUS_OPTIONS: BookingStatus[] = ['pending', 'confirmed', 'cancelled', 'c
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function Spa2BookingsManageView() {
+  const { t } = useTranslate('spa2-manage');
+  const statusLabel = (s: BookingStatus) => t(STATUS_LABEL[s]);
   const [items, setItems] = useState<Booking[]>(MOCK_BOOKINGS);
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState<BookingStatus | 'all'>('all');
@@ -186,11 +189,11 @@ export function Spa2BookingsManageView() {
   return (
     <DashboardContent maxWidth="xl">
       <CustomBreadcrumbs
-        heading="Quản lý Đặt lịch"
+        heading={t('bookings.page_title')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Spa2', href: paths.dashboard.spa2.root },
-          { name: 'Đặt lịch' },
+          { name: t('common.dashboard'), href: paths.dashboard.root },
+          { name: t('common.spa2'), href: paths.dashboard.spa2.root },
+          { name: t('nav.bookings') },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
@@ -200,7 +203,7 @@ export function Spa2BookingsManageView() {
         {(['all', 'pending', 'confirmed', 'completed', 'cancelled'] as const).map((s) => (
           <Chip
             key={s}
-            label={`${s === 'all' ? 'Tất cả' : STATUS_LABEL[s]} (${counts[s]})`}
+            label={`${s === 'all' ? t('common.all') : statusLabel(s)} (${counts[s]})`}
             variant={filterStatus === s ? 'filled' : 'outlined'}
             color={s === 'all' ? 'default' : (STATUS_COLOR[s] ?? 'default')}
             onClick={() => setFilterStatus(s)}
@@ -212,7 +215,7 @@ export function Spa2BookingsManageView() {
       <Card>
         <Box sx={{ p: 2 }}>
           <TextField
-            placeholder="Tìm khách hàng, dịch vụ, SĐT..."
+            placeholder={t('bookings.search_placeholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             size="small"
@@ -231,12 +234,12 @@ export function Spa2BookingsManageView() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Khách hàng</TableCell>
-                <TableCell>Dịch vụ</TableCell>
-                <TableCell>Ngày / Giờ</TableCell>
-                <TableCell>Chi nhánh</TableCell>
-                <TableCell>Trạng thái</TableCell>
-                <TableCell align="right">Hành động</TableCell>
+                <TableCell>{t('bookings.col_customer')}</TableCell>
+                <TableCell>{t('bookings.col_service')}</TableCell>
+                <TableCell>{t('bookings.col_datetime')}</TableCell>
+                <TableCell>{t('bookings.col_branch')}</TableCell>
+                <TableCell>{t('common.status')}</TableCell>
+                <TableCell align="right">{t('common.actions')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -261,7 +264,7 @@ export function Spa2BookingsManageView() {
                   <TableCell>
                     <Chip
                       size="small"
-                      label={STATUS_LABEL[item.status]}
+                      label={statusLabel(item.status)}
                       color={STATUS_COLOR[item.status]}
                       variant="soft"
                     />
@@ -270,7 +273,7 @@ export function Spa2BookingsManageView() {
                     <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
                       {item.status === 'pending' && (
                         <>
-                          <Tooltip title="Xác nhận">
+                          <Tooltip title={t('bookings.action_confirm')}>
                             <IconButton
                               size="small"
                               color="success"
@@ -279,7 +282,7 @@ export function Spa2BookingsManageView() {
                               <Iconify icon="solar:check-circle-bold" />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip title="Huỷ">
+                          <Tooltip title={t('bookings.action_cancel')}>
                             <IconButton
                               size="small"
                               color="error"
@@ -291,7 +294,7 @@ export function Spa2BookingsManageView() {
                         </>
                       )}
                       {item.status === 'confirmed' && (
-                        <Tooltip title="Đánh dấu hoàn thành">
+                        <Tooltip title={t('bookings.action_complete')}>
                           <IconButton
                             size="small"
                             color="primary"
@@ -301,7 +304,7 @@ export function Spa2BookingsManageView() {
                           </IconButton>
                         </Tooltip>
                       )}
-                      <Tooltip title="Xem chi tiết">
+                      <Tooltip title={t('common.view')}>
                         <IconButton size="small" onClick={() => setViewItem(item)}>
                           <Iconify icon="solar:eye-bold" />
                         </IconButton>
@@ -317,18 +320,18 @@ export function Spa2BookingsManageView() {
 
       {/* View detail dialog */}
       <Dialog open={!!viewItem} onClose={() => setViewItem(null)} maxWidth="xs" fullWidth>
-        <DialogTitle>Chi tiết đặt lịch #{viewItem?.id}</DialogTitle>
+        <DialogTitle>{t('bookings.detail_title', { id: viewItem?.id })}</DialogTitle>
         <DialogContent dividers>
           {viewItem && (
             <Stack spacing={1.5}>
               {[
-                ['Khách hàng', viewItem.customer],
-                ['Điện thoại', viewItem.phone],
-                ['Dịch vụ', viewItem.service],
-                ['Ngày', viewItem.date],
-                ['Giờ', viewItem.time],
-                ['Chi nhánh', viewItem.branch],
-                ['Ghi chú', viewItem.note || '–'],
+                [t('bookings.detail_customer'), viewItem.customer],
+                [t('bookings.detail_phone'), viewItem.phone],
+                [t('bookings.detail_service'), viewItem.service],
+                [t('bookings.detail_date'), viewItem.date],
+                [t('bookings.detail_time'), viewItem.time],
+                [t('bookings.detail_branch'), viewItem.branch],
+                [t('bookings.detail_note'), viewItem.note || '–'],
               ].map(([label, value]) => (
                 <Box key={label} sx={{ display: 'flex', gap: 1 }}>
                   <Typography variant="body2" color="text.secondary" sx={{ minWidth: 100 }}>
@@ -342,7 +345,7 @@ export function Spa2BookingsManageView() {
               <Divider />
               <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
                 <Typography variant="body2" color="text.secondary" sx={{ minWidth: 100 }}>
-                  Trạng thái:
+                  {t('bookings.detail_status')}:
                 </Typography>
                 <TextField
                   select
@@ -353,7 +356,7 @@ export function Spa2BookingsManageView() {
                 >
                   {STATUS_OPTIONS.map((s) => (
                     <MenuItem key={s} value={s}>
-                      {STATUS_LABEL[s]}
+                      {statusLabel(s)}
                     </MenuItem>
                   ))}
                 </TextField>
@@ -362,7 +365,7 @@ export function Spa2BookingsManageView() {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setViewItem(null)}>Đóng</Button>
+          <Button onClick={() => setViewItem(null)}>{t('common.close')}</Button>
         </DialogActions>
       </Dialog>
     </DashboardContent>

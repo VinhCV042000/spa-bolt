@@ -23,6 +23,7 @@ import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
@@ -46,6 +47,7 @@ const EMPTY_FORM = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function Spa2OffersManageView() {
+  const { t } = useTranslate('spa2-manage');
   const [items, setItems] = useState<Offer[]>(
     spa2Offers.map((o, i) => ({ ...o, id: i + 1, active: true }))
   );
@@ -112,11 +114,11 @@ export function Spa2OffersManageView() {
   return (
     <DashboardContent maxWidth="xl">
       <CustomBreadcrumbs
-        heading="Quản lý Ưu đãi & Mã giảm giá"
+        heading={t('offers.page_title')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Spa2', href: paths.dashboard.spa2.root },
-          { name: 'Ưu đãi' },
+          { name: t('common.dashboard'), href: paths.dashboard.root },
+          { name: t('common.spa2'), href: paths.dashboard.spa2.root },
+          { name: t('nav.offers') },
         ]}
         action={
           <Button
@@ -124,7 +126,7 @@ export function Spa2OffersManageView() {
             startIcon={<Iconify icon="mingcute:add-line" />}
             onClick={openCreate}
           >
-            Tạo ưu đãi
+            {t('offers.add_btn')}
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}
@@ -133,7 +135,7 @@ export function Spa2OffersManageView() {
       <Card>
         <Box sx={{ p: 2 }}>
           <TextField
-            placeholder="Tìm ưu đãi, mã giảm giá..."
+            placeholder={t('offers.search_placeholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             size="small"
@@ -152,12 +154,12 @@ export function Spa2OffersManageView() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Tên ưu đãi</TableCell>
-                <TableCell>Mã code</TableCell>
-                <TableCell>Giảm</TableCell>
-                <TableCell>Hết hạn</TableCell>
-                <TableCell>Trạng thái</TableCell>
-                <TableCell align="right">Hành động</TableCell>
+                <TableCell>{t('offers.col_offer')}</TableCell>
+                <TableCell>{t('offers.col_code')}</TableCell>
+                <TableCell>{t('offers.col_discount')}</TableCell>
+                <TableCell>{t('offers.col_expires')}</TableCell>
+                <TableCell>{t('common.status')}</TableCell>
+                <TableCell align="right">{t('common.actions')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -185,7 +187,7 @@ export function Spa2OffersManageView() {
                         color="primary"
                         sx={{ fontFamily: 'monospace', fontWeight: 700 }}
                       />
-                      <Tooltip title={copied === item.code ? 'Đã sao chép!' : 'Copy'}>
+                      <Tooltip title={copied === item.code ? t('common.copied') : t('common.copy')}>
                         <IconButton size="small" onClick={() => handleCopy(item.code)}>
                           <Iconify
                             icon={copied === item.code ? 'solar:check-bold' : 'solar:copy-bold'}
@@ -204,14 +206,14 @@ export function Spa2OffersManageView() {
                   <TableCell>
                     <Chip
                       size="small"
-                      label={item.active ? 'Đang dùng' : 'Tắt'}
+                      label={item.active ? t('offers.status_active') : t('offers.status_inactive')}
                       color={item.active ? 'success' : 'default'}
                       variant="soft"
                     />
                   </TableCell>
                   <TableCell align="right">
                     <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
-                      <Tooltip title={item.active ? 'Tắt' : 'Bật'}>
+                      <Tooltip title={item.active ? t('common.disable') : t('common.enable')}>
                         <IconButton size="small" onClick={() => handleToggle(item.id)}>
                           <Iconify
                             icon={item.active ? 'solar:eye-closed-bold' : 'solar:eye-bold'}
@@ -219,12 +221,12 @@ export function Spa2OffersManageView() {
                           />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Chỉnh sửa">
+                      <Tooltip title={t('common.edit')}>
                         <IconButton size="small" onClick={() => openEdit(item)}>
                           <Iconify icon="solar:pen-bold" />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Xóa">
+                      <Tooltip title={t('common.delete')}>
                         <IconButton size="small" color="error" onClick={() => setDeleteId(item.id)}>
                           <Iconify icon="solar:trash-bin-trash-bold" />
                         </IconButton>
@@ -239,17 +241,17 @@ export function Spa2OffersManageView() {
       </Card>
 
       <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{editId !== null ? 'Cập nhật ưu đãi' : 'Tạo ưu đãi mới'}</DialogTitle>
+        <DialogTitle>{editId !== null ? t('offers.form_edit') : t('offers.form_create')}</DialogTitle>
         <DialogContent dividers>
           <Stack spacing={2} sx={{ pt: 1 }}>
             <TextField
-              label="Tên ưu đãi *"
+              label={t('offers.form_title')}
               value={form.title}
               onChange={handleChange('title')}
               fullWidth
             />
             <TextField
-              label="Mô tả"
+              label={t('offers.form_desc')}
               value={form.desc}
               onChange={handleChange('desc')}
               fullWidth
@@ -258,21 +260,21 @@ export function Spa2OffersManageView() {
             />
             <Stack direction="row" spacing={2}>
               <TextField
-                label="Mã code"
+                label={t('offers.form_code')}
                 value={form.code}
                 onChange={handleChange('code')}
                 fullWidth
                 inputProps={{ style: { textTransform: 'uppercase' } }}
               />
               <TextField
-                label="Mức giảm (vd: -30%)"
+                label={t('offers.form_discount')}
                 value={form.discount}
                 onChange={handleChange('discount')}
                 fullWidth
               />
             </Stack>
             <TextField
-              label="Ngày hết hạn (vd: 31/12/2026)"
+              label={t('offers.form_expires')}
               value={form.expires}
               onChange={handleChange('expires')}
               fullWidth
@@ -280,9 +282,9 @@ export function Spa2OffersManageView() {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenForm(false)}>Huỷ</Button>
+          <Button onClick={() => setOpenForm(false)}>{t('common.cancel')}</Button>
           <Button variant="contained" onClick={handleSubmit} disabled={!form.title}>
-            {editId !== null ? 'Cập nhật' : 'Tạo mới'}
+            {editId !== null ? t('offers.form_edit') : t('offers.form_create')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -290,11 +292,11 @@ export function Spa2OffersManageView() {
       <ConfirmDialog
         open={!!deleteId}
         onClose={() => setDeleteId(null)}
-        title="Xóa ưu đãi"
-        content="Bạn có chắc muốn xóa ưu đãi này?"
+        title={t('offers.delete_title')}
+        content={t('offers.delete_content')}
         action={
           <Button variant="contained" color="error" onClick={handleDelete}>
-            Xóa
+            {t('common.delete')}
           </Button>
         }
       />

@@ -23,6 +23,7 @@ import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
@@ -40,6 +41,7 @@ const EMPTY_FORM = { city: '', name: '', address: '', phone: '', hours: '', imag
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function Spa2BranchesManageView() {
+  const { t } = useTranslate('spa2-manage');
   const [items, setItems] = useState<Branch[]>(spa2Branches.map((b, i) => ({ ...b, id: i + 1 })));
   const [search, setSearch] = useState('');
   const [openForm, setOpenForm] = useState(false);
@@ -94,11 +96,11 @@ export function Spa2BranchesManageView() {
   return (
     <DashboardContent maxWidth="xl">
       <CustomBreadcrumbs
-        heading="Quản lý Chi nhánh"
+        heading={t('branches.page_title')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Spa2', href: paths.dashboard.spa2.root },
-          { name: 'Chi nhánh' },
+          { name: t('common.dashboard'), href: paths.dashboard.root },
+          { name: t('common.spa2'), href: paths.dashboard.spa2.root },
+          { name: t('nav.branches') },
         ]}
         action={
           <Button
@@ -106,7 +108,7 @@ export function Spa2BranchesManageView() {
             startIcon={<Iconify icon="mingcute:add-line" />}
             onClick={openCreate}
           >
-            Thêm chi nhánh
+            {t('branches.add_btn')}
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}
@@ -115,7 +117,7 @@ export function Spa2BranchesManageView() {
       <Card>
         <Box sx={{ p: 2 }}>
           <TextField
-            placeholder="Tìm chi nhánh, thành phố..."
+            placeholder={t('branches.search_placeholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             size="small"
@@ -133,12 +135,12 @@ export function Spa2BranchesManageView() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Chi nhánh</TableCell>
-                <TableCell>Thành phố</TableCell>
-                <TableCell>Địa chỉ</TableCell>
-                <TableCell>Điện thoại</TableCell>
-                <TableCell>Giờ mở cửa</TableCell>
-                <TableCell align="right">Hành động</TableCell>
+                <TableCell>{t('branches.col_branch')}</TableCell>
+                <TableCell>{t('branches.col_city')}</TableCell>
+                <TableCell>{t('branches.col_address')}</TableCell>
+                <TableCell>{t('branches.col_phone')}</TableCell>
+                <TableCell>{t('branches.col_hours')}</TableCell>
+                <TableCell align="right">{t('common.actions')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -160,12 +162,12 @@ export function Spa2BranchesManageView() {
                   <TableCell>{item.hours}</TableCell>
                   <TableCell align="right">
                     <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
-                      <Tooltip title="Chỉnh sửa">
+                      <Tooltip title={t('common.edit')}>
                         <IconButton size="small" onClick={() => openEdit(item)}>
                           <Iconify icon="solar:pen-bold" />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Xóa">
+                      <Tooltip title={t('common.delete')}>
                         <IconButton size="small" color="error" onClick={() => setDeleteId(item.id)}>
                           <Iconify icon="solar:trash-bin-trash-bold" />
                         </IconButton>
@@ -180,45 +182,45 @@ export function Spa2BranchesManageView() {
       </Card>
 
       <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{editId !== null ? 'Cập nhật chi nhánh' : 'Thêm chi nhánh mới'}</DialogTitle>
+        <DialogTitle>{editId !== null ? t('branches.form_edit') : t('branches.form_create')}</DialogTitle>
         <DialogContent dividers>
           <Stack spacing={2} sx={{ pt: 1 }}>
             <Stack direction="row" spacing={2}>
               <TextField
-                label="Tên chi nhánh *"
+                label={t('branches.form_name')}
                 value={form.name}
                 onChange={handleChange('name')}
                 fullWidth
               />
               <TextField
-                label="Thành phố"
+                label={t('branches.form_city')}
                 value={form.city}
                 onChange={handleChange('city')}
                 fullWidth
               />
             </Stack>
             <TextField
-              label="Địa chỉ"
+              label={t('branches.form_address')}
               value={form.address}
               onChange={handleChange('address')}
               fullWidth
             />
             <Stack direction="row" spacing={2}>
               <TextField
-                label="Điện thoại"
+                label={t('branches.form_phone')}
                 value={form.phone}
                 onChange={handleChange('phone')}
                 fullWidth
               />
               <TextField
-                label="Giờ mở cửa"
+                label={t('branches.form_hours')}
                 value={form.hours}
                 onChange={handleChange('hours')}
                 fullWidth
               />
             </Stack>
             <TextField
-              label="URL ảnh chi nhánh"
+              label={t('branches.form_image')}
               value={form.image}
               onChange={handleChange('image')}
               fullWidth
@@ -226,9 +228,9 @@ export function Spa2BranchesManageView() {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenForm(false)}>Huỷ</Button>
+          <Button onClick={() => setOpenForm(false)}>{t('common.cancel')}</Button>
           <Button variant="contained" onClick={handleSubmit} disabled={!form.name}>
-            {editId !== null ? 'Cập nhật' : 'Thêm mới'}
+            {editId !== null ? t('branches.form_edit') : t('branches.form_create')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -236,11 +238,11 @@ export function Spa2BranchesManageView() {
       <ConfirmDialog
         open={!!deleteId}
         onClose={() => setDeleteId(null)}
-        title="Xóa chi nhánh"
-        content="Bạn có chắc muốn xóa chi nhánh này?"
+        title={t('branches.delete_title')}
+        content={t('branches.delete_content')}
         action={
           <Button variant="contained" color="error" onClick={handleDelete}>
-            Xóa
+            {t('common.delete')}
           </Button>
         }
       />

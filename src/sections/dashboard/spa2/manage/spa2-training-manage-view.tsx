@@ -24,6 +24,7 @@ import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
@@ -53,9 +54,10 @@ const EMPTY_FORM = { name: '', duration: '', level: 'Người mới', price: 0, 
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function Spa2TrainingManageView() {
+  const { t } = useTranslate('spa2-manage');
   const [items, setItems] = useState<TrainingProgram[]>(
-    spa2TrainingPrograms.map((t, i) => ({
-      ...t,
+    spa2TrainingPrograms.map((prog, i) => ({
+      ...prog,
       id: i + 1,
       active: true,
       enrolled: [12, 8, 5][i] ?? 0,
@@ -67,7 +69,7 @@ export function Spa2TrainingManageView() {
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [form, setForm] = useState(EMPTY_FORM);
 
-  const filtered = items.filter((t) => t.name.toLowerCase().includes(search.toLowerCase()));
+  const filtered = items.filter((prog) => prog.name.toLowerCase().includes(search.toLowerCase()));
 
   const handleChange =
     (field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -114,11 +116,11 @@ export function Spa2TrainingManageView() {
   return (
     <DashboardContent maxWidth="xl">
       <CustomBreadcrumbs
-        heading="Quản lý Đào tạo"
+        heading={t('training.page_title')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Spa2', href: paths.dashboard.spa2.root },
-          { name: 'Đào tạo' },
+          { name: t('common.dashboard'), href: paths.dashboard.root },
+          { name: t('common.spa2'), href: paths.dashboard.spa2.root },
+          { name: t('nav.training') },
         ]}
         action={
           <Button
@@ -126,7 +128,7 @@ export function Spa2TrainingManageView() {
             startIcon={<Iconify icon="mingcute:add-line" />}
             onClick={openCreate}
           >
-            Thêm khóa học
+            {t('training.add_btn')}
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}
@@ -135,7 +137,7 @@ export function Spa2TrainingManageView() {
       <Card>
         <Box sx={{ p: 2 }}>
           <TextField
-            placeholder="Tìm khóa học..."
+            placeholder={t('training.search_placeholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             size="small"
@@ -154,13 +156,13 @@ export function Spa2TrainingManageView() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Khóa học</TableCell>
-                <TableCell>Thời gian</TableCell>
-                <TableCell>Cấp độ</TableCell>
-                <TableCell align="right">Học phí (đ)</TableCell>
-                <TableCell align="center">Học viên</TableCell>
-                <TableCell>Trạng thái</TableCell>
-                <TableCell align="right">Hành động</TableCell>
+                <TableCell>{t('training.col_program')}</TableCell>
+                <TableCell>{t('training.col_duration')}</TableCell>
+                <TableCell>{t('training.col_level')}</TableCell>
+                <TableCell align="right">{t('training.col_price')}</TableCell>
+                <TableCell align="center">{t('training.col_enrolled')}</TableCell>
+                <TableCell>{t('common.status')}</TableCell>
+                <TableCell align="right">{t('common.actions')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -201,14 +203,14 @@ export function Spa2TrainingManageView() {
                   <TableCell>
                     <Chip
                       size="small"
-                      label={item.active ? 'Đang tuyển' : 'Tạm đóng'}
+                      label={item.active ? t('training.status_open') : t('training.status_closed')}
                       color={item.active ? 'success' : 'default'}
                       variant="soft"
                     />
                   </TableCell>
                   <TableCell align="right">
                     <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
-                      <Tooltip title={item.active ? 'Tạm đóng' : 'Mở lại'}>
+                      <Tooltip title={item.active ? t('common.disable') : t('common.enable')}>
                         <IconButton size="small" onClick={() => handleToggle(item.id)}>
                           <Iconify
                             icon={item.active ? 'solar:lock-bold' : 'solar:lock-unlocked-bold'}
@@ -216,12 +218,12 @@ export function Spa2TrainingManageView() {
                           />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Chỉnh sửa">
+                      <Tooltip title={t('common.edit')}>
                         <IconButton size="small" onClick={() => openEdit(item)}>
                           <Iconify icon="solar:pen-bold" />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Xóa">
+                      <Tooltip title={t('common.delete')}>
                         <IconButton size="small" color="error" onClick={() => setDeleteId(item.id)}>
                           <Iconify icon="solar:trash-bin-trash-bold" />
                         </IconButton>
@@ -236,25 +238,25 @@ export function Spa2TrainingManageView() {
       </Card>
 
       <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{editId !== null ? 'Cập nhật khóa học' : 'Thêm khóa học mới'}</DialogTitle>
+        <DialogTitle>{editId !== null ? t('training.form_edit') : t('training.form_create')}</DialogTitle>
         <DialogContent dividers>
           <Stack spacing={2} sx={{ pt: 1 }}>
             <TextField
-              label="Tên khóa học *"
+              label={t('training.form_name')}
               value={form.name}
               onChange={handleChange('name')}
               fullWidth
             />
             <Stack direction="row" spacing={2}>
               <TextField
-                label="Thời gian"
+                label={t('training.form_duration')}
                 value={form.duration}
                 onChange={handleChange('duration')}
                 fullWidth
               />
               <TextField
                 select
-                label="Cấp độ"
+                label={t('training.form_level')}
                 value={form.level}
                 onChange={handleChange('level')}
                 fullWidth
@@ -267,14 +269,14 @@ export function Spa2TrainingManageView() {
               </TextField>
             </Stack>
             <TextField
-              label="Học phí (đ)"
+              label={t('training.form_price')}
               type="number"
               value={form.price}
               onChange={handleChange('price')}
               fullWidth
             />
             <TextField
-              label="Kết quả đạt được"
+              label={t('training.form_outcome')}
               value={form.outcome}
               onChange={handleChange('outcome')}
               fullWidth
@@ -284,9 +286,9 @@ export function Spa2TrainingManageView() {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenForm(false)}>Huỷ</Button>
+          <Button onClick={() => setOpenForm(false)}>{t('common.cancel')}</Button>
           <Button variant="contained" onClick={handleSubmit} disabled={!form.name}>
-            {editId !== null ? 'Cập nhật' : 'Thêm mới'}
+            {editId !== null ? t('training.form_edit') : t('training.form_create')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -294,11 +296,11 @@ export function Spa2TrainingManageView() {
       <ConfirmDialog
         open={!!deleteId}
         onClose={() => setDeleteId(null)}
-        title="Xóa khóa học"
-        content="Bạn có chắc muốn xóa khóa học này?"
+        title={t('training.delete_title')}
+        content={t('training.delete_content')}
         action={
           <Button variant="contained" color="error" onClick={handleDelete}>
-            Xóa
+            {t('common.delete')}
           </Button>
         }
       />

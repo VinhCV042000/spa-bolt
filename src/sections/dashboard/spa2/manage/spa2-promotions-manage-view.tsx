@@ -24,6 +24,7 @@ import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 
+import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
@@ -47,6 +48,7 @@ const EMPTY_FORM = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function Spa2PromotionsManageView() {
+  const { t } = useTranslate("spa2-manage");
   const [items, setItems] = useState<Promotion[]>(
     spa2Promotions.map((p, i) => ({ ...p, id: i + 1, active: true }))
   );
@@ -102,11 +104,11 @@ export function Spa2PromotionsManageView() {
   return (
     <DashboardContent maxWidth="xl">
       <CustomBreadcrumbs
-        heading="Quản lý Khuyến mãi"
+        heading={t('promotions.page_title')}
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Spa2', href: paths.dashboard.spa2.root },
-          { name: 'Khuyến mãi' },
+          { name: t('common.dashboard'), href: paths.dashboard.root },
+          { name: t('common.spa2'), href: paths.dashboard.spa2.root },
+          { name: t('nav.promotions') },
         ]}
         action={
           <Button
@@ -114,7 +116,7 @@ export function Spa2PromotionsManageView() {
             startIcon={<Iconify icon="mingcute:add-line" />}
             onClick={openCreate}
           >
-            Thêm khuyến mãi
+            {t('promotions.add_btn')}
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}
@@ -123,7 +125,7 @@ export function Spa2PromotionsManageView() {
       <Card>
         <Box sx={{ p: 2 }}>
           <TextField
-            placeholder="Tìm kiếm khuyến mãi..."
+            placeholder={t('promotions.search_placeholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             size="small"
@@ -142,11 +144,11 @@ export function Spa2PromotionsManageView() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Chương trình</TableCell>
-                <TableCell>Thời gian</TableCell>
-                <TableCell>Giá / Tiết kiệm</TableCell>
-                <TableCell>Trạng thái</TableCell>
-                <TableCell align="right">Hành động</TableCell>
+                <TableCell>{t('promotions.col_campaign')}</TableCell>
+                <TableCell>{t('promotions.col_period')}</TableCell>
+                <TableCell>{t('promotions.col_price_save')}</TableCell>
+                <TableCell>{t('common.status')}</TableCell>
+                <TableCell align="right">{t('common.actions')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -170,14 +172,14 @@ export function Spa2PromotionsManageView() {
                   <TableCell>
                     <Chip
                       size="small"
-                      label={item.active ? 'Đang chạy' : 'Tạm dừng'}
+                      label={item.active ? t('common.running') : t('common.paused')}
                       color={item.active ? 'success' : 'default'}
                       variant="soft"
                     />
                   </TableCell>
                   <TableCell align="right">
                     <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
-                      <Tooltip title={item.active ? 'Tạm dừng' : 'Kích hoạt'}>
+                      <Tooltip title={item.active ? t('common.disable') : t('common.enable')}>
                         <IconButton size="small" onClick={() => handleToggle(item.id)}>
                           <Iconify
                             icon={item.active ? 'solar:pause-bold' : 'solar:play-bold'}
@@ -185,12 +187,12 @@ export function Spa2PromotionsManageView() {
                           />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Chỉnh sửa">
+                      <Tooltip title={t('common.edit')}>
                         <IconButton size="small" onClick={() => openEdit(item)}>
                           <Iconify icon="solar:pen-bold" />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Xóa">
+                      <Tooltip title={t('common.delete')}>
                         <IconButton size="small" color="error" onClick={() => setDeleteId(item.id)}>
                           <Iconify icon="solar:trash-bin-trash-bold" />
                         </IconButton>
@@ -205,37 +207,37 @@ export function Spa2PromotionsManageView() {
       </Card>
 
       <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{editId !== null ? 'Cập nhật khuyến mãi' : 'Thêm khuyến mãi mới'}</DialogTitle>
+        <DialogTitle>{editId !== null ? t('promotions.form_edit') : t('promotions.form_create')}</DialogTitle>
         <DialogContent dividers>
           <Stack spacing={2} sx={{ pt: 1 }}>
             <TextField
-              label="Tên chương trình *"
+              label={t('promotions.form_title')}
               value={form.title}
               onChange={handleChange('title')}
               fullWidth
             />
             <TextField
-              label="Thời gian (vd: 01/06 – 31/08/2026)"
+              label={t('promotions.form_period')}
               value={form.period}
               onChange={handleChange('period')}
               fullWidth
             />
             <Stack direction="row" spacing={2}>
               <TextField
-                label="Mức giá / Ưu đãi"
+                label={t('promotions.form_price')}
                 value={form.price}
                 onChange={handleChange('price')}
                 fullWidth
               />
               <TextField
-                label="Tiết kiệm"
+                label={t('promotions.form_save')}
                 value={form.save}
                 onChange={handleChange('save')}
                 fullWidth
               />
             </Stack>
             <TextField
-              label="URL ảnh"
+              label={t('common.image_url')}
               value={form.image}
               onChange={handleChange('image')}
               fullWidth
@@ -243,9 +245,9 @@ export function Spa2PromotionsManageView() {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenForm(false)}>Huỷ</Button>
+          <Button onClick={() => setOpenForm(false)}>{t('common.cancel')}</Button>
           <Button variant="contained" onClick={handleSubmit} disabled={!form.title}>
-            {editId !== null ? 'Cập nhật' : 'Thêm mới'}
+            {editId !== null ? t('promotions.form_edit') : t('promotions.form_create')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -253,11 +255,11 @@ export function Spa2PromotionsManageView() {
       <ConfirmDialog
         open={!!deleteId}
         onClose={() => setDeleteId(null)}
-        title="Xóa khuyến mãi"
-        content="Bạn có chắc muốn xóa chương trình khuyến mãi này?"
+        title={t('promotions.delete_title')}
+        content={t('promotions.delete_content')}
         action={
           <Button variant="contained" color="error" onClick={handleDelete}>
-            Xóa
+            {t('common.delete')}
           </Button>
         }
       />

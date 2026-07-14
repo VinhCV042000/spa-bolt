@@ -10,6 +10,24 @@ function lazySpa2Page(pageKey: Spa2PageKey) {
   return lazy(async () => ({ default: createDashboardSpa2Page(pageKey) }));
 }
 
+// Management pages (CRUD admin views under src/pages/dashboard/manage/spa2)
+const ManageSpa2ServicesPage = lazy(() => import('src/pages/dashboard/manage/spa2/services'));
+const ManageSpa2TrainingPage = lazy(() => import('src/pages/dashboard/manage/spa2/training'));
+const ManageSpa2BlogPage = lazy(() => import('src/pages/dashboard/manage/spa2/blog'));
+const ManageSpa2CareersPage = lazy(() => import('src/pages/dashboard/manage/spa2/careers'));
+const ManageSpa2BookingsPage = lazy(() => import('src/pages/dashboard/manage/spa2/bookings'));
+const ManageSpa2OffersPage = lazy(() => import('src/pages/dashboard/manage/spa2/offers'));
+const ManageSpa2FeedbacksPage = lazy(() => import('src/pages/dashboard/manage/spa2/feedbacks'));
+const ManageSpa2PromotionsPage = lazy(() => import('src/pages/dashboard/manage/spa2/promotions'));
+const ManageSpa2BranchesPage = lazy(() => import('src/pages/dashboard/manage/spa2/branches'));
+const ManageSpa2PartnersPage = lazy(() => import('src/pages/dashboard/manage/spa2/partners'));
+const ManageSpa2TreatmentsPage = lazy(() => import('src/pages/dashboard/manage/spa2/treatments'));
+const ManageSpa2BeforeAfterPage = lazy(
+  () => import('src/pages/dashboard/manage/spa2/before-after')
+);
+const ManageSpa2FaqPage = lazy(() => import('src/pages/dashboard/manage/spa2/faq'));
+const ManageSpa2GalleryPage = lazy(() => import('src/pages/dashboard/manage/spa2/gallery'));
+
 // Core pages
 export const DashboardSpa2HomePage = lazySpa2Page('home');
 export const DashboardSpa2AboutPage = lazySpa2Page('about');
@@ -82,38 +100,38 @@ export const dashboardSpa2Routes = [
       {
         path: 'services',
         children: [
-          { element: <DashboardSpa2ServicesPage />, index: true },
+          { element: <ManageSpa2ServicesPage />, index: true },
           { path: ':slug', element: <DashboardSpa2ServiceDetailsPage /> },
         ],
       },
-      { path: 'training', element: <DashboardSpa2TrainingPage /> },
+      { path: 'training', element: <ManageSpa2TrainingPage /> },
       {
         path: 'blog',
         children: [
-          { element: <DashboardSpa2BlogPage />, index: true },
+          { element: <ManageSpa2BlogPage />, index: true },
           { path: ':slug', element: <DashboardSpa2BlogDetailsPage /> },
         ],
       },
       {
         path: 'careers',
         children: [
-          { element: <DashboardSpa2CareersPage />, index: true },
+          { element: <ManageSpa2CareersPage />, index: true },
           { path: ':id', element: <DashboardSpa2CareerDetailsPage /> },
         ],
       },
-      { path: 'booking', element: <DashboardSpa2BookingPage /> },
+      { path: 'booking', element: <ManageSpa2BookingsPage /> },
       { path: 'contact', element: <DashboardSpa2ContactPage /> },
-      { path: 'offers', element: <DashboardSpa2OffersPage /> },
-      { path: 'feedback', element: <DashboardSpa2FeedbackPage /> },
-      { path: 'promotions', element: <DashboardSpa2PromotionsPage /> },
-      { path: 'branches', element: <DashboardSpa2BranchesPage /> },
+      { path: 'offers', element: <ManageSpa2OffersPage /> },
+      { path: 'feedback', element: <ManageSpa2FeedbacksPage /> },
+      { path: 'promotions', element: <ManageSpa2PromotionsPage /> },
+      { path: 'branches', element: <ManageSpa2BranchesPage /> },
       { path: 'account', element: <DashboardSpa2AccountPage /> },
-      { path: 'partners', element: <DashboardSpa2PartnersPage /> },
-      { path: 'treatments', element: <DashboardSpa2TreatmentsPage /> },
-      { path: 'before-after', element: <DashboardSpa2BeforeAfterPage /> },
-      { path: 'faq', element: <DashboardSpa2FaqPage /> },
+      { path: 'partners', element: <ManageSpa2PartnersPage /> },
+      { path: 'treatments', element: <ManageSpa2TreatmentsPage /> },
+      { path: 'before-after', element: <ManageSpa2BeforeAfterPage /> },
+      { path: 'faq', element: <ManageSpa2FaqPage /> },
       { path: 'policy', element: <DashboardSpa2PolicyPage /> },
-      { path: 'gallery', element: <DashboardSpa2GalleryPage /> },
+      { path: 'gallery', element: <ManageSpa2GalleryPage /> },
       { path: 'membership', element: <DashboardSpa2MembershipPage /> },
       { path: 'gift-card', element: <DashboardSpa2GiftCardPage /> },
       { path: 'wellness-package', element: <DashboardSpa2WellnessPackagePage /> },
