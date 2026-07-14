@@ -28,6 +28,44 @@ const ManageSpa2BeforeAfterPage = lazy(
 const ManageSpa2FaqPage = lazy(() => import('src/pages/dashboard/manage/spa2/faq'));
 const ManageSpa2GalleryPage = lazy(() => import('src/pages/dashboard/manage/spa2/gallery'));
 
+// Extended management pages
+const ManageSpa2PolicyPage = lazy(() => import('src/pages/dashboard/manage/spa2/policy'));
+const ManageSpa2MembershipPage = lazy(() => import('src/pages/dashboard/manage/spa2/membership'));
+const ManageSpa2GiftCardPage = lazy(() => import('src/pages/dashboard/manage/spa2/gift-card'));
+const ManageSpa2WellnessPackagePage = lazy(() => import('src/pages/dashboard/manage/spa2/wellness-package'));
+const ManageSpa2SkinQuizPage = lazy(() => import('src/pages/dashboard/manage/spa2/skin-quiz'));
+const ManageSpa2CorporatePage = lazy(() => import('src/pages/dashboard/manage/spa2/corporate'));
+const ManageSpa2ShopPage = lazy(() => import('src/pages/dashboard/manage/spa2/shop'));
+const ManageSpa2SustainabilityPage = lazy(() => import('src/pages/dashboard/manage/spa2/sustainability'));
+const ManageSpa2EventsPage = lazy(() => import('src/pages/dashboard/manage/spa2/events'));
+const ManageSpa2ReferralPage = lazy(() => import('src/pages/dashboard/manage/spa2/referral'));
+const ManageSpa2AppDownloadPage = lazy(() => import('src/pages/dashboard/manage/spa2/app-download'));
+const ManageSpa2SpecialOccasionsPage = lazy(() => import('src/pages/dashboard/manage/spa2/special-occasions'));
+const ManageSpa2HomeServicePage = lazy(() => import('src/pages/dashboard/manage/spa2/home-service'));
+const ManageSpa2SkinDiaryPage = lazy(() => import('src/pages/dashboard/manage/spa2/skin-diary'));
+const ManageSpa2MindfulnessPage = lazy(() => import('src/pages/dashboard/manage/spa2/mindfulness'));
+const ManageSpa2MedicalSpaPage = lazy(() => import('src/pages/dashboard/manage/spa2/medical-spa'));
+const ManageSpa2SpaEtiquettePage = lazy(() => import('src/pages/dashboard/manage/spa2/spa-etiquette'));
+const ManageSpa2LoyaltyRewardsPage = lazy(() => import('src/pages/dashboard/manage/spa2/loyalty-rewards'));
+const ManageSpa2ReviewPage = lazy(() => import('src/pages/dashboard/manage/spa2/review'));
+const ManageSpa2SeasonalPackagePage = lazy(() => import('src/pages/dashboard/manage/spa2/seasonal-package'));
+const ManageSpa2NutritionPage = lazy(() => import('src/pages/dashboard/manage/spa2/nutrition'));
+const ManageSpa2ConsultationPage = lazy(() => import('src/pages/dashboard/manage/spa2/consultation'));
+const ManageSpa2VipRoomPage = lazy(() => import('src/pages/dashboard/manage/spa2/vip-room'));
+const ManageSpa2PackageBuilderPage = lazy(() => import('src/pages/dashboard/manage/spa2/package-builder'));
+const ManageSpa2AppointmentPage = lazy(() => import('src/pages/dashboard/manage/spa2/appointment'));
+const ManageSpa2NewsletterPage = lazy(() => import('src/pages/dashboard/manage/spa2/newsletter'));
+const ManageSpa2PressPage = lazy(() => import('src/pages/dashboard/manage/spa2/press'));
+const ManageSpa2AffiliatePage = lazy(() => import('src/pages/dashboard/manage/spa2/affiliate'));
+const ManageSpa2SpaFinderPage = lazy(() => import('src/pages/dashboard/manage/spa2/spa-finder'));
+const ManageSpa2SpaMenuPage = lazy(() => import('src/pages/dashboard/manage/spa2/spa-menu'));
+const ManageSpa2IngredientGuidePage = lazy(() => import('src/pages/dashboard/manage/spa2/ingredient-guide'));
+const ManageSpa2SkinSchoolPage = lazy(() => import('src/pages/dashboard/manage/spa2/skin-school'));
+const ManageSpa2TherapistProfilePage = lazy(() => import('src/pages/dashboard/manage/spa2/therapist-profile'));
+const ManageSpa2SleepWellnessPage = lazy(() => import('src/pages/dashboard/manage/spa2/sleep-wellness'));
+const ManageSpa2PrenatalSpaPage = lazy(() => import('src/pages/dashboard/manage/spa2/prenatal-spa'));
+const ManageSpa2WellnessAssessmentPage = lazy(() => import('src/pages/dashboard/manage/spa2/wellness-assessment'));
+
 // Core pages
 export const DashboardSpa2HomePage = lazySpa2Page('home');
 export const DashboardSpa2AboutPage = lazySpa2Page('about');
@@ -130,43 +168,43 @@ export const dashboardSpa2Routes = [
       { path: 'treatments', element: <ManageSpa2TreatmentsPage /> },
       { path: 'before-after', element: <ManageSpa2BeforeAfterPage /> },
       { path: 'faq', element: <ManageSpa2FaqPage /> },
-      { path: 'policy', element: <DashboardSpa2PolicyPage /> },
+      { path: 'policy', element: <ManageSpa2PolicyPage /> },
       { path: 'gallery', element: <ManageSpa2GalleryPage /> },
-      { path: 'membership', element: <DashboardSpa2MembershipPage /> },
-      { path: 'gift-card', element: <DashboardSpa2GiftCardPage /> },
-      { path: 'wellness-package', element: <DashboardSpa2WellnessPackagePage /> },
-      { path: 'skin-quiz', element: <DashboardSpa2SkinQuizPage /> },
-      { path: 'corporate', element: <DashboardSpa2CorporatePage /> },
-      { path: 'shop', element: <DashboardSpa2ShopPage /> },
-      { path: 'sustainability', element: <DashboardSpa2SustainabilityPage /> },
-      { path: 'events', element: <DashboardSpa2EventsPage /> },
-      { path: 'referral', element: <DashboardSpa2ReferralPage /> },
-      { path: 'app-download', element: <DashboardSpa2AppDownloadPage /> },
-      { path: 'special-occasions', element: <DashboardSpa2SpecialOccasionsPage /> },
-      { path: 'home-service', element: <DashboardSpa2HomeServicePage /> },
-      { path: 'skin-diary', element: <DashboardSpa2SkinDiaryPage /> },
-      { path: 'mindfulness', element: <DashboardSpa2MindfulnessPage /> },
-      { path: 'medical-spa', element: <DashboardSpa2MedicalSpaPage /> },
-      { path: 'spa-etiquette', element: <DashboardSpa2SpaEtiquettePage /> },
-      { path: 'loyalty-rewards', element: <DashboardSpa2LoyaltyRewardsPage /> },
-      { path: 'review', element: <DashboardSpa2ReviewPage /> },
-      { path: 'seasonal-package', element: <DashboardSpa2SeasonalPackagePage /> },
-      { path: 'nutrition', element: <DashboardSpa2NutritionPage /> },
-      { path: 'consultation', element: <DashboardSpa2ConsultationPage /> },
-      { path: 'vip-room', element: <DashboardSpa2VIPRoomPage /> },
-      { path: 'package-builder', element: <DashboardSpa2PackageBuilderPage /> },
-      { path: 'appointment', element: <DashboardSpa2AppointmentPage /> },
-      { path: 'newsletter', element: <DashboardSpa2NewsletterPage /> },
-      { path: 'press', element: <DashboardSpa2PressPage /> },
-      { path: 'affiliate', element: <DashboardSpa2AffiliatePage /> },
-      { path: 'spa-finder', element: <DashboardSpa2SpaFinderPage /> },
-      { path: 'spa-menu', element: <DashboardSpa2SpaMenuPage /> },
-      { path: 'ingredient-guide', element: <DashboardSpa2IngredientGuidePage /> },
-      { path: 'skin-school', element: <DashboardSpa2SkinSchoolPage /> },
-      { path: 'therapist-profile', element: <DashboardSpa2TherapistProfilePage /> },
-      { path: 'sleep-wellness', element: <DashboardSpa2SleepWellnessPage /> },
-      { path: 'prenatal-spa', element: <DashboardSpa2PrenatalSpaPage /> },
-      { path: 'wellness-assessment', element: <DashboardSpa2WellnessAssessmentPage /> },
+      { path: 'membership', element: <ManageSpa2MembershipPage /> },
+      { path: 'gift-card', element: <ManageSpa2GiftCardPage /> },
+      { path: 'wellness-package', element: <ManageSpa2WellnessPackagePage /> },
+      { path: 'skin-quiz', element: <ManageSpa2SkinQuizPage /> },
+      { path: 'corporate', element: <ManageSpa2CorporatePage /> },
+      { path: 'shop', element: <ManageSpa2ShopPage /> },
+      { path: 'sustainability', element: <ManageSpa2SustainabilityPage /> },
+      { path: 'events', element: <ManageSpa2EventsPage /> },
+      { path: 'referral', element: <ManageSpa2ReferralPage /> },
+      { path: 'app-download', element: <ManageSpa2AppDownloadPage /> },
+      { path: 'special-occasions', element: <ManageSpa2SpecialOccasionsPage /> },
+      { path: 'home-service', element: <ManageSpa2HomeServicePage /> },
+      { path: 'skin-diary', element: <ManageSpa2SkinDiaryPage /> },
+      { path: 'mindfulness', element: <ManageSpa2MindfulnessPage /> },
+      { path: 'medical-spa', element: <ManageSpa2MedicalSpaPage /> },
+      { path: 'spa-etiquette', element: <ManageSpa2SpaEtiquettePage /> },
+      { path: 'loyalty-rewards', element: <ManageSpa2LoyaltyRewardsPage /> },
+      { path: 'review', element: <ManageSpa2ReviewPage /> },
+      { path: 'seasonal-package', element: <ManageSpa2SeasonalPackagePage /> },
+      { path: 'nutrition', element: <ManageSpa2NutritionPage /> },
+      { path: 'consultation', element: <ManageSpa2ConsultationPage /> },
+      { path: 'vip-room', element: <ManageSpa2VipRoomPage /> },
+      { path: 'package-builder', element: <ManageSpa2PackageBuilderPage /> },
+      { path: 'appointment', element: <ManageSpa2AppointmentPage /> },
+      { path: 'newsletter', element: <ManageSpa2NewsletterPage /> },
+      { path: 'press', element: <ManageSpa2PressPage /> },
+      { path: 'affiliate', element: <ManageSpa2AffiliatePage /> },
+      { path: 'spa-finder', element: <ManageSpa2SpaFinderPage /> },
+      { path: 'spa-menu', element: <ManageSpa2SpaMenuPage /> },
+      { path: 'ingredient-guide', element: <ManageSpa2IngredientGuidePage /> },
+      { path: 'skin-school', element: <ManageSpa2SkinSchoolPage /> },
+      { path: 'therapist-profile', element: <ManageSpa2TherapistProfilePage /> },
+      { path: 'sleep-wellness', element: <ManageSpa2SleepWellnessPage /> },
+      { path: 'prenatal-spa', element: <ManageSpa2PrenatalSpaPage /> },
+      { path: 'wellness-assessment', element: <ManageSpa2WellnessAssessmentPage /> },
     ],
   },
 ];
