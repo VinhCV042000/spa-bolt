@@ -27,14 +27,12 @@ import DialogContent from '@mui/material/DialogContent';
 import InputAdornment from '@mui/material/InputAdornment';
 import TableContainer from '@mui/material/TableContainer';
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
-
-import { DashboardContent } from 'src/layouts/dashboard';
-
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
-import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+
+import { SPA2_TEAL } from 'src/sections/spa2/spa2-data';
+
+import { Spa2ManageShell } from './spa2-manage-shell';
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -157,40 +155,29 @@ export function Spa2GenericManageView({ config }: { config: Spa2ManageConfig }) 
   };
 
   return (
-    <DashboardContent maxWidth="xl">
-      <CustomBreadcrumbs
-        heading={config.title}
-        links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Spa2', href: paths.dashboard.spa2.root },
-          { name: config.breadcrumbLabel },
-        ]}
-        action={
-          <Stack direction="row" spacing={1}>
-            {config.publicPath && (
-              <Button
-                component={RouterLink}
-                href={config.publicPath}
-                variant="outlined"
-                startIcon={<Iconify icon="solar:eye-bold" />}
-                target="_blank"
-              >
-                Xem public
-              </Button>
-            )}
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon="mingcute:add-line" />}
-              onClick={openCreate}
-            >
-              {config.addLabel}
-            </Button>
-          </Stack>
-        }
-        sx={{ mb: { xs: 3, md: 5 } }}
-      />
+    <Spa2ManageShell
+      title={config.title}
+      breadcrumbLabel={config.breadcrumbLabel}
+      publicPath={config.publicPath}
+      description={`Quản lý dữ liệu · đồng bộ với trang public ${config.publicPath ?? ''}`}
+      actions={
+        <Button
+          onClick={openCreate}
+          startIcon={<Iconify icon="mingcute:add-line" />}
+          sx={{
+            borderRadius: 50,
+            px: 3,
+            bgcolor: 'common.white',
+            color: SPA2_TEAL,
+            '&:hover': { bgcolor: 'rgba(255,255,255,0.9)' },
+          }}
+        >
+          {config.addLabel}
+        </Button>
+      }
+    >
+      <Card sx={{ borderRadius: 3 }}>
 
-      <Card>
         <Stack direction="row" spacing={2} sx={{ p: 2 }} alignItems="center">
           <TextField
             placeholder="Tìm kiếm..."
@@ -420,6 +407,6 @@ export function Spa2GenericManageView({ config }: { config: Spa2ManageConfig }) 
           </Button>
         }
       />
-    </DashboardContent>
+    </Spa2ManageShell>
   );
 }

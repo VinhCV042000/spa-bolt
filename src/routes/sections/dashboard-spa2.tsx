@@ -66,6 +66,14 @@ const ManageSpa2SleepWellnessPage = lazy(() => import('src/pages/dashboard/manag
 const ManageSpa2PrenatalSpaPage = lazy(() => import('src/pages/dashboard/manage/spa2/prenatal-spa'));
 const ManageSpa2WellnessAssessmentPage = lazy(() => import('src/pages/dashboard/manage/spa2/wellness-assessment'));
 
+// New singleton + detail management pages
+const ManageSpa2HomePage = lazy(() => import('src/pages/dashboard/manage/spa2/home'));
+const ManageSpa2AboutPage = lazy(() => import('src/pages/dashboard/manage/spa2/about'));
+const ManageSpa2ContactPage = lazy(() => import('src/pages/dashboard/manage/spa2/contact'));
+const ManageSpa2AccountPage = lazy(() => import('src/pages/dashboard/manage/spa2/account'));
+const ManageSpa2ServiceDetailPage = lazy(() => import('src/pages/dashboard/manage/spa2/service-detail'));
+const ManageSpa2BlogDetailPage = lazy(() => import('src/pages/dashboard/manage/spa2/blog-detail'));
+
 // Core pages
 export const DashboardSpa2HomePage = lazySpa2Page('home');
 export const DashboardSpa2AboutPage = lazySpa2Page('about');
@@ -133,13 +141,13 @@ export const dashboardSpa2Routes = [
   {
     path: 'spa2',
     children: [
-      { element: <DashboardSpa2HomePage />, index: true },
-      { path: 'about', element: <DashboardSpa2AboutPage /> },
+      { element: <ManageSpa2HomePage />, index: true },
+      { path: 'about', element: <ManageSpa2AboutPage /> },
       {
         path: 'services',
         children: [
           { element: <ManageSpa2ServicesPage />, index: true },
-          { path: ':slug', element: <DashboardSpa2ServiceDetailsPage /> },
+          { path: ':slug', element: <ManageSpa2ServiceDetailPage /> },
         ],
       },
       { path: 'training', element: <ManageSpa2TrainingPage /> },
@@ -147,7 +155,7 @@ export const dashboardSpa2Routes = [
         path: 'blog',
         children: [
           { element: <ManageSpa2BlogPage />, index: true },
-          { path: ':slug', element: <DashboardSpa2BlogDetailsPage /> },
+          { path: ':slug', element: <ManageSpa2BlogDetailPage /> },
         ],
       },
       {
@@ -158,12 +166,12 @@ export const dashboardSpa2Routes = [
         ],
       },
       { path: 'booking', element: <ManageSpa2BookingsPage /> },
-      { path: 'contact', element: <DashboardSpa2ContactPage /> },
+      { path: 'contact', element: <ManageSpa2ContactPage /> },
       { path: 'offers', element: <ManageSpa2OffersPage /> },
       { path: 'feedback', element: <ManageSpa2FeedbacksPage /> },
       { path: 'promotions', element: <ManageSpa2PromotionsPage /> },
       { path: 'branches', element: <ManageSpa2BranchesPage /> },
-      { path: 'account', element: <DashboardSpa2AccountPage /> },
+      { path: 'account', element: <ManageSpa2AccountPage /> },
       { path: 'partners', element: <ManageSpa2PartnersPage /> },
       { path: 'treatments', element: <ManageSpa2TreatmentsPage /> },
       { path: 'before-after', element: <ManageSpa2BeforeAfterPage /> },
