@@ -28,6 +28,44 @@ const ManageSpa2BeforeAfterPage = lazy(
 const ManageSpa2FaqPage = lazy(() => import('src/pages/dashboard/manage/spa2/faq'));
 const ManageSpa2GalleryPage = lazy(() => import('src/pages/dashboard/manage/spa2/gallery'));
 
+// Extended management pages
+const ManageSpa2PolicyPage = lazy(() => import('src/pages/dashboard/manage/spa2/policy'));
+const ManageSpa2MembershipPage = lazy(() => import('src/pages/dashboard/manage/spa2/membership'));
+const ManageSpa2GiftCardPage = lazy(() => import('src/pages/dashboard/manage/spa2/gift-card'));
+const ManageSpa2WellnessPackagePage = lazy(() => import('src/pages/dashboard/manage/spa2/wellness-package'));
+const ManageSpa2SkinQuizPage = lazy(() => import('src/pages/dashboard/manage/spa2/skin-quiz'));
+const ManageSpa2CorporatePage = lazy(() => import('src/pages/dashboard/manage/spa2/corporate'));
+const ManageSpa2ShopPage = lazy(() => import('src/pages/dashboard/manage/spa2/shop'));
+const ManageSpa2SustainabilityPage = lazy(() => import('src/pages/dashboard/manage/spa2/sustainability'));
+const ManageSpa2EventsPage = lazy(() => import('src/pages/dashboard/manage/spa2/events'));
+const ManageSpa2ReferralPage = lazy(() => import('src/pages/dashboard/manage/spa2/referral'));
+const ManageSpa2AppDownloadPage = lazy(() => import('src/pages/dashboard/manage/spa2/app-download'));
+const ManageSpa2SpecialOccasionsPage = lazy(() => import('src/pages/dashboard/manage/spa2/special-occasions'));
+const ManageSpa2HomeServicePage = lazy(() => import('src/pages/dashboard/manage/spa2/home-service'));
+const ManageSpa2SkinDiaryPage = lazy(() => import('src/pages/dashboard/manage/spa2/skin-diary'));
+const ManageSpa2MindfulnessPage = lazy(() => import('src/pages/dashboard/manage/spa2/mindfulness'));
+const ManageSpa2MedicalSpaPage = lazy(() => import('src/pages/dashboard/manage/spa2/medical-spa'));
+const ManageSpa2SpaEtiquettePage = lazy(() => import('src/pages/dashboard/manage/spa2/spa-etiquette'));
+const ManageSpa2LoyaltyRewardsPage = lazy(() => import('src/pages/dashboard/manage/spa2/loyalty-rewards'));
+const ManageSpa2ReviewPage = lazy(() => import('src/pages/dashboard/manage/spa2/review'));
+const ManageSpa2SeasonalPackagePage = lazy(() => import('src/pages/dashboard/manage/spa2/seasonal-package'));
+const ManageSpa2NutritionPage = lazy(() => import('src/pages/dashboard/manage/spa2/nutrition'));
+const ManageSpa2ConsultationPage = lazy(() => import('src/pages/dashboard/manage/spa2/consultation'));
+const ManageSpa2VipRoomPage = lazy(() => import('src/pages/dashboard/manage/spa2/vip-room'));
+const ManageSpa2PackageBuilderPage = lazy(() => import('src/pages/dashboard/manage/spa2/package-builder'));
+const ManageSpa2AppointmentPage = lazy(() => import('src/pages/dashboard/manage/spa2/appointment'));
+const ManageSpa2NewsletterPage = lazy(() => import('src/pages/dashboard/manage/spa2/newsletter'));
+const ManageSpa2PressPage = lazy(() => import('src/pages/dashboard/manage/spa2/press'));
+const ManageSpa2AffiliatePage = lazy(() => import('src/pages/dashboard/manage/spa2/affiliate'));
+const ManageSpa2SpaFinderPage = lazy(() => import('src/pages/dashboard/manage/spa2/spa-finder'));
+const ManageSpa2SpaMenuPage = lazy(() => import('src/pages/dashboard/manage/spa2/spa-menu'));
+const ManageSpa2IngredientGuidePage = lazy(() => import('src/pages/dashboard/manage/spa2/ingredient-guide'));
+const ManageSpa2SkinSchoolPage = lazy(() => import('src/pages/dashboard/manage/spa2/skin-school'));
+const ManageSpa2TherapistProfilePage = lazy(() => import('src/pages/dashboard/manage/spa2/therapist-profile'));
+const ManageSpa2SleepWellnessPage = lazy(() => import('src/pages/dashboard/manage/spa2/sleep-wellness'));
+const ManageSpa2PrenatalSpaPage = lazy(() => import('src/pages/dashboard/manage/spa2/prenatal-spa'));
+const ManageSpa2WellnessAssessmentPage = lazy(() => import('src/pages/dashboard/manage/spa2/wellness-assessment'));
+
 // Core pages
 export const DashboardSpa2HomePage = lazySpa2Page('home');
 export const DashboardSpa2AboutPage = lazySpa2Page('about');
