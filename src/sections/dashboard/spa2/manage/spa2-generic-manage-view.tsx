@@ -407,6 +407,6 @@ export function Spa2GenericManageView({ config }: { config: Spa2ManageConfig }) 
           </Button>
         }
       />
-    </DashboardContent>
+    </Spa2ManageShell>
   );
 }
