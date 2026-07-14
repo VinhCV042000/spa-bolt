@@ -66,6 +66,14 @@ const ManageSpa2SleepWellnessPage = lazy(() => import('src/pages/dashboard/manag
 const ManageSpa2PrenatalSpaPage = lazy(() => import('src/pages/dashboard/manage/spa2/prenatal-spa'));
 const ManageSpa2WellnessAssessmentPage = lazy(() => import('src/pages/dashboard/manage/spa2/wellness-assessment'));
 
+// New singleton + detail management pages
+const ManageSpa2HomePage = lazy(() => import('src/pages/dashboard/manage/spa2/home'));
+const ManageSpa2AboutPage = lazy(() => import('src/pages/dashboard/manage/spa2/about'));
+const ManageSpa2ContactPage = lazy(() => import('src/pages/dashboard/manage/spa2/contact'));
+const ManageSpa2AccountPage = lazy(() => import('src/pages/dashboard/manage/spa2/account'));
+const ManageSpa2ServiceDetailPage = lazy(() => import('src/pages/dashboard/manage/spa2/service-detail'));
+const ManageSpa2BlogDetailPage = lazy(() => import('src/pages/dashboard/manage/spa2/blog-detail'));
+
 // Core pages
 export const DashboardSpa2HomePage = lazySpa2Page('home');
 export const DashboardSpa2AboutPage = lazySpa2Page('about');
