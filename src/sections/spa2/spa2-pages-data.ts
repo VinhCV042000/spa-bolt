@@ -44,14 +44,12 @@ export const SPA2_PAGE_IMAGES = {
 // couples-spa -> category: 'couple'
 // detox-cleanse -> category: 'detox'
 
-export const spa2ServiceCategories = [
-  { value: 'all', label: 'Tất cả' },
-  { value: 'massage', label: 'Massage' },
-  { value: 'facial', label: 'Facial' },
-  { value: 'body', label: 'Body Care' },
-  { value: 'couple', label: 'Spa Đôi' },
-  { value: 'detox', label: 'Detox' },
-];
+import {
+  SPA2_SERVICE_CATEGORIES as _spa2ServiceCategories,
+  SPA2_SERVICES as _spa2Services,
+} from 'src/_mock/_spa2';
+
+export const spa2ServiceCategories = _spa2ServiceCategories;
 
 export const spa2ServiceSteps = [
   {
@@ -163,74 +161,7 @@ export const spa2BlogCategories = [
 // 'Trung Thu' -> endsAt: '2026-10-15T23:59:59'
 // 'Black Friday' -> endsAt: '2026-11-30T23:59:59'
 
-export const spa2Services = [
-  {
-    slug: 'herbal-massage',
-    category: 'massage',
-    name: 'Massage Thảo Dược',
-    short: 'Thư giãn sâu với tinh dầu thảo mộc Việt.',
-    duration: '60 phút',
-    price: 690000,
-    icon: 'solar:hand-stars-bold-duotone',
-    image: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=900&q=80',
-    benefits: ['Giảm căng cơ', 'Lưu thông khí huyết', 'An thần dễ ngủ', 'Detox nhẹ'],
-  },
-  {
-    slug: 'organic-facial',
-    category: 'facial',
-    name: 'Facial Organic',
-    short: 'Cấp ẩm, phục hồi với nguyên liệu 100% hữu cơ.',
-    duration: '75 phút',
-    price: 890000,
-    icon: 'solar:face-scan-circle-bold-duotone',
-    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=900&q=80',
-    benefits: ['Cấp ẩm chuyên sâu', 'Sáng da tự nhiên', 'Làm dịu mẩn đỏ', 'Giảm dấu hiệu lão hóa'],
-  },
-  {
-    slug: 'body-scrub-wrap',
-    category: 'body',
-    name: 'Body Scrub & Wrap',
-    short: 'Tẩy tế bào chết & ủ dưỡng toàn thân.',
-    duration: '90 phút',
-    price: 990000,
-    icon: 'solar:body-bold-duotone',
-    image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=900&q=80',
-    benefits: ['Da mịn màng', 'Săn chắc tự nhiên', 'Thải độc qua da', 'Mùi hương dễ chịu'],
-  },
-  {
-    slug: 'aromatherapy',
-    category: 'massage',
-    name: 'Aromatherapy',
-    short: 'Liệu pháp hương thơm Pháp – Nhật.',
-    duration: '60 phút',
-    price: 790000,
-    icon: 'solar:leaf-bold-duotone',
-    image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=900&q=80',
-    benefits: ['Giảm stress', 'Cân bằng tinh thần', 'Cải thiện giấc ngủ'],
-  },
-  {
-    slug: 'couples-spa',
-    category: 'couple',
-    name: 'Spa Đôi',
-    short: 'Không gian riêng tư cho hai người.',
-    duration: '120 phút',
-    price: 1990000,
-    icon: 'solar:heart-bold-duotone',
-    image: 'https://plus.unsplash.com/premium_photo-1661574718355-82659c0c74cc?w=900&q=80',
-    benefits: ['Phòng VIP riêng', 'Trà & trái cây', 'Bồn tắm hoa', 'Quà tặng cặp đôi'],
-  },
-  {
-    slug: 'detox-cleanse',
-    category: 'detox',
-    name: 'Detox & Thanh Lọc',
-    short: 'Chương trình thải độc cơ thể 3 ngày.',
-    duration: '3 ngày',
-    price: 4590000,
-    icon: 'solar:magic-stick-3-bold-duotone',
-    image: 'https://images.unsplash.com/photo-1596178060671-7a80dc8059ea?w=900&q=80',
-    benefits: ['Thải độc gan', 'Giảm 1–3kg', 'Nâng cao đề kháng', 'Chuyên gia theo dõi'],
-  },
-];
+export const spa2Services = _spa2Services;
 
 export const spa2Treatments = [
   {

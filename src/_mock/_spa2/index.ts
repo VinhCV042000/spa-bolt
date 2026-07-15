@@ -3,7 +3,7 @@
 // Both consumers import from here so the two sides stay in sync.
 // ----------------------------------------------------------------------
 
-import { SPA2_IMAGES, SPA2_SERVICE_META } from 'src/sections/spa2/spa2-data';
+import { SPA2_IMAGES } from 'src/sections/spa2/spa2-data';
 
 // ---------- Singletons ---------------------------------------------------
 
@@ -89,83 +89,106 @@ export const SPA2_ACCOUNT_CONTENT: Spa2AccountContent = {
 
 // ---------- Collections --------------------------------------------------
 
+export type Spa2ServiceStatus = 'Đang hiển thị' | 'Bản nháp' | 'Ẩn';
+
+export type Spa2ServiceCategory = {
+  value: string;
+  label: string;
+};
+
+export const SPA2_SERVICE_CATEGORIES: Spa2ServiceCategory[] = [
+  { value: 'all', label: 'Tất cả' },
+  { value: 'massage', label: 'Massage' },
+  { value: 'facial', label: 'Facial' },
+  { value: 'body', label: 'Body Care' },
+  { value: 'couple', label: 'Spa Đôi' },
+  { value: 'detox', label: 'Detox' },
+];
+
 export type Spa2ServiceItem = {
   slug: string;
-  title: string;
-  desc: string;
+  category: string;
+  name: string;
+  short: string;
   duration: string;
   price: number;
   image: string;
   icon: string;
   benefits: string[];
-  status: 'Đang hiển thị' | 'Bản nháp' | 'Ẩn';
+  status: Spa2ServiceStatus;
 };
 
 export const SPA2_SERVICES: Spa2ServiceItem[] = [
   {
-    slug: 'signature-massage',
-    title: 'Signature Herbal Massage',
-    desc: 'Massage toàn thân bằng thảo dược tươi, giúp lưu thông khí huyết và giải toả căng thẳng sâu.',
-    duration: '90 phút',
-    price: 1290000,
-    image: SPA2_SERVICE_META[0].image,
-    icon: SPA2_SERVICE_META[0].icon,
-    benefits: ['Giảm căng cơ', 'Cân bằng năng lượng', 'Ngủ ngon hơn'],
+    slug: 'herbal-massage',
+    category: 'massage',
+    name: 'Massage Thảo Dược',
+    short: 'Thư giãn sâu với tinh dầu thảo mộc Việt.',
+    duration: '60 phút',
+    price: 690000,
+    icon: 'solar:hand-stars-bold-duotone',
+    image: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=900&q=80',
+    benefits: ['Giảm căng cơ', 'Lưu thông khí huyết', 'An thần dễ ngủ', 'Detox nhẹ'],
     status: 'Đang hiển thị',
   },
   {
-    slug: 'radiance-facial',
-    title: 'Radiance Facial',
-    desc: 'Chăm sóc da chuyên sâu với vitamin C và collagen thiên nhiên cho làn da rạng rỡ tức thì.',
+    slug: 'organic-facial',
+    category: 'facial',
+    name: 'Facial Organic',
+    short: 'Cấp ẩm, phục hồi với nguyên liệu 100% hữu cơ.',
     duration: '75 phút',
     price: 890000,
-    image: SPA2_SERVICE_META[1].image,
-    icon: SPA2_SERVICE_META[1].icon,
-    benefits: ['Sáng da', 'Cấp ẩm sâu', 'Se khít lỗ chân lông'],
+    icon: 'solar:face-scan-circle-bold-duotone',
+    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=900&q=80',
+    benefits: ['Cấp ẩm chuyên sâu', 'Sáng da tự nhiên', 'Làm dịu mẩn đỏ', 'Giảm dấu hiệu lão hóa'],
     status: 'Đang hiển thị',
   },
   {
-    slug: 'body-detox',
-    title: 'Body Detox Ritual',
-    desc: 'Nghi thức thanh lọc cơ thể với muối biển và tinh dầu, giúp đào thải độc tố hiệu quả.',
-    duration: '120 phút',
-    price: 1690000,
-    image: SPA2_SERVICE_META[2].image,
-    icon: SPA2_SERVICE_META[2].icon,
-    benefits: ['Detox', 'Săn chắc da', 'Thư giãn'],
-    status: 'Đang hiển thị',
-  },
-  {
-    slug: 'green-tea-ritual',
-    title: 'Green Tea Ritual',
-    desc: 'Liệu trình từ trà xanh chống oxy hoá, phục hồi và trẻ hoá làn da.',
+    slug: 'body-scrub-wrap',
+    category: 'body',
+    name: 'Body Scrub & Wrap',
+    short: 'Tẩy tế bào chết & ủ dưỡng toàn thân.',
     duration: '90 phút',
-    price: 1190000,
-    image: SPA2_SERVICE_META[3].image,
-    icon: SPA2_SERVICE_META[3].icon,
-    benefits: ['Chống lão hoá', 'Phục hồi', 'Se khít'],
+    price: 990000,
+    icon: 'solar:body-bold-duotone',
+    image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=900&q=80',
+    benefits: ['Da mịn màng', 'Săn chắc tự nhiên', 'Thải độc qua da', 'Mùi hương dễ chịu'],
+    status: 'Đang hiển thị',
+  },
+  {
+    slug: 'aromatherapy',
+    category: 'massage',
+    name: 'Aromatherapy',
+    short: 'Liệu pháp hương thơm Pháp – Nhật.',
+    duration: '60 phút',
+    price: 790000,
+    icon: 'solar:leaf-bold-duotone',
+    image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=900&q=80',
+    benefits: ['Giảm stress', 'Cân bằng tinh thần', 'Cải thiện giấc ngủ'],
     status: 'Bản nháp',
   },
   {
-    slug: 'couple-escape',
-    title: 'Couple Escape',
-    desc: 'Trải nghiệm dành riêng cho cặp đôi trong phòng VIP với dịch vụ trọn gói.',
-    duration: '150 phút',
-    price: 2890000,
-    image: SPA2_SERVICE_META[4].image,
-    icon: SPA2_SERVICE_META[4].icon,
-    benefits: ['Không gian riêng', 'Rượu vang', 'Quà tặng'],
+    slug: 'couples-spa',
+    category: 'couple',
+    name: 'Spa Đôi',
+    short: 'Không gian riêng tư cho hai người.',
+    duration: '120 phút',
+    price: 1990000,
+    icon: 'solar:heart-bold-duotone',
+    image: 'https://plus.unsplash.com/premium_photo-1661574718355-82659c0c74cc?w=900&q=80',
+    benefits: ['Phòng VIP riêng', 'Trà & trái cây', 'Bồn tắm hoa', 'Quà tặng cặp đôi'],
     status: 'Đang hiển thị',
   },
   {
-    slug: 'zen-mind',
-    title: 'Zen Mind Meditation',
-    desc: 'Kết hợp thiền, hương liệu và âm thanh chữa lành để tái tạo năng lượng tinh thần.',
-    duration: '60 phút',
-    price: 590000,
-    image: SPA2_SERVICE_META[5].image,
-    icon: SPA2_SERVICE_META[5].icon,
-    benefits: ['Tĩnh tâm', 'Giảm stress', 'Cải thiện tập trung'],
+    slug: 'detox-cleanse',
+    category: 'detox',
+    name: 'Detox & Thanh Lọc',
+    short: 'Chương trình thải độc cơ thể 3 ngày.',
+    duration: '3 ngày',
+    price: 4590000,
+    icon: 'solar:magic-stick-3-bold-duotone',
+    image: 'https://images.unsplash.com/photo-1596178060671-7a80dc8059ea?w=900&q=80',
+    benefits: ['Thải độc gan', 'Giảm 1–3kg', 'Nâng cao đề kháng', 'Chuyên gia theo dõi'],
     status: 'Đang hiển thị',
   },
 ];
