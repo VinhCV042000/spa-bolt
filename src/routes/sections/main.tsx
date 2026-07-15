@@ -124,6 +124,15 @@ const Spa2TherapistProfilePage = lazy(() => import('src/pages/spa2/therapist-pro
 const Spa2SleepWellnessPage = lazy(() => import('src/pages/spa2/sleep-wellness'));
 const Spa2PrenatalSpaPage = lazy(() => import('src/pages/spa2/prenatal-spa'));
 const Spa2WellnessAssessmentPage = lazy(() => import('src/pages/spa2/wellness-assessment'));
+// spa2-content-pages6
+const Spa2MenSpaPage = lazy(() => import('src/pages/spa2/men-spa'));
+const Spa2HairBeautyPage = lazy(() => import('src/pages/spa2/hair-beauty'));
+const Spa2KidsSpaPage = lazy(() => import('src/pages/spa2/kids-spa'));
+const Spa2AntiAgingPage = lazy(() => import('src/pages/spa2/anti-aging'));
+const Spa2WaterTherapyPage = lazy(() => import('src/pages/spa2/water-therapy'));
+const Spa2AyurvedaPage = lazy(() => import('src/pages/spa2/ayurveda'));
+const Spa2SpaHotelPage = lazy(() => import('src/pages/spa2/spa-hotel'));
+const Spa2CommunityPage = lazy(() => import('src/pages/spa2/community'));
 // spa2-content-pages8
 const Spa2VideoGuidePage = lazy(() => import('src/pages/spa2/video-guide'));
 const Spa2FranchisePage = lazy(() => import('src/pages/spa2/franchise'));
@@ -659,6 +668,15 @@ export const mainRoutes = [
               { path: 'sleep-wellness', element: <Spa2SleepWellnessPage /> },
               { path: 'prenatal-spa', element: <Spa2PrenatalSpaPage /> },
               { path: 'wellness-assessment', element: <Spa2WellnessAssessmentPage /> },
+              // spa2-content-pages6
+              { path: 'men-spa', element: <Spa2MenSpaPage /> },
+              { path: 'hair-beauty', element: <Spa2HairBeautyPage /> },
+              { path: 'kids-spa', element: <Spa2KidsSpaPage /> },
+              { path: 'anti-aging', element: <Spa2AntiAgingPage /> },
+              { path: 'water-therapy', element: <Spa2WaterTherapyPage /> },
+              { path: 'ayurveda', element: <Spa2AyurvedaPage /> },
+              { path: 'spa-hotel', element: <Spa2SpaHotelPage /> },
+              { path: 'community', element: <Spa2CommunityPage /> },
               // spa2-content-pages8
               { path: 'franchise', element: <Spa2FranchisePage /> },
               { path: 'group-booking', element: <Spa2GroupBookingPage /> },

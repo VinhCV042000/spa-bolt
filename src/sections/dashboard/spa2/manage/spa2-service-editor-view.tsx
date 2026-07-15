@@ -2,54 +2,54 @@ import { useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
-import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
+import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
 import Accordion from '@mui/material/Accordion';
 import Grid from '@mui/material/Unstable_Grid2';
-import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
-import { Iconify } from 'src/components/iconify';
-import { Upload } from 'src/components/upload';
-
 import {
+  type Spa2Faq,
   SPA2_SERVICES,
   findSpa2Service,
+  type Spa2Feedback,
   type Spa2ServiceItem,
-  type Spa2ServiceStatus,
   type Spa2ServiceStep,
   type Spa2BeforeAfter,
-  type Spa2Feedback,
-  type Spa2Faq,
+  type Spa2ServiceStatus,
 } from 'src/_mock/_spa2';
 
+import { Upload } from 'src/components/upload';
+import { Iconify } from 'src/components/iconify';
+
+import { Spa2ManageShell } from 'src/sections/dashboard/spa2/manage/spa2-manage-shell';
 import {
-  SPA2_CREAM,
   SPA2_INK,
   SPA2_TEAL,
   SPA2_SAGE,
-  SPA2_CREAM_DARK,
+  SPA2_CREAM,
   SPA2_TEAL_DARK,
+  SPA2_CREAM_DARK,
   SPA2_TEAL_LIGHT,
   spa2ContactInfo,
 } from 'src/sections/spa2/spa2-pages-data';
-import { Spa2ManageShell } from 'src/sections/dashboard/spa2/manage/spa2-manage-shell';
 
 // ----------------------------------------------------------------------
 
@@ -138,7 +138,11 @@ export function Spa2ServiceEditorView() {
   );
 
   const removeStep = useCallback(
-    (id: string) => update('steps', value.steps.filter((s) => s.id !== id)),
+    (id: string) =>
+      update(
+        'steps',
+        value.steps.filter((s) => s.id !== id)
+      ),
     [value.steps, update]
   );
 
@@ -178,7 +182,11 @@ export function Spa2ServiceEditorView() {
   );
 
   const removeBeforeAfter = useCallback(
-    (id: string) => update('beforeAfters', value.beforeAfters.filter((b) => b.id !== id)),
+    (id: string) =>
+      update(
+        'beforeAfters',
+        value.beforeAfters.filter((b) => b.id !== id)
+      ),
     [value.beforeAfters, update]
   );
 
@@ -206,7 +214,11 @@ export function Spa2ServiceEditorView() {
   );
 
   const removeFeedback = useCallback(
-    (id: string) => update('feedbacks', value.feedbacks.filter((f) => f.id !== id)),
+    (id: string) =>
+      update(
+        'feedbacks',
+        value.feedbacks.filter((f) => f.id !== id)
+      ),
     [value.feedbacks, update]
   );
 
@@ -218,12 +230,19 @@ export function Spa2ServiceEditorView() {
 
   const updateFaq = useCallback(
     (id: string, field: keyof Spa2Faq, v: string) =>
-      update('faqs', value.faqs.map((f) => (f.id === id ? { ...f, [field]: v } : f))),
+      update(
+        'faqs',
+        value.faqs.map((f) => (f.id === id ? { ...f, [field]: v } : f))
+      ),
     [value.faqs, update]
   );
 
   const removeFaq = useCallback(
-    (id: string) => update('faqs', value.faqs.filter((f) => f.id !== id)),
+    (id: string) =>
+      update(
+        'faqs',
+        value.faqs.filter((f) => f.id !== id)
+      ),
     [value.faqs, update]
   );
 
@@ -237,7 +256,11 @@ export function Spa2ServiceEditorView() {
   );
 
   const removeGalleryImage = useCallback(
-    (idx: number) => update('gallery', value.gallery.filter((_, i) => i !== idx)),
+    (idx: number) =>
+      update(
+        'gallery',
+        value.gallery.filter((_, i) => i !== idx)
+      ),
     [value.gallery, update]
   );
 
@@ -344,23 +367,81 @@ export function Spa2ServiceEditorView() {
             </Stack>
             <Divider sx={{ mb: 2 }} />
             <Stack spacing={2}>
-              <TextField label="Slug" size="small" value={value.slug} onChange={(e) => update('slug', e.target.value)} />
-              <TextField label="Tên dịch vụ" size="small" value={value.name} onChange={(e) => update('name', e.target.value)} />
-              <TextField select label="Danh mục" size="small" value={value.category} onChange={(e) => update('category', e.target.value)}>
+              <TextField
+                label="Slug"
+                size="small"
+                value={value.slug}
+                onChange={(e) => update('slug', e.target.value)}
+              />
+              <TextField
+                label="Tên dịch vụ"
+                size="small"
+                value={value.name}
+                onChange={(e) => update('name', e.target.value)}
+              />
+              <TextField
+                select
+                label="Danh mục"
+                size="small"
+                value={value.category}
+                onChange={(e) => update('category', e.target.value)}
+              >
                 {CATEGORIES.map((c) => (
-                  <MenuItem key={c.value} value={c.value}>{c.label}</MenuItem>
+                  <MenuItem key={c.value} value={c.value}>
+                    {c.label}
+                  </MenuItem>
                 ))}
               </TextField>
-              <TextField label="Mô tả ngắn" size="small" multiline rows={2} value={value.short} onChange={(e) => update('short', e.target.value)} />
+              <TextField
+                label="Mô tả ngắn"
+                size="small"
+                multiline
+                rows={2}
+                value={value.short}
+                onChange={(e) => update('short', e.target.value)}
+              />
               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                <TextField label="Thời lượng" size="small" fullWidth value={value.duration} onChange={(e) => update('duration', e.target.value)} />
-                <TextField label="Giá (VND)" size="small" type="number" fullWidth value={value.price} onChange={(e) => update('price', Number(e.target.value))} />
+                <TextField
+                  label="Thời lượng"
+                  size="small"
+                  fullWidth
+                  value={value.duration}
+                  onChange={(e) => update('duration', e.target.value)}
+                />
+                <TextField
+                  label="Giá (VND)"
+                  size="small"
+                  type="number"
+                  fullWidth
+                  value={value.price}
+                  onChange={(e) => update('price', Number(e.target.value))}
+                />
               </Stack>
-              <TextField label="Icon (solar:*)" size="small" value={value.icon} onChange={(e) => update('icon', e.target.value)} />
-              <TextField label="Lợi ích (phân cách bằng dấu ,)" size="small" multiline rows={2} value={benefitsText} onChange={(e) => setBenefitsText(e.target.value)} />
-              <TextField select label="Trạng thái" size="small" value={value.status} onChange={(e) => update('status', e.target.value as Spa2ServiceStatus)}>
+              <TextField
+                label="Icon (solar:*)"
+                size="small"
+                value={value.icon}
+                onChange={(e) => update('icon', e.target.value)}
+              />
+              <TextField
+                label="Lợi ích (phân cách bằng dấu ,)"
+                size="small"
+                multiline
+                rows={2}
+                value={benefitsText}
+                onChange={(e) => setBenefitsText(e.target.value)}
+              />
+              <TextField
+                select
+                label="Trạng thái"
+                size="small"
+                value={value.status}
+                onChange={(e) => update('status', e.target.value as Spa2ServiceStatus)}
+              >
                 {STATUS_OPTIONS.map((s) => (
-                  <MenuItem key={s} value={s}>{s}</MenuItem>
+                  <MenuItem key={s} value={s}>
+                    {s}
+                  </MenuItem>
                 ))}
               </TextField>
             </Stack>
@@ -430,10 +511,19 @@ export function Spa2ServiceEditorView() {
           <Card sx={{ p: 2.5, borderRadius: 3, bgcolor: 'error.lighter' }}>
             <Stack direction="row" alignItems="center" justifyContent="space-between">
               <Box>
-                <Typography variant="subtitle2" color="error.darker">Xoá dịch vụ</Typography>
-                <Typography variant="caption" color="error.dark">Hành động không thể hoàn tác (mock).</Typography>
+                <Typography variant="subtitle2" color="error.darker">
+                  Xoá dịch vụ
+                </Typography>
+                <Typography variant="caption" color="error.dark">
+                  Hành động không thể hoàn tác (mock).
+                </Typography>
               </Box>
-              <Button color="error" variant="outlined" onClick={handleDelete} startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}>
+              <Button
+                color="error"
+                variant="outlined"
+                onClick={handleDelete}
+                startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
+              >
                 Xoá
               </Button>
             </Stack>
@@ -448,14 +538,27 @@ export function Spa2ServiceEditorView() {
             <Typography variant="subtitle1" sx={{ fontWeight: 700, color: SPA2_INK }}>
               Quy trình ({value.steps.length})
             </Typography>
-            <Button size="small" startIcon={<Iconify icon="mingcute:add-line" />} onClick={addStep} sx={{ color: SPA2_TEAL_DARK }}>
+            <Button
+              size="small"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+              onClick={addStep}
+              sx={{ color: SPA2_TEAL_DARK }}
+            >
               Thêm bước
             </Button>
           </Stack>
           <Divider sx={{ mb: 2 }} />
           <Stack spacing={1.5}>
             {value.steps.map((step, idx) => (
-              <Card key={step.id} sx={{ p: 2, borderRadius: 3, bgcolor: SPA2_CREAM, border: `1px solid ${SPA2_CREAM_DARK}` }}>
+              <Card
+                key={step.id}
+                sx={{
+                  p: 2,
+                  borderRadius: 3,
+                  bgcolor: SPA2_CREAM,
+                  border: `1px solid ${SPA2_CREAM_DARK}`,
+                }}
+              >
                 <Stack direction="row" spacing={1.5} alignItems="flex-start">
                   <Box
                     sx={{
@@ -491,10 +594,18 @@ export function Spa2ServiceEditorView() {
                     />
                   </Stack>
                   <Stack direction="column">
-                    <IconButton size="small" disabled={idx === 0} onClick={() => moveStep(step.id, -1)}>
+                    <IconButton
+                      size="small"
+                      disabled={idx === 0}
+                      onClick={() => moveStep(step.id, -1)}
+                    >
                       <Iconify icon="solar:alt-arrow-up-bold" />
                     </IconButton>
-                    <IconButton size="small" disabled={idx === value.steps.length - 1} onClick={() => moveStep(step.id, 1)}>
+                    <IconButton
+                      size="small"
+                      disabled={idx === value.steps.length - 1}
+                      onClick={() => moveStep(step.id, 1)}
+                    >
                       <Iconify icon="solar:alt-arrow-down-bold" />
                     </IconButton>
                     <IconButton size="small" color="error" onClick={() => removeStep(step.id)}>
@@ -507,7 +618,7 @@ export function Spa2ServiceEditorView() {
             {value.steps.length === 0 && (
               <Box sx={{ textAlign: 'center', py: 5, color: 'text.secondary' }}>
                 <Iconify icon="solar:list-linear" width={40} sx={{ color: SPA2_SAGE, mb: 1 }} />
-                <Typography>Chưa có bước nào. Nhấn "Thêm bước" để bắt đầu.</Typography>
+                <Typography>Chưa có bước nào. Nhấn &ldquo;Thêm bước&rdquo; để bắt đầu.</Typography>
               </Box>
             )}
           </Stack>
@@ -521,7 +632,12 @@ export function Spa2ServiceEditorView() {
             <Typography variant="subtitle1" sx={{ fontWeight: 700, color: SPA2_INK }}>
               Hình ảnh trước & sau ({value.beforeAfters.length})
             </Typography>
-            <Button size="small" startIcon={<Iconify icon="mingcute:add-line" />} onClick={addBeforeAfter} sx={{ color: SPA2_TEAL_DARK }}>
+            <Button
+              size="small"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+              onClick={addBeforeAfter}
+              sx={{ color: SPA2_TEAL_DARK }}
+            >
               Thêm kết quả
             </Button>
           </Stack>
@@ -531,48 +647,120 @@ export function Spa2ServiceEditorView() {
               <Grid key={ba.id} xs={12} md={6}>
                 <Card sx={{ p: 2, borderRadius: 3, border: `1px solid ${SPA2_CREAM_DARK}` }}>
                   <Stack spacing={1.5}>
-                    <TextField size="small" label="Tiêu đề" value={ba.title} onChange={(e) => updateBeforeAfter(ba.id, 'title', e.target.value)} />
+                    <TextField
+                      size="small"
+                      label="Tiêu đề"
+                      value={ba.title}
+                      onChange={(e) => updateBeforeAfter(ba.id, 'title', e.target.value)}
+                    />
                     <Stack direction="row" spacing={1.5}>
-                      <TextField size="small" label="Thời gian" value={ba.duration} onChange={(e) => updateBeforeAfter(ba.id, 'duration', e.target.value)} />
+                      <TextField
+                        size="small"
+                        label="Thời gian"
+                        value={ba.duration}
+                        onChange={(e) => updateBeforeAfter(ba.id, 'duration', e.target.value)}
+                      />
                     </Stack>
                     <Grid container spacing={1.5}>
                       <Grid xs={6}>
-                        <Typography variant="caption" sx={{ color: SPA2_TEAL_DARK, mb: 0.5, display: 'block' }}>Ảnh TRƯỚC</Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: SPA2_TEAL_DARK, mb: 0.5, display: 'block' }}
+                        >
+                          Ảnh TRƯỚC
+                        </Typography>
                         {ba.before ? (
                           <Box sx={{ position: 'relative' }}>
-                            <Box sx={{ height: 140, borderRadius: 2, backgroundImage: `url(${ba.before})`, backgroundSize: 'cover', backgroundPosition: 'center', border: `1px solid ${SPA2_CREAM_DARK}` }} />
-                            <IconButton size="small" onClick={() => updateBeforeAfter(ba.id, 'before', '')} sx={{ position: 'absolute', top: 4, right: 4, bgcolor: 'rgba(255,255,255,0.9)' }}>
+                            <Box
+                              sx={{
+                                height: 140,
+                                borderRadius: 2,
+                                backgroundImage: `url(${ba.before})`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                border: `1px solid ${SPA2_CREAM_DARK}`,
+                              }}
+                            />
+                            <IconButton
+                              size="small"
+                              onClick={() => updateBeforeAfter(ba.id, 'before', '')}
+                              sx={{
+                                position: 'absolute',
+                                top: 4,
+                                right: 4,
+                                bgcolor: 'rgba(255,255,255,0.9)',
+                              }}
+                            >
                               <Iconify icon="solar:close-circle-bold" color="error" width={16} />
                             </IconButton>
                           </Box>
                         ) : (
                           <Upload
-                            onDrop={async (files) => { if (files[0]) handleSingleImage(files[0], 'before', ba.id); }}
+                            onDrop={async (files) => {
+                              if (files[0]) handleSingleImage(files[0], 'before', ba.id);
+                            }}
                             accept={{ 'image/*': [] }}
                             sx={{ '& .MuiBox-root': { p: 2 } }}
                           />
                         )}
                       </Grid>
                       <Grid xs={6}>
-                        <Typography variant="caption" sx={{ color: SPA2_TEAL_DARK, mb: 0.5, display: 'block' }}>Ảnh SAU</Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: SPA2_TEAL_DARK, mb: 0.5, display: 'block' }}
+                        >
+                          Ảnh SAU
+                        </Typography>
                         {ba.after ? (
                           <Box sx={{ position: 'relative' }}>
-                            <Box sx={{ height: 140, borderRadius: 2, backgroundImage: `url(${ba.after})`, backgroundSize: 'cover', backgroundPosition: 'center', border: `1px solid ${SPA2_CREAM_DARK}` }} />
-                            <IconButton size="small" onClick={() => updateBeforeAfter(ba.id, 'after', '')} sx={{ position: 'absolute', top: 4, right: 4, bgcolor: 'rgba(255,255,255,0.9)' }}>
+                            <Box
+                              sx={{
+                                height: 140,
+                                borderRadius: 2,
+                                backgroundImage: `url(${ba.after})`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                border: `1px solid ${SPA2_CREAM_DARK}`,
+                              }}
+                            />
+                            <IconButton
+                              size="small"
+                              onClick={() => updateBeforeAfter(ba.id, 'after', '')}
+                              sx={{
+                                position: 'absolute',
+                                top: 4,
+                                right: 4,
+                                bgcolor: 'rgba(255,255,255,0.9)',
+                              }}
+                            >
                               <Iconify icon="solar:close-circle-bold" color="error" width={16} />
                             </IconButton>
                           </Box>
                         ) : (
                           <Upload
-                            onDrop={async (files) => { if (files[0]) handleSingleImage(files[0], 'after', ba.id); }}
+                            onDrop={async (files) => {
+                              if (files[0]) handleSingleImage(files[0], 'after', ba.id);
+                            }}
                             accept={{ 'image/*': [] }}
                             sx={{ '& .MuiBox-root': { p: 2 } }}
                           />
                         )}
                       </Grid>
                     </Grid>
-                    <TextField size="small" label="Ghi chú" multiline rows={2} value={ba.note} onChange={(e) => updateBeforeAfter(ba.id, 'note', e.target.value)} />
-                    <Button size="small" color="error" startIcon={<Iconify icon="solar:trash-bin-trash-bold" />} onClick={() => removeBeforeAfter(ba.id)}>
+                    <TextField
+                      size="small"
+                      label="Ghi chú"
+                      multiline
+                      rows={2}
+                      value={ba.note}
+                      onChange={(e) => updateBeforeAfter(ba.id, 'note', e.target.value)}
+                    />
+                    <Button
+                      size="small"
+                      color="error"
+                      startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
+                      onClick={() => removeBeforeAfter(ba.id)}
+                    >
                       Xoá
                     </Button>
                   </Stack>
@@ -582,7 +770,11 @@ export function Spa2ServiceEditorView() {
             {value.beforeAfters.length === 0 && (
               <Grid xs={12}>
                 <Box sx={{ textAlign: 'center', py: 5, color: 'text.secondary' }}>
-                  <Iconify icon="solar:gallery-linear" width={40} sx={{ color: SPA2_SAGE, mb: 1 }} />
+                  <Iconify
+                    icon="solar:gallery-linear"
+                    width={40}
+                    sx={{ color: SPA2_SAGE, mb: 1 }}
+                  />
                   <Typography>Chưa có kết quả nào.</Typography>
                 </Box>
               </Grid>
@@ -598,27 +790,72 @@ export function Spa2ServiceEditorView() {
             <Typography variant="subtitle1" sx={{ fontWeight: 700, color: SPA2_INK }}>
               Đánh giá khách hàng ({value.feedbacks.length})
             </Typography>
-            <Button size="small" startIcon={<Iconify icon="mingcute:add-line" />} onClick={addFeedback} sx={{ color: SPA2_TEAL_DARK }}>
+            <Button
+              size="small"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+              onClick={addFeedback}
+              sx={{ color: SPA2_TEAL_DARK }}
+            >
               Thêm đánh giá
             </Button>
           </Stack>
           <Divider sx={{ mb: 2 }} />
           <Stack spacing={1.5}>
             {value.feedbacks.map((f) => (
-              <Card key={f.id} sx={{ p: 2, borderRadius: 3, bgcolor: SPA2_CREAM, border: `1px solid ${SPA2_CREAM_DARK}` }}>
+              <Card
+                key={f.id}
+                sx={{
+                  p: 2,
+                  borderRadius: 3,
+                  bgcolor: SPA2_CREAM,
+                  border: `1px solid ${SPA2_CREAM_DARK}`,
+                }}
+              >
                 <Stack direction="row" spacing={2} alignItems="flex-start">
                   <Avatar src={f.avatar} sx={{ width: 48, height: 48, flexShrink: 0 }} />
                   <Stack spacing={1} sx={{ flex: 1 }}>
                     <Stack direction="row" spacing={2}>
-                      <TextField size="small" label="Tên" value={f.name} onChange={(e) => updateFeedback(f.id, 'name', e.target.value)} />
-                      <TextField size="small" label="Vai trò" value={f.role} onChange={(e) => updateFeedback(f.id, 'role', e.target.value)} />
+                      <TextField
+                        size="small"
+                        label="Tên"
+                        value={f.name}
+                        onChange={(e) => updateFeedback(f.id, 'name', e.target.value)}
+                      />
+                      <TextField
+                        size="small"
+                        label="Vai trò"
+                        value={f.role}
+                        onChange={(e) => updateFeedback(f.id, 'role', e.target.value)}
+                      />
                     </Stack>
                     <Stack direction="row" spacing={2} alignItems="center">
-                      <Rating value={f.rating} onChange={(_, v) => updateFeedback(f.id, 'rating', v ?? 5)} size="small" />
-                      <TextField size="small" label="Dịch vụ" value={f.service} onChange={(e) => updateFeedback(f.id, 'service', e.target.value)} sx={{ flex: 1 }} />
+                      <Rating
+                        value={f.rating}
+                        onChange={(_, v) => updateFeedback(f.id, 'rating', v ?? 5)}
+                        size="small"
+                      />
+                      <TextField
+                        size="small"
+                        label="Dịch vụ"
+                        value={f.service}
+                        onChange={(e) => updateFeedback(f.id, 'service', e.target.value)}
+                        sx={{ flex: 1 }}
+                      />
                     </Stack>
-                    <TextField size="small" label="Bình luận" multiline rows={2} value={f.comment} onChange={(e) => updateFeedback(f.id, 'comment', e.target.value)} />
-                    <TextField size="small" label="URL Avatar" value={f.avatar} onChange={(e) => updateFeedback(f.id, 'avatar', e.target.value)} />
+                    <TextField
+                      size="small"
+                      label="Bình luận"
+                      multiline
+                      rows={2}
+                      value={f.comment}
+                      onChange={(e) => updateFeedback(f.id, 'comment', e.target.value)}
+                    />
+                    <TextField
+                      size="small"
+                      label="URL Avatar"
+                      value={f.avatar}
+                      onChange={(e) => updateFeedback(f.id, 'avatar', e.target.value)}
+                    />
                   </Stack>
                   <IconButton size="small" color="error" onClick={() => removeFeedback(f.id)}>
                     <Iconify icon="solar:trash-bin-trash-bold" />
@@ -643,29 +880,62 @@ export function Spa2ServiceEditorView() {
             <Typography variant="subtitle1" sx={{ fontWeight: 700, color: SPA2_INK }}>
               Câu hỏi thường gặp ({value.faqs.length})
             </Typography>
-            <Button size="small" startIcon={<Iconify icon="mingcute:add-line" />} onClick={addFaq} sx={{ color: SPA2_TEAL_DARK }}>
+            <Button
+              size="small"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+              onClick={addFaq}
+              sx={{ color: SPA2_TEAL_DARK }}
+            >
               Thêm câu hỏi
             </Button>
           </Stack>
           <Divider sx={{ mb: 2 }} />
           <Stack spacing={1.5}>
             {value.faqs.map((f) => (
-              <Card key={f.id} sx={{ p: 2, borderRadius: 3, bgcolor: SPA2_CREAM, border: `1px solid ${SPA2_CREAM_DARK}` }}>
+              <Card
+                key={f.id}
+                sx={{
+                  p: 2,
+                  borderRadius: 3,
+                  bgcolor: SPA2_CREAM,
+                  border: `1px solid ${SPA2_CREAM_DARK}`,
+                }}
+              >
                 <Stack spacing={1}>
                   <Stack direction="row" spacing={1} alignItems="flex-start">
-                    <Iconify icon="solar:question-circle-bold-duotone" sx={{ color: SPA2_TEAL, mt: 0.5 }} />
-                    <TextField size="small" label="Câu hỏi" fullWidth value={f.q} onChange={(e) => updateFaq(f.id, 'q', e.target.value)} />
+                    <Iconify
+                      icon="solar:question-circle-bold-duotone"
+                      sx={{ color: SPA2_TEAL, mt: 0.5 }}
+                    />
+                    <TextField
+                      size="small"
+                      label="Câu hỏi"
+                      fullWidth
+                      value={f.q}
+                      onChange={(e) => updateFaq(f.id, 'q', e.target.value)}
+                    />
                     <IconButton size="small" color="error" onClick={() => removeFaq(f.id)}>
                       <Iconify icon="solar:trash-bin-trash-bold" />
                     </IconButton>
                   </Stack>
-                  <TextField size="small" label="Câu trả lời" multiline rows={2} value={f.a} onChange={(e) => updateFaq(f.id, 'a', e.target.value)} />
+                  <TextField
+                    size="small"
+                    label="Câu trả lời"
+                    multiline
+                    rows={2}
+                    value={f.a}
+                    onChange={(e) => updateFaq(f.id, 'a', e.target.value)}
+                  />
                 </Stack>
               </Card>
             ))}
             {value.faqs.length === 0 && (
               <Box sx={{ textAlign: 'center', py: 5, color: 'text.secondary' }}>
-                <Iconify icon="solar:question-circle-linear" width={40} sx={{ color: SPA2_SAGE, mb: 1 }} />
+                <Iconify
+                  icon="solar:question-circle-linear"
+                  width={40}
+                  sx={{ color: SPA2_SAGE, mb: 1 }}
+                />
                 <Typography>Chưa có câu hỏi nào.</Typography>
               </Box>
             )}
@@ -692,21 +962,50 @@ export function Spa2ServiceEditorView() {
             <Grid container spacing={1.5} sx={{ mt: 2 }}>
               {value.gallery.map((img, idx) => (
                 <Grid key={idx} xs={6} sm={4} md={3}>
-                  <Card sx={{ p: 0, borderRadius: 3, overflow: 'hidden', position: 'relative', border: `1px solid ${SPA2_CREAM_DARK}` }}>
-                    <Box sx={{ height: 140, backgroundImage: `url(${img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                  <Card
+                    sx={{
+                      p: 0,
+                      borderRadius: 3,
+                      overflow: 'hidden',
+                      position: 'relative',
+                      border: `1px solid ${SPA2_CREAM_DARK}`,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        height: 140,
+                        backgroundImage: `url(${img})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                      }}
+                    />
                     <Stack direction="row" sx={{ position: 'absolute', top: 4, right: 4 }}>
                       <Tooltip title="Lên">
-                        <IconButton size="small" disabled={idx === 0} onClick={() => moveGalleryImage(idx, -1)} sx={{ bgcolor: 'rgba(255,255,255,0.85)' }}>
+                        <IconButton
+                          size="small"
+                          disabled={idx === 0}
+                          onClick={() => moveGalleryImage(idx, -1)}
+                          sx={{ bgcolor: 'rgba(255,255,255,0.85)' }}
+                        >
                           <Iconify icon="solar:alt-arrow-up-bold" width={16} />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Xuống">
-                        <IconButton size="small" disabled={idx === value.gallery.length - 1} onClick={() => moveGalleryImage(idx, 1)} sx={{ bgcolor: 'rgba(255,255,255,0.85)' }}>
+                        <IconButton
+                          size="small"
+                          disabled={idx === value.gallery.length - 1}
+                          onClick={() => moveGalleryImage(idx, 1)}
+                          sx={{ bgcolor: 'rgba(255,255,255,0.85)' }}
+                        >
                           <Iconify icon="solar:alt-arrow-down-bold" width={16} />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Xoá">
-                        <IconButton size="small" onClick={() => removeGalleryImage(idx)} sx={{ bgcolor: 'rgba(255,255,255,0.85)' }}>
+                        <IconButton
+                          size="small"
+                          onClick={() => removeGalleryImage(idx)}
+                          sx={{ bgcolor: 'rgba(255,255,255,0.85)' }}
+                        >
                           <Iconify icon="solar:trash-bin-trash-bold" color="error" width={16} />
                         </IconButton>
                       </Tooltip>
@@ -722,31 +1021,77 @@ export function Spa2ServiceEditorView() {
       {/* ── PREVIEW TAB ── */}
       {tab === 'preview' && (
         <Box>
-          <Card sx={{ p: 0, borderRadius: 4, overflow: 'hidden', border: `1px solid ${SPA2_CREAM_DARK}`, boxShadow: '0 10px 30px rgba(31,42,40,0.05)' }}>
+          <Card
+            sx={{
+              p: 0,
+              borderRadius: 4,
+              overflow: 'hidden',
+              border: `1px solid ${SPA2_CREAM_DARK}`,
+              boxShadow: '0 10px 30px rgba(31,42,40,0.05)',
+            }}
+          >
             <Box sx={{ position: 'relative' }}>
-              <Box sx={{ height: 280, backgroundImage: `url(${value.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
-              <Chip label={CATEGORIES.find((c) => c.value === value.category)?.label ?? value.category} size="small" sx={{ position: 'absolute', top: 12, left: 12, bgcolor: 'rgba(255,255,255,0.9)', color: SPA2_TEAL_DARK, fontWeight: 600 }} />
+              <Box
+                sx={{
+                  height: 280,
+                  backgroundImage: `url(${value.image})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+              />
+              <Chip
+                label={CATEGORIES.find((c) => c.value === value.category)?.label ?? value.category}
+                size="small"
+                sx={{
+                  position: 'absolute',
+                  top: 12,
+                  left: 12,
+                  bgcolor: 'rgba(255,255,255,0.9)',
+                  color: SPA2_TEAL_DARK,
+                  fontWeight: 600,
+                }}
+              />
             </Box>
             <Box sx={{ p: 4 }}>
               <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 1.5 }}>
                 <Iconify icon={value.icon} sx={{ color: SPA2_TEAL }} width={28} />
-                <Typography variant="h5" sx={{ color: SPA2_INK }}>{value.name}</Typography>
+                <Typography variant="h5" sx={{ color: SPA2_INK }}>
+                  {value.name}
+                </Typography>
               </Stack>
               <Typography sx={{ color: 'text.secondary', mb: 2 }}>{value.short}</Typography>
               <Stack direction="row" spacing={1} sx={{ mb: 3 }}>
-                <Chip size="small" label={value.duration} sx={{ bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }} />
-                <Chip size="small" label={formatVND(value.price)} sx={{ bgcolor: SPA2_TEAL, color: 'white' }} />
-                <Chip size="small" label={value.status} color={value.status === 'Đang hiển thị' ? 'success' : 'default'} />
+                <Chip
+                  size="small"
+                  label={value.duration}
+                  sx={{ bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
+                />
+                <Chip
+                  size="small"
+                  label={formatVND(value.price)}
+                  sx={{ bgcolor: SPA2_TEAL, color: 'white' }}
+                />
+                <Chip
+                  size="small"
+                  label={value.status}
+                  color={value.status === 'Đang hiển thị' ? 'success' : 'default'}
+                />
               </Stack>
 
               {value.benefits.length > 0 && (
                 <>
-                  <Typography variant="h6" sx={{ color: SPA2_INK, mb: 2 }}>Lợi ích chính</Typography>
+                  <Typography variant="h6" sx={{ color: SPA2_INK, mb: 2 }}>
+                    Lợi ích chính
+                  </Typography>
                   <Grid container spacing={1.5} sx={{ mb: 3 }}>
                     {value.benefits.map((b) => (
                       <Grid key={b} xs={12} sm={6}>
                         <Stack direction="row" spacing={1} alignItems="center">
-                          <Iconify icon="solar:check-circle-bold" sx={{ color: SPA2_TEAL }} width={18} />
+                          <Iconify
+                            icon="solar:check-circle-bold"
+                            sx={{ color: SPA2_TEAL }}
+                            width={18}
+                          />
                           <Typography sx={{ color: SPA2_INK, fontSize: 14 }}>{b}</Typography>
                         </Stack>
                       </Grid>
@@ -757,11 +1102,34 @@ export function Spa2ServiceEditorView() {
 
               <Divider sx={{ my: 2 }} />
 
-              <Card sx={{ p: 2.5, borderRadius: 3, bgcolor: SPA2_CREAM, border: `1px solid ${SPA2_CREAM_DARK}` }}>
-                <Typography variant="overline" sx={{ color: SPA2_TEAL }}>Từ</Typography>
-                <Typography variant="h4" sx={{ color: SPA2_INK, mb: 0.5 }}>{formatVND(value.price)}</Typography>
+              <Card
+                sx={{
+                  p: 2.5,
+                  borderRadius: 3,
+                  bgcolor: SPA2_CREAM,
+                  border: `1px solid ${SPA2_CREAM_DARK}`,
+                }}
+              >
+                <Typography variant="overline" sx={{ color: SPA2_TEAL }}>
+                  Từ
+                </Typography>
+                <Typography variant="h4" sx={{ color: SPA2_INK, mb: 0.5 }}>
+                  {formatVND(value.price)}
+                </Typography>
                 <Typography sx={{ color: 'text.secondary', mb: 2 }}>{value.duration}</Typography>
-                <Button fullWidth component={RouterLink} href={paths.spa2.booking} size="large" sx={{ borderRadius: 999, py: 1.5, bgcolor: SPA2_TEAL, color: 'white', '&:hover': { bgcolor: SPA2_TEAL_DARK } }}>
+                <Button
+                  fullWidth
+                  component={RouterLink}
+                  href={paths.spa2.booking}
+                  size="large"
+                  sx={{
+                    borderRadius: 999,
+                    py: 1.5,
+                    bgcolor: SPA2_TEAL,
+                    color: 'white',
+                    '&:hover': { bgcolor: SPA2_TEAL_DARK },
+                  }}
+                >
                   Đặt lịch ngay
                 </Button>
                 <Stack spacing={1} sx={{ mt: 2 }}>
@@ -782,20 +1150,41 @@ export function Spa2ServiceEditorView() {
           {value.steps.length > 0 && (
             <Container maxWidth="md" sx={{ py: { xs: 4, md: 6 } }}>
               <Stack spacing={1.5} sx={{ mb: 4, textAlign: 'center', alignItems: 'center' }}>
-                <Typography variant="overline" sx={{ color: SPA2_TEAL, letterSpacing: 3 }}>Quy trình</Typography>
-                <Typography variant="h4" sx={{ color: SPA2_INK, fontWeight: 600 }}>{value.steps.length} bước trải nghiệm</Typography>
+                <Typography variant="overline" sx={{ color: SPA2_TEAL, letterSpacing: 3 }}>
+                  Quy trình
+                </Typography>
+                <Typography variant="h4" sx={{ color: SPA2_INK, fontWeight: 600 }}>
+                  {value.steps.length} bước trải nghiệm
+                </Typography>
               </Stack>
               <Stack spacing={0}>
                 {value.steps.map((step, idx) => (
                   <Stack key={step.id} direction="row" spacing={3}>
                     <Stack alignItems="center" sx={{ minWidth: 56 }}>
-                      <Box sx={{ width: 44, height: 44, borderRadius: '50%', bgcolor: SPA2_TEAL, color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, flexShrink: 0 }}>
+                      <Box
+                        sx={{
+                          width: 44,
+                          height: 44,
+                          borderRadius: '50%',
+                          bgcolor: SPA2_TEAL,
+                          color: 'white',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontWeight: 700,
+                          flexShrink: 0,
+                        }}
+                      >
                         {idx + 1}
                       </Box>
-                      {idx < value.steps.length - 1 && <Box sx={{ width: 2, flexGrow: 1, bgcolor: SPA2_TEAL_LIGHT, my: 0.5 }} />}
+                      {idx < value.steps.length - 1 && (
+                        <Box sx={{ width: 2, flexGrow: 1, bgcolor: SPA2_TEAL_LIGHT, my: 0.5 }} />
+                      )}
                     </Stack>
                     <Box sx={{ pb: 4 }}>
-                      <Typography variant="h6" sx={{ color: SPA2_INK, mb: 0.5 }}>{step.title}</Typography>
+                      <Typography variant="h6" sx={{ color: SPA2_INK, mb: 0.5 }}>
+                        {step.title}
+                      </Typography>
                       <Typography sx={{ color: 'text.secondary' }}>{step.desc}</Typography>
                     </Box>
                   </Stack>
@@ -809,30 +1198,79 @@ export function Spa2ServiceEditorView() {
             <Box sx={{ py: { xs: 4, md: 6 }, bgcolor: SPA2_CREAM }}>
               <Container>
                 <Stack spacing={1.5} sx={{ mb: 4, textAlign: 'center', alignItems: 'center' }}>
-                  <Typography variant="overline" sx={{ color: SPA2_TEAL, letterSpacing: 3 }}>Kết quả</Typography>
-                  <Typography variant="h4" sx={{ color: SPA2_INK, fontWeight: 600 }}>Hình ảnh trước & sau</Typography>
+                  <Typography variant="overline" sx={{ color: SPA2_TEAL, letterSpacing: 3 }}>
+                    Kết quả
+                  </Typography>
+                  <Typography variant="h4" sx={{ color: SPA2_INK, fontWeight: 600 }}>
+                    Hình ảnh trước & sau
+                  </Typography>
                 </Stack>
                 <Grid container spacing={3}>
                   {value.beforeAfters.map((ba) => (
                     <Grid key={ba.id} xs={12} sm={6}>
-                      <Card sx={{ p: 0, overflow: 'hidden', borderRadius: 4, border: `1px solid ${SPA2_CREAM_DARK}` }}>
+                      <Card
+                        sx={{
+                          p: 0,
+                          overflow: 'hidden',
+                          borderRadius: 4,
+                          border: `1px solid ${SPA2_CREAM_DARK}`,
+                        }}
+                      >
                         <Grid container>
                           <Grid xs={6}>
                             <Box sx={{ position: 'relative' }}>
-                              <Box sx={{ height: 200, backgroundImage: `url(${ba.before})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
-                              <Chip label="TRƯỚC" size="small" sx={{ position: 'absolute', top: 12, left: 12, bgcolor: 'rgba(31,42,40,0.8)', color: 'white' }} />
+                              <Box
+                                sx={{
+                                  height: 200,
+                                  backgroundImage: `url(${ba.before})`,
+                                  backgroundSize: 'cover',
+                                  backgroundPosition: 'center',
+                                }}
+                              />
+                              <Chip
+                                label="TRƯỚC"
+                                size="small"
+                                sx={{
+                                  position: 'absolute',
+                                  top: 12,
+                                  left: 12,
+                                  bgcolor: 'rgba(31,42,40,0.8)',
+                                  color: 'white',
+                                }}
+                              />
                             </Box>
                           </Grid>
                           <Grid xs={6}>
                             <Box sx={{ position: 'relative' }}>
-                              <Box sx={{ height: 200, backgroundImage: `url(${ba.after})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
-                              <Chip label="SAU" size="small" sx={{ position: 'absolute', top: 12, left: 12, bgcolor: SPA2_TEAL, color: 'white' }} />
+                              <Box
+                                sx={{
+                                  height: 200,
+                                  backgroundImage: `url(${ba.after})`,
+                                  backgroundSize: 'cover',
+                                  backgroundPosition: 'center',
+                                }}
+                              />
+                              <Chip
+                                label="SAU"
+                                size="small"
+                                sx={{
+                                  position: 'absolute',
+                                  top: 12,
+                                  left: 12,
+                                  bgcolor: SPA2_TEAL,
+                                  color: 'white',
+                                }}
+                              />
                             </Box>
                           </Grid>
                         </Grid>
                         <Box sx={{ p: 2.5 }}>
-                          <Typography sx={{ color: SPA2_INK, fontWeight: 600 }}>{ba.title}</Typography>
-                          <Typography sx={{ color: 'text.secondary', fontSize: 14 }}>{ba.note}</Typography>
+                          <Typography sx={{ color: SPA2_INK, fontWeight: 600 }}>
+                            {ba.title}
+                          </Typography>
+                          <Typography sx={{ color: 'text.secondary', fontSize: 14 }}>
+                            {ba.note}
+                          </Typography>
                         </Box>
                       </Card>
                     </Grid>
@@ -847,20 +1285,39 @@ export function Spa2ServiceEditorView() {
             <Box sx={{ py: { xs: 4, md: 6 } }}>
               <Container>
                 <Stack spacing={1.5} sx={{ mb: 4, textAlign: 'center', alignItems: 'center' }}>
-                  <Typography variant="overline" sx={{ color: SPA2_TEAL, letterSpacing: 3 }}>Đánh giá</Typography>
-                  <Typography variant="h4" sx={{ color: SPA2_INK, fontWeight: 600 }}>Khách hàng nói gì</Typography>
+                  <Typography variant="overline" sx={{ color: SPA2_TEAL, letterSpacing: 3 }}>
+                    Đánh giá
+                  </Typography>
+                  <Typography variant="h4" sx={{ color: SPA2_INK, fontWeight: 600 }}>
+                    Khách hàng nói gì
+                  </Typography>
                 </Stack>
                 <Grid container spacing={3}>
                   {value.feedbacks.map((f) => (
                     <Grid key={f.id} xs={12} sm={6} md={4}>
-                      <Card sx={{ p: 3, borderRadius: 4, border: `1px solid ${SPA2_CREAM_DARK}`, height: '100%' }}>
+                      <Card
+                        sx={{
+                          p: 3,
+                          borderRadius: 4,
+                          border: `1px solid ${SPA2_CREAM_DARK}`,
+                          height: '100%',
+                        }}
+                      >
                         <Rating value={f.rating} readOnly size="small" sx={{ mb: 1.5 }} />
-                        <Typography sx={{ color: SPA2_INK, lineHeight: 1.7, mb: 2, fontStyle: 'italic' }}>“{f.comment}”</Typography>
+                        <Typography
+                          sx={{ color: SPA2_INK, lineHeight: 1.7, mb: 2, fontStyle: 'italic' }}
+                        >
+                          “{f.comment}”
+                        </Typography>
                         <Stack direction="row" spacing={2} alignItems="center">
                           <Avatar src={f.avatar} />
                           <Stack>
-                            <Typography sx={{ fontWeight: 600, color: SPA2_INK }}>{f.name}</Typography>
-                            <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>{f.service}</Typography>
+                            <Typography sx={{ fontWeight: 600, color: SPA2_INK }}>
+                              {f.name}
+                            </Typography>
+                            <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>
+                              {f.service}
+                            </Typography>
                           </Stack>
                         </Stack>
                       </Card>
@@ -876,16 +1333,33 @@ export function Spa2ServiceEditorView() {
             <Box sx={{ py: { xs: 4, md: 6 }, bgcolor: SPA2_CREAM }}>
               <Container maxWidth="md">
                 <Stack spacing={1.5} sx={{ mb: 4, textAlign: 'center', alignItems: 'center' }}>
-                  <Typography variant="overline" sx={{ color: SPA2_TEAL, letterSpacing: 3 }}>FAQ</Typography>
-                  <Typography variant="h4" sx={{ color: SPA2_INK, fontWeight: 600 }}>Câu hỏi thường gặp</Typography>
+                  <Typography variant="overline" sx={{ color: SPA2_TEAL, letterSpacing: 3 }}>
+                    FAQ
+                  </Typography>
+                  <Typography variant="h4" sx={{ color: SPA2_INK, fontWeight: 600 }}>
+                    Câu hỏi thường gặp
+                  </Typography>
                 </Stack>
                 {value.faqs.map((f, idx) => (
-                  <Accordion key={f.id} defaultExpanded={idx === 0} sx={{ mb: 1.5, borderRadius: '12px !important', border: `1px solid ${SPA2_CREAM_DARK}`, boxShadow: 'none', '&:before': { display: 'none' }, '&.Mui-expanded': { borderColor: SPA2_TEAL_LIGHT } }}>
+                  <Accordion
+                    key={f.id}
+                    defaultExpanded={idx === 0}
+                    sx={{
+                      mb: 1.5,
+                      borderRadius: '12px !important',
+                      border: `1px solid ${SPA2_CREAM_DARK}`,
+                      boxShadow: 'none',
+                      '&:before': { display: 'none' },
+                      '&.Mui-expanded': { borderColor: SPA2_TEAL_LIGHT },
+                    }}
+                  >
                     <AccordionSummary expandIcon={<Iconify icon="solar:alt-arrow-down-bold" />}>
                       <Typography sx={{ fontWeight: 600, color: SPA2_INK }}>{f.q}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                      <Typography sx={{ color: 'text.secondary', lineHeight: 1.8 }}>{f.a}</Typography>
+                      <Typography sx={{ color: 'text.secondary', lineHeight: 1.8 }}>
+                        {f.a}
+                      </Typography>
                     </AccordionDetails>
                   </Accordion>
                 ))}
@@ -898,14 +1372,32 @@ export function Spa2ServiceEditorView() {
             <Box sx={{ py: { xs: 4, md: 6 } }}>
               <Container>
                 <Stack spacing={1.5} sx={{ mb: 4, textAlign: 'center', alignItems: 'center' }}>
-                  <Typography variant="overline" sx={{ color: SPA2_TEAL, letterSpacing: 3 }}>Thư viện</Typography>
-                  <Typography variant="h4" sx={{ color: SPA2_INK, fontWeight: 600 }}>Hình ảnh dịch vụ</Typography>
+                  <Typography variant="overline" sx={{ color: SPA2_TEAL, letterSpacing: 3 }}>
+                    Thư viện
+                  </Typography>
+                  <Typography variant="h4" sx={{ color: SPA2_INK, fontWeight: 600 }}>
+                    Hình ảnh dịch vụ
+                  </Typography>
                 </Stack>
                 <Grid container spacing={2}>
                   {value.gallery.map((img, idx) => (
                     <Grid key={idx} xs={6} sm={4} md={3}>
-                      <Card sx={{ p: 0, borderRadius: 3, overflow: 'hidden', border: `1px solid ${SPA2_CREAM_DARK}` }}>
-                        <Box sx={{ height: 200, backgroundImage: `url(${img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                      <Card
+                        sx={{
+                          p: 0,
+                          borderRadius: 3,
+                          overflow: 'hidden',
+                          border: `1px solid ${SPA2_CREAM_DARK}`,
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            height: 200,
+                            backgroundImage: `url(${img})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                          }}
+                        />
                       </Card>
                     </Grid>
                   ))}

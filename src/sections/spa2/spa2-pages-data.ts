@@ -157,12 +157,9 @@ export const spa2VideoReviews = [
   },
 ];
 
-export const spa2BlogCategories = [
-  { name: 'Aromatherapy', count: 4 },
-  { name: 'Skincare', count: 7 },
-  { name: 'Wellness', count: 5 },
-  { name: 'Mindfulness', count: 3 },
-];
+// Re-export shared blog data (source of truth in src/_mock/_spa2) so the public
+// view and the dashboard management pages share exactly the same content.
+export { SPA2_BLOG_CATEGORIES as spa2BlogCategories } from 'src/_mock/_spa2';
 
 // Thêm endsAt (ISO) cho countdown vào từng object trong spa2Promotions:
 // 'Mùa hè xanh' -> endsAt: '2026-08-31T23:59:59'
@@ -300,48 +297,7 @@ export const spa2Promotions = [
   },
 ];
 
-export const spa2BlogPosts = [
-  {
-    slug: 'top-10-loai-tinh-dau-cho-giac-ngu-sau',
-    title: 'Top 10 loại tinh dầu cho giấc ngủ sâu',
-    excerpt: 'Tinh dầu thiên nhiên là chìa khóa để có giấc ngủ ngon, sâu và phục hồi trọn vẹn.',
-    cover: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=900&q=80',
-    author: 'Lê Minh Anh',
-    date: '12/05/2026',
-    category: 'Aromatherapy',
-    readTime: '6 phút',
-  },
-  {
-    slug: 'cham-soc-da-mua-he-tu-thien-nhien',
-    title: 'Chăm sóc da mùa hè từ thiên nhiên',
-    excerpt: 'Bí quyết giữ làn da tươi mát, không bóng dầu trong những ngày oi bức.',
-    cover: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=900&q=80',
-    author: 'Trần Thu Hà',
-    date: '02/06/2026',
-    category: 'Skincare',
-    readTime: '8 phút',
-  },
-  {
-    slug: 'detox-co-the-trong-7-ngay',
-    title: 'Detox cơ thể trong 7 ngày tại nhà',
-    excerpt: 'Hướng dẫn chi tiết quy trình detox nhẹ nhàng, an toàn và hiệu quả.',
-    cover: 'https://images.unsplash.com/photo-1596178060671-7a80dc8059ea?w=900&q=80',
-    author: 'Phạm Hoàng Nam',
-    date: '20/06/2026',
-    category: 'Wellness',
-    readTime: '10 phút',
-  },
-  {
-    slug: 'yoga-va-thien-cho-nguoi-ban-ron',
-    title: 'Yoga & thiền cho người bận rộn',
-    excerpt: '15 phút mỗi ngày để tái tạo năng lượng và giữ tinh thần minh mẫn.',
-    cover: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=900&q=80',
-    author: 'Nguyễn Bích Ngọc',
-    date: '01/07/2026',
-    category: 'Mindfulness',
-    readTime: '5 phút',
-  },
-];
+export { type Spa2BlogPost, SPA2_POSTS as spa2BlogPosts } from 'src/_mock/_spa2';
 
 export const spa2Careers = [
   {

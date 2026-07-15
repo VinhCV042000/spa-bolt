@@ -41,9 +41,21 @@ export const SPA2_ABOUT_CONTENT: Spa2AboutContent = {
     'Chúng tôi kết hợp tinh hoa thảo dược truyền thống với kỹ thuật massage hiện đại, đem đến hành trình chăm sóc trọn vẹn cho từng khách hàng.',
   image: SPA2_IMAGES.about,
   features: [
-    { title: 'Thảo dược tự nhiên', desc: '100% nguyên liệu hữu cơ', icon: 'solar:leaf-bold-duotone' },
-    { title: 'Chuyên gia tận tâm', desc: 'Đội ngũ 10+ năm kinh nghiệm', icon: 'solar:heart-pulse-bold-duotone' },
-    { title: 'Kỹ thuật độc quyền', desc: 'Liệu trình đã được kiểm chứng', icon: 'solar:magic-stick-3-bold-duotone' },
+    {
+      title: 'Thảo dược tự nhiên',
+      desc: '100% nguyên liệu hữu cơ',
+      icon: 'solar:leaf-bold-duotone',
+    },
+    {
+      title: 'Chuyên gia tận tâm',
+      desc: 'Đội ngũ 10+ năm kinh nghiệm',
+      icon: 'solar:heart-pulse-bold-duotone',
+    },
+    {
+      title: 'Kỹ thuật độc quyền',
+      desc: 'Liệu trình đã được kiểm chứng',
+      icon: 'solar:magic-stick-3-bold-duotone',
+    },
   ],
 };
 
@@ -156,24 +168,80 @@ export type Spa2ServiceItem = {
 };
 
 const DEFAULT_STEPS = [
-  { id: 's1', title: 'Tư vấn & thăm khám', desc: 'KTV đánh giá tình trạng da/cơ thể và tư vấn liệu trình phù hợp.' },
-  { id: 's2', title: 'Làm sạch & chuẩn bị', desc: 'Tẩy trang, làm sạch sâu, xông hơi giúp lỗ chân lông giãn nở.' },
-  { id: 's3', title: 'Thực hiện liệu trình chính', desc: 'Áp dụng kỹ thuật và sản phẩm chuyên biệt theo từng dịch vụ.' },
-  { id: 's4', title: 'Phục hồi & dưỡng', desc: 'Đắp mặt nạ/dưỡng chất, massage thư giãn kết thúc liệu trình.' },
+  {
+    id: 's1',
+    title: 'Tư vấn & thăm khám',
+    desc: 'KTV đánh giá tình trạng da/cơ thể và tư vấn liệu trình phù hợp.',
+  },
+  {
+    id: 's2',
+    title: 'Làm sạch & chuẩn bị',
+    desc: 'Tẩy trang, làm sạch sâu, xông hơi giúp lỗ chân lông giãn nở.',
+  },
+  {
+    id: 's3',
+    title: 'Thực hiện liệu trình chính',
+    desc: 'Áp dụng kỹ thuật và sản phẩm chuyên biệt theo từng dịch vụ.',
+  },
+  {
+    id: 's4',
+    title: 'Phục hồi & dưỡng',
+    desc: 'Đắp mặt nạ/dưỡng chất, massage thư giãn kết thúc liệu trình.',
+  },
   { id: 's5', title: 'Tư vấn hậu phẫu', desc: 'Hướng dẫn chăm sóc tại nhà và lịch hẹn tái khám.' },
 ];
 
 const DEFAULT_FAQS = [
-  { id: 'f1', q: 'Tôi cần đặt lịch trước bao lâu?', a: 'Bạn nên đặt lịch trước ít nhất 2 giờ. Vào cuối tuần nên đặt trước 1 ngày để có khung giờ đẹp.' },
-  { id: 'f2', q: 'Sản phẩm sử dụng có an toàn cho da nhạy cảm?', a: 'Chúng tôi sử dụng 100% nguyên liệu hữu cơ, không cồn, không paraben, an toàn cho cả da nhạy cảm và phụ nữ mang thai.' },
-  { id: 'f3', q: 'Có hỗ trợ thanh toán trả góp không?', a: 'Có. Nature Spa hỗ trợ trả góp 0% qua thẻ tín dụng của 12 ngân hàng đối tác.' },
-  { id: 'f4', q: 'Tôi có thể đổi/hủy lịch không?', a: 'Bạn có thể đổi hoặc hủy lịch miễn phí trước 4 giờ so với giờ hẹn.' },
+  {
+    id: 'f1',
+    q: 'Tôi cần đặt lịch trước bao lâu?',
+    a: 'Bạn nên đặt lịch trước ít nhất 2 giờ. Vào cuối tuần nên đặt trước 1 ngày để có khung giờ đẹp.',
+  },
+  {
+    id: 'f2',
+    q: 'Sản phẩm sử dụng có an toàn cho da nhạy cảm?',
+    a: 'Chúng tôi sử dụng 100% nguyên liệu hữu cơ, không cồn, không paraben, an toàn cho cả da nhạy cảm và phụ nữ mang thai.',
+  },
+  {
+    id: 'f3',
+    q: 'Có hỗ trợ thanh toán trả góp không?',
+    a: 'Có. Nature Spa hỗ trợ trả góp 0% qua thẻ tín dụng của 12 ngân hàng đối tác.',
+  },
+  {
+    id: 'f4',
+    q: 'Tôi có thể đổi/hủy lịch không?',
+    a: 'Bạn có thể đổi hoặc hủy lịch miễn phí trước 4 giờ so với giờ hẹn.',
+  },
 ];
 
 const DEFAULT_FEEDBACKS = [
-  { id: 'fb1', name: 'Minh Anh', role: 'Khách hàng VIP', rating: 5, avatar: 'https://i.pravatar.cc/150?img=11', comment: 'Không gian xanh mát, tinh dầu thơm dịu, kỹ thuật viên rất chuyên nghiệp.', service: 'Massage Thảo Dược' },
-  { id: 'fb2', name: 'Thu Hà', role: 'Thành viên Premium', rating: 5, avatar: 'https://i.pravatar.cc/150?img=16', comment: 'Liệu trình rõ rệt sau 4 buổi. Da đều màu hơn, cảm thấy thư giãn tuyệt đối.', service: 'Facial Organic' },
-  { id: 'fb3', name: 'Hoàng Nam', role: 'Khách hàng', rating: 4, avatar: 'https://i.pravatar.cc/150?img=33', comment: 'Dịch vụ tốt, không gian đẹp. Sẽ quay lại vào tháng sau.', service: 'Body Scrub & Wrap' },
+  {
+    id: 'fb1',
+    name: 'Minh Anh',
+    role: 'Khách hàng VIP',
+    rating: 5,
+    avatar: 'https://i.pravatar.cc/150?img=11',
+    comment: 'Không gian xanh mát, tinh dầu thơm dịu, kỹ thuật viên rất chuyên nghiệp.',
+    service: 'Massage Thảo Dược',
+  },
+  {
+    id: 'fb2',
+    name: 'Thu Hà',
+    role: 'Thành viên Premium',
+    rating: 5,
+    avatar: 'https://i.pravatar.cc/150?img=16',
+    comment: 'Liệu trình rõ rệt sau 4 buổi. Da đều màu hơn, cảm thấy thư giãn tuyệt đối.',
+    service: 'Facial Organic',
+  },
+  {
+    id: 'fb3',
+    name: 'Hoàng Nam',
+    role: 'Khách hàng',
+    rating: 4,
+    avatar: 'https://i.pravatar.cc/150?img=33',
+    comment: 'Dịch vụ tốt, không gian đẹp. Sẽ quay lại vào tháng sau.',
+    service: 'Body Scrub & Wrap',
+  },
 ];
 
 const DEFAULT_GALLERY = [
@@ -184,8 +252,22 @@ const DEFAULT_GALLERY = [
 ];
 
 const DEFAULT_BEFORE_AFTERS = [
-  { id: 'ba1', title: 'Trị mụn – 8 buổi', before: 'https://images.unsplash.com/photo-1556228841-a3c527ebefe5?w=600&q=80', after: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&q=80', duration: '2 tháng', note: 'Giảm 90% mụn viêm, da đều màu, lỗ chân lông se nhỏ.' },
-  { id: 'ba2', title: 'Trẻ hóa da – 10 buổi', before: 'https://images.unsplash.com/photo-1559599101-f09722fb4948?w=600&q=80', after: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=600&q=80', duration: '2 tháng', note: 'Nâng cơ, mờ nếp nhăn, da săn chắc tự nhiên.' },
+  {
+    id: 'ba1',
+    title: 'Trị mụn – 8 buổi',
+    before: 'https://images.unsplash.com/photo-1556228841-a3c527ebefe5?w=600&q=80',
+    after: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&q=80',
+    duration: '2 tháng',
+    note: 'Giảm 90% mụn viêm, da đều màu, lỗ chân lông se nhỏ.',
+  },
+  {
+    id: 'ba2',
+    title: 'Trẻ hóa da – 10 buổi',
+    before: 'https://images.unsplash.com/photo-1559599101-f09722fb4948?w=600&q=80',
+    after: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=600&q=80',
+    duration: '2 tháng',
+    note: 'Nâng cơ, mờ nếp nhăn, da săn chắc tự nhiên.',
+  },
 ];
 
 export const SPA2_SERVICES: Spa2ServiceItem[] = [
@@ -305,11 +387,25 @@ export type Spa2BlogPost = {
   excerpt: string;
   cover: string;
   author: string;
+  /** ISO date (yyyy-mm-dd), used for sorting & the editor date input */
   publishedAt: string;
+  /** Localised display date (dd/mm/yyyy) used by the public blog */
+  date: string;
+  category: string;
+  readTime: string;
   tags: string[];
   content: string;
   status: 'Đã đăng' | 'Bản nháp' | 'Chờ duyệt';
 };
+
+export type Spa2BlogCategory = { name: string; count: number };
+
+export const SPA2_BLOG_CATEGORIES: Spa2BlogCategory[] = [
+  { name: 'Aromatherapy', count: 4 },
+  { name: 'Skincare', count: 7 },
+  { name: 'Wellness', count: 5 },
+  { name: 'Mindfulness', count: 3 },
+];
 
 export const SPA2_POSTS: Spa2BlogPost[] = [
   {
@@ -319,6 +415,9 @@ export const SPA2_POSTS: Spa2BlogPost[] = [
     cover: SPA2_IMAGES.gallery1,
     author: 'Dr. Linh',
     publishedAt: '2025-02-14',
+    date: '14/02/2025',
+    category: 'Aromatherapy',
+    readTime: '5 phút',
     tags: ['thư giãn', 'self-care'],
     content: 'Chuẩn bị không gian, chọn tinh dầu phù hợp, kết hợp âm nhạc và tắm nước ấm...',
     status: 'Đã đăng',
@@ -330,6 +429,9 @@ export const SPA2_POSTS: Spa2BlogPost[] = [
     cover: SPA2_IMAGES.gallery2,
     author: 'Dr. Han',
     publishedAt: '2025-01-20',
+    date: '20/01/2025',
+    category: 'Skincare',
+    readTime: '7 phút',
     tags: ['skincare', 'mùa lạnh'],
     content: 'Uống đủ nước, dùng kem dưỡng có ceramide, tránh nước quá nóng khi tắm...',
     status: 'Đã đăng',
@@ -341,6 +443,9 @@ export const SPA2_POSTS: Spa2BlogPost[] = [
     cover: SPA2_IMAGES.gallery3,
     author: 'Master Trang',
     publishedAt: '2025-02-05',
+    date: '05/02/2025',
+    category: 'Wellness',
+    readTime: '6 phút',
     tags: ['thảo dược', 'văn hoá'],
     content: 'Ngải cứu, sả, gừng, quế... mỗi loại mang một giá trị chữa lành riêng.',
     status: 'Chờ duyệt',
@@ -352,11 +457,18 @@ export const SPA2_POSTS: Spa2BlogPost[] = [
     cover: SPA2_IMAGES.gallery4,
     author: 'Coach Minh',
     publishedAt: '2025-02-20',
+    date: '20/02/2025',
+    category: 'Mindfulness',
+    readTime: '8 phút',
     tags: ['yoga', 'wellness'],
     content: 'Yoga làm mềm cơ thể, spa giúp phục hồi — sự kết hợp hoàn hảo cho một buổi cuối tuần.',
     status: 'Bản nháp',
   },
 ];
+
+// Legacy aliases for the public spa2 view code (kept for backwards-compat).
+export const spa2BlogPosts = SPA2_POSTS;
+export const spa2BlogCategories = SPA2_BLOG_CATEGORIES;
 
 // ---------- Helpers ------------------------------------------------------
 
