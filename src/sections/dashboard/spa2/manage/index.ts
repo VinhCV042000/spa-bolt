@@ -5,7 +5,6 @@ export { Spa2OffersManageView } from './spa2-offers-manage-view';
 export { Spa2CareersManageView } from './spa2-careers-manage-view';
 export { Spa2GalleryManageView } from './spa2-gallery-manage-view';
 export { Spa2ServicesManageView } from './spa2-services-manage-view';
-export { Spa2ServiceEditorView } from './spa2-service-editor-view';
 export { Spa2BookingsManageView } from './spa2-bookings-manage-view';
 export { Spa2BranchesManageView } from './spa2-branches-manage-view';
 export { Spa2PartnersManageView } from './spa2-partners-manage-view';

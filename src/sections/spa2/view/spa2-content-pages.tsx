@@ -963,26 +963,11 @@ export function Spa2ServiceDetailsPageView() {
   const { slug } = useParams<{ slug: string }>();
   const service = spa2Services.find((s) => s.slug === slug) ?? spa2Services[0];
 
-  const stepsToShow =
-    service.steps && service.steps.length > 0 ? service.steps : spa2ServiceSteps;
-  const beforeAftersToShow =
-    service.beforeAfters && service.beforeAfters.length > 0
-      ? service.beforeAfters
-      : spa2BeforeAfters;
-  const faqsToShow =
-    service.faqs && service.faqs.length > 0 ? service.faqs : spa2Faqs;
-
-  const serviceFeedbacks =
-    service.feedbacks && service.feedbacks.length > 0 ? service.feedbacks : [];
   const relatedFeedbacks = spa2Feedbacks.filter((f) =>
     f.service.toLowerCase().includes(service.name.split(' ')[0].toLowerCase())
   );
   const feedbacksToShow =
-    serviceFeedbacks.length > 0
-      ? serviceFeedbacks
-      : relatedFeedbacks.length > 0
-        ? relatedFeedbacks
-        : spa2Feedbacks.slice(0, 3);
+    relatedFeedbacks.length > 0 ? relatedFeedbacks : spa2Feedbacks.slice(0, 3);
 
   return (
     <Spa2PageShell>
@@ -1062,10 +1047,10 @@ export function Spa2ServiceDetailsPageView() {
       {/* Quy trình - step timeline */}
       <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: SPA2_CREAM }}>
         <Container maxWidth="md">
-          <Spa2SectionTitle eyebrow="Quy trình" title={`${stepsToShow.length} bước trải nghiệm`} />
+          <Spa2SectionTitle eyebrow="Quy trình" title="5 bước trải nghiệm" />
           <Stack spacing={0}>
-            {stepsToShow.map((step, idx) => (
-              <Stack key={step.id || step.title} direction="row" spacing={3}>
+            {spa2ServiceSteps.map((step, idx) => (
+              <Stack key={step.title} direction="row" spacing={3}>
                 <Stack alignItems="center" sx={{ minWidth: 56 }}>
                   <Box
                     sx={{
@@ -1083,7 +1068,7 @@ export function Spa2ServiceDetailsPageView() {
                   >
                     {idx + 1}
                   </Box>
-                  {idx < stepsToShow.length - 1 && (
+                  {idx < spa2ServiceSteps.length - 1 && (
                     <Box sx={{ width: 2, flexGrow: 1, bgcolor: SPA2_TEAL_LIGHT, my: 0.5 }} />
                   )}
                 </Stack>
@@ -1104,8 +1089,8 @@ export function Spa2ServiceDetailsPageView() {
         <Container>
           <Spa2SectionTitle eyebrow="Kết quả" title="Hình ảnh trước & sau" />
           <Grid container spacing={3}>
-            {beforeAftersToShow.slice(0, 2).map((ba) => (
-              <Grid key={ba.id || ba.title} xs={12} sm={6}>
+            {spa2BeforeAfters.slice(0, 2).map((ba) => (
+              <Grid key={ba.title} xs={12} sm={6}>
                 <Spa2SoftCard sx={{ p: 0, overflow: 'hidden' }}>
                   <Grid container>
                     <Grid xs={6}>
@@ -1178,7 +1163,7 @@ export function Spa2ServiceDetailsPageView() {
                 <Spa2SoftCard>
                   <Rating value={f.rating} readOnly size="small" sx={{ mb: 1.5 }} />
                   <Typography sx={{ color: SPA2_INK, lineHeight: 1.7, mb: 2, fontStyle: 'italic' }}>
-                    "{f.comment}"
+                    “{f.comment}”
                   </Typography>
                   <Stack direction="row" spacing={2} alignItems="center">
                     <Avatar src={f.avatar} />
@@ -1200,9 +1185,9 @@ export function Spa2ServiceDetailsPageView() {
       <Box sx={{ py: { xs: 8, md: 12 } }}>
         <Container maxWidth="md">
           <Spa2SectionTitle eyebrow="FAQ" title="Câu hỏi thường gặp" />
-          {faqsToShow.slice(0, 4).map((f, idx) => (
+          {spa2Faqs.slice(0, 4).map((f, idx) => (
             <Accordion
-              key={f.id || f.q}
+              key={f.q}
               defaultExpanded={idx === 0}
               sx={{
                 mb: 1.5,
@@ -1528,7 +1513,7 @@ export function Spa2TrainingPageView() {
                       {g.name}
                     </Typography>
                     <Typography sx={{ color: SPA2_INK, fontStyle: 'italic', mb: 1.5 }}>
-                      "{g.review}"
+                      “{g.review}”
                     </Typography>
                     <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
                       — {g.student}
@@ -1862,7 +1847,7 @@ export function Spa2BlogPageView() {
 //           </Typography>
 //           <Box sx={{ p: 3, borderLeft: `4px solid ${SPA2_TEAL}`, bgcolor: SPA2_CREAM, my: 4 }}>
 //             <Typography sx={{ color: SPA2_INK, fontStyle: 'italic' }}>
-//               "Vẻ đẹp thực sự đến từ sự cân bằng giữa cơ thể, tâm trí và thiên nhiên."
+//               “Vẻ đẹp thực sự đến từ sự cân bằng giữa cơ thể, tâm trí và thiên nhiên.”
 //             </Typography>
 //           </Box>
 //         </Container>
@@ -1932,7 +1917,7 @@ export function Spa2BlogDetailsPageView() {
           </Typography>
           <Box sx={{ p: 3, borderLeft: `4px solid ${SPA2_TEAL}`, bgcolor: SPA2_CREAM, my: 4 }}>
             <Typography sx={{ color: SPA2_INK, fontStyle: 'italic' }}>
-              "Vẻ đẹp thực sự đến từ sự cân bằng giữa cơ thể, tâm trí và thiên nhiên."
+              “Vẻ đẹp thực sự đến từ sự cân bằng giữa cơ thể, tâm trí và thiên nhiên.”
             </Typography>
           </Box>
 
@@ -3099,7 +3084,7 @@ export function Spa2OffersPageView() {
 //                 <Spa2SoftCard>
 //                   <Rating value={f.rating} readOnly size="small" sx={{ mb: 1.5 }} />
 //                   <Typography sx={{ color: SPA2_INK, lineHeight: 1.7, mb: 2, fontStyle: 'italic' }}>
-//                     "{f.comment}"
+//                     “{f.comment}”
 //                   </Typography>
 //                   <Stack direction="row" spacing={2} alignItems="center">
 //                     <Avatar src={f.avatar} />
@@ -3207,7 +3192,7 @@ export function Spa2FeedbackPageView() {
                 <Spa2SoftCard>
                   <Rating value={f.rating} readOnly size="small" sx={{ mb: 1.5 }} />
                   <Typography sx={{ color: SPA2_INK, lineHeight: 1.7, mb: 2, fontStyle: 'italic' }}>
-                    "{f.comment}"
+                    “{f.comment}”
                   </Typography>
                   <Stack direction="row" spacing={2} alignItems="center">
                     <Avatar src={f.avatar} />
@@ -4590,7 +4575,7 @@ export function Spa2BeforeAfterPageView() {
                 <Spa2SoftCard>
                   <Rating value={f.rating} readOnly size="small" sx={{ mb: 1.5 }} />
                   <Typography sx={{ color: SPA2_INK, lineHeight: 1.7, mb: 2, fontStyle: 'italic' }}>
-                    "{f.comment}"
+                    “{f.comment}”
                   </Typography>
                   <Stack direction="row" spacing={2} alignItems="center">
                     <Avatar src={f.avatar} />

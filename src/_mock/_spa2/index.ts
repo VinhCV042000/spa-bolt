@@ -105,37 +105,6 @@ export const SPA2_SERVICE_CATEGORIES: Spa2ServiceCategory[] = [
   { value: 'detox', label: 'Detox' },
 ];
 
-export type Spa2ServiceStep = {
-  id: string;
-  title: string;
-  desc: string;
-};
-
-export type Spa2BeforeAfter = {
-  id: string;
-  title: string;
-  before: string;
-  after: string;
-  duration: string;
-  note: string;
-};
-
-export type Spa2Feedback = {
-  id: string;
-  name: string;
-  role: string;
-  rating: number;
-  avatar: string;
-  comment: string;
-  service: string;
-};
-
-export type Spa2Faq = {
-  id: string;
-  q: string;
-  a: string;
-};
-
 export type Spa2ServiceItem = {
   slug: string;
   category: string;
@@ -147,45 +116,7 @@ export type Spa2ServiceItem = {
   icon: string;
   benefits: string[];
   status: Spa2ServiceStatus;
-  steps: Spa2ServiceStep[];
-  beforeAfters: Spa2BeforeAfter[];
-  feedbacks: Spa2Feedback[];
-  faqs: Spa2Faq[];
-  gallery: string[];
 };
-
-const DEFAULT_STEPS = [
-  { id: 's1', title: 'Tư vấn & thăm khám', desc: 'KTV đánh giá tình trạng da/cơ thể và tư vấn liệu trình phù hợp.' },
-  { id: 's2', title: 'Làm sạch & chuẩn bị', desc: 'Tẩy trang, làm sạch sâu, xông hơi giúp lỗ chân lông giãn nở.' },
-  { id: 's3', title: 'Thực hiện liệu trình chính', desc: 'Áp dụng kỹ thuật và sản phẩm chuyên biệt theo từng dịch vụ.' },
-  { id: 's4', title: 'Phục hồi & dưỡng', desc: 'Đắp mặt nạ/dưỡng chất, massage thư giãn kết thúc liệu trình.' },
-  { id: 's5', title: 'Tư vấn hậu phẫu', desc: 'Hướng dẫn chăm sóc tại nhà và lịch hẹn tái khám.' },
-];
-
-const DEFAULT_FAQS = [
-  { id: 'f1', q: 'Tôi cần đặt lịch trước bao lâu?', a: 'Bạn nên đặt lịch trước ít nhất 2 giờ. Vào cuối tuần nên đặt trước 1 ngày để có khung giờ đẹp.' },
-  { id: 'f2', q: 'Sản phẩm sử dụng có an toàn cho da nhạy cảm?', a: 'Chúng tôi sử dụng 100% nguyên liệu hữu cơ, không cồn, không paraben, an toàn cho cả da nhạy cảm và phụ nữ mang thai.' },
-  { id: 'f3', q: 'Có hỗ trợ thanh toán trả góp không?', a: 'Có. Nature Spa hỗ trợ trả góp 0% qua thẻ tín dụng của 12 ngân hàng đối tác.' },
-  { id: 'f4', q: 'Tôi có thể đổi/hủy lịch không?', a: 'Bạn có thể đổi hoặc hủy lịch miễn phí trước 4 giờ so với giờ hẹn.' },
-];
-
-const DEFAULT_FEEDBACKS = [
-  { id: 'fb1', name: 'Minh Anh', role: 'Khách hàng VIP', rating: 5, avatar: 'https://i.pravatar.cc/150?img=11', comment: 'Không gian xanh mát, tinh dầu thơm dịu, kỹ thuật viên rất chuyên nghiệp.', service: 'Massage Thảo Dược' },
-  { id: 'fb2', name: 'Thu Hà', role: 'Thành viên Premium', rating: 5, avatar: 'https://i.pravatar.cc/150?img=16', comment: 'Liệu trình rõ rệt sau 4 buổi. Da đều màu hơn, cảm thấy thư giãn tuyệt đối.', service: 'Facial Organic' },
-  { id: 'fb3', name: 'Hoàng Nam', role: 'Khách hàng', rating: 4, avatar: 'https://i.pravatar.cc/150?img=33', comment: 'Dịch vụ tốt, không gian đẹp. Sẽ quay lại vào tháng sau.', service: 'Body Scrub & Wrap' },
-];
-
-const DEFAULT_GALLERY = [
-  'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600&q=80',
-  'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=600&q=80',
-  'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&q=80',
-  'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=600&q=80',
-];
-
-const DEFAULT_BEFORE_AFTERS = [
-  { id: 'ba1', title: 'Trị mụn – 8 buổi', before: 'https://images.unsplash.com/photo-1556228841-a3c527ebefe5?w=600&q=80', after: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&q=80', duration: '2 tháng', note: 'Giảm 90% mụn viêm, da đều màu, lỗ chân lông se nhỏ.' },
-  { id: 'ba2', title: 'Trẻ hóa da – 10 buổi', before: 'https://images.unsplash.com/photo-1559599101-f09722fb4948?w=600&q=80', after: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=600&q=80', duration: '2 tháng', note: 'Nâng cơ, mờ nếp nhăn, da săn chắc tự nhiên.' },
-];
 
 export const SPA2_SERVICES: Spa2ServiceItem[] = [
   {
@@ -199,11 +130,6 @@ export const SPA2_SERVICES: Spa2ServiceItem[] = [
     image: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=900&q=80',
     benefits: ['Giảm căng cơ', 'Lưu thông khí huyết', 'An thần dễ ngủ', 'Detox nhẹ'],
     status: 'Đang hiển thị',
-    steps: DEFAULT_STEPS,
-    beforeAfters: DEFAULT_BEFORE_AFTERS,
-    feedbacks: DEFAULT_FEEDBACKS,
-    faqs: DEFAULT_FAQS,
-    gallery: DEFAULT_GALLERY,
   },
   {
     slug: 'organic-facial',
@@ -216,11 +142,6 @@ export const SPA2_SERVICES: Spa2ServiceItem[] = [
     image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=900&q=80',
     benefits: ['Cấp ẩm chuyên sâu', 'Sáng da tự nhiên', 'Làm dịu mẩn đỏ', 'Giảm dấu hiệu lão hóa'],
     status: 'Đang hiển thị',
-    steps: DEFAULT_STEPS,
-    beforeAfters: DEFAULT_BEFORE_AFTERS,
-    feedbacks: DEFAULT_FEEDBACKS,
-    faqs: DEFAULT_FAQS,
-    gallery: DEFAULT_GALLERY,
   },
   {
     slug: 'body-scrub-wrap',
@@ -233,11 +154,6 @@ export const SPA2_SERVICES: Spa2ServiceItem[] = [
     image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=900&q=80',
     benefits: ['Da mịn màng', 'Săn chắc tự nhiên', 'Thải độc qua da', 'Mùi hương dễ chịu'],
     status: 'Đang hiển thị',
-    steps: DEFAULT_STEPS,
-    beforeAfters: DEFAULT_BEFORE_AFTERS,
-    feedbacks: DEFAULT_FEEDBACKS,
-    faqs: DEFAULT_FAQS,
-    gallery: DEFAULT_GALLERY,
   },
   {
     slug: 'aromatherapy',
@@ -250,11 +166,6 @@ export const SPA2_SERVICES: Spa2ServiceItem[] = [
     image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=900&q=80',
     benefits: ['Giảm stress', 'Cân bằng tinh thần', 'Cải thiện giấc ngủ'],
     status: 'Bản nháp',
-    steps: DEFAULT_STEPS,
-    beforeAfters: DEFAULT_BEFORE_AFTERS,
-    feedbacks: DEFAULT_FEEDBACKS,
-    faqs: DEFAULT_FAQS,
-    gallery: DEFAULT_GALLERY,
   },
   {
     slug: 'couples-spa',
@@ -267,11 +178,6 @@ export const SPA2_SERVICES: Spa2ServiceItem[] = [
     image: 'https://plus.unsplash.com/premium_photo-1661574718355-82659c0c74cc?w=900&q=80',
     benefits: ['Phòng VIP riêng', 'Trà & trái cây', 'Bồn tắm hoa', 'Quà tặng cặp đôi'],
     status: 'Đang hiển thị',
-    steps: DEFAULT_STEPS,
-    beforeAfters: DEFAULT_BEFORE_AFTERS,
-    feedbacks: DEFAULT_FEEDBACKS,
-    faqs: DEFAULT_FAQS,
-    gallery: DEFAULT_GALLERY,
   },
   {
     slug: 'detox-cleanse',
@@ -284,11 +190,6 @@ export const SPA2_SERVICES: Spa2ServiceItem[] = [
     image: 'https://images.unsplash.com/photo-1596178060671-7a80dc8059ea?w=900&q=80',
     benefits: ['Thải độc gan', 'Giảm 1–3kg', 'Nâng cao đề kháng', 'Chuyên gia theo dõi'],
     status: 'Đang hiển thị',
-    steps: DEFAULT_STEPS,
-    beforeAfters: DEFAULT_BEFORE_AFTERS,
-    feedbacks: DEFAULT_FEEDBACKS,
-    faqs: DEFAULT_FAQS,
-    gallery: DEFAULT_GALLERY,
   },
 ];
 
