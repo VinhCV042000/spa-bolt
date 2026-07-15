@@ -124,6 +124,16 @@ const Spa2TherapistProfilePage = lazy(() => import('src/pages/spa2/therapist-pro
 const Spa2SleepWellnessPage = lazy(() => import('src/pages/spa2/sleep-wellness'));
 const Spa2PrenatalSpaPage = lazy(() => import('src/pages/spa2/prenatal-spa'));
 const Spa2WellnessAssessmentPage = lazy(() => import('src/pages/spa2/wellness-assessment'));
+// spa2-content-pages8
+const Spa2VideoGuidePage = lazy(() => import('src/pages/spa2/video-guide'));
+const Spa2FranchisePage = lazy(() => import('src/pages/spa2/franchise'));
+const Spa2CertificateWallPage = lazy(() => import('src/pages/spa2/certificate-wall'));
+const Spa2GroupBookingPage = lazy(() => import('src/pages/spa2/group-booking'));
+// spa2-content-pages9
+const Spa2PriceListPage = lazy(() => import('src/pages/spa2/price-list'));
+const Spa2WaitListPage = lazy(() => import('src/pages/spa2/wait-list'));
+const Spa2VoucherCheckPage = lazy(() => import('src/pages/spa2/voucher-check'));
+const Spa2AccessibilityPage = lazy(() => import('src/pages/spa2/accessibility'));
 
 // Spa3 (mediterranean variant)
 const Spa3Page = lazy(() => import('src/pages/spa3'));
@@ -649,6 +659,16 @@ export const mainRoutes = [
               { path: 'sleep-wellness', element: <Spa2SleepWellnessPage /> },
               { path: 'prenatal-spa', element: <Spa2PrenatalSpaPage /> },
               { path: 'wellness-assessment', element: <Spa2WellnessAssessmentPage /> },
+              // spa2-content-pages8
+              { path: 'franchise', element: <Spa2FranchisePage /> },
+              { path: 'group-booking', element: <Spa2GroupBookingPage /> },
+              { path: 'certificate-wall', element: <Spa2CertificateWallPage /> },
+              { path: 'video-guide', element: <Spa2VideoGuidePage /> },
+              // spa2-content-pages9
+              { path: 'price-list', element: <Spa2PriceListPage /> },
+              { path: 'wait-list', element: <Spa2WaitListPage /> },
+              { path: 'voucher-check', element: <Spa2VoucherCheckPage /> },
+              { path: 'accessibility', element: <Spa2AccessibilityPage /> },
             ],
           },
           {

@@ -137,6 +137,7 @@ export type Spa2Faq = {
 };
 
 export type Spa2ServiceItem = {
+  id: string;
   slug: string;
   category: string;
   name: string;
@@ -189,6 +190,7 @@ const DEFAULT_BEFORE_AFTERS = [
 
 export const SPA2_SERVICES: Spa2ServiceItem[] = [
   {
+    id: '1',
     slug: 'herbal-massage',
     category: 'massage',
     name: 'Massage Thảo Dược',
@@ -206,6 +208,7 @@ export const SPA2_SERVICES: Spa2ServiceItem[] = [
     gallery: DEFAULT_GALLERY,
   },
   {
+    id: '2',
     slug: 'organic-facial',
     category: 'facial',
     name: 'Facial Organic',
@@ -223,6 +226,7 @@ export const SPA2_SERVICES: Spa2ServiceItem[] = [
     gallery: DEFAULT_GALLERY,
   },
   {
+    id: '3',
     slug: 'body-scrub-wrap',
     category: 'body',
     name: 'Body Scrub & Wrap',
@@ -240,6 +244,7 @@ export const SPA2_SERVICES: Spa2ServiceItem[] = [
     gallery: DEFAULT_GALLERY,
   },
   {
+    id: '4',
     slug: 'aromatherapy',
     category: 'massage',
     name: 'Aromatherapy',
@@ -257,6 +262,7 @@ export const SPA2_SERVICES: Spa2ServiceItem[] = [
     gallery: DEFAULT_GALLERY,
   },
   {
+    id: '5',
     slug: 'couples-spa',
     category: 'couple',
     name: 'Spa Đôi',
@@ -274,6 +280,7 @@ export const SPA2_SERVICES: Spa2ServiceItem[] = [
     gallery: DEFAULT_GALLERY,
   },
   {
+    id: '6',
     slug: 'detox-cleanse',
     category: 'detox',
     name: 'Detox & Thanh Lọc',

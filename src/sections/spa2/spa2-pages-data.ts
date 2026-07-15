@@ -3,6 +3,19 @@
 // Distinct from spa1 (dark luxury) – soft, organic, airy, eco-friendly.
 // ----------------------------------------------------------------------
 
+// Thêm field "category" cho spa2Services (chèn vào từng object hiện có), ví dụ:
+// herbal-massage -> category: 'massage'
+// organic-facial -> category: 'facial'
+// body-scrub-wrap -> category: 'body'
+// aromatherapy -> category: 'massage'
+// couples-spa -> category: 'couple'
+// detox-cleanse -> category: 'detox'
+
+import {
+  SPA2_SERVICES as _spa2Services,
+  SPA2_SERVICE_CATEGORIES as _spa2ServiceCategories,
+} from 'src/_mock/_spa2';
+
 export const SPA2_TEAL = '#2E8B7A';
 export const SPA2_TEAL_DARK = '#1D6B5C';
 export const SPA2_TEAL_LIGHT = '#5AB5A3';
@@ -36,39 +49,34 @@ export const SPA2_PAGE_IMAGES = {
   gallery: 'https://images.unsplash.com/photo-1531112068337-3cd6d0d2b56b?w=1600&q=80',
 };
 
-// Thêm field "category" cho spa2Services (chèn vào từng object hiện có), ví dụ:
-// herbal-massage -> category: 'massage'
-// organic-facial -> category: 'facial'
-// body-scrub-wrap -> category: 'body'
-// aromatherapy -> category: 'massage'
-// couples-spa -> category: 'couple'
-// detox-cleanse -> category: 'detox'
-
-import {
-  SPA2_SERVICE_CATEGORIES as _spa2ServiceCategories,
-  SPA2_SERVICES as _spa2Services,
-} from 'src/_mock/_spa2';
-
 export const spa2ServiceCategories = _spa2ServiceCategories;
 
 export const spa2ServiceSteps = [
   {
+    id: 1,
     title: 'Tư vấn & thăm khám',
     desc: 'KTV đánh giá tình trạng da/cơ thể và tư vấn liệu trình phù hợp.',
   },
   {
+    id: 2,
     title: 'Làm sạch & chuẩn bị',
     desc: 'Tẩy trang, làm sạch sâu, xông hơi giúp lỗ chân lông giãn nở.',
   },
   {
+    id: 3,
     title: 'Thực hiện liệu trình chính',
     desc: 'Áp dụng kỹ thuật và sản phẩm chuyên biệt theo từng dịch vụ.',
   },
   {
+    id: 4,
     title: 'Phục hồi & dưỡng',
     desc: 'Đắp mặt nạ/dưỡng chất, massage thư giãn kết thúc liệu trình.',
   },
-  { title: 'Tư vấn chăm sóc tại nhà', desc: 'Hướng dẫn duy trì kết quả và lịch tái khám phù hợp.' },
+  {
+    id: 5,
+    title: 'Tư vấn chăm sóc tại nhà',
+    desc: 'Hướng dẫn duy trì kết quả và lịch tái khám phù hợp.',
+  },
 ];
 
 export const spa2PartnerProfiles = [
@@ -165,6 +173,7 @@ export const spa2Services = _spa2Services;
 
 export const spa2Treatments = [
   {
+    id: 1,
     name: 'Liệu Trình Trẻ Hóa 10 Buổi',
     sessions: 10,
     duration: '2 tháng',
@@ -173,6 +182,7 @@ export const spa2Treatments = [
     includes: ['Facial Collagen', 'RF nâng cơ', 'Mặt nạ vàng 24K', 'Massage cổ vai gáy'],
   },
   {
+    id: 2,
     name: 'Liệu Trình Trị Mụn 8 Buổi',
     sessions: 8,
     duration: '2 tháng',
@@ -181,6 +191,7 @@ export const spa2Treatments = [
     includes: ['Lấy nhân mụn chuẩn y khoa', 'Ánh sáng sinh học', 'Peel nhẹ', 'Phục hồi cấp ẩm'],
   },
   {
+    id: 3,
     name: 'Liệu Trình Giảm Béo 12 Buổi',
     sessions: 12,
     duration: '3 tháng',
@@ -189,6 +200,7 @@ export const spa2Treatments = [
     includes: ['Sóng RF tan mỡ', 'Massage dẫn lưu', 'Ủ thảo dược', 'Tư vấn dinh dưỡng'],
   },
   {
+    id: 4,
     name: 'Liệu Trình Trắng Sáng 6 Buổi',
     sessions: 6,
     duration: '6 tuần',
@@ -526,6 +538,7 @@ export const spa2Feedbacks = [
 
 export const spa2BeforeAfters = [
   {
+    id: 1,
     title: 'Trị mụn – 8 buổi',
     before: 'https://images.unsplash.com/photo-1556228841-a3c527ebefe5?w=600&q=80',
     after: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&q=80',
@@ -533,6 +546,7 @@ export const spa2BeforeAfters = [
     note: 'Giảm 90% mụn viêm, da đều màu, lỗ chân lông se nhỏ.',
   },
   {
+    id: 2,
     title: 'Trẻ hóa da – 10 buổi',
     before: 'https://images.unsplash.com/photo-1559599101-f09722fb4948?w=600&q=80',
     after: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=600&q=80',
@@ -540,6 +554,7 @@ export const spa2BeforeAfters = [
     note: 'Nâng cơ, mờ nếp nhăn, da săn chắc tự nhiên.',
   },
   {
+    id: 3,
     title: 'Giảm béo – 12 buổi',
     before: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80',
     after: 'https://images.unsplash.com/photo-1517363898874-737b62a7db91?w=600&q=80',
@@ -547,6 +562,7 @@ export const spa2BeforeAfters = [
     note: 'Giảm 8cm vòng eo, săn chắc cơ bụng, không xâm lấn.',
   },
   {
+    id: 4,
     title: 'Trắng sáng – 6 buổi',
     before: 'https://images.unsplash.com/photo-1516975698824-571cb39ceee6?w=600&q=80',
     after: 'https://images.unsplash.com/photo-1531123414780-f3d9d2c46c6c?w=600&q=80',
@@ -557,26 +573,32 @@ export const spa2BeforeAfters = [
 
 export const spa2Faqs = [
   {
+    id: 1,
     q: 'Tôi cần đặt lịch trước bao lâu?',
     a: 'Bạn nên đặt lịch trước ít nhất 2 giờ. Vào cuối tuần nên đặt trước 1 ngày để có khung giờ đẹp.',
   },
   {
+    id: 2,
     q: 'Sản phẩm sử dụng có an toàn cho da nhạy cảm?',
     a: 'Chúng tôi sử dụng 100% nguyên liệu hữu cơ, không cồn, không paraben, an toàn cho cả da nhạy cảm và phụ nữ mang thai.',
   },
   {
+    id: 3,
     q: 'Có hỗ trợ thanh toán trả góp không?',
     a: 'Có. Nature Spa hỗ trợ trả góp 0% qua thẻ tín dụng của 12 ngân hàng đối tác.',
   },
   {
+    id: 4,
     q: 'Tôi có thể đổi/hủy lịch không?',
     a: 'Bạn có thể đổi hoặc hủy lịch miễn phí trước 4 giờ so với giờ hẹn.',
   },
   {
+    id: 5,
     q: 'Có phòng riêng cho cặp đôi không?',
     a: 'Có 6 phòng VIP đôi tại các chi nhánh, kèm bồn tắm hoa và khu nghỉ riêng tư.',
   },
   {
+    id: 6,
     q: 'Spa có chương trình thẻ thành viên không?',
     a: 'Có 3 hạng thẻ: Silver, Gold, Platinum với ưu đãi 5–15% và quà tặng sinh nhật.',
   },

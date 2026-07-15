@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -6,42 +6,40 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Unstable_Grid2';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import InputAdornment from '@mui/material/InputAdornment';
-import Grid from '@mui/material/Unstable_Grid2';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { useTranslate } from 'src/locales';
 import { DashboardContent } from 'src/layouts/dashboard';
+import {
+  SPA2_SERVICES,
+  type Spa2ServiceItem,
+  type Spa2ServiceStatus,
+  SPA2_SERVICE_CATEGORIES,
+} from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 import {
-  SPA2_SERVICES,
-  SPA2_SERVICE_CATEGORIES,
-  type Spa2ServiceItem,
-  type Spa2ServiceStatus,
-} from 'src/_mock/_spa2';
-
-import {
-  SPA2_CREAM,
   SPA2_INK,
   SPA2_SAGE,
   SPA2_TEAL,
-  SPA2_CREAM_DARK,
+  SPA2_CREAM,
   SPA2_TEAL_DARK,
+  SPA2_CREAM_DARK,
   SPA2_TEAL_LIGHT,
 } from 'src/sections/spa2/spa2-pages-data';
 
@@ -52,12 +50,13 @@ const CATEGORIES = SPA2_SERVICE_CATEGORIES.filter((c) => c.value !== 'all');
 const STATUS_COLOR: Record<Spa2ServiceStatus, 'success' | 'default' | 'warning'> = {
   'Đang hiển thị': 'success',
   'Bản nháp': 'default',
-  'Ẩn': 'warning',
+  Ẩn: 'warning',
 };
 
 const formatVND = (n: number) => `${new Intl.NumberFormat('vi-VN').format(n)}đ`;
 
 const EMPTY_FORM: Spa2ServiceItem = {
+  id: '',
   slug: '',
   category: 'massage',
   name: '',
@@ -90,7 +89,7 @@ export function Spa2ServicesManageView() {
 
   const filtered = useMemo(() => {
     let list = items.filter(
-    (s) =>
+      (s) =>
         s.name.toLowerCase().includes(search.toLowerCase()) ||
         s.category.toLowerCase().includes(search.toLowerCase())
     );
@@ -323,9 +322,7 @@ export function Spa2ServicesManageView() {
                   }}
                 />
                 <Chip
-                  label={
-                    CATEGORIES.find((c) => c.value === item.category)?.label ?? item.category
-                  }
+                  label={CATEGORIES.find((c) => c.value === item.category)?.label ?? item.category}
                   size="small"
                   sx={{
                     position: 'absolute',
@@ -381,7 +378,11 @@ export function Spa2ServicesManageView() {
                     <Tooltip title={item.status === 'Đang hiển thị' ? 'Ẩn' : 'Hiện'}>
                       <IconButton size="small" onClick={() => handleToggle(item.slug)}>
                         <Iconify
-                          icon={item.status === 'Đang hiển thị' ? 'solar:eye-closed-bold' : 'solar:eye-bold'}
+                          icon={
+                            item.status === 'Đang hiển thị'
+                              ? 'solar:eye-closed-bold'
+                              : 'solar:eye-bold'
+                          }
                           color={item.status === 'Đang hiển thị' ? 'warning.main' : 'success.main'}
                         />
                       </IconButton>
@@ -483,7 +484,9 @@ export function Spa2ServicesManageView() {
               label="Trạng thái"
               select
               value={form.status}
-              onChange={(e) => setForm((p) => ({ ...p, status: e.target.value as Spa2ServiceStatus }))}
+              onChange={(e) =>
+                setForm((p) => ({ ...p, status: e.target.value as Spa2ServiceStatus }))
+              }
               fullWidth
             >
               <MenuItem value="Đang hiển thị">Đang hiển thị</MenuItem>

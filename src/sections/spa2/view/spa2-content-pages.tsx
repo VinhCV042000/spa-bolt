@@ -1178,7 +1178,7 @@ export function Spa2ServiceDetailsPageView() {
                 <Spa2SoftCard>
                   <Rating value={f.rating} readOnly size="small" sx={{ mb: 1.5 }} />
                   <Typography sx={{ color: SPA2_INK, lineHeight: 1.7, mb: 2, fontStyle: 'italic' }}>
-                    "{f.comment}"
+                    &ldquo;{f.comment}&rdquo;
                   </Typography>
                   <Stack direction="row" spacing={2} alignItems="center">
                     <Avatar src={f.avatar} />
@@ -1528,7 +1528,7 @@ export function Spa2TrainingPageView() {
                       {g.name}
                     </Typography>
                     <Typography sx={{ color: SPA2_INK, fontStyle: 'italic', mb: 1.5 }}>
-                      "{g.review}"
+                      &ldquo;{g.review}&rdquo;
                     </Typography>
                     <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
                       — {g.student}
@@ -1932,7 +1932,7 @@ export function Spa2BlogDetailsPageView() {
           </Typography>
           <Box sx={{ p: 3, borderLeft: `4px solid ${SPA2_TEAL}`, bgcolor: SPA2_CREAM, my: 4 }}>
             <Typography sx={{ color: SPA2_INK, fontStyle: 'italic' }}>
-              "Vẻ đẹp thực sự đến từ sự cân bằng giữa cơ thể, tâm trí và thiên nhiên."
+              &ldquo;Vẻ đẹp thực sự đến từ sự cân bằng giữa cơ thể, tâm trí và thiên nhiên.&rdquo;
             </Typography>
           </Box>
 
@@ -3207,7 +3207,7 @@ export function Spa2FeedbackPageView() {
                 <Spa2SoftCard>
                   <Rating value={f.rating} readOnly size="small" sx={{ mb: 1.5 }} />
                   <Typography sx={{ color: SPA2_INK, lineHeight: 1.7, mb: 2, fontStyle: 'italic' }}>
-                    "{f.comment}"
+                    &ldquo;{f.comment}&rdquo;
                   </Typography>
                   <Stack direction="row" spacing={2} alignItems="center">
                     <Avatar src={f.avatar} />
@@ -4590,7 +4590,7 @@ export function Spa2BeforeAfterPageView() {
                 <Spa2SoftCard>
                   <Rating value={f.rating} readOnly size="small" sx={{ mb: 1.5 }} />
                   <Typography sx={{ color: SPA2_INK, lineHeight: 1.7, mb: 2, fontStyle: 'italic' }}>
-                    "{f.comment}"
+                    &ldquo;{f.comment}&rdquo;
                   </Typography>
                   <Stack direction="row" spacing={2} alignItems="center">
                     <Avatar src={f.avatar} />
