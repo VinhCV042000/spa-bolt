@@ -68,6 +68,11 @@ const EMPTY_FORM: Spa2ServiceItem = {
   image: '',
   benefits: [],
   status: 'Đang hiển thị',
+  steps: [],
+  beforeAfters: [],
+  feedbacks: [],
+  faqs: [],
+  gallery: [],
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
