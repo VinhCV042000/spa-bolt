@@ -1,5 +1,6 @@
 export { Spa2FaqManageView } from 'src/sections/dashboard/spa2/manage/spa2-faq-manage-view';
 export { Spa2BlogManageView } from 'src/sections/dashboard/spa2/manage/spa2-blog-manage-view';
+export { Spa2AboutManageView } from 'src/sections/dashboard/spa2/manage/spa2-about-manage-view';
 export { Spa2StaffManageView } from 'src/sections/dashboard/spa2/manage/spa2-staff-manage-view';
 export { Spa2OffersManageView } from 'src/sections/dashboard/spa2/manage/spa2-offers-manage-view';
 export { Spa2CareersManageView } from 'src/sections/dashboard/spa2/manage/spa2-careers-manage-view';

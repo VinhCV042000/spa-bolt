@@ -45,6 +45,7 @@ import { Iconify } from 'src/components/iconify';
 
 import {
   SPA2_INK,
+  spa2Team,
   spa2Faqs,
   SPA2_SAGE,
   SPA2_TEAL,
@@ -56,8 +57,11 @@ import {
   spa2Services,
   spa2BlogPosts,
   spa2Feedbacks,
+  spa2AboutStory,
+  spa2AboutBanner,
   SPA2_TEAL_DARK,
   spa2Treatments,
+  spa2AboutStoryImage,
   spa2Promotions,
   SPA2_CREAM_DARK,
   SPA2_TEAL_LIGHT,
@@ -71,8 +75,10 @@ import {
   spa2ServiceSteps,
   spa2QualityCerts,
   spa2Technologies,
+  spa2VisionMission,
   spa2CareersSlogan,
   spa2ExtraPartners,
+  spa2Certifications,
   spa2BlogCategories,
   spa2Collaborations,
   spa2PartnerProfiles,
@@ -89,6 +95,7 @@ import {
   spa2RecruitmentProcess,
   spa2InternalVideoThumb,
 } from '../spa2-pages-data';
+import { spa2ImageBackgroundStyle } from '../spa2-image-utils';
 
 // ----------------------------------------------------------------------
 // SHARED BUILDING BLOCKS – Nature/cream style with curved organic shapes
@@ -98,11 +105,13 @@ const formatVND = (n: number) => `${new Intl.NumberFormat('vi-VN').format(n)}đ`
 
 function Spa2PageHero({
   image,
+  imageStyle,
   eyebrow,
   title,
   subtitle,
 }: {
   image: string;
+  imageStyle?: { focalX?: number; focalY?: number; zoom?: number };
   eyebrow: string;
   title: string;
   subtitle: string;
@@ -204,9 +213,12 @@ function Spa2PageHero({
                 borderRadius: '50% 50% 30% 30% / 30% 30% 20% 20%',
                 overflow: 'hidden',
                 boxShadow: '0 30px 60px rgba(46,139,122,0.25)',
-                backgroundImage: `url(${image})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
+                ...spa2ImageBackgroundStyle({
+                  url: image,
+                  focalX: imageStyle?.focalX ?? 50,
+                  focalY: imageStyle?.focalY ?? 50,
+                  zoom: imageStyle?.zoom ?? 100,
+                }),
               }}
             />
           </Grid>
@@ -424,87 +436,22 @@ function Spa2PageShell({ children }: { children: React.ReactNode }) {
 // 1. ABOUT
 // ======================================================================
 export function Spa2AboutPageView() {
-  const story = [
-    'Nature Spa ra đời năm 2015 tại TP.HCM, khởi nguồn từ mong muốn mang những liệu pháp chăm sóc da và cơ thể an toàn, lành tính đến gần hơn với phụ nữ Việt – nơi thiên nhiên và khoa học cùng song hành.',
-    'Từ một cơ sở nhỏ với 3 kỹ thuật viên, chúng tôi đã phát triển thành hệ thống 4 chi nhánh trên toàn quốc, đồng hành cùng hơn 25.000 khách hàng trong hành trình tìm lại sự cân bằng cho cơ thể và tâm trí.',
-    'Mỗi sản phẩm, mỗi liệu trình tại Nature Spa đều được chọn lọc kỹ lưỡng từ nguyên liệu hữu cơ, kết hợp công nghệ chăm sóc da hiện đại từ châu Âu – để vẻ đẹp không chỉ nằm ở bề ngoài mà còn lan tỏa từ bên trong.',
-  ];
-
-  const visionMission = [
-    {
-      icon: 'solar:eye-bold-duotone',
-      title: 'Tầm nhìn',
-      desc: 'Trở thành hệ thống spa thiên nhiên hàng đầu Việt Nam – điểm đến tin cậy cho hành trình chăm sóc sức khỏe và vẻ đẹp bền vững của mọi phụ nữ.',
-    },
-    {
-      icon: 'solar:heart-bold-duotone',
-      title: 'Sứ mệnh',
-      desc: 'Mang đến trải nghiệm chăm sóc toàn diện, an toàn và tận tâm – giúp khách hàng cân bằng cơ thể, tâm trí và kết nối sâu sắc hơn với thiên nhiên.',
-    },
-  ];
-
-  const team = [
-    {
-      name: 'Nguyễn Thảo Vy',
-      role: 'Nhà sáng lập & CEO',
-      image: 'https://i.pravatar.cc/300?img=47',
-      bio: 'Hơn 15 năm kinh nghiệm trong ngành chăm sóc sắc đẹp, chứng chỉ CIDESCO quốc tế.',
-    },
-    {
-      name: 'Trần Minh Khôi',
-      role: 'Giám đốc chuyên môn',
-      image: 'https://i.pravatar.cc/300?img=12',
-      bio: 'Chuyên gia trị liệu da với hơn 10 năm tu nghiệp tại Pháp và Hàn Quốc.',
-    },
-    {
-      name: 'Phạm Hồng Nhi',
-      role: 'Trưởng phòng đào tạo',
-      image: 'https://i.pravatar.cc/300?img=32',
-      bio: 'Đào tạo hơn 500 kỹ thuật viên đạt chuẩn quốc tế trong 8 năm qua.',
-    },
-    {
-      name: 'Lê Gia Huy',
-      role: 'Chuyên gia Detox & dinh dưỡng',
-      image: 'https://i.pravatar.cc/300?img=14',
-      bio: 'Cố vấn dinh dưỡng cho các liệu trình detox và chăm sóc body toàn diện.',
-    },
-  ];
-
-  const certifications = [
-    {
-      icon: 'solar:medal-ribbon-star-bold-duotone',
-      name: 'Eco-Spa Certified',
-      org: 'Green Spa Network',
-      year: '2021',
-    },
-    {
-      icon: 'solar:verified-check-bold-duotone',
-      name: 'CIDESCO International',
-      org: 'CIDESCO',
-      year: '2019',
-    },
-    {
-      icon: 'solar:cup-star-bold-duotone',
-      name: 'Top 10 Spa Việt Nam',
-      org: 'Vietnam Beauty Awards',
-      year: '2023',
-    },
-    {
-      icon: 'solar:shield-check-bold-duotone',
-      name: 'ISO 9001:2015',
-      org: 'Bureau Veritas',
-      year: '2022',
-    },
-  ];
+  // Shared with the dashboard manage page (src/pages/dashboard/manage/spa2/about.tsx)
+  // via src/_mock/_spa2 — keep this view reading from the same source.
+  const story = spa2AboutStory;
+  const visionMission = spa2VisionMission;
+  const team = spa2Team;
+  const certifications = spa2Certifications;
 
   return (
     <Spa2PageShell>
       {/* Banner */}
       <Spa2PageHero
-        image={SPA2_PAGE_IMAGES.about}
-        eyebrow="Về Nature Spa"
-        title="Hành trình mang thiên nhiên vào từng liệu trình"
-        subtitle="Chúng tôi tin rằng vẻ đẹp đích thực bắt nguồn từ sự cân bằng giữa cơ thể, tâm trí và thiên nhiên."
+        image={spa2AboutBanner.image.url}
+        imageStyle={spa2AboutBanner.image}
+        eyebrow={spa2AboutBanner.eyebrow}
+        title={spa2AboutBanner.title}
+        subtitle={spa2AboutBanner.subtitle}
       />
 
       {/* Story thương hiệu */}
@@ -519,9 +466,7 @@ export function Spa2AboutPageView() {
                   borderRadius: '30% 30% 50% 50% / 20% 20% 30% 30%',
                   overflow: 'hidden',
                   boxShadow: '0 30px 60px rgba(46,139,122,0.2)',
-                  backgroundImage: `url(${SPA2_PAGE_IMAGES.about})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
+                  ...spa2ImageBackgroundStyle(spa2AboutStoryImage),
                 }}
               />
             </Grid>
@@ -551,6 +496,16 @@ export function Spa2AboutPageView() {
             {visionMission.map((v) => (
               <Grid key={v.title} xs={12} md={6}>
                 <Spa2SoftCard sx={{ textAlign: 'center', py: 5 }}>
+                  {v.image?.url && (
+                    <Box
+                      sx={{
+                        height: 160,
+                        borderRadius: 3,
+                        mb: 3,
+                        ...spa2ImageBackgroundStyle(v.image),
+                      }}
+                    />
+                  )}
                   <Box
                     sx={{
                       width: 72,
@@ -593,6 +548,15 @@ export function Spa2AboutPageView() {
                 <Spa2SoftCard sx={{ textAlign: 'center' }}>
                   <Avatar
                     src={t.image}
+                    alt={t.name}
+                    slotProps={{
+                      img: {
+                        style: {
+                          objectPosition: `${t.imageFocalX ?? 50}% ${t.imageFocalY ?? 50}%`,
+                          transform: `scale(${(t.imageZoom ?? 100) / 100})`,
+                        },
+                      },
+                    }}
                     sx={{
                       width: 96,
                       height: 96,

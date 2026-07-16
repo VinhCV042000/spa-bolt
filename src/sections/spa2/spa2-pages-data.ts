@@ -26,6 +26,7 @@ export {
   spa2Treatments,
   spa2Promotions,
   spa2AboutStory,
+  spa2AboutBanner,
   spa2ContactInfo,
   spa2ComboOffers,
   spa2JoinReasons,
@@ -44,6 +45,7 @@ export {
   spa2ExtraPartners,
   spa2Certifications,
   spa2Collaborations,
+  spa2AboutStoryImage,
   spa2PartnerProfiles,
   spa2BookingPackages,
   spa2TrainingMission,
@@ -58,7 +60,11 @@ export {
   spa2PartnerCategories,
   spa2RecruitmentProcess,
   spa2InternalVideoThumb,
+  type Spa2AdjustableImage,
+  type Spa2AboutTeamMember,
+  type Spa2AboutCertification,
   SPA2_POSTS as spa2BlogPosts,
+  type Spa2AboutVisionMissionItem,
   SPA2_BLOG_CATEGORIES as spa2BlogCategories,
 } from 'src/_mock/_spa2';
 

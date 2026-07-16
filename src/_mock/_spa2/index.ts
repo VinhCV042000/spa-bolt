@@ -87,39 +87,6 @@ export const SPA2_HOME_CONTENT: Spa2HomeContent = {
   heroImage: SPA2_PAGE_IMAGES.hero,
 };
 
-export type Spa2AboutContent = {
-  eyebrow: string;
-  title: string;
-  description: string;
-  image: string;
-  features: { title: string; desc: string; icon: string }[];
-};
-
-export const SPA2_ABOUT_CONTENT: Spa2AboutContent = {
-  eyebrow: 'Về Nature Spa',
-  title: 'Không gian chữa lành từ thiên nhiên',
-  description:
-    'Chúng tôi kết hợp tinh hoa thảo dược truyền thống với kỹ thuật massage hiện đại, đem đến hành trình chăm sóc trọn vẹn cho từng khách hàng.',
-  image: SPA2_PAGE_IMAGES.about,
-  features: [
-    {
-      title: 'Thảo dược tự nhiên',
-      desc: '100% nguyên liệu hữu cơ',
-      icon: 'solar:leaf-bold-duotone',
-    },
-    {
-      title: 'Chuyên gia tận tâm',
-      desc: 'Đội ngũ 10+ năm kinh nghiệm',
-      icon: 'solar:heart-pulse-bold-duotone',
-    },
-    {
-      title: 'Kỹ thuật độc quyền',
-      desc: 'Liệu trình đã được kiểm chứng',
-      icon: 'solar:magic-stick-3-bold-duotone',
-    },
-  ],
-};
-
 export type Spa2ContactContent = {
   title: string;
   subtitle: string;
@@ -821,6 +788,70 @@ export const SPA2_BOOKINGS: Spa2BookingItem[] = [
 export const SPA2_BOOKING_BRANCHES = ['Quận 1', 'Hồ Tây', 'Đà Nẵng', 'Nha Trang'];
 
 // ---------- About / Team / Certifications ---------------------------------
+// Single source of truth for the public "/spa2/about" page AND its dashboard
+// manage page (src/pages/dashboard/manage/spa2/about.tsx) — both read these
+// same arrays so the two sides never drift apart.
+
+// An image with an editable focal point (framing) and zoom level, so admins
+// can upload a local file or paste a URL, then fine-tune how it's cropped
+// without needing an external image editor. `zoom` is a CSS background-size
+// percentage (100 = fit, up to 200 = 2x zoomed in); `focalX`/`focalY` are
+// CSS background-position percentages.
+export type Spa2AdjustableImage = {
+  url: string;
+  focalX: number;
+  focalY: number;
+  zoom: number;
+};
+
+export type Spa2AboutBanner = {
+  image: Spa2AdjustableImage;
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+};
+
+export type Spa2AboutVisionMissionItem = {
+  id?: string;
+  icon: string;
+  title: string;
+  desc: string;
+  image?: Spa2AdjustableImage;
+};
+
+export type Spa2AboutTeamMember = {
+  id?: string;
+  name: string;
+  role: string;
+  image: string;
+  imageFocalX?: number;
+  imageFocalY?: number;
+  imageZoom?: number;
+  bio: string;
+};
+
+export type Spa2AboutCertification = {
+  id?: string;
+  icon: string;
+  name: string;
+  org: string;
+  year: string;
+};
+
+export const spa2AboutBanner: Spa2AboutBanner = {
+  image: { url: SPA2_PAGE_IMAGES.about, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'Về Nature Spa',
+  title: 'Hành trình mang thiên nhiên vào từng liệu trình',
+  subtitle:
+    'Chúng tôi tin rằng vẻ đẹp đích thực bắt nguồn từ sự cân bằng giữa cơ thể, tâm trí và thiên nhiên.',
+};
+
+export const spa2AboutStoryImage: Spa2AdjustableImage = {
+  url: SPA2_PAGE_IMAGES.about,
+  focalX: 50,
+  focalY: 50,
+  zoom: 100,
+};
 
 export const spa2AboutStory: string[] = [
   'Nature Spa ra đời năm 2015 tại TP.HCM, khởi nguồn từ mong muốn mang những liệu pháp chăm sóc da và cơ thể an toàn, lành tính đến gần hơn với phụ nữ Việt – nơi thiên nhiên và khoa học cùng song hành.',
@@ -828,7 +859,7 @@ export const spa2AboutStory: string[] = [
   'Mỗi sản phẩm, mỗi liệu trình tại Nature Spa đều được chọn lọc kỹ lưỡng từ nguyên liệu hữu cơ, kết hợp công nghệ chăm sóc da hiện đại từ châu Âu – để vẻ đẹp không chỉ nằm ở bề ngoài mà còn lan tỏa từ bên trong.',
 ];
 
-export const spa2VisionMission = [
+export const spa2VisionMission: Spa2AboutVisionMissionItem[] = [
   {
     icon: 'solar:eye-bold-duotone',
     title: 'Tầm nhìn',
@@ -841,7 +872,7 @@ export const spa2VisionMission = [
   },
 ];
 
-export const spa2Team = [
+export const spa2Team: Spa2AboutTeamMember[] = [
   {
     name: 'Nguyễn Thảo Vy',
     role: 'Nhà sáng lập & CEO',
@@ -868,7 +899,7 @@ export const spa2Team = [
   },
 ];
 
-export const spa2Certifications = [
+export const spa2Certifications: Spa2AboutCertification[] = [
   {
     icon: 'solar:medal-ribbon-star-bold-duotone',
     name: 'Eco-Spa Certified',
