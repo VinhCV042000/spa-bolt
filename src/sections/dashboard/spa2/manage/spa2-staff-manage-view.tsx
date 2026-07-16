@@ -34,7 +34,7 @@ import { spa2Team } from 'src/sections/spa2/spa2-pages-data';
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-type Staff = (typeof spa2Team)[number] & { id: number };
+type Staff = (typeof spa2Team)[number] & { id: string };
 
 const EMPTY_FORM = { name: '', role: '', image: '', bio: '' };
 
@@ -42,11 +42,11 @@ const EMPTY_FORM = { name: '', role: '', image: '', bio: '' };
 
 export function Spa2StaffManageView() {
   const { t } = useTranslate('spa2-manage');
-  const [items, setItems] = useState<Staff[]>(spa2Team.map((s, i) => ({ ...s, id: i + 1 })));
+  const [items, setItems] = useState<Staff[]>(spa2Team.map((s, i) => ({ ...s, id: `${i + 1}` })));
   const [search, setSearch] = useState('');
   const [openForm, setOpenForm] = useState(false);
-  const [editId, setEditId] = useState<number | null>(null);
-  const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const [form, setForm] = useState(EMPTY_FORM);
 
   const filtered = items.filter(
@@ -75,7 +75,7 @@ export function Spa2StaffManageView() {
     if (editId !== null) {
       setItems((p) => p.map((x) => (x.id === editId ? { ...x, ...form } : x)));
     } else {
-      const newId = Math.max(0, ...items.map((x) => x.id)) + 1;
+      const newId = `${Math.max(0, ...items.map((x) => parseInt(x.id, 10))) + 1}`;
       setItems((p) => [...p, { ...form, id: newId }]);
     }
     setOpenForm(false);

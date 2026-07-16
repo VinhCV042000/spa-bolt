@@ -38,8 +38,8 @@ import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
 import {
-  spa2CreateAdjustableImage,
   spa2ImageBackgroundStyle,
+  spa2CreateAdjustableImage,
 } from 'src/sections/spa2/spa2-image-utils';
 import {
   SPA2_INK,

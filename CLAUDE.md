@@ -40,7 +40,7 @@ Every spa2 page (public or admin) is identified by a `Spa2PageKey` string litera
 
 ### spa2 dashboard (admin) pages
 
-`src/pages/dashboard/spa2/*.tsx` are thin generated files — each just calls `createDashboardSpa2Page('<pageKey>')` (see `src/sections/dashboard/spa2/create-dashboard-spa2-page.tsx`). They are produced by `scripts/generate-dashboard-spa2-pages.mjs`'s `PAGE_MAP`; add a new admin page by adding an entry there and rerunning the script rather than hand-writing the page file.
+`src/pages/dashboard/manage/spa2/*.tsx` are thin generated files — each just calls `createDashboardSpa2Page('<pageKey>')` (see `src/sections/dashboard/spa2/create-dashboard-spa2-page.tsx`). They are produced by `scripts/generate-dashboard-spa2-pages.mjs`'s `PAGE_MAP`; add a new admin page by adding an entry there and rerunning the script rather than hand-writing the page file.
 
 The actual admin UI lives in `src/sections/dashboard/spa2/manage/`, in two patterns:
 1. **Generic CRUD** — `spa2-generic-manage-view.tsx` renders any content type driven entirely by a `Spa2ManageConfig` object (title, table fields, status presets, seed rows) declared in `spa2-manage-configs.ts`. Prefer adding a config entry here for a new simple content type instead of writing a new view component.

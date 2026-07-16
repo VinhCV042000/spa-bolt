@@ -43,6 +43,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { Iconify } from 'src/components/iconify';
 
+import { spa2ImageBackgroundStyle } from '../spa2-image-utils';
 import {
   SPA2_INK,
   spa2Team,
@@ -58,11 +59,10 @@ import {
   spa2BlogPosts,
   spa2Feedbacks,
   spa2AboutStory,
-  spa2AboutBanner,
   SPA2_TEAL_DARK,
   spa2Treatments,
-  spa2AboutStoryImage,
   spa2Promotions,
+  spa2AboutBanner,
   SPA2_CREAM_DARK,
   SPA2_TEAL_LIGHT,
   spa2ContactInfo,
@@ -79,8 +79,9 @@ import {
   spa2CareersSlogan,
   spa2ExtraPartners,
   spa2Certifications,
-  spa2BlogCategories,
   spa2Collaborations,
+  spa2TrainingBanner,
+  spa2AboutStoryImage,
   spa2PartnerProfiles,
   spa2TrainingMission,
   spa2TrainingRoadmap,
@@ -94,8 +95,8 @@ import {
   spa2PartnerCategories,
   spa2RecruitmentProcess,
   spa2InternalVideoThumb,
+  computeSpa2BlogCategories,
 } from '../spa2-pages-data';
-import { spa2ImageBackgroundStyle } from '../spa2-image-utils';
 
 // ----------------------------------------------------------------------
 // SHARED BUILDING BLOCKS – Nature/cream style with curved organic shapes
@@ -213,12 +214,9 @@ function Spa2PageHero({
                 borderRadius: '50% 50% 30% 30% / 30% 30% 20% 20%',
                 overflow: 'hidden',
                 boxShadow: '0 30px 60px rgba(46,139,122,0.25)',
-                ...spa2ImageBackgroundStyle({
-                  url: image,
-                  focalX: imageStyle?.focalX ?? 50,
-                  focalY: imageStyle?.focalY ?? 50,
-                  zoom: imageStyle?.zoom ?? 100,
-                }),
+                backgroundImage: `url(${image})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
               }}
             />
           </Grid>
@@ -1257,10 +1255,11 @@ export function Spa2TrainingPageView() {
     <Spa2PageShell>
       {/* Banner khóa học + Tiêu đề nổi bật + CTA */}
       <Spa2PageHero
-        image={SPA2_PAGE_IMAGES.training}
-        eyebrow="Đào tạo"
-        title="Học viện Nature Spa Academy"
-        subtitle="Khóa học chuyên sâu cho kỹ thuật viên, chuyên gia chăm sóc da và quản lý spa."
+        image={spa2TrainingBanner.image.url}
+        imageStyle={spa2TrainingBanner.image}
+        eyebrow={spa2TrainingBanner.eyebrow}
+        title={spa2TrainingBanner.title}
+        subtitle={spa2TrainingBanner.subtitle}
       />
       <Box sx={{ pb: { xs: 4, md: 6 } }}>
         <Container sx={{ textAlign: 'center' }}>
@@ -1440,6 +1439,15 @@ export function Spa2TrainingPageView() {
                 <Spa2SoftCard sx={{ textAlign: 'center' }}>
                   <Avatar
                     src={i.image}
+                    alt={i.name}
+                    slotProps={{
+                      img: {
+                        style: {
+                          objectPosition: `${i.imageFocalX ?? 50}% ${i.imageFocalY ?? 50}%`,
+                          transform: `scale(${(i.imageZoom ?? 100) / 100})`,
+                        },
+                      },
+                    }}
                     sx={{
                       width: 96,
                       height: 96,
@@ -1584,6 +1592,7 @@ export function Spa2TrainingPageView() {
 export function Spa2BlogPageView() {
   const [highlight, ...rest] = spa2BlogPosts;
   const trending = [...spa2BlogPosts].slice(0, 3);
+  const categories = computeSpa2BlogCategories(spa2BlogPosts);
 
   return (
     <Spa2PageShell>
@@ -1718,7 +1727,7 @@ export function Spa2BlogPageView() {
                     Danh mục
                   </Typography>
                   <Stack spacing={1.5}>
-                    {spa2BlogCategories.map((c) => (
+                    {categories.map((c) => (
                       <Stack
                         key={c.name}
                         direction="row"
@@ -1848,6 +1857,11 @@ export function Spa2BlogDetailsPageView() {
     <Spa2PageShell>
       <Spa2PageHero
         image={post.cover}
+        imageStyle={{
+          focalX: post.coverFocalX ?? 50,
+          focalY: post.coverFocalY ?? 50,
+          zoom: post.coverZoom ?? 100,
+        }}
         eyebrow={post.category}
         title={post.title}
         subtitle={post.excerpt}
@@ -1876,29 +1890,39 @@ export function Spa2BlogDetailsPageView() {
             }}
           />
 
-          <Typography sx={{ color: SPA2_INK, lineHeight: 1.9, mb: 3 }}>
-            Chăm sóc bản thân là một hành trình dài hơi, không phải đích đến. Mỗi ngày dành ra 15–30
-            phút cho cơ thể và tâm trí có thể tạo ra sự khác biệt lớn theo thời gian.
-          </Typography>
-          <Typography variant="h5" sx={{ color: SPA2_TEAL_DARK, mb: 2 }}>
-            1. Bắt đầu từ những điều nhỏ nhất
-          </Typography>
-          <Typography sx={{ color: 'text.secondary', lineHeight: 1.9, mb: 3 }}>
-            Một ly nước ấm vào buổi sáng, vài phút hít thở sâu, hoặc một bài kéo giãn nhẹ — đây là
-            những bước khởi đầu đơn giản nhưng mang lại hiệu quả bền vững.
-          </Typography>
-          <Typography variant="h5" sx={{ color: SPA2_TEAL_DARK, mb: 2 }}>
-            2. Lắng nghe cơ thể
-          </Typography>
-          <Typography sx={{ color: 'text.secondary', lineHeight: 1.9, mb: 3 }}>
-            Cơ thể là người bạn trung thực nhất. Khi mệt mỏi, hãy nghỉ ngơi. Khi căng thẳng, hãy cho
-            phép bản thân được chăm sóc.
-          </Typography>
-          <Box sx={{ p: 3, borderLeft: `4px solid ${SPA2_TEAL}`, bgcolor: SPA2_CREAM, my: 4 }}>
-            <Typography sx={{ color: SPA2_INK, fontStyle: 'italic' }}>
-              &ldquo;Vẻ đẹp thực sự đến từ sự cân bằng giữa cơ thể, tâm trí và thiên nhiên.&rdquo;
-            </Typography>
-          </Box>
+          {/* Nội dung bài viết — cùng dữ liệu với trang quản lý */}
+          <Box
+            sx={{
+              color: SPA2_INK,
+              '& p': { lineHeight: 1.9, color: 'text.secondary', mb: 2.5 },
+              '& h3': { color: SPA2_TEAL_DARK, mt: 1, mb: 1.5 },
+              '& blockquote': {
+                m: 0,
+                mb: 2.5,
+                p: 2.5,
+                borderLeft: `4px solid ${SPA2_TEAL}`,
+                bgcolor: SPA2_CREAM,
+                fontStyle: 'italic',
+              },
+              '& ul, & ol': { pl: 3, mb: 2.5, color: 'text.secondary' },
+              '& a': { color: SPA2_TEAL },
+            }}
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
+
+          {post.tags.length > 0 && (
+            <Stack direction="row" spacing={0.75} flexWrap="wrap" sx={{ mb: 4 }}>
+              {post.tags.map((t) => (
+                <Chip
+                  key={t}
+                  label={`#${t}`}
+                  size="small"
+                  variant="outlined"
+                  sx={{ borderColor: SPA2_TEAL, color: SPA2_TEAL_DARK }}
+                />
+              ))}
+            </Stack>
+          )}
 
           {/* CTA dịch vụ liên quan */}
           <Spa2SoftCard

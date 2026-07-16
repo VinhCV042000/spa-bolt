@@ -1,9 +1,13 @@
+import type { Spa2BlogPost, Spa2AdjustableImage } from 'src/_mock/_spa2';
+
 import { useMemo, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
+import Link from '@mui/material/Link';
 import Tabs from '@mui/material/Tabs';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
@@ -24,11 +28,18 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
-import { SPA2_POSTS, type Spa2BlogPost, SPA2_BLOG_CATEGORIES } from 'src/_mock/_spa2';
+import {
+  SPA2_POSTS,
+  spa2UpsertPost,
+  spa2DeletePost,
+  SPA2_BLOG_CATEGORY_NAMES,
+  computeSpa2BlogCategories,
+} from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
+import { spa2ImageBackgroundStyle } from 'src/sections/spa2/spa2-image-utils';
 import {
   SPA2_INK,
   SPA2_TEAL,
@@ -37,11 +48,19 @@ import {
   SPA2_CREAM_DARK,
 } from 'src/sections/spa2/spa2-pages-data';
 
+import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Manages the same post list that src/sections/spa2/view/spa2-content-pages.tsx
+// (Spa2BlogPageView) renders on the public /spa2/blog page. Every create/edit/
+// approve/delete action also writes straight into the shared `SPA2_POSTS`
+// array (via spa2UpsertPost/spa2DeletePost from src/_mock/_spa2), so the
+// public pages and the full post editor (Spa2BlogEditorView, at
+// /dashboard/spa2/blog/:slug) always see the same data within a session.
+// ─────────────────────────────────────────────────────────────────────────────
 
-type FormShape = Omit<Spa2BlogPost, 'status'>;
+type FormShape = Omit<Spa2BlogPost, 'status' | 'tags'> & { tagsInput: string };
 
 const STATUSES: Spa2BlogPost['status'][] = ['Đã đăng', 'Chờ duyệt', 'Bản nháp'];
 
@@ -56,18 +75,45 @@ const emptyForm = (): FormShape => ({
   title: '',
   excerpt: '',
   cover: '',
+  coverFocalX: 50,
+  coverFocalY: 50,
+  coverZoom: 100,
   author: '',
   publishedAt: new Date().toISOString().slice(0, 10),
   date: new Date().toLocaleDateString('vi-VN'),
-  category: SPA2_BLOG_CATEGORIES[0]?.name ?? 'Skincare',
+  category: SPA2_BLOG_CATEGORY_NAMES[0] ?? 'Skincare',
   readTime: '5 phút',
-  tags: [],
+  tagsInput: '',
   content: '',
 });
+
+const coverImageValue = (form: FormShape): Spa2AdjustableImage => ({
+  url: form.cover,
+  focalX: form.coverFocalX ?? 50,
+  focalY: form.coverFocalY ?? 50,
+  zoom: form.coverZoom ?? 100,
+});
+
+const applyCoverImage = (form: FormShape, img: Spa2AdjustableImage): FormShape => ({
+  ...form,
+  cover: img.url,
+  coverFocalX: img.focalX,
+  coverFocalY: img.focalY,
+  coverZoom: img.zoom,
+});
+
+const coverBg = (p: { cover: string; coverFocalX?: number; coverFocalY?: number; coverZoom?: number }) =>
+  spa2ImageBackgroundStyle({
+    url: p.cover,
+    focalX: p.coverFocalX ?? 50,
+    focalY: p.coverFocalY ?? 50,
+    zoom: p.coverZoom ?? 100,
+  });
 
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function Spa2BlogManageView() {
+  const navigate = useNavigate();
   const [items, setItems] = useState<Spa2BlogPost[]>(() => SPA2_POSTS.map((p) => ({ ...p })));
   const [search, setSearch] = useState('');
   const [statusTab, setStatusTab] = useState<'all' | Spa2BlogPost['status']>('all');
@@ -85,6 +131,8 @@ export function Spa2BlogManageView() {
     }),
     [items]
   );
+
+  const categories = useMemo(() => computeSpa2BlogCategories(items), [items]);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -108,8 +156,22 @@ export function Spa2BlogManageView() {
   };
 
   const openEdit = (p: Spa2BlogPost) => {
-    const { status: _s, ...formData } = p;
-    setForm({ ...formData });
+    setForm({
+      slug: p.slug,
+      title: p.title,
+      excerpt: p.excerpt,
+      cover: p.cover,
+      coverFocalX: p.coverFocalX,
+      coverFocalY: p.coverFocalY,
+      coverZoom: p.coverZoom,
+      author: p.author,
+      publishedAt: p.publishedAt,
+      date: p.date,
+      category: p.category,
+      readTime: p.readTime,
+      tagsInput: p.tags.join(', '),
+      content: p.content,
+    });
     setEditSlug(p.slug);
     setOpenForm(true);
   };
@@ -121,32 +183,52 @@ export function Spa2BlogManageView() {
 
   const handleSubmit = useCallback(() => {
     const finalSlug = form.slug || form.title.toLowerCase().replace(/\s+/g, '-').slice(0, 80);
+    const tags = form.tagsInput
+      .split(',')
+      .map((t) => t.trim())
+      .filter(Boolean);
+    const { tagsInput: _tagsInput, ...rest2 } = form;
     const next: Spa2BlogPost = {
-      ...form,
+      ...rest2,
       slug: finalSlug,
+      tags,
       status: editSlug
         ? (items.find((x) => x.slug === editSlug)?.status ?? 'Bản nháp')
         : 'Bản nháp',
     };
+    spa2UpsertPost(next);
+    setOpenForm(false);
     if (editSlug) {
       setItems((prev) => prev.map((x) => (x.slug === editSlug ? next : x)));
     } else {
       setItems((prev) => [next, ...prev]);
+      // Brand-new post: jump straight into the full editor to write real content.
+      navigate(paths.dashboard.spa2.blogDetails(next.slug));
     }
-    setOpenForm(false);
-  }, [form, editSlug, items]);
+  }, [form, editSlug, items, navigate]);
 
   const handleDelete = useCallback(() => {
+    if (deleteSlug) spa2DeletePost(deleteSlug);
     setItems((prev) => prev.filter((x) => x.slug !== deleteSlug));
     setDeleteSlug(null);
   }, [deleteSlug]);
 
   const handleApprove = useCallback((slug: string) => {
-    setItems((prev) => prev.map((x) => (x.slug === slug ? { ...x, status: 'Đã đăng' } : x)));
+    setItems((prev) => {
+      const next = prev.map((x) => (x.slug === slug ? { ...x, status: 'Đã đăng' as const } : x));
+      const updated = next.find((x) => x.slug === slug);
+      if (updated) spa2UpsertPost(updated);
+      return next;
+    });
   }, []);
 
   const handleToDraft = useCallback((slug: string) => {
-    setItems((prev) => prev.map((x) => (x.slug === slug ? { ...x, status: 'Bản nháp' } : x)));
+    setItems((prev) => {
+      const next = prev.map((x) => (x.slug === slug ? { ...x, status: 'Bản nháp' as const } : x));
+      const updated = next.find((x) => x.slug === slug);
+      if (updated) spa2UpsertPost(updated);
+      return next;
+    });
   }, []);
 
   // ---- render ------------------------------------------------------------
@@ -276,9 +358,15 @@ export function Spa2BlogManageView() {
                         variant="soft"
                       />
                     </Stack>
-                    <Typography variant="h5" sx={{ color: SPA2_INK }}>
-                      {featured.title}
-                    </Typography>
+                    <Link
+                      component={RouterLink}
+                      href={paths.dashboard.spa2.blogDetails(featured.slug)}
+                      sx={{ textDecoration: 'none', '&:hover': { color: SPA2_TEAL } }}
+                    >
+                      <Typography variant="h5" sx={{ color: SPA2_INK }}>
+                        {featured.title}
+                      </Typography>
+                    </Link>
                     <Typography color="text.secondary">{featured.excerpt}</Typography>
                     <Stack direction="row" spacing={1} alignItems="center">
                       <Avatar sx={{ width: 24, height: 24, bgcolor: SPA2_TEAL, fontSize: 12 }}>
@@ -337,10 +425,10 @@ export function Spa2BlogManageView() {
             </Card>
           )}
 
-          {/* Grid mirrors public blog cards */}
+          {/* Grid mirrors public blog cards — 1/2/3 columns for balance at every width */}
           <Grid container spacing={3}>
             {rest.map((p) => (
-              <Grid key={p.slug} xs={12} sm={6}>
+              <Grid key={p.slug} xs={12} sm={6} lg={4}>
                 <Card
                   sx={{
                     p: 0,
@@ -359,6 +447,7 @@ export function Spa2BlogManageView() {
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                       position: 'relative',
+                      ...coverBg(p),
                     }}
                   >
                     <Chip
@@ -375,12 +464,19 @@ export function Spa2BlogManageView() {
                       label={p.category}
                       sx={{ alignSelf: 'flex-start', bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
                     />
-                    <Typography
-                      variant="subtitle1"
-                      sx={{ color: SPA2_INK, lineHeight: 1.4, minHeight: 44 }}
+                    <Link
+                      component={RouterLink}
+                      href={paths.dashboard.spa2.blogDetails(p.slug)}
+                      sx={{
+                        color: SPA2_INK,
+                        textDecoration: 'none',
+                        '&:hover': { color: SPA2_TEAL },
+                      }}
                     >
-                      {p.title}
-                    </Typography>
+                      <Typography variant="subtitle1" sx={{ lineHeight: 1.4, minHeight: 44 }}>
+                        {p.title}
+                      </Typography>
+                    </Link>
                     <Typography variant="body2" color="text.secondary" sx={{ minHeight: 40 }}>
                       {p.excerpt}
                     </Typography>
@@ -415,12 +511,12 @@ export function Spa2BlogManageView() {
                         </Tooltip>
                       </Stack>
                       <Stack direction="row" spacing={0.5}>
-                        <Tooltip title="Sửa nhanh">
+                        <Tooltip title="Sửa nhanh (thông tin)">
                           <IconButton size="small" onClick={() => openEdit(p)}>
                             <Iconify icon="solar:pen-bold" />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title="Trang chi tiết">
+                        <Tooltip title="Soạn nội dung đầy đủ">
                           <IconButton
                             size="small"
                             component={RouterLink}
@@ -474,25 +570,22 @@ export function Spa2BlogManageView() {
                 Danh mục
               </Typography>
               <Stack spacing={1}>
-                {SPA2_BLOG_CATEGORIES.map((c) => {
-                  const count = items.filter((p) => p.category === c.name).length;
-                  return (
-                    <Stack
-                      key={c.name}
-                      direction="row"
-                      justifyContent="space-between"
-                      alignItems="center"
-                      sx={{ py: 1, borderBottom: `1px solid ${SPA2_CREAM_DARK}` }}
-                    >
-                      <Typography sx={{ color: SPA2_INK }}>{c.name}</Typography>
-                      <Chip
-                        size="small"
-                        label={count}
-                        sx={{ bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
-                      />
-                    </Stack>
-                  );
-                })}
+                {categories.map((c) => (
+                  <Stack
+                    key={c.name}
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    sx={{ py: 1, borderBottom: `1px solid ${SPA2_CREAM_DARK}` }}
+                  >
+                    <Typography sx={{ color: SPA2_INK }}>{c.name}</Typography>
+                    <Chip
+                      size="small"
+                      label={c.count}
+                      sx={{ bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
+                    />
+                  </Stack>
+                ))}
               </Stack>
             </Card>
 
@@ -550,11 +643,17 @@ export function Spa2BlogManageView() {
         </Grid>
       </Grid>
 
-      {/* Quick create/edit dialog */}
+      {/* Quick create/edit dialog — metadata only; nội dung đầy đủ soạn ở trang riêng */}
       <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{editSlug ? 'Chỉnh sửa bài viết' : 'Tạo bài viết mới'}</DialogTitle>
+        <DialogTitle>{editSlug ? 'Chỉnh sửa thông tin bài viết' : 'Tạo bài viết mới'}</DialogTitle>
         <DialogContent dividers>
           <Stack spacing={2} sx={{ pt: 1 }}>
+            {!editSlug && (
+              <Typography variant="body2" color="text.secondary">
+                Điền thông tin cơ bản trước — sau khi tạo, bạn sẽ được chuyển sang trang soạn thảo
+                để viết nội dung đầy đủ.
+              </Typography>
+            )}
             <TextField
               label="Tiêu đề"
               size="small"
@@ -587,9 +686,9 @@ export function Spa2BlogManageView() {
                 value={form.category}
                 onChange={handleField('category')}
               >
-                {SPA2_BLOG_CATEGORIES.map((c) => (
-                  <MenuItem key={c.name} value={c.name}>
-                    {c.name}
+                {SPA2_BLOG_CATEGORY_NAMES.map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
                   </MenuItem>
                 ))}
               </TextField>
@@ -610,12 +709,20 @@ export function Spa2BlogManageView() {
                 onChange={handleField('readTime')}
               />
             </Stack>
+            <Spa2ImageField
+              label="Ảnh cover"
+              value={coverImageValue(form)}
+              onChange={(img) => setForm((p) => applyCoverImage(p, img))}
+              height={180}
+              helperText="Kéo thả ảnh, dán URL, hoặc tải ảnh từ máy — kéo trên ảnh để chọn điểm lấy nét."
+            />
             <TextField
-              label="Ảnh cover (URL)"
+              label="Tags"
               size="small"
-              value={form.cover}
-              onChange={handleField('cover')}
+              value={form.tagsInput}
+              onChange={handleField('tagsInput')}
               fullWidth
+              helperText="Cách nhau bởi dấu phẩy, ví dụ: skincare, mùa lạnh"
             />
             <TextField
               label="Slug (để trống sẽ tự tạo)"
@@ -634,7 +741,7 @@ export function Spa2BlogManageView() {
             disabled={!form.title}
             sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
           >
-            {editSlug ? 'Lưu thay đổi' : 'Tạo bài viết'}
+            {editSlug ? 'Lưu thay đổi' : 'Tạo & soạn nội dung'}
           </Button>
         </DialogActions>
       </Dialog>

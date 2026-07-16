@@ -446,6 +446,9 @@ export type Spa2BlogPost = {
   title: string;
   excerpt: string;
   cover: string;
+  coverFocalX?: number;
+  coverFocalY?: number;
+  coverZoom?: number;
   author: string;
   /** ISO date (yyyy-mm-dd), used for sorting & the editor date input */
   publishedAt: string;
@@ -454,18 +457,25 @@ export type Spa2BlogPost = {
   category: string;
   readTime: string;
   tags: string[];
+  /** HTML string produced by the rich-text editor; rendered verbatim on the public page. */
   content: string;
   status: 'Đã đăng' | 'Bản nháp' | 'Chờ duyệt';
 };
 
 export type Spa2BlogCategory = { name: string; count: number };
 
-export const SPA2_BLOG_CATEGORIES: Spa2BlogCategory[] = [
-  { name: 'Aromatherapy', count: 4 },
-  { name: 'Skincare', count: 7 },
-  { name: 'Wellness', count: 5 },
-  { name: 'Mindfulness', count: 3 },
-];
+// Canonical, fixed list of blog categories offered in every category <select>
+// (admin quick-dialog, full editor). Post counts are always derived from the
+// live post list via `computeSpa2BlogCategories`, never hardcoded, so the
+// public sidebar and the admin sidebar can never drift out of sync.
+export const SPA2_BLOG_CATEGORY_NAMES = ['Aromatherapy', 'Skincare', 'Wellness', 'Mindfulness'];
+
+export function computeSpa2BlogCategories(posts: Spa2BlogPost[]): Spa2BlogCategory[] {
+  return SPA2_BLOG_CATEGORY_NAMES.map((name) => ({
+    name,
+    count: posts.filter((p) => p.category === name).length,
+  }));
+}
 
 export const SPA2_POSTS: Spa2BlogPost[] = [
   {
@@ -479,7 +489,14 @@ export const SPA2_POSTS: Spa2BlogPost[] = [
     category: 'Aromatherapy',
     readTime: '5 phút',
     tags: ['thư giãn', 'self-care'],
-    content: 'Chuẩn bị không gian, chọn tinh dầu phù hợp, kết hợp âm nhạc và tắm nước ấm...',
+    content:
+      '<p>Chăm sóc bản thân không cần phải cầu kỳ hay tốn kém — chỉ cần một góc nhỏ yên tĩnh và vài nguyên liệu quen thuộc, bạn đã có thể tạo ra một buổi trị liệu tại gia trọn vẹn.</p>' +
+      '<h3>1. Chuẩn bị không gian</h3>' +
+      '<p>Dọn dẹp một góc phòng, tắt bớt đèn, thắp nến thơm hoặc đốt tinh dầu để tạo cảm giác thư thái ngay từ những phút đầu tiên.</p>' +
+      '<h3>2. Chọn tinh dầu phù hợp</h3>' +
+      '<p>Oải hương giúp an thần, cam bergamot giúp cân bằng cảm xúc, còn khuynh diệp giúp thông thoáng hô hấp — hãy chọn loại phù hợp với nhu cầu của bạn.</p>' +
+      '<blockquote>“Chỉ 15–20 phút mỗi tuần cũng đủ để cơ thể và tâm trí được tái tạo.”</blockquote>' +
+      '<p>Kết hợp thêm một bản nhạc nhẹ và một bồn nước ấm, nghi thức cuối tuần của bạn đã hoàn chỉnh.</p>',
     status: 'Đã đăng',
   },
   {
@@ -493,7 +510,13 @@ export const SPA2_POSTS: Spa2BlogPost[] = [
     category: 'Skincare',
     readTime: '7 phút',
     tags: ['skincare', 'mùa lạnh'],
-    content: 'Uống đủ nước, dùng kem dưỡng có ceramide, tránh nước quá nóng khi tắm...',
+    content:
+      '<p>Không khí hanh khô mùa lạnh khiến làn da dễ mất nước và bong tróc hơn bình thường. Một vài điều chỉnh nhỏ trong thói quen chăm sóc da có thể tạo khác biệt lớn.</p>' +
+      '<h3>Uống đủ nước từ bên trong</h3>' +
+      '<p>Duy trì 1.5–2 lít nước mỗi ngày giúp da giữ được độ đàn hồi tự nhiên, ngay cả khi thời tiết hanh khô.</p>' +
+      '<h3>Chọn kem dưỡng có ceramide</h3>' +
+      '<p>Ceramide giúp củng cố hàng rào bảo vệ da, hạn chế mất nước qua biểu bì — nên ưu tiên trong các sản phẩm dưỡng ẩm mùa lạnh.</p>' +
+      '<p>Tránh tắm nước quá nóng và hạn chế tẩy tế bào chết quá thường xuyên để da không bị kích ứng thêm.</p>',
     status: 'Đã đăng',
   },
   {
@@ -507,7 +530,12 @@ export const SPA2_POSTS: Spa2BlogPost[] = [
     category: 'Wellness',
     readTime: '6 phút',
     tags: ['thảo dược', 'văn hoá'],
-    content: 'Ngải cứu, sả, gừng, quế... mỗi loại mang một giá trị chữa lành riêng.',
+    content:
+      '<p>Ngải cứu, sả, gừng, quế... mỗi loại thảo dược bản địa đều mang một giá trị chữa lành riêng, được cha ông ta sử dụng từ hàng trăm năm nay.</p>' +
+      '<h3>Ngải cứu — làm ấm và giảm đau nhức</h3>' +
+      '<p>Thường dùng trong các liệu trình chườm nóng, giúp thư giãn cơ bắp và lưu thông khí huyết.</p>' +
+      '<h3>Sả & gừng — thanh lọc và giữ ấm cơ thể</h3>' +
+      '<p>Kết hợp trong xông hơi hoặc ngâm chân, giúp cơ thể ấm lên và tinh thần sảng khoái hơn.</p>',
     status: 'Chờ duyệt',
   },
   {
@@ -521,13 +549,19 @@ export const SPA2_POSTS: Spa2BlogPost[] = [
     category: 'Mindfulness',
     readTime: '8 phút',
     tags: ['yoga', 'wellness'],
-    content: 'Yoga làm mềm cơ thể, spa giúp phục hồi — sự kết hợp hoàn hảo cho một buổi cuối tuần.',
+    content:
+      '<p>Yoga làm mềm cơ thể, spa giúp phục hồi — sự kết hợp hoàn hảo cho một buổi cuối tuần tái tạo năng lượng toàn diện.</p>' +
+      '<h3>Yoga chuẩn bị cơ thể</h3>' +
+      '<p>Các động tác kéo giãn nhẹ nhàng giúp cơ bắp thả lỏng, sẵn sàng đón nhận liệu trình massage sâu hơn.</p>' +
+      '<h3>Spa hoàn thiện quá trình phục hồi</h3>' +
+      '<p>Sau buổi tập, một liệu trình massage hoặc xông hơi giúp đào thải axit lactic, giảm đau nhức và cải thiện giấc ngủ.</p>',
     status: 'Bản nháp',
   },
 ];
 
 // Legacy aliases for the public spa2 view code (kept for backwards-compat).
 export const spa2BlogPosts = SPA2_POSTS;
+export const SPA2_BLOG_CATEGORIES: Spa2BlogCategory[] = computeSpa2BlogCategories(SPA2_POSTS);
 export const spa2BlogCategories = SPA2_BLOG_CATEGORIES;
 
 // ---------- Helpers ------------------------------------------------------
@@ -537,6 +571,25 @@ export function findSpa2Service(slug: string) {
 }
 export function findSpa2Post(slug: string) {
   return SPA2_POSTS.find((p) => p.slug === slug);
+}
+
+// Mutators that write straight into the shared `SPA2_POSTS` array so the
+// admin list, the admin editor, and the public blog pages always agree on
+// the same in-memory data for the current session (no separate copies).
+export function spa2UpsertPost(post: Spa2BlogPost) {
+  const idx = SPA2_POSTS.findIndex((p) => p.slug === post.slug);
+  if (idx >= 0) {
+    SPA2_POSTS[idx] = post;
+  } else {
+    SPA2_POSTS.unshift(post);
+  }
+}
+
+export function spa2DeletePost(slug: string) {
+  const idx = SPA2_POSTS.findIndex((p) => p.slug === slug);
+  if (idx >= 0) {
+    SPA2_POSTS.splice(idx, 1);
+  }
 }
 
 // ---------- Careers (view + dashboard shared) ----------------------------
@@ -874,24 +927,28 @@ export const spa2VisionMission: Spa2AboutVisionMissionItem[] = [
 
 export const spa2Team: Spa2AboutTeamMember[] = [
   {
+    id: '1',
     name: 'Nguyễn Thảo Vy',
     role: 'Nhà sáng lập & CEO',
     image: 'https://i.pravatar.cc/300?img=47',
     bio: 'Hơn 15 năm kinh nghiệm trong ngành chăm sóc sắc đẹp, chứng chỉ CIDESCO quốc tế.',
   },
   {
+    id: '2',
     name: 'Trần Minh Khôi',
     role: 'Giám đốc chuyên môn',
     image: 'https://i.pravatar.cc/300?img=12',
     bio: 'Chuyên gia trị liệu da với hơn 10 năm tu nghiệp tại Pháp và Hàn Quốc.',
   },
   {
+    id: '3',
     name: 'Phạm Hồng Nhi',
     role: 'Trưởng phòng đào tạo',
     image: 'https://i.pravatar.cc/300?img=32',
     bio: 'Đào tạo hơn 500 kỹ thuật viên đạt chuẩn quốc tế trong 8 năm qua.',
   },
   {
+    id: '4',
     name: 'Lê Gia Huy',
     role: 'Chuyên gia Detox & dinh dưỡng',
     image: 'https://i.pravatar.cc/300?img=14',
@@ -1390,7 +1447,62 @@ export const spa2ComboOffers = [
 
 // ---------- Training -------------------------------------------------
 
-export const spa2TrainingPrograms = [
+export interface Spa2TrainingProgram {
+  name: string;
+  duration: string;
+  level: string;
+  price: number;
+  outcome: string;
+}
+
+export interface Spa2TrainingRoadmapStage {
+  stage: string;
+  duration: string;
+  desc: string;
+}
+
+export interface Spa2TrainingInstructor {
+  name: string;
+  image: string;
+  imageFocalX?: number;
+  imageFocalY?: number;
+  imageZoom?: number;
+  experience: string;
+  certs: string[];
+}
+
+export interface Spa2TrainingGraduate {
+  name: string;
+  image: string;
+  imageFocalX?: number;
+  imageFocalY?: number;
+  imageZoom?: number;
+  review: string;
+  student: string;
+}
+
+export interface Spa2TrainingBanner {
+  image: Spa2AdjustableImage;
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+}
+
+export const spa2TrainingBanner: Spa2TrainingBanner = {
+  image: { url: SPA2_PAGE_IMAGES.training, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'Đào tạo',
+  title: 'Học viện Nature Spa Academy',
+  subtitle: 'Khóa học chuyên sâu cho kỹ thuật viên, chuyên gia chăm sóc da và quản lý spa.',
+};
+
+export const spa2TrainingMissionImage: Spa2AdjustableImage = {
+  url: SPA2_PAGE_IMAGES.training,
+  focalX: 50,
+  focalY: 50,
+  zoom: 100,
+};
+
+export const spa2TrainingPrograms: Spa2TrainingProgram[] = [
   {
     name: 'Khóa Massage Trị Liệu Cơ Bản',
     duration: '4 tuần',
@@ -1417,7 +1529,7 @@ export const spa2TrainingPrograms = [
 export const spa2TrainingMission =
   'Đào tạo thế hệ kỹ thuật viên spa chuyên nghiệp, am hiểu thiên nhiên và tận tâm với khách hàng – chuẩn quốc tế, gốc Việt Nam.';
 
-export const spa2TrainingRoadmap = [
+export const spa2TrainingRoadmap: Spa2TrainingRoadmapStage[] = [
   {
     stage: 'Nền tảng',
     duration: '2 tuần',
@@ -1432,7 +1544,7 @@ export const spa2TrainingRoadmap = [
   { stage: 'Thực tập', duration: '2 tuần', desc: 'Thực hành trực tiếp tại chi nhánh có giám sát.' },
 ];
 
-export const spa2Instructors = [
+export const spa2Instructors: Spa2TrainingInstructor[] = [
   {
     name: 'Th.S Đặng Thu Trang',
     image: 'https://i.pravatar.cc/300?img=45',
@@ -1453,7 +1565,7 @@ export const spa2Instructors = [
   },
 ];
 
-export const spa2GraduateShowcase = [
+export const spa2GraduateShowcase: Spa2TrainingGraduate[] = [
   {
     name: 'Lớp KTV K12',
     image: 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=900&q=80',
@@ -1557,4 +1669,3 @@ export const spa2ContactInfo = {
   address: '45 Nguyễn Huệ, Quận 1, TP.HCM',
   workingHours: '9:00 – 22:00 mỗi ngày',
 };
-
