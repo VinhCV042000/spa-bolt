@@ -109,13 +109,6 @@ export function Spa2ServicesManageView() {
     setOpenForm(true);
   }, []);
 
-  const openEdit = useCallback((item: Spa2ServiceItem) => {
-    setForm(item);
-    setBenefitsText(item.benefits.join(', '));
-    setEditSlug(item.slug);
-    setOpenForm(true);
-  }, []);
-
   const handleSubmit = useCallback(() => {
     const benefits = benefitsText
       .split(',')

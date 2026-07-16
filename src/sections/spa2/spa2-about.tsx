@@ -13,7 +13,7 @@ import { useTranslate } from 'src/locales';
 import { Iconify } from 'src/components/iconify';
 import { varFade } from 'src/components/animate';
 
-import { SPA2_TEAL, SPA2_IMAGES, SPA2_TEAL_LIGHT } from 'src/sections/spa2/spa2-data';
+import { SPA2_TEAL, SPA2_TEAL_LIGHT, SPA2_PAGE_IMAGES } from 'src/sections/spa2/spa2-pages-data';
 
 // ----------------------------------------------------------------------
 
@@ -41,7 +41,7 @@ export function Spa2About({ sx, ...other }: BoxProps) {
               <Box sx={{ position: 'relative' }}>
                 <Box
                   component="img"
-                  src={SPA2_IMAGES.about}
+                  src={SPA2_PAGE_IMAGES.about}
                   alt="About spa"
                   sx={{ width: '100%', height: 480, objectFit: 'cover', borderRadius: 4 }}
                 />

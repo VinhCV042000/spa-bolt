@@ -13,7 +13,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { SPA2_TEAL, SPA2_TEAL_DARK, SPA2_TEAL_LIGHT } from 'src/sections/spa2/spa2-data';
+import { SPA2_TEAL, SPA2_TEAL_DARK, SPA2_TEAL_LIGHT } from 'src/sections/spa2/spa2-pages-data';
 
 // ----------------------------------------------------------------------
 

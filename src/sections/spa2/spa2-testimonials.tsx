@@ -15,7 +15,7 @@ import { useTranslate } from 'src/locales';
 
 import { varFade } from 'src/components/animate';
 
-import { SPA2_TEAL, SPA2_CREAM, SPA2_TESTIMONIAL_META } from 'src/sections/spa2/spa2-data';
+import { SPA2_TEAL, SPA2_CREAM, SPA2_TESTIMONIAL_META } from 'src/sections/spa2/spa2-pages-data';
 
 // ----------------------------------------------------------------------
 

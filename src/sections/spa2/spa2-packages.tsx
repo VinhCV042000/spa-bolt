@@ -20,7 +20,7 @@ import { useTranslate } from 'src/locales';
 import { Iconify } from 'src/components/iconify';
 import { varFade } from 'src/components/animate';
 
-import { SPA2_TEAL, SPA2_TEAL_LIGHT, SPA2_PACKAGE_META } from 'src/sections/spa2/spa2-data';
+import { SPA2_TEAL, SPA2_TEAL_LIGHT, SPA2_PACKAGE_META } from 'src/sections/spa2/spa2-pages-data';
 
 // ----------------------------------------------------------------------
 

@@ -1,10 +1,7 @@
 import type { Spa2PageParams } from 'src/api/spa2/types';
 
 import { SPA2_EXTENDED_MOCKS } from 'src/api/spa2/mock/extended-pages';
-
-import { SPA2_IMAGES } from 'src/sections/spa2/spa2-data';
-import {
-  spa2Faqs,
+import { spa2Faqs ,
   spa2Team,
   spa2Offers,
   spa2Gallery,
@@ -20,19 +17,21 @@ import {
   spa2Promotions,
   spa2ContactInfo,
   spa2Instructors,
+  SPA2_PAGE_IMAGES,
   spa2BeforeAfters,
   spa2VisionMission,
   spa2Certifications,
   spa2BookingPackages,
   spa2PartnerProfiles,
   spa2TrainingPrograms,
-} from 'src/sections/spa2/spa2-pages-data';
+} from 'src/_mock/_spa2';
+
 
 // ----------------------------------------------------------------------
 
 export function getSpa2HomeMock() {
   return {
-    hero: SPA2_IMAGES.hero,
+    hero: SPA2_PAGE_IMAGES.hero,
     services: spa2Services.slice(0, 4),
     team: spa2Team.slice(0, 3),
     stats: [

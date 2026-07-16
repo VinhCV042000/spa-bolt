@@ -10,7 +10,7 @@ import { SPA2_CONTACT_CONTENT } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
 
-import { SPA2_TEAL, SPA2_TEAL_DARK, SPA2_TEAL_LIGHT } from 'src/sections/spa2/spa2-data';
+import { SPA2_TEAL, SPA2_TEAL_DARK, SPA2_TEAL_LIGHT } from 'src/sections/spa2/spa2-pages-data';
 import { Spa2SingletonEditor } from 'src/sections/dashboard/spa2/manage/spa2-singleton-editor';
 
 const metadata = { title: `Quản lý Liên hệ | Spa2 - ${CONFIG.appName}` };

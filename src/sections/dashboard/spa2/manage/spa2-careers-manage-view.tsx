@@ -1,15 +1,19 @@
-import { useState, useCallback } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
+import Tabs from '@mui/material/Tabs';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
+import Grid from '@mui/material/Unstable_Grid2';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
@@ -25,17 +29,28 @@ import TableContainer from '@mui/material/TableContainer';
 import { paths } from 'src/routes/paths';
 
 import { useTranslate } from 'src/locales';
-import { DashboardContent } from 'src/layouts/dashboard';
+import {
+  SPA2_CAREERS,
+  SPA2_JOIN_REASONS,
+  SPA2_CAREER_SLOGAN,
+  type Spa2CareerItem,
+  SPA2_WORKPLACE_GALLERY,
+  SPA2_RECRUITMENT_PROCESS,
+} from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
-import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { spa2Careers } from 'src/sections/spa2/spa2-pages-data';
+import {
+  SPA2_TEAL,
+  SPA2_CREAM,
+  SPA2_TEAL_DARK,
+  SPA2_TEAL_LIGHT,
+} from 'src/sections/spa2/spa2-pages-data';
+
+import { Spa2ManageShell } from './spa2-manage-shell';
 
 // ─────────────────────────────────────────────────────────────────────────────
-
-type Career = (typeof spa2Careers)[number] & { status: 'open' | 'closed'; applications?: number };
 
 const JOB_TYPES = ['Toàn thời gian', 'Bán thời gian', 'Linh hoạt', 'Remote'];
 
@@ -47,28 +62,38 @@ const EMPTY_FORM = {
   benefits: '',
 };
 
+type StatusFilter = 'all' | 'open' | 'closed';
+
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function Spa2CareersManageView() {
   const { t } = useTranslate('spa2-manage');
-  const [items, setItems] = useState<Career[]>(
-    spa2Careers.map((c) => ({
-      ...c,
-      status: 'open' as const,
-      applications: Math.floor(Math.random() * 20),
-    }))
-  );
+  const [items, setItems] = useState<Spa2CareerItem[]>(SPA2_CAREERS);
   const [search, setSearch] = useState('');
+  const [statusTab, setStatusTab] = useState<StatusFilter>('all');
   const [openForm, setOpenForm] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [form, setForm] = useState(EMPTY_FORM);
 
-  const filtered = items.filter(
-    (c) =>
-      c.title.toLowerCase().includes(search.toLowerCase()) ||
-      c.location.toLowerCase().includes(search.toLowerCase())
+  const filtered = useMemo(
+    () =>
+      items.filter((c) => {
+        const q = search.toLowerCase();
+        const matchSearch =
+          !q || c.title.toLowerCase().includes(q) || c.location.toLowerCase().includes(q);
+        const matchStatus = statusTab === 'all' || c.status === statusTab;
+        return matchSearch && matchStatus;
+      }),
+    [items, search, statusTab]
   );
+
+  const counts = {
+    all: items.length,
+    open: items.filter((c) => c.status === 'open').length,
+    closed: items.filter((c) => c.status === 'closed').length,
+    applications: items.reduce((sum, c) => sum + (c.applications ?? 0), 0),
+  };
 
   const handleChange =
     (field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -80,7 +105,7 @@ export function Spa2CareersManageView() {
     setOpenForm(true);
   };
 
-  const openEdit = (item: Career) => {
+  const openEdit = (item: Spa2CareerItem) => {
     setForm({
       title: item.title,
       location: item.location,
@@ -107,7 +132,16 @@ export function Spa2CareersManageView() {
       setItems((p) => p.map((x) => (x.id === editId ? { ...x, ...next } : x)));
     } else {
       const newId = Math.max(0, ...items.map((x) => x.id)) + 1;
-      setItems((p) => [...p, { ...next, id: newId, status: 'open', applications: 0 }]);
+      setItems((p) => [
+        {
+          ...next,
+          id: newId,
+          status: 'open',
+          applications: 0,
+          postedAt: new Date().toISOString().slice(0, 10),
+        },
+        ...p,
+      ]);
     }
     setOpenForm(false);
   }, [form, editId, items]);
@@ -124,121 +158,355 @@ export function Spa2CareersManageView() {
   }, []);
 
   return (
-    <DashboardContent maxWidth="xl">
-      <CustomBreadcrumbs
-        heading={t('careers.page_title')}
-        links={[
-          { name: t('common.dashboard'), href: paths.dashboard.root },
-          { name: t('common.spa2'), href: paths.dashboard.spa2.root },
-          { name: t('nav.careers') },
-        ]}
-        action={
-          <Button
-            variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-            onClick={openCreate}
-          >
-            {t('careers.add_btn')}
-          </Button>
-        }
-        sx={{ mb: { xs: 3, md: 5 } }}
-      />
+    <Spa2ManageShell
+      title={t('careers.page_title')}
+      description={SPA2_CAREER_SLOGAN}
+      breadcrumbLabel={t('nav.careers')}
+      publicPath={paths.spa2.careers}
+      actions={
+        <Button
+          onClick={openCreate}
+          startIcon={<Iconify icon="mingcute:add-line" />}
+          sx={{
+            borderRadius: 50,
+            px: 2.5,
+            bgcolor: 'common.white',
+            color: SPA2_TEAL_DARK,
+            fontWeight: 700,
+            '&:hover': { bgcolor: SPA2_CREAM },
+          }}
+        >
+          {t('careers.add_btn')}
+        </Button>
+      }
+    >
+      {/* KPI cards */}
+      <Grid container spacing={2} sx={{ mb: 3 }}>
+        {[
+          { label: 'Tổng vị trí', value: counts.all, icon: 'solar:case-bold-duotone' },
+          { label: 'Đang tuyển', value: counts.open, icon: 'solar:play-circle-bold-duotone' },
+          { label: 'Đã đóng', value: counts.closed, icon: 'solar:pause-circle-bold-duotone' },
+          {
+            label: 'Hồ sơ ứng tuyển',
+            value: counts.applications,
+            icon: 'solar:users-group-rounded-bold-duotone',
+          },
+        ].map((k) => (
+          <Grid key={k.label} xs={6} md={3}>
+            <Card
+              sx={{
+                p: 2.5,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+                border: `1px solid ${SPA2_TEAL_LIGHT}33`,
+              }}
+            >
+              <Box
+                sx={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: 2,
+                  bgcolor: `${SPA2_TEAL}15`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Iconify icon={k.icon} width={26} sx={{ color: SPA2_TEAL_DARK }} />
+              </Box>
+              <Box>
+                <Typography variant="h5" sx={{ color: SPA2_TEAL_DARK, fontWeight: 700 }}>
+                  {k.value}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {k.label}
+                </Typography>
+              </Box>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
 
-      <Card>
-        <Box sx={{ p: 2 }}>
-          <TextField
-            placeholder={t('careers.search_placeholder')}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            size="small"
-            sx={{ width: 280 }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Box>
+      <Grid container spacing={3}>
+        {/* Main: careers table */}
+        <Grid xs={12} md={8}>
+          <Card>
+            <Box sx={{ p: 2, borderBottom: `1px solid ${SPA2_TEAL_LIGHT}22` }}>
+              <Tabs
+                value={statusTab}
+                onChange={(_, v) => setStatusTab(v)}
+                sx={{
+                  '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+                  '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
+                }}
+              >
+                <Tab
+                  value="all"
+                  label={
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <span>{t('common.all')}</span>
+                      <Chip size="small" label={counts.all} />
+                    </Stack>
+                  }
+                />
+                <Tab
+                  value="open"
+                  label={
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <span>{t('careers.status_open')}</span>
+                      <Chip size="small" color="success" label={counts.open} />
+                    </Stack>
+                  }
+                />
+                <Tab
+                  value="closed"
+                  label={
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <span>{t('careers.status_closed')}</span>
+                      <Chip size="small" label={counts.closed} />
+                    </Stack>
+                  }
+                />
+              </Tabs>
+            </Box>
 
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>{t('careers.col_position')}</TableCell>
-                <TableCell>{t('careers.col_location')}</TableCell>
-                <TableCell>{t('careers.col_type')}</TableCell>
-                <TableCell>{t('careers.col_salary')}</TableCell>
-                <TableCell align="center">{t('careers.col_applications')}</TableCell>
-                <TableCell>{t('common.status')}</TableCell>
-                <TableCell align="right">{t('common.actions')}</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filtered.map((item) => (
-                <TableRow key={item.id} hover>
-                  <TableCell>
+            <Box sx={{ p: 2 }}>
+              <TextField
+                placeholder={t('careers.search_placeholder')}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                size="small"
+                fullWidth
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Box>
+
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>{t('careers.col_position')}</TableCell>
+                    <TableCell>{t('careers.col_location')}</TableCell>
+                    <TableCell>{t('careers.col_salary')}</TableCell>
+                    <TableCell align="center">{t('careers.col_applications')}</TableCell>
+                    <TableCell>{t('common.status')}</TableCell>
+                    <TableCell align="right">{t('common.actions')}</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {filtered.map((item) => (
+                    <TableRow key={item.id} hover>
+                      <TableCell>
+                        <Stack>
+                          <Typography variant="subtitle2" sx={{ color: SPA2_TEAL_DARK }}>
+                            {item.title}
+                          </Typography>
+                          <Stack direction="row" spacing={0.5} sx={{ mt: 0.5 }} flexWrap="wrap">
+                            <Chip
+                              size="small"
+                              label={item.type}
+                              sx={{ bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
+                            />
+                            {item.benefits.slice(0, 2).map((b) => (
+                              <Chip
+                                key={b}
+                                size="small"
+                                variant="outlined"
+                                label={b}
+                                sx={{ borderColor: `${SPA2_TEAL}55`, color: 'text.secondary' }}
+                              />
+                            ))}
+                          </Stack>
+                        </Stack>
+                      </TableCell>
+                      <TableCell>
+                        <Stack direction="row" spacing={0.5} alignItems="center">
+                          <Iconify
+                            icon="solar:map-point-bold"
+                            width={14}
+                            sx={{ color: SPA2_TEAL }}
+                          />
+                          <Typography variant="body2">{item.location}</Typography>
+                        </Stack>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2" sx={{ color: SPA2_TEAL_DARK, fontWeight: 600 }}>
+                          {item.salary}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Chip
+                          size="small"
+                          label={item.applications ?? 0}
+                          sx={{ bgcolor: `${SPA2_TEAL}15`, color: SPA2_TEAL_DARK, fontWeight: 700 }}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          size="small"
+                          label={
+                            item.status === 'open'
+                              ? t('careers.status_open')
+                              : t('careers.status_closed')
+                          }
+                          color={item.status === 'open' ? 'success' : 'default'}
+                          variant="soft"
+                        />
+                      </TableCell>
+                      <TableCell align="right">
+                        <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
+                          <Tooltip
+                            title={
+                              item.status === 'open' ? t('common.disable') : t('common.enable')
+                            }
+                          >
+                            <IconButton size="small" onClick={() => handleToggleStatus(item.id)}>
+                              <Iconify
+                                icon={
+                                  item.status === 'open'
+                                    ? 'solar:lock-bold'
+                                    : 'solar:lock-unlocked-bold'
+                                }
+                                sx={{
+                                  color: item.status === 'open' ? 'warning.main' : 'success.main',
+                                }}
+                              />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title={t('common.edit')}>
+                            <IconButton size="small" onClick={() => openEdit(item)}>
+                              <Iconify icon="solar:pen-bold" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title={t('common.delete')}>
+                            <IconButton
+                              size="small"
+                              color="error"
+                              onClick={() => setDeleteId(item.id)}
+                            >
+                              <Iconify icon="solar:trash-bin-trash-bold" />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  {filtered.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={6} align="center" sx={{ py: 6, color: 'text.disabled' }}>
+                        Không có vị trí nào phù hợp.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Card>
+        </Grid>
+
+        {/* Side: brand storytelling (mirrors public careers page) */}
+        <Grid xs={12} md={4}>
+          <Stack spacing={2}>
+            <Card sx={{ p: 3, border: `1px solid ${SPA2_TEAL_LIGHT}33` }}>
+              <Typography
+                variant="overline"
+                sx={{ letterSpacing: 1.5, color: SPA2_TEAL, fontWeight: 700 }}
+              >
+                Vì sao chọn chúng tôi
+              </Typography>
+              <Typography variant="h6" sx={{ color: SPA2_TEAL_DARK, mb: 2 }}>
+                Lý do gia nhập Nature Spa
+              </Typography>
+              <Stack spacing={1.5}>
+                {SPA2_JOIN_REASONS.map((r) => (
+                  <Stack key={r.text} direction="row" spacing={1.5} alignItems="center">
+                    <Iconify icon={r.icon} width={22} sx={{ color: SPA2_TEAL }} />
+                    <Typography variant="body2" sx={{ color: SPA2_TEAL_DARK, fontWeight: 500 }}>
+                      {r.text}
+                    </Typography>
+                  </Stack>
+                ))}
+              </Stack>
+            </Card>
+
+            <Card sx={{ p: 3, border: `1px solid ${SPA2_TEAL_LIGHT}33` }}>
+              <Typography
+                variant="overline"
+                sx={{ letterSpacing: 1.5, color: SPA2_TEAL, fontWeight: 700 }}
+              >
+                Quy trình
+              </Typography>
+              <Typography variant="h6" sx={{ color: SPA2_TEAL_DARK, mb: 2 }}>
+                Quy trình tuyển dụng
+              </Typography>
+              <Stack spacing={1.5}>
+                {SPA2_RECRUITMENT_PROCESS.map((p, i) => (
+                  <Stack key={p.step} direction="row" spacing={1.5} alignItems="flex-start">
+                    <Box
+                      sx={{
+                        flexShrink: 0,
+                        width: 28,
+                        height: 28,
+                        borderRadius: '50%',
+                        bgcolor: SPA2_TEAL,
+                        color: 'white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: 13,
+                        fontWeight: 700,
+                      }}
+                    >
+                      {i + 1}
+                    </Box>
                     <Box>
-                      <Typography variant="subtitle2">{item.title}</Typography>
+                      <Typography variant="body2" sx={{ color: SPA2_TEAL_DARK, fontWeight: 600 }}>
+                        {p.step}
+                      </Typography>
                       <Typography variant="caption" color="text.secondary">
-                        {item.benefits.slice(0, 2).join(' · ')}
+                        {p.desc}
                       </Typography>
                     </Box>
-                  </TableCell>
-                  <TableCell>{item.location}</TableCell>
-                  <TableCell>
-                    <Chip size="small" label={item.type} />
-                  </TableCell>
-                  <TableCell>{item.salary}</TableCell>
-                  <TableCell align="center">
-                    <Typography variant="body2" fontWeight={600} color="primary.main">
-                      {item.applications ?? 0}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      size="small"
-                      label={item.status === 'open' ? t('careers.status_open') : t('careers.status_closed')}
-                      color={item.status === 'open' ? 'success' : 'default'}
-                      variant="soft"
+                  </Stack>
+                ))}
+              </Stack>
+              <Divider sx={{ my: 2 }} />
+              <Typography
+                variant="overline"
+                sx={{ letterSpacing: 1.5, color: SPA2_TEAL, fontWeight: 700 }}
+              >
+                Môi trường làm việc
+              </Typography>
+              <Grid container spacing={1} sx={{ mt: 0.5 }}>
+                {SPA2_WORKPLACE_GALLERY.slice(0, 4).map((src) => (
+                  <Grid key={src} xs={6}>
+                    <Box
+                      sx={{
+                        aspectRatio: '4/3',
+                        borderRadius: 1.5,
+                        backgroundImage: `url(${src})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                      }}
                     />
-                  </TableCell>
-                  <TableCell align="right">
-                    <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
-                      <Tooltip title={item.status === 'open' ? t('common.disable') : t('common.enable')}>
-                        <IconButton size="small" onClick={() => handleToggleStatus(item.id)}>
-                          <Iconify
-                            icon={
-                              item.status === 'open'
-                                ? 'solar:lock-bold'
-                                : 'solar:lock-unlocked-bold'
-                            }
-                            color={item.status === 'open' ? 'warning.main' : 'success.main'}
-                          />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title={t('common.edit')}>
-                        <IconButton size="small" onClick={() => openEdit(item)}>
-                          <Iconify icon="solar:pen-bold" />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title={t('common.delete')}>
-                        <IconButton size="small" color="error" onClick={() => setDeleteId(item.id)}>
-                          <Iconify icon="solar:trash-bin-trash-bold" />
-                        </IconButton>
-                      </Tooltip>
-                    </Stack>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            </Card>
+          </Stack>
+        </Grid>
+      </Grid>
 
+      {/* Edit / create dialog */}
       <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>
+        <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>
           {editId !== null ? t('careers.form_edit') : t('careers.form_create')}
         </DialogTitle>
         <DialogContent dividers>
@@ -283,12 +551,18 @@ export function Spa2CareersManageView() {
               fullWidth
               multiline
               rows={2}
+              helperText="Ngăn cách bằng dấu phẩy"
             />
           </Stack>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenForm(false)}>{t('common.cancel')}</Button>
-          <Button variant="contained" onClick={handleSubmit} disabled={!form.title}>
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            disabled={!form.title}
+            sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
+          >
             {editId !== null ? t('careers.form_edit') : t('careers.form_create')}
           </Button>
         </DialogActions>
@@ -305,6 +579,6 @@ export function Spa2CareersManageView() {
           </Button>
         }
       />
-    </DashboardContent>
+    </Spa2ManageShell>
   );
 }

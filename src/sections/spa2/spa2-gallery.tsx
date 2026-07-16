@@ -12,15 +12,15 @@ import { useTranslate } from 'src/locales';
 
 import { varFade } from 'src/components/animate';
 
-import { SPA2_TEAL, SPA2_IMAGES } from 'src/sections/spa2/spa2-data';
+import { SPA2_TEAL, SPA2_PAGE_IMAGES } from 'src/sections/spa2/spa2-pages-data';
 
 // ----------------------------------------------------------------------
 
 const galleryImages = [
-  SPA2_IMAGES.gallery1,
-  SPA2_IMAGES.gallery2,
-  SPA2_IMAGES.gallery3,
-  SPA2_IMAGES.gallery4,
+  SPA2_PAGE_IMAGES.gallery1,
+  SPA2_PAGE_IMAGES.gallery2,
+  SPA2_PAGE_IMAGES.gallery3,
+  SPA2_PAGE_IMAGES.gallery4,
 ];
 
 export function Spa2Gallery({ sx, ...other }: BoxProps) {

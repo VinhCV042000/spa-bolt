@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 
 import { Iconify } from 'src/components/iconify';
 
-import { SPA2_TEAL } from 'src/sections/spa2/spa2-data';
+import { SPA2_TEAL } from 'src/sections/spa2/spa2-pages-data';
 
 import { Spa2ManageShell } from './spa2-manage-shell';
 
