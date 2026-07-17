@@ -122,6 +122,11 @@ export function Spa2ServiceEditorView() {
 
   const handleDelete = useCallback(() => navigate(paths.dashboard.spa2.services), [navigate]);
 
+  const handleBack = useCallback(
+    () => navigate(paths.dashboard.spa2.services),
+    [navigate]
+  );
+
   // ── Steps CRUD ──
   const addStep = useCallback(() => {
     const newStep: Spa2ServiceStep = { id: genId(), title: 'Bước mới', desc: '' };
@@ -300,6 +305,19 @@ export function Spa2ServiceEditorView() {
       actions={
         <>
           <Button
+            onClick={handleBack}
+            startIcon={<Iconify icon="solar:arrow-left-linear" />}
+            sx={{
+              borderRadius: 50,
+              px: 2.5,
+              color: 'common.white',
+              border: '1.5px solid rgba(255,255,255,0.7)',
+              '&:hover': { bgcolor: 'rgba(255,255,255,0.12)', borderColor: 'common.white' },
+            }}
+          >
+            Quay lại danh sách
+          </Button>
+          <Button
             onClick={handleApprove}
             startIcon={<Iconify icon="solar:check-circle-bold" />}
             sx={{
@@ -339,6 +357,10 @@ export function Spa2ServiceEditorView() {
         scrollButtons="auto"
         sx={{
           mb: 3,
+          position: 'sticky',
+          top: 65,
+          zIndex: 10,
+          bgcolor: 'background.paper',
           '& .MuiTab-root': { minHeight: 56, fontWeight: 600 },
           '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
           '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
@@ -367,6 +389,19 @@ export function Spa2ServiceEditorView() {
             </Stack>
             <Divider sx={{ mb: 2 }} />
             <Stack spacing={2}>
+              <TextField
+                select
+                label="Trạng thái"
+                size="small"
+                value={value.status}
+                onChange={(e) => update('status', e.target.value as Spa2ServiceStatus)}
+              >
+                {STATUS_OPTIONS.map((s) => (
+                  <MenuItem key={s} value={s}>
+                    {s}
+                  </MenuItem>
+                ))}
+              </TextField>
               <TextField
                 label="Slug"
                 size="small"
@@ -431,19 +466,6 @@ export function Spa2ServiceEditorView() {
                 value={benefitsText}
                 onChange={(e) => setBenefitsText(e.target.value)}
               />
-              <TextField
-                select
-                label="Trạng thái"
-                size="small"
-                value={value.status}
-                onChange={(e) => update('status', e.target.value as Spa2ServiceStatus)}
-              >
-                {STATUS_OPTIONS.map((s) => (
-                  <MenuItem key={s} value={s}>
-                    {s}
-                  </MenuItem>
-                ))}
-              </TextField>
             </Stack>
           </Card>
 

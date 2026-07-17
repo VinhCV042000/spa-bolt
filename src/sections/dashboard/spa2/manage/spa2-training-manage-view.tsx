@@ -10,14 +10,18 @@ import type {
 import { useState } from 'react';
 
 import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
+import Tabs from '@mui/material/Tabs';
 import Chip from '@mui/material/Chip';
+import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
@@ -30,6 +34,8 @@ import { paths } from 'src/routes/paths';
 
 import { uuidv4 } from 'src/utils/uuidv4';
 
+import { RouterLink } from 'src/routes/components';
+
 import {
   spa2Instructors,
   spa2TrainingBanner,
@@ -40,6 +46,7 @@ import {
   spa2TrainingMissionImage,
 } from 'src/_mock/_spa2';
 
+import { Editor } from 'src/components/editor';
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
@@ -52,6 +59,12 @@ import {
   SPA2_TEAL_LIGHT,
   SPA2_CREAM_DARK,
 } from 'src/sections/spa2/spa2-pages-data';
+import {
+  Spa2Cta,
+  Spa2PageHero,
+  Spa2SoftCard,
+  Spa2SectionTitle,
+} from 'src/sections/spa2/view/spa2-content-pages';
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
@@ -207,6 +220,109 @@ function InstructorAvatar({
   );
 }
 
+function ProgramPreviewCard({ form }: { form: Omit<ProgramItem, 'id'> }) {
+  return (
+    <Spa2SoftCard>
+      <Chip
+        label={form.level}
+        size="small"
+        sx={{ bgcolor: SPA2_CREAM_DARK, color: SPA2_TEAL_DARK, mb: 2 }}
+      />
+      <Typography variant="h6" sx={{ color: SPA2_INK, mb: 1 }}>
+        {form.name || '(Chưa đặt tên)'}
+      </Typography>
+      <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+        <Iconify icon="solar:clock-circle-bold" sx={{ color: SPA2_TEAL }} />
+        <Typography sx={{ color: 'text.secondary' }}>{form.duration}</Typography>
+      </Stack>
+      <Box
+        sx={{ color: 'text.secondary', mb: 2, '& p': { m: 0 } }}
+        dangerouslySetInnerHTML={{ __html: form.outcome }}
+      />
+      <Divider sx={{ my: 2 }} />
+      <Typography variant="h5" sx={{ color: SPA2_TEAL, mb: 2 }}>
+        {formatVND(form.price)}
+      </Typography>
+      <Button
+        fullWidth
+        disabled
+        sx={{ borderRadius: 999, bgcolor: SPA2_TEAL, color: 'white', opacity: 0.7 }}
+      >
+        Đăng ký tư vấn
+      </Button>
+    </Spa2SoftCard>
+  );
+}
+
+function InstructorPreviewCard({
+  form,
+}: {
+  form: Omit<InstructorItem, 'id'> & { certsInput: string };
+}) {
+  const certs = form.certsInput
+    .split(',')
+    .map((c) => c.trim())
+    .filter(Boolean);
+  return (
+    <Spa2SoftCard sx={{ textAlign: 'center' }}>
+      <Avatar
+        src={form.image}
+        alt={form.name}
+        slotProps={{
+          img: {
+            style: {
+              objectPosition: `${form.imageFocalX ?? 50}% ${form.imageFocalY ?? 50}%`,
+              transform: `scale(${(form.imageZoom ?? 100) / 100})`,
+            },
+          },
+        }}
+        sx={{ width: 96, height: 96, mx: 'auto', mb: 2, border: `3px solid ${SPA2_TEAL_LIGHT}` }}
+      />
+      <Typography variant="h6" sx={{ color: SPA2_INK, mb: 0.5 }}>
+        {form.name || '(Chưa đặt tên)'}
+      </Typography>
+      <Box
+        sx={{ color: 'text.secondary', fontSize: 14, mb: 1.5, '& p': { m: 0 } }}
+        dangerouslySetInnerHTML={{ __html: form.experience }}
+      />
+      <Stack direction="row" spacing={1} justifyContent="center" flexWrap="wrap">
+        {certs.map((c) => (
+          <Chip key={c} size="small" label={c} sx={{ bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }} />
+        ))}
+      </Stack>
+    </Spa2SoftCard>
+  );
+}
+
+function GraduatePreviewCard({ form }: { form: Omit<GraduateItem, 'id'> }) {
+  return (
+    <Spa2SoftCard sx={{ p: 0, overflow: 'hidden' }}>
+      <Box
+        sx={{
+          height: 220,
+          bgcolor: SPA2_CREAM_DARK,
+          ...spa2ImageBackgroundStyle({
+            url: form.image,
+            focalX: form.imageFocalX ?? 50,
+            focalY: form.imageFocalY ?? 50,
+            zoom: form.imageZoom ?? 100,
+          }),
+        }}
+      />
+      <Box sx={{ p: 3 }}>
+        <Typography sx={{ color: SPA2_TEAL_DARK, fontWeight: 700, mb: 1 }}>
+          {form.name || '(Chưa đặt tên)'}
+        </Typography>
+        <Box
+          sx={{ color: SPA2_INK, fontStyle: 'italic', mb: 1.5, '& p': { m: 0 } }}
+          dangerouslySetInnerHTML={{ __html: form.review }}
+        />
+        <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>— {form.student}</Typography>
+      </Box>
+    </Spa2SoftCard>
+  );
+}
+
 // ----------------------------------------------------------------------
 
 export function Spa2TrainingManageView() {
@@ -233,7 +349,9 @@ export function Spa2TrainingManageView() {
 
   const [dirty, setDirty] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
-  const [previewOpen, setPreviewOpen] = useState(false);
+  const [tab, setTab] = useState<
+    'banner' | 'mission' | 'programs' | 'roadmap' | 'instructors' | 'graduates' | 'preview'
+  >('banner');
   const markDirty = () => setDirty(true);
 
   // ---- Program dialog state ----
@@ -486,46 +604,88 @@ export function Spa2TrainingManageView() {
         </>
       }
     >
-      <Stack
-        spacing={1}
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        sx={{ mb: 2 }}
-      >
-        <Stack direction="row" spacing={1} alignItems="center">
-          {dirty && (
-            <Chip
-              size="small"
-              variant="soft"
-              color="warning"
-              label="Có thay đổi chưa lưu"
-              icon={<Iconify icon="solar:pen-bold" width={14} />}
-            />
-          )}
-          {savedAt && !dirty && (
-            <Chip
-              size="small"
-              variant="soft"
-              color="success"
-              label={`Đã lưu ${savedAt.toLocaleTimeString('vi-VN')}`}
-              icon={<Iconify icon="solar:check-circle-bold" width={14} />}
-            />
-          )}
-        </Stack>
-        <Button
-          size="small"
-          variant="outlined"
-          onClick={() => setPreviewOpen(true)}
-          startIcon={<Iconify icon="solar:eye-bold" width={16} />}
-          sx={{ borderRadius: 50 }}
-        >
-          Xem trước như trang thật
-        </Button>
+      <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
+        {dirty && (
+          <Chip
+            size="small"
+            variant="soft"
+            color="warning"
+            label="Có thay đổi chưa lưu"
+            icon={<Iconify icon="solar:pen-bold" width={14} />}
+          />
+        )}
+        {savedAt && !dirty && (
+          <Chip
+            size="small"
+            variant="soft"
+            color="success"
+            label={`Đã lưu ${savedAt.toLocaleTimeString('vi-VN')}`}
+            icon={<Iconify icon="solar:check-circle-bold" width={14} />}
+          />
+        )}
       </Stack>
 
-      <Stack spacing={3}>
-        {/* Banner trang */}
+      <Tabs
+        value={tab}
+        onChange={(_, v: typeof tab) => setTab(v)}
+        variant="scrollable"
+        scrollButtons="auto"
+        sx={{
+          mb: 3,
+          position: 'sticky',
+          top: 65,
+          zIndex: 10,
+          bgcolor: 'background.paper',
+          '& .MuiTab-root': { minHeight: 56, fontWeight: 600 },
+          '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
+          '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+        }}
+      >
+        <Tab
+          value="banner"
+          icon={<Iconify icon="solar:gallery-wide-bold-duotone" width={20} />}
+          iconPosition="start"
+          label="Banner trang"
+        />
+        <Tab
+          value="mission"
+          icon={<Iconify icon="solar:flag-bold-duotone" width={20} />}
+          iconPosition="start"
+          label="Sứ mệnh học viện"
+        />
+        <Tab
+          value="programs"
+          icon={<Iconify icon="solar:notebook-bold-duotone" width={20} />}
+          iconPosition="start"
+          label="Chương trình đào tạo"
+        />
+        <Tab
+          value="roadmap"
+          icon={<Iconify icon="solar:routing-2-bold-duotone" width={20} />}
+          iconPosition="start"
+          label="Lộ trình học"
+        />
+        <Tab
+          value="instructors"
+          icon={<Iconify icon="solar:users-group-rounded-bold-duotone" width={20} />}
+          iconPosition="start"
+          label="Giảng viên"
+        />
+        <Tab
+          value="graduates"
+          icon={<Iconify icon="solar:cup-star-bold-duotone" width={20} />}
+          iconPosition="start"
+          label="Thành tựu học viên"
+        />
+        <Tab
+          value="preview"
+          icon={<Iconify icon="solar:eye-bold-duotone" width={20} />}
+          iconPosition="start"
+          label="Xem trước"
+        />
+      </Tabs>
+
+      {tab === 'banner' && (
         <SectionCard title="Banner trang" icon="solar:gallery-wide-bold-duotone">
           <Grid container spacing={3}>
             <Grid xs={12} md={5}>
@@ -566,8 +726,9 @@ export function Spa2TrainingManageView() {
             </Grid>
           </Grid>
         </SectionCard>
+      )}
 
-        {/* Sứ mệnh học viện */}
+      {tab === 'mission' && (
         <SectionCard title="Sứ mệnh học viện" icon="solar:flag-bold-duotone">
           <Grid container spacing={3}>
             <Grid xs={12} md={5}>
@@ -580,19 +741,21 @@ export function Spa2TrainingManageView() {
               />
             </Grid>
             <Grid xs={12} md={7}>
-              <TextField
+              <Typography variant="caption" sx={{ color: 'text.secondary', mb: 0.5, display: 'block' }}>
+                Nội dung sứ mệnh
+              </Typography>
+              <Editor
                 value={mission}
-                onChange={(e) => updateMission(e.target.value)}
-                fullWidth
-                multiline
-                minRows={6}
-                label="Nội dung sứ mệnh"
+                onChange={(html) => updateMission(html)}
+                placeholder="Nội dung sứ mệnh"
+                sx={{ maxHeight: 260 }}
               />
             </Grid>
           </Grid>
         </SectionCard>
+      )}
 
-        {/* Chương trình đào tạo */}
+      {tab === 'programs' && (
         <SectionCard
           title="Chương trình đào tạo"
           icon="solar:notebook-bold-duotone"
@@ -661,9 +824,15 @@ export function Spa2TrainingManageView() {
                             {p.duration}
                           </Typography>
                         </Stack>
-                        <Typography variant="caption" color="text.secondary" sx={{ flexGrow: 1 }}>
-                          {p.outcome}
-                        </Typography>
+                        <Box
+                          sx={{
+                            flexGrow: 1,
+                            fontSize: 12,
+                            color: 'text.secondary',
+                            '& p': { m: 0 },
+                          }}
+                          dangerouslySetInnerHTML={{ __html: p.outcome }}
+                        />
                         <Divider />
                         <Typography variant="subtitle2" sx={{ color: SPA2_TEAL }}>
                           {formatVND(p.price)}
@@ -676,8 +845,9 @@ export function Spa2TrainingManageView() {
             </Grid>
           </Spa2SortableGrid>
         </SectionCard>
+      )}
 
-        {/* Lộ trình học */}
+      {tab === 'roadmap' && (
         <SectionCard
           title="Lộ trình học"
           icon="solar:routing-2-bold-duotone"
@@ -736,9 +906,10 @@ export function Spa2TrainingManageView() {
                             sx={{ bgcolor: 'common.white', color: SPA2_TEAL_DARK }}
                           />
                         </Stack>
-                        <Typography variant="caption" color="text.secondary">
-                          {r.desc}
-                        </Typography>
+                        <Box
+                          sx={{ fontSize: 12, color: 'text.secondary', '& p': { m: 0 } }}
+                          dangerouslySetInnerHTML={{ __html: r.desc }}
+                        />
                       </Box>
                       <Stack direction="row" spacing={0.5}>
                         <Tooltip title="Sửa">
@@ -763,8 +934,9 @@ export function Spa2TrainingManageView() {
             </Stack>
           </Spa2SortableGrid>
         </SectionCard>
+      )}
 
-        {/* Giảng viên */}
+      {tab === 'instructors' && (
         <SectionCard
           title="Giảng viên"
           icon="solar:users-group-rounded-bold-duotone"
@@ -800,9 +972,10 @@ export function Spa2TrainingManageView() {
                         <Typography variant="subtitle2" sx={{ color: SPA2_INK }}>
                           {ins.name || '(Chưa đặt tên)'}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {ins.experience}
-                        </Typography>
+                        <Box
+                          sx={{ fontSize: 12, color: 'text.secondary', '& p': { m: 0 } }}
+                          dangerouslySetInnerHTML={{ __html: ins.experience }}
+                        />
                         <Stack direction="row" spacing={0.5} flexWrap="wrap" justifyContent="center">
                           {ins.certs.map((c) => (
                             <Chip key={c} size="small" label={c} sx={{ bgcolor: SPA2_CREAM_DARK }} />
@@ -832,8 +1005,9 @@ export function Spa2TrainingManageView() {
             </Grid>
           </Spa2SortableGrid>
         </SectionCard>
+      )}
 
-        {/* Thành tựu học viên */}
+      {tab === 'graduates' && (
         <SectionCard
           title="Thành tựu học viên"
           icon="solar:cup-star-bold-duotone"
@@ -895,9 +1069,15 @@ export function Spa2TrainingManageView() {
                         <Typography variant="subtitle2" sx={{ color: SPA2_TEAL_DARK }}>
                           {g.name || '(Chưa đặt tên)'}
                         </Typography>
-                        <Typography variant="body2" sx={{ color: SPA2_INK, fontStyle: 'italic' }}>
-                          &ldquo;{g.review}&rdquo;
-                        </Typography>
+                        <Box
+                          sx={{
+                            color: SPA2_INK,
+                            fontStyle: 'italic',
+                            fontSize: 14,
+                            '& p': { m: 0 },
+                          }}
+                          dangerouslySetInnerHTML={{ __html: g.review }}
+                        />
                         <Typography variant="caption" color="text.secondary">
                           — {g.student}
                         </Typography>
@@ -909,276 +1089,10 @@ export function Spa2TrainingManageView() {
             </Grid>
           </Spa2SortableGrid>
         </SectionCard>
-      </Stack>
+      )}
 
-      {/* Program dialog */}
-      <Dialog open={programDialog} onClose={() => setProgramDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>
-          {programEditId ? 'Sửa chương trình' : 'Thêm chương trình'}
-        </DialogTitle>
-        <DialogContent dividers>
-          <Stack spacing={2} sx={{ pt: 1 }}>
-            <TextField
-              label="Tên chương trình"
-              value={programForm.name}
-              onChange={(e) => setProgramForm((p) => ({ ...p, name: e.target.value }))}
-              fullWidth
-            />
-            <Stack direction="row" spacing={2}>
-              <TextField
-                label="Thời lượng"
-                value={programForm.duration}
-                onChange={(e) => setProgramForm((p) => ({ ...p, duration: e.target.value }))}
-                fullWidth
-              />
-              <TextField
-                select
-                label="Cấp độ"
-                value={programForm.level}
-                onChange={(e) => setProgramForm((p) => ({ ...p, level: e.target.value }))}
-                fullWidth
-              >
-                {LEVELS.map((l) => (
-                  <MenuItem key={l} value={l}>
-                    {l}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Stack>
-            <TextField
-              label="Học phí (VNĐ)"
-              type="number"
-              value={programForm.price}
-              onChange={(e) => setProgramForm((p) => ({ ...p, price: Number(e.target.value) }))}
-              fullWidth
-            />
-            <TextField
-              label="Kết quả đạt được"
-              value={programForm.outcome}
-              onChange={(e) => setProgramForm((p) => ({ ...p, outcome: e.target.value }))}
-              fullWidth
-              multiline
-              rows={2}
-            />
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setProgramDialog(false)}>Huỷ</Button>
-          <Button
-            variant="contained"
-            onClick={submitProgram}
-            disabled={!programForm.name}
-            sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
-          >
-            {programEditId ? 'Lưu' : 'Thêm'}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Roadmap dialog */}
-      <Dialog open={roadmapDialog} onClose={() => setRoadmapDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>
-          {roadmapEditId ? 'Sửa giai đoạn' : 'Thêm giai đoạn'}
-        </DialogTitle>
-        <DialogContent dividers>
-          <Stack spacing={2} sx={{ pt: 1 }}>
-            <TextField
-              label="Tên giai đoạn"
-              value={roadmapForm.stage}
-              onChange={(e) => setRoadmapForm((p) => ({ ...p, stage: e.target.value }))}
-              fullWidth
-            />
-            <TextField
-              label="Thời lượng"
-              value={roadmapForm.duration}
-              onChange={(e) => setRoadmapForm((p) => ({ ...p, duration: e.target.value }))}
-              fullWidth
-            />
-            <TextField
-              label="Mô tả"
-              value={roadmapForm.desc}
-              onChange={(e) => setRoadmapForm((p) => ({ ...p, desc: e.target.value }))}
-              fullWidth
-              multiline
-              rows={2}
-            />
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setRoadmapDialog(false)}>Huỷ</Button>
-          <Button
-            variant="contained"
-            onClick={submitRoadmap}
-            disabled={!roadmapForm.stage}
-            sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
-          >
-            {roadmapEditId ? 'Lưu' : 'Thêm'}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Instructor dialog */}
-      <Dialog
-        open={instructorDialog}
-        onClose={() => setInstructorDialog(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>
-          {instructorEditId ? 'Sửa giảng viên' : 'Thêm giảng viên'}
-        </DialogTitle>
-        <DialogContent dividers>
-          <Stack spacing={2} sx={{ pt: 1 }}>
-            <Spa2ImageField
-              label="Ảnh đại diện"
-              value={imageFieldValue(instructorForm)}
-              onChange={(img) => setInstructorForm((p) => applyImageField(p, img))}
-              height={200}
-              helperText="Kéo thả ảnh, dán URL, hoặc tải ảnh từ máy — sau đó kéo trên ảnh để chọn điểm lấy nét khuôn mặt và chỉnh thanh trượt để phóng to."
-            />
-            <TextField
-              label="Họ tên"
-              value={instructorForm.name}
-              onChange={(e) => setInstructorForm((p) => ({ ...p, name: e.target.value }))}
-              fullWidth
-            />
-            <TextField
-              label="Kinh nghiệm"
-              value={instructorForm.experience}
-              onChange={(e) => setInstructorForm((p) => ({ ...p, experience: e.target.value }))}
-              fullWidth
-              multiline
-              rows={2}
-            />
-            <TextField
-              label="Chứng chỉ"
-              value={instructorForm.certsInput}
-              onChange={(e) => setInstructorForm((p) => ({ ...p, certsInput: e.target.value }))}
-              fullWidth
-              helperText="Cách nhau bởi dấu phẩy, ví dụ: CIDESCO, CIBTAC"
-            />
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setInstructorDialog(false)}>Huỷ</Button>
-          <Button
-            variant="contained"
-            onClick={submitInstructor}
-            disabled={!instructorForm.name}
-            sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
-          >
-            {instructorEditId ? 'Lưu' : 'Thêm'}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Graduate dialog */}
-      <Dialog open={graduateDialog} onClose={() => setGraduateDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>
-          {graduateEditId ? 'Sửa câu chuyện' : 'Thêm câu chuyện'}
-        </DialogTitle>
-        <DialogContent dividers>
-          <Stack spacing={2} sx={{ pt: 1 }}>
-            <TextField
-              label="Tên lớp học"
-              value={graduateForm.name}
-              onChange={(e) => setGraduateForm((p) => ({ ...p, name: e.target.value }))}
-              fullWidth
-            />
-            <Spa2ImageField
-              label="Ảnh minh hoạ"
-              value={imageFieldValue(graduateForm)}
-              onChange={(img) => setGraduateForm((p) => applyImageField(p, img))}
-              height={180}
-              helperText="Kéo thả ảnh, dán URL, hoặc tải ảnh từ máy."
-            />
-            <TextField
-              label="Cảm nhận"
-              value={graduateForm.review}
-              onChange={(e) => setGraduateForm((p) => ({ ...p, review: e.target.value }))}
-              fullWidth
-              multiline
-              rows={2}
-            />
-            <TextField
-              label="Tên học viên"
-              value={graduateForm.student}
-              onChange={(e) => setGraduateForm((p) => ({ ...p, student: e.target.value }))}
-              fullWidth
-            />
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setGraduateDialog(false)}>Huỷ</Button>
-          <Button
-            variant="contained"
-            onClick={submitGraduate}
-            disabled={!graduateForm.name}
-            sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
-          >
-            {graduateEditId ? 'Lưu' : 'Thêm'}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <ConfirmDialog
-        open={!!programDeleteId}
-        onClose={() => setProgramDeleteId(null)}
-        title="Xoá chương trình"
-        content="Bạn có chắc muốn xoá chương trình đào tạo này?"
-        action={
-          <Button variant="contained" color="error" onClick={confirmDeleteProgram}>
-            Xoá
-          </Button>
-        }
-      />
-
-      <ConfirmDialog
-        open={!!roadmapDeleteId}
-        onClose={() => setRoadmapDeleteId(null)}
-        title="Xoá giai đoạn"
-        content="Bạn có chắc muốn xoá giai đoạn này khỏi lộ trình học?"
-        action={
-          <Button variant="contained" color="error" onClick={confirmDeleteRoadmap}>
-            Xoá
-          </Button>
-        }
-      />
-
-      <ConfirmDialog
-        open={!!instructorDeleteId}
-        onClose={() => setInstructorDeleteId(null)}
-        title="Xoá giảng viên"
-        content="Bạn có chắc muốn xoá giảng viên này?"
-        action={
-          <Button variant="contained" color="error" onClick={confirmDeleteInstructor}>
-            Xoá
-          </Button>
-        }
-      />
-
-      <ConfirmDialog
-        open={!!graduateDeleteId}
-        onClose={() => setGraduateDeleteId(null)}
-        title="Xoá câu chuyện"
-        content="Bạn có chắc muốn xoá câu chuyện thành tựu này?"
-        action={
-          <Button variant="contained" color="error" onClick={confirmDeleteGraduate}>
-            Xoá
-          </Button>
-        }
-      />
-
-      {/* Live preview — mirrors the actual layout/colors of /spa2/training */}
-      <Dialog
-        open={previewOpen}
-        onClose={() => setPreviewOpen(false)}
-        maxWidth="md"
-        fullWidth
-        scroll="paper"
-      >
-        <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>Xem trước trang Đào tạo</DialogTitle>
-        <DialogContent dividers sx={{ p: 0, bgcolor: SPA2_CREAM }}>
+      {tab === 'preview' && (
+        <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, overflow: 'hidden' }}>
           {/* Hero */}
           <Box sx={{ position: 'relative', overflow: 'hidden', px: 3, py: 5 }}>
             <Box
@@ -1432,11 +1346,326 @@ export function Spa2TrainingManageView() {
               </Typography>
             </Card>
           </Box>
+        </Box>
+      )}
+
+      {/* Program dialog */}
+      <Dialog open={programDialog} onClose={() => setProgramDialog(false)} maxWidth="md" fullWidth>
+        <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>
+          {programEditId ? 'Sửa chương trình' : 'Thêm chương trình'}
+        </DialogTitle>
+        <DialogContent dividers>
+          <Grid container spacing={3} sx={{ pt: 1 }}>
+            <Grid xs={12} md={6}>
+              <Stack spacing={2}>
+                <TextField
+                  label="Tên chương trình"
+                  value={programForm.name}
+                  onChange={(e) => setProgramForm((p) => ({ ...p, name: e.target.value }))}
+                  fullWidth
+                />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    label="Thời lượng"
+                    value={programForm.duration}
+                    onChange={(e) => setProgramForm((p) => ({ ...p, duration: e.target.value }))}
+                    fullWidth
+                  />
+                  <TextField
+                    select
+                    label="Cấp độ"
+                    value={programForm.level}
+                    onChange={(e) => setProgramForm((p) => ({ ...p, level: e.target.value }))}
+                    fullWidth
+                  >
+                    {LEVELS.map((l) => (
+                      <MenuItem key={l} value={l}>
+                        {l}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Stack>
+                <TextField
+                  label="Học phí (VNĐ)"
+                  type="number"
+                  value={programForm.price}
+                  onChange={(e) => setProgramForm((p) => ({ ...p, price: Number(e.target.value) }))}
+                  fullWidth
+                />
+                <Box>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: 'text.secondary', mb: 0.5, display: 'block' }}
+                  >
+                    Kết quả đạt được
+                  </Typography>
+                  <Editor
+                    value={programForm.outcome}
+                    onChange={(html) => setProgramForm((p) => ({ ...p, outcome: html }))}
+                    placeholder="Kết quả đạt được"
+                    sx={{ maxHeight: 180 }}
+                  />
+                </Box>
+              </Stack>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1, display: 'block' }}>
+                Xem trước
+              </Typography>
+              <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
+                <ProgramPreviewCard form={programForm} />
+              </Box>
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setPreviewOpen(false)}>Đóng</Button>
+          <Button onClick={() => setProgramDialog(false)}>Huỷ</Button>
+          <Button
+            variant="contained"
+            onClick={submitProgram}
+            disabled={!programForm.name}
+            sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
+          >
+            {programEditId ? 'Lưu' : 'Thêm'}
+          </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Roadmap dialog */}
+      <Dialog open={roadmapDialog} onClose={() => setRoadmapDialog(false)} maxWidth="sm" fullWidth>
+        <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>
+          {roadmapEditId ? 'Sửa giai đoạn' : 'Thêm giai đoạn'}
+        </DialogTitle>
+        <DialogContent dividers>
+          <Stack spacing={2} sx={{ pt: 1 }}>
+            <TextField
+              label="Tên giai đoạn"
+              value={roadmapForm.stage}
+              onChange={(e) => setRoadmapForm((p) => ({ ...p, stage: e.target.value }))}
+              fullWidth
+            />
+            <TextField
+              label="Thời lượng"
+              value={roadmapForm.duration}
+              onChange={(e) => setRoadmapForm((p) => ({ ...p, duration: e.target.value }))}
+              fullWidth
+            />
+            <Box>
+              <Typography
+                variant="caption"
+                sx={{ color: 'text.secondary', mb: 0.5, display: 'block' }}
+              >
+                Mô tả
+              </Typography>
+              <Editor
+                value={roadmapForm.desc}
+                onChange={(html) => setRoadmapForm((p) => ({ ...p, desc: html }))}
+                placeholder="Mô tả"
+                sx={{ maxHeight: 160 }}
+              />
+            </Box>
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setRoadmapDialog(false)}>Huỷ</Button>
+          <Button
+            variant="contained"
+            onClick={submitRoadmap}
+            disabled={!roadmapForm.stage}
+            sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
+          >
+            {roadmapEditId ? 'Lưu' : 'Thêm'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Instructor dialog */}
+      <Dialog
+        open={instructorDialog}
+        onClose={() => setInstructorDialog(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>
+          {instructorEditId ? 'Sửa giảng viên' : 'Thêm giảng viên'}
+        </DialogTitle>
+        <DialogContent dividers>
+          <Grid container spacing={3} sx={{ pt: 1 }}>
+            <Grid xs={12} md={6}>
+              <Stack spacing={2}>
+                <Spa2ImageField
+                  label="Ảnh đại diện"
+                  value={imageFieldValue(instructorForm)}
+                  onChange={(img) => setInstructorForm((p) => applyImageField(p, img))}
+                  height={200}
+                  helperText="Kéo thả ảnh, dán URL, hoặc tải ảnh từ máy — sau đó kéo trên ảnh để chọn điểm lấy nét khuôn mặt và chỉnh thanh trượt để phóng to."
+                />
+                <TextField
+                  label="Họ tên"
+                  value={instructorForm.name}
+                  onChange={(e) => setInstructorForm((p) => ({ ...p, name: e.target.value }))}
+                  fullWidth
+                />
+                <Box>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: 'text.secondary', mb: 0.5, display: 'block' }}
+                  >
+                    Kinh nghiệm
+                  </Typography>
+                  <Editor
+                    value={instructorForm.experience}
+                    onChange={(html) => setInstructorForm((p) => ({ ...p, experience: html }))}
+                    placeholder="Kinh nghiệm"
+                    sx={{ maxHeight: 160 }}
+                  />
+                </Box>
+                <TextField
+                  label="Chứng chỉ"
+                  value={instructorForm.certsInput}
+                  onChange={(e) => setInstructorForm((p) => ({ ...p, certsInput: e.target.value }))}
+                  fullWidth
+                  helperText="Cách nhau bởi dấu phẩy, ví dụ: CIDESCO, CIBTAC"
+                />
+              </Stack>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1, display: 'block' }}>
+                Xem trước
+              </Typography>
+              <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
+                <InstructorPreviewCard form={instructorForm} />
+              </Box>
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setInstructorDialog(false)}>Huỷ</Button>
+          <Button
+            variant="contained"
+            onClick={submitInstructor}
+            disabled={!instructorForm.name}
+            sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
+          >
+            {instructorEditId ? 'Lưu' : 'Thêm'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Graduate dialog */}
+      <Dialog open={graduateDialog} onClose={() => setGraduateDialog(false)} maxWidth="md" fullWidth>
+        <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>
+          {graduateEditId ? 'Sửa câu chuyện' : 'Thêm câu chuyện'}
+        </DialogTitle>
+        <DialogContent dividers>
+          <Grid container spacing={3} sx={{ pt: 1 }}>
+            <Grid xs={12} md={6}>
+              <Stack spacing={2}>
+                <TextField
+                  label="Tên lớp học"
+                  value={graduateForm.name}
+                  onChange={(e) => setGraduateForm((p) => ({ ...p, name: e.target.value }))}
+                  fullWidth
+                />
+                <Spa2ImageField
+                  label="Ảnh minh hoạ"
+                  value={imageFieldValue(graduateForm)}
+                  onChange={(img) => setGraduateForm((p) => applyImageField(p, img))}
+                  height={180}
+                  helperText="Kéo thả ảnh, dán URL, hoặc tải ảnh từ máy."
+                />
+                <Box>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: 'text.secondary', mb: 0.5, display: 'block' }}
+                  >
+                    Cảm nhận
+                  </Typography>
+                  <Editor
+                    value={graduateForm.review}
+                    onChange={(html) => setGraduateForm((p) => ({ ...p, review: html }))}
+                    placeholder="Cảm nhận"
+                    sx={{ maxHeight: 160 }}
+                  />
+                </Box>
+                <TextField
+                  label="Tên học viên"
+                  value={graduateForm.student}
+                  onChange={(e) => setGraduateForm((p) => ({ ...p, student: e.target.value }))}
+                  fullWidth
+                />
+              </Stack>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1, display: 'block' }}>
+                Xem trước
+              </Typography>
+              <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
+                <GraduatePreviewCard form={graduateForm} />
+              </Box>
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setGraduateDialog(false)}>Huỷ</Button>
+          <Button
+            variant="contained"
+            onClick={submitGraduate}
+            disabled={!graduateForm.name}
+            sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
+          >
+            {graduateEditId ? 'Lưu' : 'Thêm'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <ConfirmDialog
+        open={!!programDeleteId}
+        onClose={() => setProgramDeleteId(null)}
+        title="Xoá chương trình"
+        content="Bạn có chắc muốn xoá chương trình đào tạo này?"
+        action={
+          <Button variant="contained" color="error" onClick={confirmDeleteProgram}>
+            Xoá
+          </Button>
+        }
+      />
+
+      <ConfirmDialog
+        open={!!roadmapDeleteId}
+        onClose={() => setRoadmapDeleteId(null)}
+        title="Xoá giai đoạn"
+        content="Bạn có chắc muốn xoá giai đoạn này khỏi lộ trình học?"
+        action={
+          <Button variant="contained" color="error" onClick={confirmDeleteRoadmap}>
+            Xoá
+          </Button>
+        }
+      />
+
+      <ConfirmDialog
+        open={!!instructorDeleteId}
+        onClose={() => setInstructorDeleteId(null)}
+        title="Xoá giảng viên"
+        content="Bạn có chắc muốn xoá giảng viên này?"
+        action={
+          <Button variant="contained" color="error" onClick={confirmDeleteInstructor}>
+            Xoá
+          </Button>
+        }
+      />
+
+      <ConfirmDialog
+        open={!!graduateDeleteId}
+        onClose={() => setGraduateDeleteId(null)}
+        title="Xoá câu chuyện"
+        content="Bạn có chắc muốn xoá câu chuyện thành tựu này?"
+        action={
+          <Button variant="contained" color="error" onClick={confirmDeleteGraduate}>
+            Xoá
+          </Button>
+        }
+      />
     </Spa2ManageShell>
   );
 }

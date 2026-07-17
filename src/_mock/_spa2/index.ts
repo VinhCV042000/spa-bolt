@@ -602,6 +602,8 @@ export const spa2Careers = [
     type: 'Toàn thời gian',
     salary: '12 – 20 triệu',
     benefits: ['Đào tạo quốc tế', 'Bảo hiểm cao cấp', 'Du lịch hằng năm'],
+    description:
+      'Chúng tôi tìm kiếm ứng viên yêu nghề, có tinh thần cầu tiến và mong muốn phát triển sự nghiệp lâu dài trong ngành chăm sóc sắc đẹp.',
   },
   {
     id: 2,
@@ -610,6 +612,8 @@ export const spa2Careers = [
     type: 'Toàn thời gian',
     salary: '10 – 18 triệu',
     benefits: ['Hoa hồng hấp dẫn', 'Môi trường năng động', 'Lộ trình thăng tiến'],
+    description:
+      'Tư vấn dịch vụ phù hợp cho khách hàng, chăm sóc và duy trì mối quan hệ lâu dài, phối hợp cùng đội ngũ kỹ thuật để mang lại trải nghiệm tốt nhất.',
   },
   {
     id: 3,
@@ -618,6 +622,8 @@ export const spa2Careers = [
     type: 'Toàn thời gian',
     salary: 'Thỏa thuận',
     benefits: ['Cổ phần thưởng', 'Bảo hiểm gia đình', 'Đào tạo lãnh đạo'],
+    description:
+      'Điều hành hoạt động vận hành chi nhánh, quản lý đội ngũ nhân viên, đảm bảo chất lượng dịch vụ và mục tiêu doanh thu.',
   },
   {
     id: 4,
@@ -626,6 +632,8 @@ export const spa2Careers = [
     type: 'Linh hoạt',
     salary: '8 – 15 triệu',
     benefits: ['Làm việc từ xa', 'Lương theo dự án', 'Workshop hàng tháng'],
+    description:
+      'Lên ý tưởng và sản xuất nội dung cho các kênh truyền thông của Nature Spa, phối hợp cùng đội ngũ thiết kế và vận hành chiến dịch quảng bá.',
   },
 ];
 
@@ -649,6 +657,15 @@ export const SPA2_CAREERS: Spa2CareerItem[] = spa2Careers.map((c, i) => ({
 
 export const spa2CareersSlogan = 'Nơi đam mê làm đẹp gặp gỡ cơ hội phát triển';
 
+export type Spa2CareersBanner = Spa2PageBanner;
+
+export const spa2CareersBanner: Spa2CareersBanner = {
+  image: { url: SPA2_PAGE_IMAGES.careers, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'Tuyển dụng',
+  title: spa2CareersSlogan,
+  subtitle: 'Nature Spa luôn tìm kiếm những người yêu thiên nhiên và đam mê chăm sóc con người.',
+};
+
 export const spa2JoinReasons = [
   { icon: 'solar:wallet-money-bold-duotone', text: 'Thu nhập hấp dẫn' },
   { icon: 'solar:buildings-2-bold-duotone', text: 'Môi trường chuyên nghiệp' },
@@ -663,15 +680,19 @@ export const spa2RecruitmentProcess = [
   { step: 'Nhận việc', desc: 'Chính thức gia nhập đội ngũ Nature Spa.' },
 ];
 
-export const spa2WorkplaceGallery = [
+export const spa2WorkplaceGallery: Spa2AdjustableImage[] = [
   'https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=900&q=80',
   'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=900&q=80',
   'https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=900&q=80',
   'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=900&q=80',
-];
+].map((url) => ({ url, focalX: 50, focalY: 50, zoom: 100 }));
 
-export const spa2InternalVideoThumb =
-  'https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=900&q=80';
+export const spa2InternalVideoThumb: Spa2AdjustableImage = {
+  url: 'https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=900&q=80',
+  focalX: 50,
+  focalY: 50,
+  zoom: 100,
+};
 
 export const SPA2_CAREER_SLOGAN = spa2CareersSlogan;
 export const SPA2_JOIN_REASONS = spa2JoinReasons;
@@ -680,6 +701,61 @@ export const SPA2_WORKPLACE_GALLERY = spa2WorkplaceGallery;
 export const SPA2_INTERNAL_VIDEO_THUMB = spa2InternalVideoThumb;
 
 // ---------- Bookings (view + dashboard shared) --------------------------
+
+export type Spa2BookingBanner = Spa2PageBanner;
+
+export const spa2BookingBanner: Spa2BookingBanner = {
+  image: { url: SPA2_PAGE_IMAGES.booking, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'Đặt lịch',
+  title: 'Đặt lịch online trong 1 phút',
+  subtitle:
+    'Chọn dịch vụ, chi nhánh và thời gian phù hợp – chúng tôi sẽ xác nhận trong vòng 15 phút.',
+};
+
+// ---------- Services banner (view + dashboard shared) -------------------
+
+export type Spa2ServicesBanner = Spa2PageBanner;
+
+export const spa2ServicesBanner: Spa2ServicesBanner = {
+  image: { url: SPA2_PAGE_IMAGES.services, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'Dịch vụ',
+  title: 'Bộ sưu tập liệu pháp từ thiên nhiên',
+  subtitle:
+    'Mỗi liệu trình là một hành trình cảm nhận – kết hợp tinh hoa thảo mộc Việt và công nghệ hiện đại châu Âu.',
+};
+
+// ---------- Blog banner (view + dashboard shared) ------------------------
+
+export type Spa2BlogBanner = Spa2PageBanner;
+
+export const spa2BlogBanner: Spa2BlogBanner = {
+  image: { url: SPA2_PAGE_IMAGES.blog, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'Blog',
+  title: 'Cẩm nang chăm sóc bản thân',
+  subtitle: 'Chia sẻ kiến thức về dưỡng da, dinh dưỡng, yoga và lối sống lành mạnh.',
+};
+
+// ---------- Contact banner (view + dashboard shared) ----------------------
+
+export type Spa2ContactBanner = Spa2PageBanner;
+
+export const spa2ContactBanner: Spa2ContactBanner = {
+  image: { url: SPA2_PAGE_IMAGES.contact, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'Liên hệ',
+  title: 'Chúng tôi luôn lắng nghe bạn',
+  subtitle: 'Để lại lời nhắn, đội ngũ tư vấn sẽ phản hồi trong 30 phút (giờ hành chính).',
+};
+
+// ---------- Offers banner (view + dashboard shared) ------------------------
+
+export type Spa2OffersBanner = Spa2PageBanner;
+
+export const spa2OffersBanner: Spa2OffersBanner = {
+  image: { url: SPA2_PAGE_IMAGES.offers, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'Ưu đãi',
+  title: 'Gói ưu đãi dành riêng cho bạn',
+  subtitle: 'Tiết kiệm hơn, trải nghiệm trọn vẹn hơn với các ưu đãi thường niên.',
+};
 
 export const spa2BookingPackages = [
   {
@@ -857,12 +933,17 @@ export type Spa2AdjustableImage = {
   zoom: number;
 };
 
-export type Spa2AboutBanner = {
+// Generic "page hero" shape reused by every spa2 sub-page that has an
+// editable banner (About, Careers, Booking, ...): an adjustable image plus
+// the eyebrow/title/subtitle copy shown in `Spa2PageHero`.
+export type Spa2PageBanner = {
   image: Spa2AdjustableImage;
   eyebrow: string;
   title: string;
   subtitle: string;
 };
+
+export type Spa2AboutBanner = Spa2PageBanner;
 
 export type Spa2AboutVisionMissionItem = {
   id?: string;

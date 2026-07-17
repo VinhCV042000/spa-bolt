@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import { useMemo, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
@@ -7,6 +9,7 @@ import Chip from '@mui/material/Chip';
 import Tabs from '@mui/material/Tabs';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
+import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
@@ -25,6 +28,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import InputAdornment from '@mui/material/InputAdornment';
 import TableContainer from '@mui/material/TableContainer';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { paths } from 'src/routes/paths';
 
@@ -33,24 +37,68 @@ import { fCurrency } from 'src/utils/format-number';
 import { useTranslate } from 'src/locales';
 import {
   SPA2_BOOKINGS,
+  spa2BookingBanner,
+  spa2BookingPackages,
   type Spa2BookingItem,
-  SPA2_BOOKING_PACKAGES,
   SPA2_BOOKING_BRANCHES,
   type Spa2BookingStatus,
+  type Spa2AdjustableImage,
 } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
+import { useTable } from 'src/components/table/use-table';
+import { ConfirmDialog } from 'src/components/custom-dialog';
+import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
 
+import { spa2ImageBackgroundStyle } from 'src/sections/spa2/spa2-image-utils';
 import {
+  SPA2_INK,
   SPA2_TEAL,
   SPA2_CREAM,
   SPA2_TEAL_DARK,
   SPA2_TEAL_LIGHT,
+  SPA2_CREAM_DARK,
 } from 'src/sections/spa2/spa2-pages-data';
 
+import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Manages every content block src/sections/spa2/view/spa2-content-pages.tsx
+// (Spa2BookingPageView) renders on the public /spa2/booking page — banner and
+// treatment packages — plus the actual customer booking requests, all in one
+// place. Package/banner data is read from and written back in the same shape
+// as src/_mock/_spa2 (the single source of truth shared with the public
+// view); booking requests are the operational queue admins triage day to day.
+// ─────────────────────────────────────────────────────────────────────────────
+
+type PackageItem = {
+  id: string;
+  slug: string;
+  name: string;
+  price: number;
+  sessions: number;
+  hot: boolean;
+  perks: string[];
+};
+
+const slugify = (s: string) =>
+  s
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '') || `goi-${Date.now()}`;
+
+const EMPTY_PACKAGE: Omit<PackageItem, 'id' | 'slug'> = {
+  name: '',
+  price: 0,
+  sessions: 1,
+  hot: false,
+  perks: [],
+};
 
 const STATUS_COLOR: Record<Spa2BookingStatus, 'warning' | 'success' | 'error' | 'default'> = {
   pending: 'warning',
@@ -72,18 +120,157 @@ type StatusFilter = Spa2BookingStatus | 'all';
 
 const formatVND = (n: number) => `${fCurrency(n)} ₫`;
 
+function SectionCard({
+  title,
+  icon,
+  action,
+  children,
+}: {
+  title: string;
+  icon: string;
+  action?: ReactNode;
+  children: ReactNode;
+}) {
+  return (
+    <Card sx={{ p: 3, borderRadius: 3 }}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Iconify icon={icon} width={22} sx={{ color: SPA2_TEAL }} />
+          <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+            {title}
+          </Typography>
+        </Stack>
+        {action}
+      </Stack>
+      <Divider sx={{ mb: 2 }} />
+      {children}
+    </Card>
+  );
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function Spa2BookingsManageView() {
   const { t } = useTranslate('spa2-manage');
   const statusLabel = (s: Spa2BookingStatus) => t(STATUS_LABEL[s]);
 
+  const [banner, setBanner] = useState(() => ({
+    ...spa2BookingBanner,
+    image: { ...spa2BookingBanner.image },
+  }));
+  const [packages, setPackages] = useState<PackageItem[]>(() =>
+    spa2BookingPackages.map((p) => ({ ...p, id: p.slug }))
+  );
+  const [dirty, setDirty] = useState(false);
+  const [savedAt, setSavedAt] = useState<Date | null>(null);
+  const [tab, setTab] = useState<'banner' | 'packages' | 'requests' | 'preview'>('banner');
+  const markDirty = () => setDirty(true);
+
   const [items, setItems] = useState<Spa2BookingItem[]>(SPA2_BOOKINGS);
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState<StatusFilter>('all');
   const [filterBranch, setFilterBranch] = useState<string>('all');
   const [viewItem, setViewItem] = useState<Spa2BookingItem | null>(null);
+  const table = useTable({ defaultRowsPerPage: 5 });
 
+  // ---- Banner ----
+  const updateBanner = (key: 'eyebrow' | 'title' | 'subtitle', value: string) => {
+    setBanner((prev) => ({ ...prev, [key]: value }));
+    markDirty();
+  };
+  const updateBannerImage = (img: Spa2AdjustableImage) => {
+    setBanner((prev) => ({ ...prev, image: img }));
+    markDirty();
+  };
+
+  // ---- Packages CRUD ----
+  const [packageDialog, setPackageDialog] = useState(false);
+  const [packageEditId, setPackageEditId] = useState<string | null>(null);
+  const [packageForm, setPackageForm] = useState<
+    Omit<PackageItem, 'id' | 'slug'> & {
+      perksInput: string;
+    }
+  >({ ...EMPTY_PACKAGE, perksInput: '' });
+  const [packageDeleteId, setPackageDeleteId] = useState<string | null>(null);
+
+  const openCreatePackage = () => {
+    setPackageForm({ ...EMPTY_PACKAGE, perksInput: '' });
+    setPackageEditId(null);
+    setPackageDialog(true);
+  };
+  const openEditPackage = (p: PackageItem) => {
+    setPackageForm({
+      name: p.name,
+      price: p.price,
+      sessions: p.sessions,
+      hot: p.hot,
+      perks: p.perks,
+      perksInput: p.perks.join(', '),
+    });
+    setPackageEditId(p.id);
+    setPackageDialog(true);
+  };
+  const submitPackage = () => {
+    const perks = packageForm.perksInput
+      .split(',')
+      .map((x) => x.trim())
+      .filter(Boolean);
+    if (packageEditId) {
+      setPackages((prev) =>
+        prev.map((p) =>
+          p.id === packageEditId
+            ? {
+                ...p,
+                name: packageForm.name,
+                price: Number(packageForm.price),
+                sessions: Number(packageForm.sessions),
+                hot: packageForm.hot,
+                perks,
+              }
+            : p
+        )
+      );
+    } else {
+      const slug = slugify(packageForm.name);
+      setPackages((prev) => [
+        ...prev,
+        {
+          id: slug,
+          slug,
+          name: packageForm.name,
+          price: Number(packageForm.price),
+          sessions: Number(packageForm.sessions),
+          hot: packageForm.hot,
+          perks,
+        },
+      ]);
+    }
+    setPackageDialog(false);
+    markDirty();
+  };
+  const confirmDeletePackage = () => {
+    setPackages((prev) => prev.filter((p) => p.id !== packageDeleteId));
+    setPackageDeleteId(null);
+    markDirty();
+  };
+  const reorderPackages = (next: PackageItem[]) => {
+    setPackages(next);
+    markDirty();
+  };
+
+  const handleSave = () => {
+    setSavedAt(new Date());
+    setDirty(false);
+  };
+
+  const handleReset = () => {
+    setBanner({ ...spa2BookingBanner, image: { ...spa2BookingBanner.image } });
+    setPackages(spa2BookingPackages.map((p) => ({ ...p, id: p.slug })));
+    setItems(SPA2_BOOKINGS);
+    setDirty(false);
+  };
+
+  // ---- Booking requests ----
   const filtered = useMemo(
     () =>
       items.filter((b) => {
@@ -119,162 +306,444 @@ export function Spa2BookingsManageView() {
   return (
     <Spa2ManageShell
       title={t('bookings.page_title')}
-      description="Xác nhận, theo dõi và duyệt lịch hẹn của khách – dữ liệu đồng bộ với trang đặt lịch công khai."
+      description="Banner, gói liệu trình và danh sách đặt lịch của khách – dữ liệu đồng bộ với trang đặt lịch công khai."
       breadcrumbLabel={t('nav.bookings')}
       publicPath={paths.spa2.booking}
+      actions={
+        <>
+          <Button
+            variant="outlined"
+            onClick={handleReset}
+            disabled={!dirty}
+            sx={{
+              borderRadius: 50,
+              px: 2.5,
+              color: 'common.white',
+              border: '1.5px solid rgba(255,255,255,0.7)',
+              '&:hover': { bgcolor: 'rgba(255,255,255,0.12)', borderColor: 'common.white' },
+            }}
+          >
+            {t('common.discard_changes')}
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleSave}
+            startIcon={<Iconify icon="solar:diskette-bold" />}
+            sx={{
+              borderRadius: 50,
+              px: 3,
+              bgcolor: 'common.white',
+              color: SPA2_TEAL,
+              '&:hover': { bgcolor: 'rgba(255,255,255,0.88)' },
+            }}
+          >
+            {t('common.save_changes')}
+          </Button>
+        </>
+      }
     >
-      {/* KPI */}
-      <Grid container spacing={2} sx={{ mb: 3 }}>
-        {[
-          {
-            key: 'all',
-            label: t('common.all'),
-            value: counts.all,
-            icon: 'solar:calendar-bold-duotone',
-          },
-          {
-            key: 'pending',
-            label: statusLabel('pending'),
-            value: counts.pending,
-            icon: 'solar:hourglass-bold-duotone',
-          },
-          {
-            key: 'confirmed',
-            label: statusLabel('confirmed'),
-            value: counts.confirmed,
-            icon: 'solar:check-circle-bold-duotone',
-          },
-          {
-            key: 'completed',
-            label: statusLabel('completed'),
-            value: counts.completed,
-            icon: 'solar:diploma-bold-duotone',
-          },
-          {
-            key: 'cancelled',
-            label: statusLabel('cancelled'),
-            value: counts.cancelled,
-            icon: 'solar:close-circle-bold-duotone',
-          },
-        ].map((k) => (
-          <Grid key={k.key} xs={6} md={2.4}>
-            <Card
-              onClick={() => setFilterStatus(k.key as StatusFilter)}
+      <Stack
+        spacing={1}
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ mb: 2 }}
+      >
+        <Stack direction="row" spacing={1} alignItems="center">
+          {dirty && (
+            <Chip
+              size="small"
+              variant="soft"
+              color="warning"
+              label={t('common.unsaved_changes')}
+              icon={<Iconify icon="solar:pen-bold" width={14} />}
+            />
+          )}
+          {savedAt && !dirty && (
+            <Chip
+              size="small"
+              variant="soft"
+              color="success"
+              label={t('common.saved_at', { time: savedAt.toLocaleTimeString('vi-VN') })}
+              icon={<Iconify icon="solar:check-circle-bold" width={14} />}
+            />
+          )}
+        </Stack>
+      </Stack>
+
+      {/* Tabs */}
+      <Tabs
+        value={tab}
+        onChange={(_, v: 'banner' | 'packages' | 'requests' | 'preview') => setTab(v)}
+        variant="scrollable"
+        scrollButtons="auto"
+        sx={{
+          mb: 3,
+          position: 'sticky',
+          top: 65,
+          zIndex: 10,
+          bgcolor: 'background.paper',
+          '& .MuiTab-root': { minHeight: 56, fontWeight: 600 },
+          '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
+          '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+        }}
+      >
+        <Tab
+          value="banner"
+          icon={<Iconify icon="solar:gallery-wide-bold-duotone" width={20} />}
+          iconPosition="start"
+          label={t('bookings.banner_section')}
+        />
+        <Tab
+          value="packages"
+          icon={<Iconify icon="solar:wallet-money-bold-duotone" width={20} />}
+          iconPosition="start"
+          label={t('bookings.packages_section')}
+        />
+        <Tab
+          value="requests"
+          icon={<Iconify icon="solar:calendar-bold-duotone" width={20} />}
+          iconPosition="start"
+          label={t('bookings.page_title')}
+        />
+        <Tab
+          value="preview"
+          icon={<Iconify icon="solar:eye-bold-duotone" width={20} />}
+          iconPosition="start"
+          label={t('common.preview_btn')}
+        />
+      </Tabs>
+
+      {/* Banner */}
+      {tab === 'banner' && (
+        <SectionCard title={t('bookings.banner_section')} icon="solar:gallery-wide-bold-duotone">
+          <Grid container spacing={3}>
+            <Grid xs={12} md={5}>
+              <Spa2ImageField
+                label={t('bookings.banner_image')}
+                value={banner.image}
+                onChange={updateBannerImage}
+                height={220}
+                helperText={t('bookings.banner_image_help')}
+              />
+            </Grid>
+            <Grid xs={12} md={7}>
+              <Stack spacing={2}>
+                <TextField
+                  label={t('bookings.banner_eyebrow')}
+                  value={banner.eyebrow}
+                  onChange={(e) => updateBanner('eyebrow', e.target.value)}
+                  fullWidth
+                  size="small"
+                />
+                <TextField
+                  label={t('bookings.banner_title')}
+                  value={banner.title}
+                  onChange={(e) => updateBanner('title', e.target.value)}
+                  fullWidth
+                  multiline
+                  minRows={2}
+                />
+                <TextField
+                  label={t('bookings.banner_subtitle')}
+                  value={banner.subtitle}
+                  onChange={(e) => updateBanner('subtitle', e.target.value)}
+                  fullWidth
+                  multiline
+                  minRows={3}
+                />
+              </Stack>
+            </Grid>
+          </Grid>
+        </SectionCard>
+      )}
+
+      {/* Gói liệu trình */}
+      {tab === 'packages' && (
+        <SectionCard
+          title={t('bookings.packages_section')}
+          icon="solar:wallet-money-bold-duotone"
+          action={
+            <Button
+              size="small"
+              onClick={openCreatePackage}
+              startIcon={<Iconify icon="mingcute:add-line" width={16} />}
+            >
+              {t('bookings.packages_add')}
+            </Button>
+          }
+        >
+          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1.5 }}>
+            {t('common.drag_hint')}
+          </Typography>
+          {packages.length === 0 && (
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+              {t('bookings.packages_empty')}
+            </Typography>
+          )}
+          <Spa2SortableGrid items={packages} onReorder={reorderPackages}>
+            <Grid container spacing={2} alignItems="stretch">
+              {packages.map((p) => (
+                <Grid key={p.id} xs={12} sm={6} md={3}>
+                  <Spa2SortableItem id={p.id}>
+                    {(sortable) => (
+                      <Stack
+                        spacing={1}
+                        sx={{
+                          p: 2,
+                          height: '100%',
+                          borderRadius: 2,
+                          position: 'relative',
+                          bgcolor: SPA2_CREAM,
+                          border: p.hot ? `1.5px solid ${SPA2_TEAL}` : undefined,
+                        }}
+                      >
+                        <Stack direction="row" justifyContent="space-between" alignItems="center">
+                          <Spa2DragHandle sortable={sortable} />
+                          <Stack direction="row" spacing={0.5}>
+                            <Tooltip title={t('common.edit')}>
+                              <IconButton size="small" onClick={() => openEditPackage(p)}>
+                                <Iconify icon="solar:pen-bold" width={16} />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title={t('common.delete')}>
+                              <IconButton
+                                size="small"
+                                color="error"
+                                onClick={() => setPackageDeleteId(p.id)}
+                              >
+                                <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </Stack>
+                        {p.hot && (
+                          <Chip
+                            label="PHỔ BIẾN NHẤT"
+                            size="small"
+                            sx={{
+                              alignSelf: 'flex-start',
+                              bgcolor: SPA2_TEAL,
+                              color: 'common.white',
+                              fontWeight: 700,
+                              fontSize: 10,
+                              height: 20,
+                            }}
+                          />
+                        )}
+                        <Typography variant="subtitle2" sx={{ color: SPA2_INK }}>
+                          {p.name || '(Chưa đặt tên)'}
+                        </Typography>
+                        <Typography variant="h6" sx={{ color: SPA2_TEAL }}>
+                          {formatVND(p.price)}
+                        </Typography>
+                        <Stack direction="row" spacing={0.5} alignItems="center">
+                          <Typography variant="caption" color="text.secondary">
+                            {p.sessions} buổi
+                          </Typography>
+                          <Chip
+                            size="small"
+                            label={`${packageBookingCount(p.slug)} đặt`}
+                            sx={{
+                              bgcolor: `${SPA2_TEAL}15`,
+                              color: SPA2_TEAL_DARK,
+                              fontSize: 11,
+                              height: 20,
+                            }}
+                          />
+                        </Stack>
+                        <Divider />
+                        <Stack spacing={0.5} sx={{ flexGrow: 1 }}>
+                          {p.perks.slice(0, 3).map((perk) => (
+                            <Stack key={perk} direction="row" spacing={0.75} alignItems="center">
+                              <Iconify
+                                icon="solar:check-circle-bold"
+                                width={12}
+                                sx={{ color: SPA2_TEAL }}
+                              />
+                              <Typography variant="caption" color="text.secondary">
+                                {perk}
+                              </Typography>
+                            </Stack>
+                          ))}
+                        </Stack>
+                      </Stack>
+                    )}
+                  </Spa2SortableItem>
+                </Grid>
+              ))}
+            </Grid>
+          </Spa2SortableGrid>
+        </SectionCard>
+      )}
+
+      {/* Danh sách đặt lịch */}
+      {tab === 'requests' && (
+        <Card>
+          <Box sx={{ p: 2.5, borderBottom: `1px solid ${SPA2_TEAL_LIGHT}22` }}>
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <Iconify icon="solar:calendar-bold-duotone" width={22} sx={{ color: SPA2_TEAL }} />
+              <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                {t('bookings.page_title')}
+              </Typography>
+            </Stack>
+          </Box>
+
+          {/* KPI */}
+          <Grid container spacing={2} sx={{ p: 2.5 }}>
+            {[
+              {
+                key: 'all',
+                label: t('common.all'),
+                value: counts.all,
+                icon: 'solar:calendar-bold-duotone',
+              },
+              {
+                key: 'pending',
+                label: statusLabel('pending'),
+                value: counts.pending,
+                icon: 'solar:hourglass-bold-duotone',
+              },
+              {
+                key: 'confirmed',
+                label: statusLabel('confirmed'),
+                value: counts.confirmed,
+                icon: 'solar:check-circle-bold-duotone',
+              },
+              {
+                key: 'completed',
+                label: statusLabel('completed'),
+                value: counts.completed,
+                icon: 'solar:diploma-bold-duotone',
+              },
+              {
+                key: 'cancelled',
+                label: statusLabel('cancelled'),
+                value: counts.cancelled,
+                icon: 'solar:close-circle-bold-duotone',
+              },
+            ].map((k) => (
+              <Grid key={k.key} xs={6} md={2.4}>
+                <Card
+                  onClick={() => {
+                    setFilterStatus(k.key as StatusFilter);
+                    table.onResetPage();
+                  }}
+                  sx={{
+                    p: 2,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1.5,
+                    bgcolor: filterStatus === k.key ? `${SPA2_TEAL}12` : SPA2_CREAM,
+                    transition: 'all .2s',
+                    '&:hover': { borderColor: SPA2_TEAL },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 1.5,
+                      bgcolor: `${SPA2_TEAL}18`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Iconify icon={k.icon} width={22} sx={{ color: SPA2_TEAL_DARK }} />
+                  </Box>
+                  <Box>
+                    <Typography variant="h6" sx={{ color: SPA2_TEAL_DARK, lineHeight: 1 }}>
+                      {k.value}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {k.label}
+                    </Typography>
+                  </Box>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ px: 2.5, pb: 2 }}>
+            <TextField
+              placeholder={t('bookings.search_placeholder')}
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                table.onResetPage();
+              }}
+              size="small"
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <TextField
+              select
+              size="small"
+              value={filterBranch}
+              onChange={(e) => {
+                setFilterBranch(e.target.value);
+                table.onResetPage();
+              }}
+              sx={{ minWidth: 180 }}
+              label={t('bookings.col_branch')}
+            >
+              <MenuItem value="all">{t('common.all')}</MenuItem>
+              {SPA2_BOOKING_BRANCHES.map((b) => (
+                <MenuItem key={b} value={b}>
+                  {b}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Stack>
+
+          <Box sx={{ px: 2.5 }}>
+            <Tabs
+              value={filterStatus}
+              onChange={(_, v) => {
+                setFilterStatus(v);
+                table.onResetPage();
+              }}
+              variant="scrollable"
               sx={{
-                p: 2,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1.5,
-                border: `1px solid ${SPA2_TEAL_LIGHT}33`,
-                bgcolor: filterStatus === k.key ? `${SPA2_TEAL}12` : 'background.paper',
-                transition: 'all .2s',
-                '&:hover': { borderColor: SPA2_TEAL },
+                '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+                '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
               }}
             >
-              <Box
-                sx={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: 1.5,
-                  bgcolor: `${SPA2_TEAL}18`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Iconify icon={k.icon} width={22} sx={{ color: SPA2_TEAL_DARK }} />
-              </Box>
-              <Box>
-                <Typography variant="h6" sx={{ color: SPA2_TEAL_DARK, lineHeight: 1 }}>
-                  {k.value}
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  {k.label}
-                </Typography>
-              </Box>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+              <Tab value="all" label={`${t('common.all')} (${counts.all})`} />
+              <Tab value="pending" label={`${statusLabel('pending')} (${counts.pending})`} />
+              <Tab value="confirmed" label={`${statusLabel('confirmed')} (${counts.confirmed})`} />
+              <Tab value="completed" label={`${statusLabel('completed')} (${counts.completed})`} />
+              <Tab value="cancelled" label={`${statusLabel('cancelled')} (${counts.cancelled})`} />
+            </Tabs>
+          </Box>
 
-      <Grid container spacing={3}>
-        {/* Main: bookings table */}
-        <Grid xs={12} md={8}>
-          <Card>
-            <Box sx={{ p: 2, borderBottom: `1px solid ${SPA2_TEAL_LIGHT}22` }}>
-              <Tabs
-                value={filterStatus}
-                onChange={(_, v) => setFilterStatus(v)}
-                variant="scrollable"
-                sx={{
-                  '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
-                  '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
-                }}
-              >
-                <Tab value="all" label={`${t('common.all')} (${counts.all})`} />
-                <Tab value="pending" label={`${statusLabel('pending')} (${counts.pending})`} />
-                <Tab
-                  value="confirmed"
-                  label={`${statusLabel('confirmed')} (${counts.confirmed})`}
-                />
-                <Tab
-                  value="completed"
-                  label={`${statusLabel('completed')} (${counts.completed})`}
-                />
-                <Tab
-                  value="cancelled"
-                  label={`${statusLabel('cancelled')} (${counts.cancelled})`}
-                />
-              </Tabs>
-            </Box>
-
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ p: 2 }}>
-              <TextField
-                placeholder={t('bookings.search_placeholder')}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                size="small"
-                fullWidth
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <TextField
-                select
-                size="small"
-                value={filterBranch}
-                onChange={(e) => setFilterBranch(e.target.value)}
-                sx={{ minWidth: 180 }}
-                label="Chi nhánh"
-              >
-                <MenuItem value="all">Tất cả chi nhánh</MenuItem>
-                {SPA2_BOOKING_BRANCHES.map((b) => (
-                  <MenuItem key={b} value={b}>
-                    {b}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Stack>
-
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>{t('bookings.col_customer')}</TableCell>
-                    <TableCell>{t('bookings.col_service')}</TableCell>
-                    <TableCell>{t('bookings.col_datetime')}</TableCell>
-                    <TableCell>{t('bookings.col_branch')}</TableCell>
-                    <TableCell>{t('common.status')}</TableCell>
-                    <TableCell align="right">{t('common.actions')}</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {filtered.map((item) => (
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>{t('bookings.col_customer')}</TableCell>
+                  <TableCell>{t('bookings.col_service')}</TableCell>
+                  <TableCell>{t('bookings.col_datetime')}</TableCell>
+                  <TableCell>{t('bookings.col_branch')}</TableCell>
+                  <TableCell>{t('common.status')}</TableCell>
+                  <TableCell align="right">{t('common.actions')}</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filtered
+                  .slice(
+                    table.page * table.rowsPerPage,
+                    table.page * table.rowsPerPage + table.rowsPerPage
+                  )
+                  .map((item) => (
                     <TableRow key={item.id} hover>
                       <TableCell>
                         <Stack>
@@ -293,8 +762,8 @@ export function Spa2BookingsManageView() {
                             <Chip
                               size="small"
                               label={
-                                SPA2_BOOKING_PACKAGES.find((p) => p.slug === item.packageSlug)
-                                  ?.name ?? item.packageSlug
+                                packages.find((p) => p.slug === item.packageSlug)?.name ??
+                                item.packageSlug
                               }
                               sx={{
                                 mt: 0.5,
@@ -375,106 +844,164 @@ export function Spa2BookingsManageView() {
                       </TableCell>
                     </TableRow>
                   ))}
-                  {filtered.length === 0 && (
-                    <TableRow>
-                      <TableCell colSpan={6} align="center" sx={{ py: 6, color: 'text.disabled' }}>
-                        Không có lịch hẹn phù hợp.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Card>
-        </Grid>
+                {filtered.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={6} align="center" sx={{ py: 6, color: 'text.disabled' }}>
+                      {t('common.no_data')}
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePaginationCustom
+            count={filtered.length}
+            page={table.page}
+            rowsPerPage={table.rowsPerPage}
+            onPageChange={table.onChangePage}
+            onRowsPerPageChange={table.onChangeRowsPerPage}
+          />
+        </Card>
+      )}
 
-        {/* Side: booking packages (mirrors public booking page card layout) */}
-        <Grid xs={12} md={4}>
-          <Card sx={{ p: 3, border: `1px solid ${SPA2_TEAL_LIGHT}33` }}>
-            <Typography
-              variant="overline"
-              sx={{ letterSpacing: 1.5, color: SPA2_TEAL, fontWeight: 700 }}
+      {/* Preview */}
+      {tab === 'preview' && (
+        <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, overflow: 'hidden' }}>
+          <Box
+            sx={{
+              position: 'relative',
+              height: 260,
+              bgcolor: SPA2_CREAM_DARK,
+              ...spa2ImageBackgroundStyle(banner.image),
+            }}
+          >
+            <Box
+              sx={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(0deg, rgba(0,0,0,0.65), rgba(0,0,0,0))',
+              }}
+            />
+            <Stack
+              spacing={0.75}
+              sx={{ position: 'absolute', left: 24, right: 24, bottom: 20, color: 'common.white' }}
             >
-              Gói liệu trình
-            </Typography>
-            <Typography variant="h6" sx={{ color: SPA2_TEAL_DARK, mb: 2 }}>
-              Gói bán chạy trên trang đặt lịch
-            </Typography>
-            <Stack spacing={1.5}>
-              {SPA2_BOOKING_PACKAGES.map((p) => (
-                <Box
-                  key={p.slug}
-                  sx={{
-                    p: 2,
-                    borderRadius: 2,
-                    border: p.hot ? `1.5px solid ${SPA2_TEAL}` : `1px solid ${SPA2_TEAL_LIGHT}44`,
-                    bgcolor: p.hot ? `${SPA2_TEAL}08` : 'transparent',
-                    position: 'relative',
-                  }}
-                >
-                  {p.hot && (
-                    <Chip
-                      label="HOT"
-                      size="small"
-                      sx={{
-                        position: 'absolute',
-                        top: 8,
-                        right: 8,
-                        bgcolor: SPA2_TEAL,
-                        color: 'white',
-                        fontWeight: 700,
-                        fontSize: 10,
-                        height: 20,
-                      }}
-                    />
-                  )}
-                  <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
-                    <Box>
-                      <Typography sx={{ color: SPA2_TEAL_DARK, fontWeight: 700 }}>
-                        {p.name}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {p.sessions} buổi
-                      </Typography>
-                    </Box>
-                    <Box sx={{ textAlign: 'right' }}>
-                      <Typography sx={{ color: SPA2_TEAL, fontWeight: 700 }}>
-                        {formatVND(p.price)}
-                      </Typography>
-                      <Chip
-                        size="small"
-                        label={`${packageBookingCount(p.slug)} đặt`}
-                        sx={{
-                          mt: 0.5,
-                          bgcolor: `${SPA2_TEAL}15`,
-                          color: SPA2_TEAL_DARK,
-                          fontSize: 11,
-                          height: 20,
-                        }}
-                      />
-                    </Box>
-                  </Stack>
-                  <Divider sx={{ my: 1.5 }} />
-                  <Stack spacing={0.5}>
-                    {p.perks.slice(0, 3).map((perk) => (
-                      <Stack key={perk} direction="row" spacing={0.75} alignItems="center">
-                        <Iconify
-                          icon="solar:check-circle-bold"
-                          width={12}
-                          sx={{ color: SPA2_TEAL }}
-                        />
-                        <Typography variant="caption" color="text.secondary">
-                          {perk}
-                        </Typography>
-                      </Stack>
-                    ))}
-                  </Stack>
-                </Box>
-              ))}
+              <Typography variant="overline" sx={{ letterSpacing: 2, opacity: 0.9 }}>
+                {banner.eyebrow}
+              </Typography>
+              <Typography variant="h4" sx={{ fontWeight: 700 }}>
+                {banner.title}
+              </Typography>
+              <Typography variant="body2" sx={{ maxWidth: 520, opacity: 0.9 }}>
+                {banner.subtitle}
+              </Typography>
             </Stack>
-          </Card>
-        </Grid>
-      </Grid>
+          </Box>
+
+          <Box sx={{ p: 3 }}>
+            <Typography variant="subtitle1" sx={{ mb: 1.5, color: SPA2_INK, fontWeight: 700 }}>
+              {t('bookings.packages_section')}
+            </Typography>
+            <Grid container spacing={2}>
+              {packages.map((p) => (
+                <Grid key={p.id} xs={6} sm={3}>
+                  <Card
+                    sx={{
+                      p: 2,
+                      borderRadius: 2,
+                      textAlign: 'center',
+                      border: p.hot ? `2px solid ${SPA2_TEAL}` : undefined,
+                    }}
+                  >
+                    <Typography variant="subtitle2">{p.name}</Typography>
+                    <Typography variant="h6" sx={{ color: SPA2_TEAL }}>
+                      {formatVND(p.price)}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {p.sessions} buổi
+                    </Typography>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        </Box>
+      )}
+
+      {/* Package dialog */}
+      <Dialog open={packageDialog} onClose={() => setPackageDialog(false)} maxWidth="sm" fullWidth>
+        <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>
+          {packageEditId ? t('common.edit') : t('bookings.packages_add')}
+        </DialogTitle>
+        <DialogContent dividers>
+          <Stack spacing={2} sx={{ pt: 1 }}>
+            <TextField
+              label={t('bookings.packages_name')}
+              value={packageForm.name}
+              onChange={(e) => setPackageForm((p) => ({ ...p, name: e.target.value }))}
+              fullWidth
+            />
+            <Stack direction="row" spacing={2}>
+              <TextField
+                label={t('bookings.packages_price')}
+                type="number"
+                value={packageForm.price}
+                onChange={(e) => setPackageForm((p) => ({ ...p, price: Number(e.target.value) }))}
+                fullWidth
+              />
+              <TextField
+                label={t('bookings.packages_sessions')}
+                type="number"
+                value={packageForm.sessions}
+                onChange={(e) =>
+                  setPackageForm((p) => ({ ...p, sessions: Number(e.target.value) }))
+                }
+                fullWidth
+              />
+            </Stack>
+            <TextField
+              label={t('bookings.packages_perks')}
+              value={packageForm.perksInput}
+              onChange={(e) => setPackageForm((p) => ({ ...p, perksInput: e.target.value }))}
+              fullWidth
+              multiline
+              rows={3}
+            />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={packageForm.hot}
+                  onChange={(e) => setPackageForm((p) => ({ ...p, hot: e.target.checked }))}
+                />
+              }
+              label={t('bookings.packages_hot')}
+            />
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setPackageDialog(false)}>{t('common.cancel')}</Button>
+          <Button
+            variant="contained"
+            onClick={submitPackage}
+            disabled={!packageForm.name}
+            sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
+          >
+            {packageEditId ? t('common.save') : t('common.create')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <ConfirmDialog
+        open={!!packageDeleteId}
+        onClose={() => setPackageDeleteId(null)}
+        title={t('bookings.packages_delete_title')}
+        content={t('bookings.packages_delete_content')}
+        action={
+          <Button variant="contained" color="error" onClick={confirmDeletePackage}>
+            {t('common.delete')}
+          </Button>
+        }
+      />
 
       {/* View detail dialog */}
       <Dialog open={!!viewItem} onClose={() => setViewItem(null)} maxWidth="xs" fullWidth>

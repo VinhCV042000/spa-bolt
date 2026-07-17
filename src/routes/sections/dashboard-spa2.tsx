@@ -73,6 +73,7 @@ const ManageSpa2ContactPage = lazy(() => import('src/pages/dashboard/manage/spa2
 const ManageSpa2AccountPage = lazy(() => import('src/pages/dashboard/manage/spa2/account'));
 const ManageSpa2ServiceDetailPage = lazy(() => import('src/pages/dashboard/manage/spa2/service-detail'));
 const ManageSpa2BlogDetailPage = lazy(() => import('src/pages/dashboard/manage/spa2/blog-detail'));
+const ManageSpa2CareerDetailPage = lazy(() => import('src/pages/dashboard/manage/spa2/career-detail'));
 
 // Core pages
 export const DashboardSpa2HomePage = lazySpa2Page('home');
@@ -83,7 +84,6 @@ export const DashboardSpa2TrainingPage = lazySpa2Page('training');
 export const DashboardSpa2BlogPage = lazySpa2Page('blog');
 export const DashboardSpa2BlogDetailsPage = lazySpa2Page('blog-details');
 export const DashboardSpa2CareersPage = lazySpa2Page('careers');
-export const DashboardSpa2CareerDetailsPage = lazySpa2Page('career-details');
 export const DashboardSpa2BookingPage = lazySpa2Page('booking');
 export const DashboardSpa2ContactPage = lazySpa2Page('contact');
 export const DashboardSpa2OffersPage = lazySpa2Page('offers');
@@ -162,7 +162,7 @@ export const dashboardSpa2Routes = [
         path: 'careers',
         children: [
           { element: <ManageSpa2CareersPage />, index: true },
-          { path: ':id', element: <DashboardSpa2CareerDetailsPage /> },
+          { path: ':id', element: <ManageSpa2CareerDetailPage /> },
         ],
       },
       { path: 'booking', element: <ManageSpa2BookingsPage /> },

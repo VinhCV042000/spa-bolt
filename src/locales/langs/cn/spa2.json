@@ -22,6 +22,8 @@
       { "title": "先进科技", "desc": "欧洲级别设备" }
     ]
   },
+  "careers": { "reasonsEyebrow": "为什么选择我们", "reasonsTitle": "加入 Nature Spa 的理由", "positionsEyebrow": "在招职位", "positionsTitle": "职业机会", "viewDetails": "查看详情", "noResults": "没有符合条件的职位。", "cultureEyebrow": "企业文化", "cultureTitle": "工作环境", "detailDescEyebrow": "职位描述", "detailDescTitle": "任职要求与福利", "detailBenefitsTitle": "福利待遇", "detailProcessTitle": "招聘流程", "applyTitle": "申请该职位", "formName": "姓名", "formPhone": "电话号码", "formEmail": "邮箱", "formIntro": "自我介绍", "formUploadCv": "上传简历", "formSubmit": "提交申请", "submittedTitle": "申请已提交！", "submittedDesc": "人事部门将在3个工作日内与您联系。", "cultureDetailEyebrow": "企业文化", "cultureDetailTitle": "Nature Spa 的日常", "videoCaption": "Nature Spa 工作环境介绍视频" },
+  "booking": { "servicesEyebrow": "服务项目", "servicesTitle": "选择您感兴趣的服务类别", "viewDetails": "查看详情", "packagesEyebrow": "疗程套餐", "packagesTitle": "选择适合您的套餐", "mostPopular": "最受欢迎", "sessionsSuffix": "次", "selectPackage": "选择此套餐", "confirmTitle": "确认预约信息", "confirmPackageLabel": "套餐", "confirmSessionsLabel": "疗程次数", "confirmTotalLabel": "总金额", "formName": "姓名", "formPhone": "电话号码", "formDate": "日期", "formTime": "时间", "formNote": "备注", "backBtn": "返回", "confirmBtn": "确认预约", "successTitle": "预约成功！", "successDesc": "我们将在15分钟内联系您确认。", "backToPackages": "返回选择其他套餐" },
   "services": {
     "eyebrow": "服务项目",
     "title": "灵感源自自然的疗法",

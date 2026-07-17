@@ -4,6 +4,8 @@ export { Spa2BlogEditorView } from 'src/sections/dashboard/spa2/manage/spa2-blog
 export { Spa2AboutManageView } from 'src/sections/dashboard/spa2/manage/spa2-about-manage-view';
 export { Spa2StaffManageView } from 'src/sections/dashboard/spa2/manage/spa2-staff-manage-view';
 export { Spa2OffersManageView } from 'src/sections/dashboard/spa2/manage/spa2-offers-manage-view';
+export { Spa2CareerEditorView } from 'src/sections/dashboard/spa2/manage/spa2-career-editor-view';
+export { Spa2ContactManageView } from 'src/sections/dashboard/spa2/manage/spa2-contact-manage-view';
 export { Spa2CareersManageView } from 'src/sections/dashboard/spa2/manage/spa2-careers-manage-view';
 export { Spa2GalleryManageView } from 'src/sections/dashboard/spa2/manage/spa2-gallery-manage-view';
 export { Spa2ServiceEditorView } from 'src/sections/dashboard/spa2/manage/spa2-service-editor-view';

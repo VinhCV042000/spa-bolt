@@ -50,7 +50,14 @@
     "before": "Avant",
     "after": "Après",
     "running": "En cours",
-    "paused": "Pausé"
+    "paused": "Pausé",
+    "discard_changes": "Réinitialiser",
+    "save_changes": "Enregistrer les modifications",
+    "unsaved_changes": "Modifications non enregistrées",
+    "saved_at": "Enregistré à {{time}}",
+    "drag_hint": "Faites glisser l'icône pour réorganiser.",
+    "preview_btn": "Aperçu de la page",
+    "back_to_list": "Retour à la liste"
   },
   "nav": {
     "manage_group": "Spa2 — Gestion",
@@ -68,7 +75,8 @@
     "partners": "Partenaires",
     "before_after": "Avant & Après",
     "faq": "FAQ",
-    "training": "Formation"
+    "training": "Formation",
+    "contact": "Contact"
   },
   "services": {
     "page_title": "Gestion des Services",
@@ -91,7 +99,15 @@
     "delete_title": "Supprimer le service",
     "delete_content": "Ce service sera définitivement supprimé.",
     "status_active": "Actif",
-    "status_inactive": "Inactif"
+    "status_inactive": "Inactif",
+    "banner_section": "Bannière de la page",
+    "banner_image": "Image de la bannière",
+    "banner_image_help": "Image affichée à droite de la bannière de la page Services.",
+    "banner_eyebrow": "Eyebrow (petit label au-dessus du titre)",
+    "banner_title": "Titre de la bannière",
+    "banner_subtitle": "Description courte",
+    "list_section": "Liste des services",
+    "preview_title": "Aperçu de la page Services"
   },
   "blog": {
     "page_title": "Gestion du Blog",
@@ -115,14 +131,23 @@
     "delete_title": "Supprimer l'article",
     "delete_content": "Cet article sera définitivement supprimé.",
     "status_published": "Publié",
-    "status_draft": "Brouillon"
+    "status_draft": "Brouillon",
+    "banner_section": "Bannière de la page",
+    "banner_image": "Image de la bannière",
+    "banner_image_help": "Image affichée à droite de la bannière de la page Blog.",
+    "banner_eyebrow": "Eyebrow (petit label au-dessus du titre)",
+    "banner_title": "Titre de la bannière",
+    "banner_subtitle": "Description courte",
+    "list_section": "Liste des articles",
+    "preview_title": "Aperçu de la page Blog"
   },
   "treatments": { "page_title": "Gestion des Traitements", "add_btn": "Ajouter un traitement", "search_placeholder": "Rechercher...", "col_name": "Traitement", "col_target": "Cible", "col_sessions": "Séances", "col_duration": "Durée", "col_price": "Prix (VND)", "col_status": "Statut", "form_create": "Nouveau traitement", "form_edit": "Modifier le traitement", "form_name": "Nom du traitement", "form_target": "Cible / Type de peau", "form_sessions": "Nombre de séances", "form_duration": "Durée", "form_price": "Prix (VND)", "form_includes": "Comprend (séparés par virgule)", "delete_title": "Supprimer le traitement", "delete_content": "Ce traitement sera définitivement supprimé." },
-  "careers": { "page_title": "Gestion du Recrutement", "add_btn": "Publier une offre", "search_placeholder": "Rechercher des postes...", "col_position": "Poste", "col_location": "Lieu", "col_type": "Type", "col_salary": "Salaire", "col_applications": "Candidatures", "col_status": "Statut", "form_create": "Nouvelle offre", "form_edit": "Modifier l'offre", "form_title": "Intitulé du poste", "form_location": "Lieu", "form_type": "Type de contrat", "form_salary": "Fourchette salariale", "form_benefits": "Avantages (séparés par virgule)", "delete_title": "Supprimer l'offre", "delete_content": "Cette offre sera définitivement supprimée.", "status_open": "Recrutement ouvert", "status_closed": "Fermé" },
-  "bookings": { "page_title": "Gestion des Réservations", "search_placeholder": "Chercher client, service, tél...", "col_customer": "Client", "col_service": "Service", "col_datetime": "Date / Heure", "col_branch": "Agence", "col_status": "Statut", "detail_title": "Réservation #{{id}}", "detail_customer": "Client", "detail_phone": "Téléphone", "detail_service": "Service", "detail_date": "Date", "detail_time": "Heure", "detail_branch": "Agence", "detail_note": "Note", "detail_status": "Statut", "status_pending": "En attente", "status_confirmed": "Confirmé", "status_completed": "Terminé", "status_cancelled": "Annulé", "action_confirm": "Confirmer", "action_cancel": "Annuler", "action_complete": "Marquer terminé" },
+  "careers": { "page_title": "Gestion du Recrutement", "add_btn": "Publier une offre", "search_placeholder": "Rechercher des postes...", "col_position": "Poste", "col_location": "Lieu", "col_type": "Type", "col_salary": "Salaire", "col_applications": "Candidatures", "col_status": "Statut", "form_create": "Nouvelle offre", "form_edit": "Modifier l'offre", "form_title": "Intitulé du poste", "form_location": "Lieu", "form_type": "Type de contrat", "form_salary": "Fourchette salariale", "form_benefits": "Avantages (séparés par virgule)", "delete_title": "Supprimer l'offre", "delete_content": "Cette offre sera définitivement supprimée.", "status_open": "Recrutement ouvert", "status_closed": "Fermé", "banner_section": "Bannière de la page", "banner_image": "Image de la bannière", "banner_image_help": "Image affichée à droite de la bannière de la page Recrutement.", "banner_eyebrow": "Eyebrow (petit label au-dessus du titre)", "banner_title": "Titre de la bannière", "banner_subtitle": "Description courte", "positions_section": "Offres d'emploi", "reasons_section": "Raisons de nous rejoindre", "reasons_add": "Ajouter une raison", "reasons_icon": "Icône", "reasons_text": "Texte", "reasons_empty": "Aucune raison pour le moment — cliquez sur « Ajouter une raison ».", "reasons_delete_title": "Supprimer la raison", "reasons_delete_content": "Voulez-vous vraiment supprimer cette raison ?", "process_section": "Processus de recrutement", "process_add": "Ajouter une étape", "process_step": "Nom de l'étape", "process_desc": "Description", "process_empty": "Aucune étape pour le moment — cliquez sur « Ajouter une étape ».", "process_delete_title": "Supprimer l'étape", "process_delete_content": "Voulez-vous vraiment supprimer cette étape du processus ?", "gallery_section": "Environnement de travail", "gallery_add": "Ajouter une photo", "gallery_empty": "Aucune photo pour le moment — cliquez sur « Ajouter une photo ».", "form_description": "Description du poste", "preview_title": "Aperçu de la page Recrutement" },
+  "bookings": { "page_title": "Gestion des Réservations", "search_placeholder": "Chercher client, service, tél...", "col_customer": "Client", "col_service": "Service", "col_datetime": "Date / Heure", "col_branch": "Agence", "col_status": "Statut", "detail_title": "Réservation #{{id}}", "detail_customer": "Client", "detail_phone": "Téléphone", "detail_service": "Service", "detail_date": "Date", "detail_time": "Heure", "detail_branch": "Agence", "detail_note": "Note", "detail_status": "Statut", "status_pending": "En attente", "status_confirmed": "Confirmé", "status_completed": "Terminé", "status_cancelled": "Annulé", "action_confirm": "Confirmer", "action_cancel": "Annuler", "action_complete": "Marquer terminé", "banner_section": "Bannière de la page", "banner_image": "Image de la bannière", "banner_image_help": "Image affichée à droite de la bannière de la page Réservation.", "banner_eyebrow": "Eyebrow (petit label au-dessus du titre)", "banner_title": "Titre de la bannière", "banner_subtitle": "Description courte", "packages_section": "Forfaits", "packages_add": "Ajouter un forfait", "packages_empty": "Aucun forfait pour le moment — cliquez sur « Ajouter un forfait ».", "packages_name": "Nom du forfait", "packages_price": "Prix (VND)", "packages_sessions": "Séances", "packages_perks": "Avantages (séparés par virgule)", "packages_hot": "Forfait vedette (LE PLUS POPULAIRE)", "packages_delete_title": "Supprimer le forfait", "packages_delete_content": "Voulez-vous vraiment supprimer ce forfait ?", "preview_title": "Aperçu de la page Réservation" },
   "feedbacks": { "page_title": "Gestion des Avis", "search_placeholder": "Rechercher client, service...", "col_customer": "Client", "col_service": "Service", "col_rating": "Note", "col_content": "Contenu", "col_status": "Statut", "detail_title": "Détail de l'avis", "detail_name": "Client", "detail_role": "Rôle", "detail_service": "Service", "detail_comment": "Commentaire", "detail_status": "Statut", "delete_title": "Supprimer l'avis", "delete_content": "Cet avis sera définitivement supprimé.", "status_pending": "En attente", "status_approved": "Approuvé", "status_rejected": "Rejeté" },
   "promotions": { "page_title": "Gestion des Promotions", "add_btn": "Ajouter une promo", "search_placeholder": "Rechercher...", "col_campaign": "Campagne", "col_period": "Période", "col_price_save": "Offre / Économies", "col_status": "Statut", "form_create": "Nouvelle promotion", "form_edit": "Modifier la promotion", "form_title": "Nom de la campagne", "form_period": "Période", "form_price": "Offre", "form_save": "Économies", "form_image": "URL de l'image", "delete_title": "Supprimer la promotion", "delete_content": "Cette promotion sera supprimée.", "status_running": "En cours", "status_paused": "Pausé" },
-  "offers": { "page_title": "Offres & Codes de réduction", "add_btn": "Créer une offre", "search_placeholder": "Rechercher offres, codes...", "col_offer": "Offre", "col_code": "Code", "col_discount": "Réduction", "col_expires": "Expiration", "col_status": "Statut", "form_create": "Nouvelle offre", "form_edit": "Modifier l'offre", "form_title": "Nom de l'offre", "form_desc": "Description", "form_code": "Code promo", "form_discount": "Réduction (ex. -30%)", "form_expires": "Date d'expiration", "delete_title": "Supprimer l'offre", "delete_content": "Cette offre sera supprimée.", "status_active": "Actif", "status_inactive": "Inactif" },
+  "offers": { "page_title": "Offres & Codes de réduction", "add_btn": "Créer une offre", "search_placeholder": "Rechercher offres, codes...", "col_offer": "Offre", "col_code": "Code", "col_discount": "Réduction", "col_expires": "Expiration", "col_status": "Statut", "form_create": "Nouvelle offre", "form_edit": "Modifier l'offre", "form_title": "Nom de l'offre", "form_desc": "Description", "form_code": "Code promo", "form_discount": "Réduction (ex. -30%)", "form_expires": "Date d'expiration", "delete_title": "Supprimer l'offre", "delete_content": "Cette offre sera supprimée.", "status_active": "Actif", "status_inactive": "Inactif", "banner_section": "Bannière de la page", "banner_image": "Image de bannière", "banner_image_help": "Image affichée à droite de la bannière de la page Offres.", "banner_eyebrow": "Eyebrow (petit label au-dessus du titre)", "banner_title": "Titre de la bannière", "banner_subtitle": "Description courte", "vouchers_section": "Codes de réduction", "combos_section": "Forfaits combo", "combo_add": "Ajouter un combo", "combo_name": "Nom du combo", "combo_services": "Services inclus (séparés par virgule)", "combo_original_price": "Prix original (VND)", "combo_sale_price": "Prix promotionnel (VND)", "combo_perks": "Avantages (séparés par virgule)", "combo_delete_title": "Supprimer le combo", "combo_delete_content": "Voulez-vous vraiment supprimer ce forfait combo ?" },
+  "contact": { "page_title": "Gestion du Contact", "banner_section": "Bannière de la page", "banner_image": "Image de bannière", "banner_image_help": "Image affichée à droite de la bannière de la page Contact.", "banner_eyebrow": "Eyebrow (petit label au-dessus du titre)", "banner_title": "Titre de la bannière", "banner_subtitle": "Description courte", "info_section": "Informations de contact", "form_hotline": "Hotline", "form_email": "Email", "form_zalo": "Zalo", "form_working_hours": "Heures d'ouverture", "form_address": "Adresse", "preview_title": "Aperçu de la page Contact" },
   "staff": { "page_title": "Gestion de l'Équipe", "add_btn": "Ajouter un membre", "search_placeholder": "Chercher nom, poste...", "col_staff": "Membre", "col_role": "Rôle", "col_bio": "Bio", "form_create": "Nouveau membre", "form_edit": "Modifier le profil", "form_name": "Nom complet", "form_role": "Rôle", "form_image": "URL photo", "form_bio": "Bio", "delete_title": "Retirer le membre", "delete_content": "Ce membre sera retiré." },
   "branches": { "page_title": "Gestion des Agences", "add_btn": "Ajouter une agence", "search_placeholder": "Chercher agence, ville...", "col_branch": "Agence", "col_city": "Ville", "col_address": "Adresse", "col_phone": "Téléphone", "col_hours": "Horaires", "form_create": "Nouvelle agence", "form_edit": "Modifier l'agence", "form_name": "Nom de l'agence", "form_city": "Ville", "form_address": "Adresse", "form_phone": "Téléphone", "form_hours": "Horaires d'ouverture", "form_image": "URL photo agence", "delete_title": "Supprimer l'agence", "delete_content": "Cette agence sera supprimée." },
   "gallery": { "page_title": "Galerie Photos", "add_btn": "Ajouter une photo", "count": "{{count}} photos dans la galerie", "form_create": "Ajouter une photo", "form_url": "URL de l'image", "form_caption": "Légende", "delete_title": "Supprimer la photo", "delete_content": "Cette photo sera supprimée." },

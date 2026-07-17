@@ -1,7 +1,7 @@
 import type { Spa2BlogPost, Spa2AdjustableImage } from 'src/_mock/_spa2';
 
-import { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMemo, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -16,8 +16,10 @@ import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import TextField from '@mui/material/TextField';
+import Pagination from '@mui/material/Pagination';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -28,8 +30,10 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
 import {
   SPA2_POSTS,
+  spa2BlogBanner,
   spa2UpsertPost,
   spa2DeletePost,
   SPA2_BLOG_CATEGORY_NAMES,
@@ -47,22 +51,25 @@ import {
   SPA2_TEAL_DARK,
   SPA2_CREAM_DARK,
 } from 'src/sections/spa2/spa2-pages-data';
+import { Spa2Cta, Spa2PageHero, Spa2SoftCard } from 'src/sections/spa2/view/spa2-content-pages';
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Manages the same post list that src/sections/spa2/view/spa2-content-pages.tsx
-// (Spa2BlogPageView) renders on the public /spa2/blog page. Every create/edit/
-// approve/delete action also writes straight into the shared `SPA2_POSTS`
-// array (via spa2UpsertPost/spa2DeletePost from src/_mock/_spa2), so the
-// public pages and the full post editor (Spa2BlogEditorView, at
-// /dashboard/spa2/blog/:slug) always see the same data within a session.
+// Manages the same post list — and the page banner — that
+// src/sections/spa2/view/spa2-content-pages.tsx (Spa2BlogPageView) renders on
+// the public /spa2/blog page. Every create/edit/approve/delete action also
+// writes straight into the shared `SPA2_POSTS` array (via
+// spa2UpsertPost/spa2DeletePost from src/_mock/_spa2), so the public pages and
+// the full post editor (Spa2BlogEditorView, at /dashboard/spa2/blog/:slug)
+// always see the same data within a session.
 // ─────────────────────────────────────────────────────────────────────────────
 
 type FormShape = Omit<Spa2BlogPost, 'status' | 'tags'> & { tagsInput: string };
 
 const STATUSES: Spa2BlogPost['status'][] = ['Đã đăng', 'Chờ duyệt', 'Bản nháp'];
+const PER_PAGE = 6;
 
 const STATUS_COLOR: Record<Spa2BlogPost['status'], 'success' | 'warning' | 'default'> = {
   'Đã đăng': 'success',
@@ -113,14 +120,36 @@ const coverBg = (p: { cover: string; coverFocalX?: number; coverFocalY?: number;
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function Spa2BlogManageView() {
+  const { t } = useTranslate('spa2-manage');
   const navigate = useNavigate();
+
+  const [banner, setBanner] = useState(() => ({
+    ...spa2BlogBanner,
+    image: { ...spa2BlogBanner.image },
+  }));
+  const [dirty, setDirty] = useState(false);
+  const [savedAt, setSavedAt] = useState<Date | null>(null);
+  const [tab, setTab] = useState<'banner' | 'list' | 'preview'>('banner');
+  const markDirty = () => setDirty(true);
+
   const [items, setItems] = useState<Spa2BlogPost[]>(() => SPA2_POSTS.map((p) => ({ ...p })));
   const [search, setSearch] = useState('');
   const [statusTab, setStatusTab] = useState<'all' | Spa2BlogPost['status']>('all');
+  const [page, setPage] = useState(1);
   const [openForm, setOpenForm] = useState(false);
   const [editSlug, setEditSlug] = useState<string | null>(null);
   const [deleteSlug, setDeleteSlug] = useState<string | null>(null);
   const [form, setForm] = useState<FormShape>(emptyForm);
+
+  // ---- Banner ----
+  const updateBanner = (key: 'eyebrow' | 'title' | 'subtitle', value: string) => {
+    setBanner((prev) => ({ ...prev, [key]: value }));
+    markDirty();
+  };
+  const updateBannerImage = (img: Spa2AdjustableImage) => {
+    setBanner((prev) => ({ ...prev, image: img }));
+    markDirty();
+  };
 
   const counts = useMemo(
     () => ({
@@ -148,6 +177,8 @@ export function Spa2BlogManageView() {
   }, [items, search, statusTab]);
 
   const [featured, ...rest] = filtered;
+  const pageCount = Math.max(1, Math.ceil(rest.length / PER_PAGE));
+  const paginatedRest = rest.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
   const openCreate = () => {
     setForm(emptyForm());
@@ -185,7 +216,7 @@ export function Spa2BlogManageView() {
     const finalSlug = form.slug || form.title.toLowerCase().replace(/\s+/g, '-').slice(0, 80);
     const tags = form.tagsInput
       .split(',')
-      .map((t) => t.trim())
+      .map((t2) => t2.trim())
       .filter(Boolean);
     const { tagsInput: _tagsInput, ...rest2 } = form;
     const next: Spa2BlogPost = {
@@ -198,6 +229,7 @@ export function Spa2BlogManageView() {
     };
     spa2UpsertPost(next);
     setOpenForm(false);
+    markDirty();
     if (editSlug) {
       setItems((prev) => prev.map((x) => (x.slug === editSlug ? next : x)));
     } else {
@@ -211,6 +243,7 @@ export function Spa2BlogManageView() {
     if (deleteSlug) spa2DeletePost(deleteSlug);
     setItems((prev) => prev.filter((x) => x.slug !== deleteSlug));
     setDeleteSlug(null);
+    markDirty();
   }, [deleteSlug]);
 
   const handleApprove = useCallback((slug: string) => {
@@ -220,6 +253,7 @@ export function Spa2BlogManageView() {
       if (updated) spa2UpsertPost(updated);
       return next;
     });
+    markDirty();
   }, []);
 
   const handleToDraft = useCallback((slug: string) => {
@@ -229,7 +263,18 @@ export function Spa2BlogManageView() {
       if (updated) spa2UpsertPost(updated);
       return next;
     });
+    markDirty();
   }, []);
+
+  const handleSave = () => {
+    setSavedAt(new Date());
+    setDirty(false);
+  };
+
+  const handleReset = () => {
+    setBanner({ ...spa2BlogBanner, image: { ...spa2BlogBanner.image } });
+    setDirty(false);
+  };
 
   // ---- render ------------------------------------------------------------
 
@@ -237,501 +282,866 @@ export function Spa2BlogManageView() {
     <Spa2ManageShell
       title="Quản lý Blog"
       eyebrow="Nature Spa · Cẩm nang chăm sóc"
-      description="Quản lý toàn bộ bài viết trên trang Blog công khai — tạo mới, chỉnh sửa, duyệt và ẩn/hiện."
+      description={banner.subtitle}
       breadcrumbLabel="Blog"
       publicPath={paths.spa2.blog}
       actions={
-        <Button
-          onClick={openCreate}
-          startIcon={<Iconify icon="mingcute:add-line" />}
-          sx={{
-            borderRadius: 50,
-            px: 3,
-            bgcolor: 'common.white',
-            color: SPA2_TEAL,
-            fontWeight: 600,
-            '&:hover': { bgcolor: SPA2_CREAM },
-          }}
-        >
-          Thêm bài viết
-        </Button>
+        <>
+          <Button
+            variant="outlined"
+            onClick={handleReset}
+            disabled={!dirty}
+            sx={{
+              borderRadius: 50,
+              px: 2.5,
+              color: 'common.white',
+              border: '1.5px solid rgba(255,255,255,0.7)',
+              '&:hover': { bgcolor: 'rgba(255,255,255,0.12)', borderColor: 'common.white' },
+            }}
+          >
+            {t('common.discard_changes')}
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleSave}
+            startIcon={<Iconify icon="solar:diskette-bold" />}
+            sx={{
+              borderRadius: 50,
+              px: 3,
+              bgcolor: 'common.white',
+              color: SPA2_TEAL,
+              '&:hover': { bgcolor: 'rgba(255,255,255,0.88)' },
+            }}
+          >
+            {t('common.save_changes')}
+          </Button>
+        </>
       }
     >
-      <Grid container spacing={3}>
-        {/* Main column */}
-        <Grid xs={12} md={8}>
-          <Card sx={{ p: 2, mb: 3, borderRadius: 3 }}>
-            <Stack
-              direction={{ xs: 'column', sm: 'row' }}
-              spacing={2}
-              alignItems={{ sm: 'center' }}
-              justifyContent="space-between"
-            >
-              <TextField
-                size="small"
-                placeholder="Tìm theo tiêu đề, tác giả, danh mục…"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                sx={{ width: { xs: '100%', sm: 320 } }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                    </InputAdornment>
-                  ),
-                }}
+      <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
+        {dirty && (
+          <Chip
+            size="small"
+            variant="soft"
+            color="warning"
+            label={t('common.unsaved_changes')}
+            icon={<Iconify icon="solar:pen-bold" width={14} />}
+          />
+        )}
+        {savedAt && !dirty && (
+          <Chip
+            size="small"
+            variant="soft"
+            color="success"
+            label={t('common.saved_at', { time: savedAt.toLocaleTimeString('vi-VN') })}
+            icon={<Iconify icon="solar:check-circle-bold" width={14} />}
+          />
+        )}
+      </Stack>
+
+      <Tabs
+        value={tab}
+        onChange={(_, v) => setTab(v)}
+        variant="scrollable"
+        scrollButtons="auto"
+        sx={{
+          mb: 3,
+          position: 'sticky',
+          top: 65,
+          zIndex: 10,
+          bgcolor: 'background.paper',
+          '& .MuiTab-root': { minHeight: 56, fontWeight: 600 },
+          '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
+          '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+        }}
+      >
+        <Tab
+          value="banner"
+          label={t('blog.banner_section')}
+          icon={<Iconify icon="solar:gallery-wide-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
+          value="list"
+          label={t('blog.list_section')}
+          icon={<Iconify icon="solar:notebook-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
+          value="preview"
+          label={t('common.preview_btn')}
+          icon={<Iconify icon="solar:eye-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+      </Tabs>
+
+      {/* Banner */}
+      {tab === 'banner' && (
+        <Card sx={{ p: 3, borderRadius: 3 }}>
+          <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
+            <Iconify
+              icon="solar:gallery-wide-bold-duotone"
+              width={22}
+              sx={{ color: SPA2_TEAL }}
+            />
+            <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+              {t('blog.banner_section')}
+            </Typography>
+          </Stack>
+          <Divider sx={{ mb: 2 }} />
+          <Grid container spacing={3}>
+            <Grid xs={12} md={5}>
+              <Spa2ImageField
+                label={t('blog.banner_image')}
+                value={banner.image}
+                onChange={updateBannerImage}
+                height={220}
+                helperText={t('blog.banner_image_help')}
               />
-              <Tabs
-                value={statusTab}
-                onChange={(_, v) => setStatusTab(v)}
-                variant="scrollable"
-                sx={{
-                  minHeight: 36,
-                  '& .MuiTab-root': { minHeight: 36, textTransform: 'none', fontWeight: 600 },
-                  '& .Mui-selected': { color: SPA2_TEAL_DARK },
-                  '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
-                }}
-              >
-                <Tab
-                  value="all"
-                  label={
-                    <Stack direction="row" spacing={1} alignItems="center">
-                      <span>Tất cả</span>
-                      <Chip size="small" label={counts.all} />
-                    </Stack>
-                  }
+            </Grid>
+            <Grid xs={12} md={7}>
+              <Stack spacing={2}>
+                <TextField
+                  label={t('blog.banner_eyebrow')}
+                  value={banner.eyebrow}
+                  onChange={(e) => updateBanner('eyebrow', e.target.value)}
+                  fullWidth
+                  size="small"
                 />
-                {STATUSES.map((s) => (
+                <TextField
+                  label={t('blog.banner_title')}
+                  value={banner.title}
+                  onChange={(e) => updateBanner('title', e.target.value)}
+                  fullWidth
+                  multiline
+                  minRows={2}
+                />
+                <TextField
+                  label={t('blog.banner_subtitle')}
+                  value={banner.subtitle}
+                  onChange={(e) => updateBanner('subtitle', e.target.value)}
+                  fullWidth
+                  multiline
+                  minRows={3}
+                />
+              </Stack>
+            </Grid>
+          </Grid>
+        </Card>
+      )}
+
+      {/* Danh sách bài viết */}
+      {tab === 'list' && (
+        <Grid container spacing={3}>
+          {/* Main column */}
+          <Grid xs={12} md={8}>
+            <Card sx={{ p: 2, mb: 3, borderRadius: 3 }}>
+              <Stack
+                direction={{ xs: 'column', sm: 'row' }}
+                spacing={2}
+                alignItems={{ sm: 'center' }}
+                justifyContent="space-between"
+              >
+                <TextField
+                  size="small"
+                  placeholder="Tìm theo tiêu đề, tác giả, danh mục…"
+                  value={search}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    setPage(1);
+                  }}
+                  sx={{ width: { xs: '100%', sm: 320 } }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <Tabs
+                  value={statusTab}
+                  onChange={(_, v) => {
+                    setStatusTab(v);
+                    setPage(1);
+                  }}
+                  variant="scrollable"
+                  sx={{
+                    minHeight: 36,
+                    '& .MuiTab-root': { minHeight: 36, textTransform: 'none', fontWeight: 600 },
+                    '& .Mui-selected': { color: SPA2_TEAL_DARK },
+                    '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+                  }}
+                >
                   <Tab
-                    key={s}
-                    value={s}
+                    value="all"
                     label={
                       <Stack direction="row" spacing={1} alignItems="center">
-                        <span>{s}</span>
-                        <Chip
-                          size="small"
-                          color={STATUS_COLOR[s]}
-                          variant="soft"
-                          label={counts[s]}
-                        />
+                        <span>Tất cả</span>
+                        <Chip size="small" label={counts.all} />
                       </Stack>
                     }
                   />
-                ))}
-              </Tabs>
-            </Stack>
-          </Card>
+                  {STATUSES.map((s) => (
+                    <Tab
+                      key={s}
+                      value={s}
+                      label={
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          <span>{s}</span>
+                          <Chip
+                            size="small"
+                            color={STATUS_COLOR[s]}
+                            variant="soft"
+                            label={counts[s]}
+                          />
+                        </Stack>
+                      }
+                    />
+                  ))}
+                </Tabs>
+              </Stack>
+            </Card>
 
-          {/* Featured card mirrors public /spa2/blog hero layout */}
-          {featured && (
-            <Card
-              sx={{
-                mb: 3,
-                borderRadius: 3,
-                overflow: 'hidden',
-                border: `1px solid ${SPA2_CREAM_DARK}`,
-              }}
-            >
-              <Grid container>
-                <Grid xs={12} sm={5}>
-                  <Box
-                    sx={{
-                      minHeight: { xs: 200, sm: '100%' },
-                      backgroundImage: `url(${featured.cover})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                    }}
-                  />
-                </Grid>
-                <Grid xs={12} sm={7}>
-                  <Stack spacing={1.5} sx={{ p: { xs: 2.5, md: 3.5 } }}>
-                    <Stack direction="row" spacing={1}>
-                      <Chip label="Nổi bật" sx={{ bgcolor: SPA2_TEAL, color: 'white' }} />
-                      <Chip
-                        label={featured.category}
-                        sx={{ bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
-                      />
-                      <Chip
-                        size="small"
-                        label={featured.status}
-                        color={STATUS_COLOR[featured.status]}
-                        variant="soft"
-                      />
-                    </Stack>
-                    <Link
-                      component={RouterLink}
-                      href={paths.dashboard.spa2.blogDetails(featured.slug)}
-                      sx={{ textDecoration: 'none', '&:hover': { color: SPA2_TEAL } }}
-                    >
-                      <Typography variant="h5" sx={{ color: SPA2_INK }}>
-                        {featured.title}
-                      </Typography>
-                    </Link>
-                    <Typography color="text.secondary">{featured.excerpt}</Typography>
-                    <Stack direction="row" spacing={1} alignItems="center">
-                      <Avatar sx={{ width: 24, height: 24, bgcolor: SPA2_TEAL, fontSize: 12 }}>
-                        {featured.author[0]}
-                      </Avatar>
-                      <Typography variant="caption" color="text.secondary">
-                        {featured.author} · {featured.date} · {featured.readTime}
-                      </Typography>
-                    </Stack>
-                    <Stack direction="row" spacing={1} sx={{ pt: 1 }}>
-                      <Button
+            <Stack direction="row" justifyContent="flex-end" sx={{ mb: 2 }}>
+              <Button
+                onClick={openCreate}
+                startIcon={<Iconify icon="mingcute:add-line" />}
+                sx={{
+                  borderRadius: 50,
+                  px: 3,
+                  bgcolor: SPA2_TEAL,
+                  color: 'white',
+                  fontWeight: 600,
+                  '&:hover': { bgcolor: SPA2_TEAL_DARK },
+                }}
+              >
+                Thêm bài viết
+              </Button>
+            </Stack>
+
+            {/* Featured card mirrors public /spa2/blog hero layout */}
+            {featured && (
+              <Card
+                sx={{
+                  mb: 3,
+                  borderRadius: 3,
+                  overflow: 'hidden',
+                  border: `1px solid ${SPA2_CREAM_DARK}`,
+                }}
+              >
+                <Grid container>
+                  <Grid xs={12} sm={5}>
+                    <Box
+                      sx={{
+                        minHeight: { xs: 200, sm: '100%' },
+                        backgroundImage: `url(${featured.cover})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                      }}
+                    />
+                  </Grid>
+                  <Grid xs={12} sm={7}>
+                    <Stack spacing={1.5} sx={{ p: { xs: 2.5, md: 3.5 } }}>
+                      <Stack direction="row" spacing={1}>
+                        <Chip label="Nổi bật" sx={{ bgcolor: SPA2_TEAL, color: 'white' }} />
+                        <Chip
+                          label={featured.category}
+                          sx={{ bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
+                        />
+                        <Chip
+                          size="small"
+                          label={featured.status}
+                          color={STATUS_COLOR[featured.status]}
+                          variant="soft"
+                        />
+                      </Stack>
+                      <Link
                         component={RouterLink}
                         href={paths.dashboard.spa2.blogDetails(featured.slug)}
-                        startIcon={<Iconify icon="solar:pen-bold" />}
-                        sx={{
-                          borderRadius: 50,
-                          px: 2.5,
-                          bgcolor: SPA2_TEAL,
-                          color: 'white',
-                          '&:hover': { bgcolor: SPA2_TEAL_DARK },
-                        }}
+                        sx={{ textDecoration: 'none', '&:hover': { color: SPA2_TEAL } }}
                       >
-                        Chỉnh sửa
-                      </Button>
-                      <Button
-                        component={RouterLink}
-                        href={paths.spa2.blogDetails(featured.slug)}
-                        target="_blank"
-                        variant="outlined"
-                        startIcon={<Iconify icon="solar:eye-bold" />}
-                        sx={{ borderRadius: 50, borderColor: SPA2_TEAL, color: SPA2_TEAL_DARK }}
-                      >
-                        Xem public
-                      </Button>
-                      {featured.status !== 'Đã đăng' ? (
+                        <Typography variant="h5" sx={{ color: SPA2_INK }}>
+                          {featured.title}
+                        </Typography>
+                      </Link>
+                      <Typography color="text.secondary">{featured.excerpt}</Typography>
+                      <Stack direction="row" spacing={1} alignItems="center">
+                        <Avatar sx={{ width: 24, height: 24, bgcolor: SPA2_TEAL, fontSize: 12 }}>
+                          {featured.author[0]}
+                        </Avatar>
+                        <Typography variant="caption" color="text.secondary">
+                          {featured.author} · {featured.date} · {featured.readTime}
+                        </Typography>
+                      </Stack>
+                      <Stack direction="row" spacing={1} sx={{ pt: 1 }}>
                         <Button
-                          onClick={() => handleApprove(featured.slug)}
-                          startIcon={<Iconify icon="solar:check-circle-bold" />}
-                          sx={{ borderRadius: 50, color: 'success.main' }}
+                          component={RouterLink}
+                          href={paths.dashboard.spa2.blogDetails(featured.slug)}
+                          startIcon={<Iconify icon="solar:pen-bold" />}
+                          sx={{
+                            borderRadius: 50,
+                            px: 2.5,
+                            bgcolor: SPA2_TEAL,
+                            color: 'white',
+                            '&:hover': { bgcolor: SPA2_TEAL_DARK },
+                          }}
                         >
-                          Duyệt
+                          Chỉnh sửa
                         </Button>
-                      ) : (
                         <Button
-                          onClick={() => handleToDraft(featured.slug)}
-                          startIcon={<Iconify icon="solar:eye-closed-bold" />}
-                          sx={{ borderRadius: 50, color: 'warning.main' }}
+                          component={RouterLink}
+                          href={paths.spa2.blogDetails(featured.slug)}
+                          target="_blank"
+                          variant="outlined"
+                          startIcon={<Iconify icon="solar:eye-bold" />}
+                          sx={{ borderRadius: 50, borderColor: SPA2_TEAL, color: SPA2_TEAL_DARK }}
                         >
-                          Chuyển nháp
+                          Xem public
                         </Button>
-                      )}
+                        {featured.status !== 'Đã đăng' ? (
+                          <Button
+                            onClick={() => handleApprove(featured.slug)}
+                            startIcon={<Iconify icon="solar:check-circle-bold" />}
+                            sx={{ borderRadius: 50, color: 'success.main' }}
+                          >
+                            Duyệt
+                          </Button>
+                        ) : (
+                          <Button
+                            onClick={() => handleToDraft(featured.slug)}
+                            startIcon={<Iconify icon="solar:eye-closed-bold" />}
+                            sx={{ borderRadius: 50, color: 'warning.main' }}
+                          >
+                            Chuyển nháp
+                          </Button>
+                        )}
+                      </Stack>
                     </Stack>
-                  </Stack>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Card>
-          )}
+              </Card>
+            )}
 
-          {/* Grid mirrors public blog cards — 1/2/3 columns for balance at every width */}
-          <Grid container spacing={3}>
-            {rest.map((p) => (
-              <Grid key={p.slug} xs={12} sm={6} lg={4}>
-                <Card
-                  sx={{
-                    p: 0,
-                    overflow: 'hidden',
-                    borderRadius: 3,
-                    border: `1px solid ${SPA2_CREAM_DARK}`,
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                  }}
-                >
-                  <Box
+            {/* Grid mirrors public blog cards — 1/2/3 columns, uniform sizing + pagination */}
+            <Grid container spacing={3}>
+              {paginatedRest.map((p) => (
+                <Grid key={p.slug} xs={12} sm={6} lg={4} sx={{ display: 'flex' }}>
+                  <Card
                     sx={{
-                      height: 180,
-                      backgroundImage: `url(${p.cover})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                      position: 'relative',
-                      ...coverBg(p),
+                      p: 0,
+                      overflow: 'hidden',
+                      borderRadius: 3,
+                      border: `1px solid ${SPA2_CREAM_DARK}`,
+                      width: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
                     }}
                   >
-                    <Chip
-                      size="small"
-                      label={p.status}
-                      color={STATUS_COLOR[p.status]}
-                      variant="filled"
-                      sx={{ position: 'absolute', top: 12, right: 12 }}
-                    />
-                  </Box>
-                  <Stack spacing={1.25} sx={{ p: 2.5, flexGrow: 1 }}>
-                    <Chip
-                      size="small"
-                      label={p.category}
-                      sx={{ alignSelf: 'flex-start', bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
-                    />
-                    <Link
-                      component={RouterLink}
-                      href={paths.dashboard.spa2.blogDetails(p.slug)}
+                    <Box
                       sx={{
-                        color: SPA2_INK,
-                        textDecoration: 'none',
-                        '&:hover': { color: SPA2_TEAL },
+                        height: 180,
+                        backgroundImage: `url(${p.cover})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        position: 'relative',
+                        ...coverBg(p),
                       }}
                     >
-                      <Typography variant="subtitle1" sx={{ lineHeight: 1.4, minHeight: 44 }}>
-                        {p.title}
-                      </Typography>
-                    </Link>
-                    <Typography variant="body2" color="text.secondary" sx={{ minHeight: 40 }}>
-                      {p.excerpt}
-                    </Typography>
-                    <Typography variant="caption" color="text.disabled">
-                      {p.author} · {p.date} · {p.readTime}
-                    </Typography>
-                    <Divider sx={{ mt: 'auto' }} />
-                    <Stack direction="row" justifyContent="space-between" alignItems="center">
-                      <Stack direction="row" spacing={0.5}>
-                        {p.status !== 'Đã đăng' ? (
-                          <Tooltip title="Duyệt & đăng">
-                            <IconButton size="small" onClick={() => handleApprove(p.slug)}>
-                              <Iconify icon="solar:check-circle-bold" color="success.main" />
-                            </IconButton>
-                          </Tooltip>
-                        ) : (
-                          <Tooltip title="Chuyển về nháp">
-                            <IconButton size="small" onClick={() => handleToDraft(p.slug)}>
-                              <Iconify icon="solar:eye-closed-bold" color="warning.main" />
-                            </IconButton>
-                          </Tooltip>
-                        )}
-                        <Tooltip title="Xem public">
-                          <IconButton
-                            size="small"
-                            component={RouterLink}
-                            href={paths.spa2.blogDetails(p.slug)}
-                            target="_blank"
-                          >
-                            <Iconify icon="solar:eye-bold" />
-                          </IconButton>
-                        </Tooltip>
-                      </Stack>
-                      <Stack direction="row" spacing={0.5}>
-                        <Tooltip title="Sửa nhanh (thông tin)">
-                          <IconButton size="small" onClick={() => openEdit(p)}>
-                            <Iconify icon="solar:pen-bold" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Soạn nội dung đầy đủ">
-                          <IconButton
-                            size="small"
-                            component={RouterLink}
-                            href={paths.dashboard.spa2.blogDetails(p.slug)}
-                            sx={{ color: SPA2_TEAL }}
-                          >
-                            <Iconify icon="solar:pen-new-square-bold" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Xoá">
-                          <IconButton
-                            size="small"
-                            color="error"
-                            onClick={() => setDeleteSlug(p.slug)}
-                          >
-                            <Iconify icon="solar:trash-bin-trash-bold" />
-                          </IconButton>
-                        </Tooltip>
-                      </Stack>
-                    </Stack>
-                  </Stack>
-                </Card>
-              </Grid>
-            ))}
-
-            {filtered.length === 0 && (
-              <Grid xs={12}>
-                <Card sx={{ p: 6, textAlign: 'center', borderRadius: 3 }}>
-                  <Iconify
-                    icon="solar:notebook-bold-duotone"
-                    width={48}
-                    sx={{ color: SPA2_TEAL, mb: 1 }}
-                  />
-                  <Typography variant="h6" sx={{ color: SPA2_INK }}>
-                    Không tìm thấy bài viết
-                  </Typography>
-                  <Typography color="text.secondary" variant="body2">
-                    Thử đổi từ khoá hoặc tạo bài viết mới.
-                  </Typography>
-                </Card>
-              </Grid>
-            )}
-          </Grid>
-        </Grid>
-
-        {/* Sidebar mirrors public blog sidebar */}
-        <Grid xs={12} md={4}>
-          <Stack spacing={3} sx={{ position: { md: 'sticky' }, top: { md: 96 } }}>
-            <Card sx={{ p: 2.5, borderRadius: 3 }}>
-              <Typography variant="subtitle1" sx={{ color: SPA2_INK, mb: 2 }}>
-                Danh mục
-              </Typography>
-              <Stack spacing={1}>
-                {categories.map((c) => (
-                  <Stack
-                    key={c.name}
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    sx={{ py: 1, borderBottom: `1px solid ${SPA2_CREAM_DARK}` }}
-                  >
-                    <Typography sx={{ color: SPA2_INK }}>{c.name}</Typography>
-                    <Chip
-                      size="small"
-                      label={c.count}
-                      sx={{ bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
-                    />
-                  </Stack>
-                ))}
-              </Stack>
-            </Card>
-
-            <Card sx={{ p: 2.5, borderRadius: 3 }}>
-              <Typography variant="subtitle1" sx={{ color: SPA2_INK, mb: 2 }}>
-                Chờ duyệt gần đây
-              </Typography>
-              <Stack spacing={1.5}>
-                {items
-                  .filter((p) => p.status === 'Chờ duyệt')
-                  .slice(0, 4)
-                  .map((p) => (
-                    <Stack
-                      key={p.slug}
-                      direction="row"
-                      spacing={1.5}
-                      alignItems="center"
-                      component={RouterLink}
-                      href={paths.dashboard.spa2.blogDetails(p.slug)}
-                      sx={{ textDecoration: 'none', '&:hover': { color: SPA2_TEAL } }}
-                    >
-                      <Box
-                        sx={{
-                          width: 44,
-                          height: 44,
-                          borderRadius: 1.5,
-                          flexShrink: 0,
-                          backgroundImage: `url(${p.cover})`,
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center',
-                        }}
+                      <Chip
+                        size="small"
+                        label={p.status}
+                        color={STATUS_COLOR[p.status]}
+                        variant="filled"
+                        sx={{ position: 'absolute', top: 12, right: 12 }}
                       />
-                      <Stack sx={{ minWidth: 0 }}>
-                        <Typography
-                          variant="body2"
-                          sx={{ color: SPA2_INK, fontWeight: 600 }}
-                          noWrap
-                        >
+                    </Box>
+                    <Stack spacing={1.25} sx={{ p: 2.5, flexGrow: 1 }}>
+                      <Chip
+                        size="small"
+                        label={p.category}
+                        sx={{ alignSelf: 'flex-start', bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
+                      />
+                      <Link
+                        component={RouterLink}
+                        href={paths.dashboard.spa2.blogDetails(p.slug)}
+                        sx={{
+                          color: SPA2_INK,
+                          textDecoration: 'none',
+                          '&:hover': { color: SPA2_TEAL },
+                        }}
+                      >
+                        <Typography variant="subtitle1" sx={{ lineHeight: 1.4, minHeight: 44 }}>
                           {p.title}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {p.author} · {p.date}
-                        </Typography>
+                      </Link>
+                      <Typography variant="body2" color="text.secondary" sx={{ minHeight: 40 }}>
+                        {p.excerpt}
+                      </Typography>
+                      <Typography variant="caption" color="text.disabled">
+                        {p.author} · {p.date} · {p.readTime}
+                      </Typography>
+                      <Divider sx={{ mt: 'auto' }} />
+                      <Stack direction="row" justifyContent="space-between" alignItems="center">
+                        <Stack direction="row" spacing={0.5}>
+                          {p.status !== 'Đã đăng' ? (
+                            <Tooltip title="Duyệt & đăng">
+                              <IconButton size="small" onClick={() => handleApprove(p.slug)}>
+                                <Iconify icon="solar:check-circle-bold" color="success.main" />
+                              </IconButton>
+                            </Tooltip>
+                          ) : (
+                            <Tooltip title="Chuyển về nháp">
+                              <IconButton size="small" onClick={() => handleToDraft(p.slug)}>
+                                <Iconify icon="solar:eye-closed-bold" color="warning.main" />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                          <Tooltip title="Xem public">
+                            <IconButton
+                              size="small"
+                              component={RouterLink}
+                              href={paths.spa2.blogDetails(p.slug)}
+                              target="_blank"
+                            >
+                              <Iconify icon="solar:eye-bold" />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                        <Stack direction="row" spacing={0.5}>
+                          <Tooltip title="Sửa nhanh (thông tin)">
+                            <IconButton size="small" onClick={() => openEdit(p)}>
+                              <Iconify icon="solar:pen-bold" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Soạn nội dung đầy đủ">
+                            <IconButton
+                              size="small"
+                              component={RouterLink}
+                              href={paths.dashboard.spa2.blogDetails(p.slug)}
+                              sx={{ color: SPA2_TEAL }}
+                            >
+                              <Iconify icon="solar:pen-new-square-bold" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Xoá">
+                            <IconButton
+                              size="small"
+                              color="error"
+                              onClick={() => setDeleteSlug(p.slug)}
+                            >
+                              <Iconify icon="solar:trash-bin-trash-bold" />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
                       </Stack>
                     </Stack>
-                  ))}
-                {items.filter((p) => p.status === 'Chờ duyệt').length === 0 && (
-                  <Typography variant="body2" color="text.secondary">
-                    Không có bài chờ duyệt.
-                  </Typography>
-                )}
-              </Stack>
-            </Card>
-          </Stack>
-        </Grid>
-      </Grid>
+                  </Card>
+                </Grid>
+              ))}
 
-      {/* Quick create/edit dialog — metadata only; nội dung đầy đủ soạn ở trang riêng */}
-      <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="sm" fullWidth>
+              {filtered.length === 0 && (
+                <Grid xs={12}>
+                  <Card sx={{ p: 6, textAlign: 'center', borderRadius: 3 }}>
+                    <Iconify
+                      icon="solar:notebook-bold-duotone"
+                      width={48}
+                      sx={{ color: SPA2_TEAL, mb: 1 }}
+                    />
+                    <Typography variant="h6" sx={{ color: SPA2_INK }}>
+                      Không tìm thấy bài viết
+                    </Typography>
+                    <Typography color="text.secondary" variant="body2">
+                      Thử đổi từ khoá hoặc tạo bài viết mới.
+                    </Typography>
+                  </Card>
+                </Grid>
+              )}
+            </Grid>
+
+            {pageCount > 1 && (
+              <Stack alignItems="center" sx={{ mt: 4 }}>
+                <Pagination
+                  count={pageCount}
+                  page={page}
+                  onChange={(_, v) => setPage(v)}
+                  shape="rounded"
+                  sx={{
+                    '& .Mui-selected': {
+                      bgcolor: `${SPA2_TEAL} !important`,
+                      color: 'white',
+                    },
+                  }}
+                />
+              </Stack>
+            )}
+          </Grid>
+
+          {/* Sidebar mirrors public blog sidebar */}
+          <Grid xs={12} md={4}>
+            <Stack spacing={3} sx={{ position: { md: 'sticky' }, top: { md: 96 } }}>
+              <Card sx={{ p: 2.5, borderRadius: 3 }}>
+                <Typography variant="subtitle1" sx={{ color: SPA2_INK, mb: 2 }}>
+                  Danh mục
+                </Typography>
+                <Stack spacing={1}>
+                  {categories.map((c) => (
+                    <Stack
+                      key={c.name}
+                      direction="row"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      sx={{ py: 1, borderBottom: `1px solid ${SPA2_CREAM_DARK}` }}
+                    >
+                      <Typography sx={{ color: SPA2_INK }}>{c.name}</Typography>
+                      <Chip
+                        size="small"
+                        label={c.count}
+                        sx={{ bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
+                      />
+                    </Stack>
+                  ))}
+                </Stack>
+              </Card>
+
+              <Card sx={{ p: 2.5, borderRadius: 3 }}>
+                <Typography variant="subtitle1" sx={{ color: SPA2_INK, mb: 2 }}>
+                  Chờ duyệt gần đây
+                </Typography>
+                <Stack spacing={1.5}>
+                  {items
+                    .filter((p) => p.status === 'Chờ duyệt')
+                    .slice(0, 4)
+                    .map((p) => (
+                      <Stack
+                        key={p.slug}
+                        direction="row"
+                        spacing={1.5}
+                        alignItems="center"
+                        component={RouterLink}
+                        href={paths.dashboard.spa2.blogDetails(p.slug)}
+                        sx={{ textDecoration: 'none', '&:hover': { color: SPA2_TEAL } }}
+                      >
+                        <Box
+                          sx={{
+                            width: 44,
+                            height: 44,
+                            borderRadius: 1.5,
+                            flexShrink: 0,
+                            backgroundImage: `url(${p.cover})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                          }}
+                        />
+                        <Stack sx={{ minWidth: 0 }}>
+                          <Typography
+                            variant="body2"
+                            sx={{ color: SPA2_INK, fontWeight: 600 }}
+                            noWrap
+                          >
+                            {p.title}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {p.author} · {p.date}
+                          </Typography>
+                        </Stack>
+                      </Stack>
+                    ))}
+                  {items.filter((p) => p.status === 'Chờ duyệt').length === 0 && (
+                    <Typography variant="body2" color="text.secondary">
+                      Không có bài chờ duyệt.
+                    </Typography>
+                  )}
+                </Stack>
+              </Card>
+            </Stack>
+          </Grid>
+        </Grid>
+      )}
+
+      {/* Full-page live preview — pixel-for-pixel same layout/order as the public /spa2/blog page */}
+      {tab === 'preview' && (
+        <Box sx={{ borderRadius: 3, overflow: 'hidden', border: `1px solid ${SPA2_CREAM_DARK}` }}>
+          <Box sx={{ bgcolor: 'background.default' }}>
+            <Spa2PageHero
+              image={banner.image.url}
+              imageStyle={banner.image}
+              eyebrow={banner.eyebrow}
+              title={banner.title}
+              subtitle={banner.subtitle}
+            />
+
+            {featured && (
+              <Box sx={{ py: { xs: 6, md: 8 } }}>
+                <Container>
+                  <Spa2SoftCard sx={{ p: 0, overflow: 'hidden' }}>
+                    <Grid container>
+                      <Grid xs={12} md={6}>
+                        <Box
+                          sx={{
+                            minHeight: 280,
+                            height: '100%',
+                            backgroundImage: `url(${featured.cover})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                          }}
+                        />
+                      </Grid>
+                      <Grid xs={12} md={6}>
+                        <Box sx={{ p: { xs: 3, md: 5 } }}>
+                          <Chip label="Bài viết nổi bật" sx={{ bgcolor: SPA2_TEAL, color: 'white', mb: 2 }} />
+                          <Typography variant="h4" sx={{ color: SPA2_INK, mb: 1.5 }}>
+                            {featured.title}
+                          </Typography>
+                          <Typography sx={{ color: 'text.secondary', mb: 2 }}>
+                            {featured.excerpt}
+                          </Typography>
+                          <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 3 }}>
+                            <Avatar sx={{ width: 28, height: 28, bgcolor: SPA2_TEAL, fontSize: 13 }}>
+                              {featured.author[0]}
+                            </Avatar>
+                            <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
+                              {featured.author} · {featured.date} · {featured.readTime}
+                            </Typography>
+                          </Stack>
+                          <Button
+                            disabled
+                            endIcon={<Iconify icon="solar:arrow-right-linear" />}
+                            sx={{
+                              borderRadius: 999,
+                              px: 3,
+                              bgcolor: SPA2_TEAL,
+                              color: 'white',
+                              '&.Mui-disabled': { bgcolor: SPA2_TEAL, color: 'white', opacity: 0.85 },
+                            }}
+                          >
+                            Đọc bài viết
+                          </Button>
+                        </Box>
+                      </Grid>
+                    </Grid>
+                  </Spa2SoftCard>
+                </Container>
+              </Box>
+            )}
+
+            <Box sx={{ pb: { xs: 8, md: 12 } }}>
+              <Container>
+                <Grid container spacing={5}>
+                  <Grid xs={12} md={8}>
+                    <Grid container spacing={4}>
+                      {paginatedRest.map((p) => (
+                        <Grid key={p.slug} xs={12} sm={6}>
+                          <Spa2SoftCard sx={{ p: 0, overflow: 'hidden' }}>
+                            <Box
+                              sx={{
+                                height: 180,
+                                backgroundImage: `url(${p.cover})`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                              }}
+                            />
+                            <Box sx={{ p: 2.5 }}>
+                              <Chip
+                                size="small"
+                                label={p.category}
+                                sx={{ mb: 1.5, bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
+                              />
+                              <Typography
+                                variant="h6"
+                                sx={{ color: SPA2_INK, mb: 1, fontSize: 16, lineHeight: 1.4 }}
+                              >
+                                {p.title}
+                              </Typography>
+                              <Typography sx={{ color: 'text.secondary', fontSize: 14, mb: 1.5 }}>
+                                {p.excerpt}
+                              </Typography>
+                              <Stack direction="row" spacing={1} alignItems="center">
+                                <Typography sx={{ fontSize: 12, color: 'text.disabled' }}>
+                                  {p.date}
+                                </Typography>
+                                <Typography sx={{ fontSize: 12, color: 'text.disabled' }}>·</Typography>
+                                <Typography sx={{ fontSize: 12, color: 'text.disabled' }}>
+                                  {p.readTime}
+                                </Typography>
+                              </Stack>
+                            </Box>
+                          </Spa2SoftCard>
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </Grid>
+
+                  <Grid xs={12} md={4}>
+                    <Stack spacing={3}>
+                      <Spa2SoftCard>
+                        <Typography variant="h6" sx={{ color: SPA2_INK, mb: 2 }}>
+                          Danh mục
+                        </Typography>
+                        <Stack spacing={1.5}>
+                          {categories.map((c) => (
+                            <Stack
+                              key={c.name}
+                              direction="row"
+                              justifyContent="space-between"
+                              sx={{ py: 1, borderBottom: `1px solid ${SPA2_CREAM_DARK}` }}
+                            >
+                              <Typography sx={{ color: SPA2_INK }}>{c.name}</Typography>
+                              <Chip
+                                size="small"
+                                label={c.count}
+                                sx={{ bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
+                              />
+                            </Stack>
+                          ))}
+                        </Stack>
+                      </Spa2SoftCard>
+                    </Stack>
+                  </Grid>
+                </Grid>
+              </Container>
+            </Box>
+          </Box>
+        </Box>
+      )}
+
+      {/* Quick create/edit dialog — left: edit, right: live preview; nội dung đầy đủ soạn ở trang riêng */}
+      <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="md" fullWidth>
         <DialogTitle>{editSlug ? 'Chỉnh sửa thông tin bài viết' : 'Tạo bài viết mới'}</DialogTitle>
         <DialogContent dividers>
-          <Stack spacing={2} sx={{ pt: 1 }}>
-            {!editSlug && (
-              <Typography variant="body2" color="text.secondary">
-                Điền thông tin cơ bản trước — sau khi tạo, bạn sẽ được chuyển sang trang soạn thảo
-                để viết nội dung đầy đủ.
-              </Typography>
-            )}
-            <TextField
-              label="Tiêu đề"
-              size="small"
-              value={form.title}
-              onChange={handleField('title')}
-              fullWidth
-            />
-            <TextField
-              label="Tóm tắt"
-              size="small"
-              multiline
-              rows={2}
-              value={form.excerpt}
-              onChange={handleField('excerpt')}
-              fullWidth
-            />
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-              <TextField
-                label="Tác giả"
-                size="small"
-                fullWidth
-                value={form.author}
-                onChange={handleField('author')}
-              />
-              <TextField
-                select
-                label="Danh mục"
-                size="small"
-                fullWidth
-                value={form.category}
-                onChange={handleField('category')}
+          <Grid container spacing={3} sx={{ pt: 1 }}>
+            <Grid xs={12} md={6}>
+              <Stack spacing={2}>
+                {!editSlug && (
+                  <Typography variant="body2" color="text.secondary">
+                    Điền thông tin cơ bản trước — sau khi tạo, bạn sẽ được chuyển sang trang soạn
+                    thảo để viết nội dung đầy đủ.
+                  </Typography>
+                )}
+                <TextField
+                  label="Tiêu đề"
+                  size="small"
+                  value={form.title}
+                  onChange={handleField('title')}
+                  fullWidth
+                />
+                <TextField
+                  label="Tóm tắt"
+                  size="small"
+                  multiline
+                  rows={2}
+                  value={form.excerpt}
+                  onChange={handleField('excerpt')}
+                  fullWidth
+                />
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                  <TextField
+                    label="Tác giả"
+                    size="small"
+                    fullWidth
+                    value={form.author}
+                    onChange={handleField('author')}
+                  />
+                  <TextField
+                    select
+                    label="Danh mục"
+                    size="small"
+                    fullWidth
+                    value={form.category}
+                    onChange={handleField('category')}
+                  >
+                    {SPA2_BLOG_CATEGORY_NAMES.map((name) => (
+                      <MenuItem key={name} value={name}>
+                        {name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Stack>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                  <TextField
+                    label="Ngày hiển thị"
+                    size="small"
+                    fullWidth
+                    value={form.date}
+                    onChange={handleField('date')}
+                  />
+                  <TextField
+                    label="Thời lượng đọc"
+                    size="small"
+                    fullWidth
+                    value={form.readTime}
+                    onChange={handleField('readTime')}
+                  />
+                </Stack>
+                <Spa2ImageField
+                  label="Ảnh cover"
+                  value={coverImageValue(form)}
+                  onChange={(img) => setForm((p) => applyCoverImage(p, img))}
+                  height={160}
+                  helperText="Kéo thả ảnh, dán URL, hoặc tải ảnh từ máy — kéo trên ảnh để chọn điểm lấy nét."
+                />
+                <TextField
+                  label="Tags"
+                  size="small"
+                  value={form.tagsInput}
+                  onChange={handleField('tagsInput')}
+                  fullWidth
+                  helperText="Cách nhau bởi dấu phẩy, ví dụ: skincare, mùa lạnh"
+                />
+                <TextField
+                  label="Slug (để trống sẽ tự tạo)"
+                  size="small"
+                  value={form.slug}
+                  onChange={handleField('slug')}
+                  fullWidth
+                />
+              </Stack>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <Typography
+                variant="caption"
+                sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
               >
-                {SPA2_BLOG_CATEGORY_NAMES.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Stack>
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-              <TextField
-                label="Ngày hiển thị"
-                size="small"
-                fullWidth
-                value={form.date}
-                onChange={handleField('date')}
-              />
-              <TextField
-                label="Thời lượng đọc"
-                size="small"
-                fullWidth
-                value={form.readTime}
-                onChange={handleField('readTime')}
-              />
-            </Stack>
-            <Spa2ImageField
-              label="Ảnh cover"
-              value={coverImageValue(form)}
-              onChange={(img) => setForm((p) => applyCoverImage(p, img))}
-              height={180}
-              helperText="Kéo thả ảnh, dán URL, hoặc tải ảnh từ máy — kéo trên ảnh để chọn điểm lấy nét."
-            />
-            <TextField
-              label="Tags"
-              size="small"
-              value={form.tagsInput}
-              onChange={handleField('tagsInput')}
-              fullWidth
-              helperText="Cách nhau bởi dấu phẩy, ví dụ: skincare, mùa lạnh"
-            />
-            <TextField
-              label="Slug (để trống sẽ tự tạo)"
-              size="small"
-              value={form.slug}
-              onChange={handleField('slug')}
-              fullWidth
-            />
-          </Stack>
+                Xem trước
+              </Typography>
+              <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
+                <Spa2SoftCard sx={{ p: 0, overflow: 'hidden' }}>
+                  <Box
+                    sx={{
+                      height: 160,
+                      bgcolor: SPA2_CREAM_DARK,
+                      ...coverBg(form),
+                    }}
+                  />
+                  <Box sx={{ p: 2.5 }}>
+                    <Chip
+                      size="small"
+                      label={form.category || 'Danh mục'}
+                      sx={{ mb: 1.5, bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
+                    />
+                    <Typography
+                      variant="h6"
+                      sx={{ color: SPA2_INK, mb: 1, fontSize: 16, lineHeight: 1.4 }}
+                    >
+                      {form.title || 'Tiêu đề bài viết'}
+                    </Typography>
+                    <Typography sx={{ color: 'text.secondary', fontSize: 14, mb: 1.5 }}>
+                      {form.excerpt || 'Tóm tắt bài viết…'}
+                    </Typography>
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <Typography sx={{ fontSize: 12, color: 'text.disabled' }}>
+                        {form.date}
+                      </Typography>
+                      <Typography sx={{ fontSize: 12, color: 'text.disabled' }}>·</Typography>
+                      <Typography sx={{ fontSize: 12, color: 'text.disabled' }}>
+                        {form.readTime}
+                      </Typography>
+                    </Stack>
+                  </Box>
+                </Spa2SoftCard>
+              </Box>
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenForm(false)}>Huỷ</Button>

@@ -4,14 +4,18 @@ import type { Spa2AdjustableImage } from 'src/_mock/_spa2';
 import { useState } from 'react';
 
 import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
+import Tabs from '@mui/material/Tabs';
+import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
+import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
@@ -34,6 +38,7 @@ import {
   spa2AboutStoryImage,
 } from 'src/_mock/_spa2';
 
+import { Editor } from 'src/components/editor';
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
@@ -49,6 +54,12 @@ import {
   SPA2_TEAL_LIGHT,
   SPA2_CREAM_DARK,
 } from 'src/sections/spa2/spa2-pages-data';
+import {
+  Spa2Cta,
+  Spa2PageHero,
+  Spa2SoftCard,
+  Spa2SectionTitle,
+} from 'src/sections/spa2/view/spa2-content-pages';
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
@@ -138,6 +149,66 @@ function SectionCard({
   );
 }
 
+function TeamPreviewCard({ form }: { form: TeamItem }) {
+  return (
+    <Spa2SoftCard sx={{ textAlign: 'center' }}>
+      <Avatar
+        src={form.image}
+        alt={form.name}
+        slotProps={{
+          img: {
+            style: {
+              objectPosition: `${form.imageFocalX ?? 50}% ${form.imageFocalY ?? 50}%`,
+              transform: `scale(${(form.imageZoom ?? 100) / 100})`,
+            },
+          },
+        }}
+        sx={{ width: 96, height: 96, mx: 'auto', mb: 2, border: `3px solid ${SPA2_TEAL_LIGHT}` }}
+      />
+      <Typography variant="h6" sx={{ color: SPA2_INK, mb: 0.5 }}>
+        {form.name || '(Chưa đặt tên)'}
+      </Typography>
+      <Typography sx={{ color: SPA2_TEAL_DARK, fontSize: 14, fontWeight: 600, mb: 1.5 }}>
+        {form.role}
+      </Typography>
+      <Box
+        sx={{ color: 'text.secondary', fontSize: 14, '& p': { m: 0 } }}
+        dangerouslySetInnerHTML={{ __html: form.bio }}
+      />
+    </Spa2SoftCard>
+  );
+}
+
+function CertPreviewCard({ form }: { form: CertItem }) {
+  return (
+    <Spa2SoftCard sx={{ textAlign: 'center' }}>
+      <Iconify icon={form.icon} width={48} sx={{ color: SPA2_TEAL, mb: 2 }} />
+      <Typography variant="subtitle1" sx={{ color: SPA2_INK, mb: 0.5 }}>
+        {form.name || '(Chưa đặt tên)'}
+      </Typography>
+      <Typography sx={{ color: 'text.secondary', fontSize: 13 }}>{form.org}</Typography>
+      <Chip
+        label={form.year}
+        size="small"
+        sx={{ mt: 1.5, bgcolor: SPA2_CREAM_DARK, color: SPA2_TEAL_DARK }}
+      />
+    </Spa2SoftCard>
+  );
+}
+
+// ----------------------------------------------------------------------
+
+type TabKey = 'banner' | 'story' | 'vision' | 'team' | 'certs' | 'preview';
+
+const TAB_LABELS: { key: TabKey; label: string; icon: string }[] = [
+  { key: 'banner', label: 'Banner trang', icon: 'solar:gallery-wide-bold-duotone' },
+  { key: 'story', label: 'Câu chuyện thương hiệu', icon: 'solar:info-circle-bold-duotone' },
+  { key: 'vision', label: 'Tầm nhìn & Sứ mệnh', icon: 'solar:eye-bold-duotone' },
+  { key: 'team', label: 'Đội ngũ chuyên gia', icon: 'solar:users-group-rounded-bold-duotone' },
+  { key: 'certs', label: 'Chứng nhận & giải thưởng', icon: 'solar:medal-ribbon-star-bold-duotone' },
+  { key: 'preview', label: 'Xem trước', icon: 'solar:eye-bold-duotone' },
+];
+
 // ----------------------------------------------------------------------
 
 export function Spa2AboutManageView() {
@@ -159,7 +230,7 @@ export function Spa2AboutManageView() {
 
   const [dirty, setDirty] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
-  const [previewOpen, setPreviewOpen] = useState(false);
+  const [tab, setTab] = useState<TabKey>('banner');
   const markDirty = () => setDirty(true);
 
   // ---- Team dialog state ----
@@ -378,19 +449,38 @@ export function Spa2AboutManageView() {
             />
           )}
         </Stack>
-        <Button
-          size="small"
-          variant="outlined"
-          onClick={() => setPreviewOpen(true)}
-          startIcon={<Iconify icon="solar:eye-bold" width={16} />}
-          sx={{ borderRadius: 50 }}
-        >
-          Xem trước toàn trang
-        </Button>
       </Stack>
 
-      <Stack spacing={3}>
-        {/* Banner */}
+      {/* Tabs */}
+      <Tabs
+        value={tab}
+        onChange={(_, v: TabKey) => setTab(v)}
+        variant="scrollable"
+        scrollButtons="auto"
+        sx={{
+          mb: 3,
+          position: 'sticky',
+          top: 65,
+          zIndex: 10,
+          bgcolor: 'background.paper',
+          '& .MuiTab-root': { minHeight: 56, fontWeight: 600 },
+          '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
+          '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+        }}
+      >
+        {TAB_LABELS.map((t) => (
+          <Tab
+            key={t.key}
+            value={t.key}
+            icon={<Iconify icon={t.icon} width={20} />}
+            iconPosition="start"
+            label={t.label}
+          />
+        ))}
+      </Tabs>
+
+      {/* Banner */}
+      {tab === 'banner' && (
         <SectionCard title="Banner trang" icon="solar:gallery-wide-bold-duotone">
           <Grid container spacing={3}>
             <Grid xs={12} md={5}>
@@ -431,8 +521,10 @@ export function Spa2AboutManageView() {
             </Grid>
           </Grid>
         </SectionCard>
+      )}
 
-        {/* Câu chuyện thương hiệu */}
+      {/* Câu chuyện thương hiệu */}
+      {tab === 'story' && (
         <SectionCard
           title="Câu chuyện thương hiệu"
           icon="solar:info-circle-bold-duotone"
@@ -483,8 +575,10 @@ export function Spa2AboutManageView() {
             </Grid>
           </Grid>
         </SectionCard>
+      )}
 
-        {/* Tầm nhìn & Sứ mệnh */}
+      {/* Tầm nhìn & Sứ mệnh */}
+      {tab === 'vision' && (
         <SectionCard
           title="Tầm nhìn & Sứ mệnh"
           icon="solar:eye-bold-duotone"
@@ -534,15 +628,20 @@ export function Spa2AboutManageView() {
                           label="Tiêu đề"
                           fullWidth
                         />
-                        <TextField
-                          value={v.desc}
-                          onChange={(e) => updateVisionMission(v.id, 'desc', e.target.value)}
-                          size="small"
-                          label="Mô tả"
-                          fullWidth
-                          multiline
-                          minRows={2}
-                        />
+                        <Box>
+                          <Typography
+                            variant="caption"
+                            sx={{ color: 'text.secondary', mb: 0.5, display: 'block' }}
+                          >
+                            Mô tả
+                          </Typography>
+                          <Editor
+                            value={v.desc}
+                            onChange={(html) => updateVisionMission(v.id, 'desc', html)}
+                            placeholder="Mô tả"
+                            sx={{ maxHeight: 160 }}
+                          />
+                        </Box>
                         <FormControlLabel
                           control={
                             <Switch
@@ -570,8 +669,10 @@ export function Spa2AboutManageView() {
             </Grid>
           </Spa2SortableGrid>
         </SectionCard>
+      )}
 
-        {/* Đội ngũ chuyên gia */}
+      {/* Đội ngũ chuyên gia */}
+      {tab === 'team' && (
         <SectionCard
           title="Đội ngũ chuyên gia"
           icon="solar:users-group-rounded-bold-duotone"
@@ -649,8 +750,10 @@ export function Spa2AboutManageView() {
             </Grid>
           </Spa2SortableGrid>
         </SectionCard>
+      )}
 
-        {/* Chứng nhận & giải thưởng */}
+      {/* Chứng nhận & giải thưởng */}
+      {tab === 'certs' && (
         <SectionCard
           title="Chứng nhận & giải thưởng"
           icon="solar:medal-ribbon-star-bold-duotone"
@@ -712,43 +815,61 @@ export function Spa2AboutManageView() {
             </Grid>
           </Spa2SortableGrid>
         </SectionCard>
-      </Stack>
+      )}
 
       {/* Team member dialog */}
-      <Dialog open={teamDialog} onClose={() => setTeamDialog(false)} maxWidth="sm" fullWidth>
+      <Dialog open={teamDialog} onClose={() => setTeamDialog(false)} maxWidth="md" fullWidth>
         <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>
           {teamEditIndex !== null ? 'Sửa thành viên' : 'Thêm thành viên'}
         </DialogTitle>
         <DialogContent dividers>
-          <Stack spacing={2} sx={{ pt: 1 }}>
-            <TextField
-              label="Họ tên"
-              value={teamForm.name}
-              onChange={(e) => setTeamForm((p) => ({ ...p, name: e.target.value }))}
-              fullWidth
-            />
-            <TextField
-              label="Vai trò"
-              value={teamForm.role}
-              onChange={(e) => setTeamForm((p) => ({ ...p, role: e.target.value }))}
-              fullWidth
-            />
-            <Spa2ImageField
-              label="Ảnh đại diện"
-              value={teamImageValue(teamForm)}
-              onChange={(img) => setTeamForm((p) => applyTeamImage(p, img))}
-              height={200}
-              helperText="Kéo thả ảnh, dán URL, hoặc kéo trên ảnh để chọn điểm lấy nét khuôn mặt."
-            />
-            <TextField
-              label="Tiểu sử"
-              value={teamForm.bio}
-              onChange={(e) => setTeamForm((p) => ({ ...p, bio: e.target.value }))}
-              fullWidth
-              multiline
-              rows={3}
-            />
-          </Stack>
+          <Grid container spacing={3} sx={{ pt: 1 }}>
+            <Grid xs={12} md={6}>
+              <Stack spacing={2}>
+                <TextField
+                  label="Họ tên"
+                  value={teamForm.name}
+                  onChange={(e) => setTeamForm((p) => ({ ...p, name: e.target.value }))}
+                  fullWidth
+                />
+                <TextField
+                  label="Vai trò"
+                  value={teamForm.role}
+                  onChange={(e) => setTeamForm((p) => ({ ...p, role: e.target.value }))}
+                  fullWidth
+                />
+                <Spa2ImageField
+                  label="Ảnh đại diện"
+                  value={teamImageValue(teamForm)}
+                  onChange={(img) => setTeamForm((p) => applyTeamImage(p, img))}
+                  height={200}
+                  helperText="Kéo thả ảnh, dán URL, hoặc kéo trên ảnh để chọn điểm lấy nét khuôn mặt."
+                />
+                <Box>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: 'text.secondary', mb: 0.5, display: 'block' }}
+                  >
+                    Tiểu sử
+                  </Typography>
+                  <Editor
+                    value={teamForm.bio}
+                    onChange={(html) => setTeamForm((p) => ({ ...p, bio: html }))}
+                    placeholder="Tiểu sử"
+                    sx={{ maxHeight: 200 }}
+                  />
+                </Box>
+              </Stack>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1, display: 'block' }}>
+                Xem trước
+              </Typography>
+              <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
+                <TeamPreviewCard form={teamForm} />
+              </Box>
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setTeamDialog(false)}>Huỷ</Button>
@@ -764,38 +885,50 @@ export function Spa2AboutManageView() {
       </Dialog>
 
       {/* Certification dialog */}
-      <Dialog open={certDialog} onClose={() => setCertDialog(false)} maxWidth="sm" fullWidth>
+      <Dialog open={certDialog} onClose={() => setCertDialog(false)} maxWidth="md" fullWidth>
         <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>
           {certEditIndex !== null ? 'Sửa chứng nhận' : 'Thêm chứng nhận'}
         </DialogTitle>
         <DialogContent dividers>
-          <Stack spacing={2} sx={{ pt: 1 }}>
-            <TextField
-              label="Icon"
-              value={certForm.icon}
-              onChange={(e) => setCertForm((p) => ({ ...p, icon: e.target.value }))}
-              helperText="Tên icon Solar (vd: solar:medal-ribbon-star-bold-duotone)"
-              fullWidth
-            />
-            <TextField
-              label="Tên chứng nhận"
-              value={certForm.name}
-              onChange={(e) => setCertForm((p) => ({ ...p, name: e.target.value }))}
-              fullWidth
-            />
-            <TextField
-              label="Tổ chức cấp"
-              value={certForm.org}
-              onChange={(e) => setCertForm((p) => ({ ...p, org: e.target.value }))}
-              fullWidth
-            />
-            <TextField
-              label="Năm"
-              value={certForm.year}
-              onChange={(e) => setCertForm((p) => ({ ...p, year: e.target.value }))}
-              fullWidth
-            />
-          </Stack>
+          <Grid container spacing={3} sx={{ pt: 1 }}>
+            <Grid xs={12} md={6}>
+              <Stack spacing={2}>
+                <TextField
+                  label="Icon"
+                  value={certForm.icon}
+                  onChange={(e) => setCertForm((p) => ({ ...p, icon: e.target.value }))}
+                  helperText="Tên icon Solar (vd: solar:medal-ribbon-star-bold-duotone)"
+                  fullWidth
+                />
+                <TextField
+                  label="Tên chứng nhận"
+                  value={certForm.name}
+                  onChange={(e) => setCertForm((p) => ({ ...p, name: e.target.value }))}
+                  fullWidth
+                />
+                <TextField
+                  label="Tổ chức cấp"
+                  value={certForm.org}
+                  onChange={(e) => setCertForm((p) => ({ ...p, org: e.target.value }))}
+                  fullWidth
+                />
+                <TextField
+                  label="Năm"
+                  value={certForm.year}
+                  onChange={(e) => setCertForm((p) => ({ ...p, year: e.target.value }))}
+                  fullWidth
+                />
+              </Stack>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1, display: 'block' }}>
+                Xem trước
+              </Typography>
+              <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
+                <CertPreviewCard form={certForm} />
+              </Box>
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setCertDialog(false)}>Huỷ</Button>
@@ -834,151 +967,133 @@ export function Spa2AboutManageView() {
         }
       />
 
-      {/* Live preview of the whole page with the current unsaved edits */}
-      <Dialog
-        open={previewOpen}
-        onClose={() => setPreviewOpen(false)}
-        maxWidth="md"
-        fullWidth
-        scroll="paper"
-      >
-        <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>Xem trước trang Giới thiệu</DialogTitle>
-        <DialogContent dividers sx={{ bgcolor: SPA2_CREAM, p: 0 }}>
-          <Box
-            sx={{
-              position: 'relative',
-              height: 280,
-              ...spa2ImageBackgroundStyle(banner.image),
-              bgcolor: SPA2_CREAM_DARK,
-            }}
-          >
-            <Box
-              sx={{
-                position: 'absolute',
-                inset: 0,
-                background: 'linear-gradient(0deg, rgba(0,0,0,0.65), rgba(0,0,0,0))',
-              }}
-            />
-            <Stack
-              spacing={0.75}
-              sx={{ position: 'absolute', left: 24, right: 24, bottom: 20, color: 'common.white' }}
-            >
-              <Typography variant="overline" sx={{ letterSpacing: 2, opacity: 0.9 }}>
-                {banner.eyebrow}
-              </Typography>
-              <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                {banner.title}
-              </Typography>
-              <Typography variant="body2" sx={{ maxWidth: 520, opacity: 0.9 }}>
-                {banner.subtitle}
-              </Typography>
-            </Stack>
+      {/* Live preview of the whole page with the current unsaved edits — mirrors Spa2AboutPageView exactly */}
+      {tab === 'preview' && (
+        <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
+          <Spa2PageHero
+            image={banner.image.url}
+            imageStyle={banner.image}
+            eyebrow={banner.eyebrow}
+            title={banner.title}
+            subtitle={banner.subtitle}
+          />
+
+          {/* Story thương hiệu */}
+          <Box sx={{ py: { xs: 8, md: 12 } }}>
+            <Container>
+              <Grid container spacing={6} alignItems="center">
+                <Grid xs={12} md={5}>
+                  <Box
+                    sx={{
+                      position: 'relative',
+                      aspectRatio: '4/5',
+                      borderRadius: '30% 30% 50% 50% / 20% 20% 30% 30%',
+                      overflow: 'hidden',
+                      boxShadow: '0 30px 60px rgba(46,139,122,0.2)',
+                      ...spa2ImageBackgroundStyle(storyImage),
+                    }}
+                  />
+                </Grid>
+                <Grid xs={12} md={7}>
+                  <Spa2SectionTitle
+                    eyebrow="Câu chuyện"
+                    title="Thương hiệu của chúng tôi"
+                    align="left"
+                  />
+                  <Stack spacing={2.5}>
+                    {story.map((p, idx) => (
+                      <Typography key={idx} sx={{ color: 'text.secondary', lineHeight: 1.9 }}>
+                        {p}
+                      </Typography>
+                    ))}
+                  </Stack>
+                </Grid>
+              </Grid>
+            </Container>
           </Box>
 
-          <Box sx={{ p: 3 }}>
-            <Grid container spacing={3} sx={{ mb: 4 }}>
-              <Grid xs={12} md={5}>
-                <Box
-                  sx={{
-                    height: 200,
-                    borderRadius: 3,
-                    ...spa2ImageBackgroundStyle(storyImage),
-                    bgcolor: SPA2_CREAM_DARK,
-                  }}
-                />
-              </Grid>
-              <Grid xs={12} md={7}>
-                <Stack spacing={1.5}>
-                  {story.map((p, idx) => (
-                    <Typography key={idx} variant="body2" sx={{ color: 'text.secondary' }}>
-                      {p}
-                    </Typography>
-                  ))}
-                </Stack>
-              </Grid>
-            </Grid>
-
-            <Typography variant="subtitle1" sx={{ mb: 1.5, color: SPA2_INK, fontWeight: 700 }}>
-              Tầm nhìn & Sứ mệnh
-            </Typography>
-            <Grid container spacing={2} sx={{ mb: 4 }}>
-              {visionMission.map((v) => (
-                <Grid key={v.id} xs={12} sm={6}>
-                  <Card sx={{ p: 2, borderRadius: 2, textAlign: 'center' }}>
-                    {v.image?.url && (
+          {/* Vision / Mission */}
+          <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: SPA2_CREAM }}>
+            <Container>
+              <Spa2SectionTitle eyebrow="Định hướng" title="Tầm nhìn & Sứ mệnh" />
+              <Grid container spacing={3}>
+                {visionMission.map((v) => (
+                  <Grid key={v.id} xs={12} md={6}>
+                    <Spa2SoftCard sx={{ textAlign: 'center', py: 5 }}>
+                      {v.image?.url && (
+                        <Box
+                          sx={{
+                            height: 160,
+                            borderRadius: 3,
+                            mb: 3,
+                            ...spa2ImageBackgroundStyle(v.image),
+                          }}
+                        />
+                      )}
                       <Box
                         sx={{
-                          height: 90,
-                          borderRadius: 1.5,
-                          mb: 1.5,
-                          ...spa2ImageBackgroundStyle(v.image),
+                          width: 72,
+                          height: 72,
+                          mx: 'auto',
+                          mb: 2.5,
+                          borderRadius: '50%',
+                          bgcolor: SPA2_TEAL,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
                         }}
+                      >
+                        <Iconify icon={v.icon} width={36} sx={{ color: 'common.white' }} />
+                      </Box>
+                      <Typography variant="h5" sx={{ color: SPA2_INK, mb: 1.5 }}>
+                        {v.title}
+                      </Typography>
+                      <Box
+                        sx={{ color: 'text.secondary', maxWidth: 420, mx: 'auto', '& p': { m: 0 } }}
+                        dangerouslySetInnerHTML={{ __html: v.desc }}
                       />
-                    )}
-                    <Iconify icon={v.icon} width={28} sx={{ color: SPA2_TEAL, mb: 1 }} />
-                    <Typography variant="subtitle2">{v.title}</Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      {v.desc}
-                    </Typography>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-
-            <Typography variant="subtitle1" sx={{ mb: 1.5, color: SPA2_INK, fontWeight: 700 }}>
-              Đội ngũ chuyên gia
-            </Typography>
-            <Grid container spacing={2} sx={{ mb: 4 }}>
-              {team.map((member) => (
-                <Grid key={member.id} xs={6} sm={3}>
-                  <Stack spacing={0.5} alignItems="center" sx={{ textAlign: 'center' }}>
-                    <Box
-                      sx={{
-                        width: 56,
-                        height: 56,
-                        borderRadius: '50%',
-                        bgcolor: SPA2_CREAM_DARK,
-                        ...spa2ImageBackgroundStyle({
-                          url: member.image,
-                          focalX: member.imageFocalX ?? 50,
-                          focalY: member.imageFocalY ?? 50,
-                          zoom: member.imageZoom ?? 100,
-                        }),
-                      }}
-                    />
-                    <Typography variant="caption" sx={{ fontWeight: 600 }}>
-                      {member.name}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      {member.role}
-                    </Typography>
-                  </Stack>
-                </Grid>
-              ))}
-            </Grid>
-
-            <Typography variant="subtitle1" sx={{ mb: 1.5, color: SPA2_INK, fontWeight: 700 }}>
-              Chứng nhận & giải thưởng
-            </Typography>
-            <Grid container spacing={2}>
-              {certifications.map((cert) => (
-                <Grid key={cert.id} xs={6} sm={3}>
-                  <Stack spacing={0.5} alignItems="center" sx={{ textAlign: 'center' }}>
-                    <Iconify icon={cert.icon} width={28} sx={{ color: SPA2_TEAL }} />
-                    <Typography variant="caption" sx={{ fontWeight: 600 }}>
-                      {cert.name}
-                    </Typography>
-                    <Chip label={cert.year} size="small" />
-                  </Stack>
-                </Grid>
-              ))}
-            </Grid>
+                    </Spa2SoftCard>
+                  </Grid>
+                ))}
+              </Grid>
+            </Container>
           </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setPreviewOpen(false)}>Đóng</Button>
-        </DialogActions>
-      </Dialog>
+
+          {/* Đội ngũ */}
+          <Box sx={{ py: { xs: 8, md: 12 } }}>
+            <Container>
+              <Spa2SectionTitle
+                eyebrow="Con người"
+                title="Đội ngũ chuyên gia"
+                subtitle="Mỗi liệu trình tại Nature Spa được thực hiện bởi những con người tận tâm và giàu kinh nghiệm."
+              />
+              <Grid container spacing={3}>
+                {team.map((t) => (
+                  <Grid key={t.id} xs={12} sm={6} md={3}>
+                    <TeamPreviewCard form={t} />
+                  </Grid>
+                ))}
+              </Grid>
+            </Container>
+          </Box>
+
+          {/* Chứng nhận / giải thưởng */}
+          <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: SPA2_CREAM }}>
+            <Container>
+              <Spa2SectionTitle eyebrow="Vinh danh" title="Chứng nhận & giải thưởng" />
+              <Grid container spacing={3}>
+                {certifications.map((c) => (
+                  <Grid key={c.id} xs={12} sm={6} md={3}>
+                    <CertPreviewCard form={c} />
+                  </Grid>
+                ))}
+              </Grid>
+            </Container>
+          </Box>
+
+          <Spa2Cta />
+        </Box>
+      )}
     </Spa2ManageShell>
   );
 }

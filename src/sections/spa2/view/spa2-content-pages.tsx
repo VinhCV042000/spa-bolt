@@ -41,6 +41,8 @@ import {
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useTranslate } from 'src/locales';
+
 import { Iconify } from 'src/components/iconify';
 
 import { spa2ImageBackgroundStyle } from '../spa2-image-utils';
@@ -62,6 +64,7 @@ import {
   SPA2_TEAL_DARK,
   spa2Treatments,
   spa2Promotions,
+  spa2BlogBanner,
   spa2AboutBanner,
   SPA2_CREAM_DARK,
   SPA2_TEAL_LIGHT,
@@ -75,15 +78,20 @@ import {
   spa2ServiceSteps,
   spa2QualityCerts,
   spa2Technologies,
+  spa2OffersBanner,
+  spa2BookingBanner,
+  spa2CareersBanner,
   spa2VisionMission,
-  spa2CareersSlogan,
   spa2ExtraPartners,
+  spa2ContactBanner,
+  spa2ServicesBanner,
   spa2Certifications,
   spa2Collaborations,
   spa2TrainingBanner,
   spa2AboutStoryImage,
   spa2PartnerProfiles,
   spa2TrainingMission,
+  spa2TrainingMissionImage,
   spa2TrainingRoadmap,
   spa2BookingPackages,
   spa2TrainingPrograms,
@@ -104,7 +112,7 @@ import {
 
 const formatVND = (n: number) => `${new Intl.NumberFormat('vi-VN').format(n)}đ`;
 
-function Spa2PageHero({
+export function Spa2PageHero({
   image,
   imageStyle,
   eyebrow,
@@ -226,7 +234,7 @@ function Spa2PageHero({
   );
 }
 
-function Spa2SectionTitle({
+export function Spa2SectionTitle({
   eyebrow,
   title,
   subtitle,
@@ -259,7 +267,7 @@ function Spa2SectionTitle({
   );
 }
 
-function Spa2SoftCard({ children, sx }: { children: React.ReactNode; sx?: any }) {
+export function Spa2SoftCard({ children, sx }: { children: React.ReactNode; sx?: any }) {
   return (
     <Card
       sx={{
@@ -283,7 +291,7 @@ function Spa2SoftCard({ children, sx }: { children: React.ReactNode; sx?: any })
   );
 }
 
-function Spa2Cta() {
+export function Spa2Cta() {
   return (
     <Box sx={{ py: { xs: 6, md: 10 }, bgcolor: SPA2_CREAM }}>
       <Container>
@@ -522,9 +530,15 @@ export function Spa2AboutPageView() {
                   <Typography variant="h5" sx={{ color: SPA2_INK, mb: 1.5 }}>
                     {v.title}
                   </Typography>
-                  <Typography sx={{ color: 'text.secondary', maxWidth: 420, mx: 'auto' }}>
-                    {v.desc}
-                  </Typography>
+                  <Box
+                    sx={{
+                      color: 'text.secondary',
+                      maxWidth: 420,
+                      mx: 'auto',
+                      '& p': { m: 0 },
+                    }}
+                    dangerouslySetInnerHTML={{ __html: v.desc }}
+                  />
                 </Spa2SoftCard>
               </Grid>
             ))}
@@ -571,7 +585,10 @@ export function Spa2AboutPageView() {
                   >
                     {t.role}
                   </Typography>
-                  <Typography sx={{ color: 'text.secondary', fontSize: 14 }}>{t.bio}</Typography>
+                  <Box
+                    sx={{ color: 'text.secondary', fontSize: 14, '& p': { m: 0 } }}
+                    dangerouslySetInnerHTML={{ __html: t.bio }}
+                  />
                 </Spa2SoftCard>
               </Grid>
             ))}
@@ -698,10 +715,11 @@ export function Spa2ServicesPageView() {
   return (
     <Spa2PageShell>
       <Spa2PageHero
-        image={SPA2_PAGE_IMAGES.services}
-        eyebrow="Dịch vụ"
-        title="Bộ sưu tập liệu pháp từ thiên nhiên"
-        subtitle="Mỗi liệu trình là một hành trình cảm nhận – kết hợp tinh hoa thảo mộc Việt và công nghệ hiện đại châu Âu."
+        image={spa2ServicesBanner.image.url}
+        imageStyle={spa2ServicesBanner.image}
+        eyebrow={spa2ServicesBanner.eyebrow}
+        title={spa2ServicesBanner.title}
+        subtitle={spa2ServicesBanner.subtitle}
       />
 
       <Box sx={{ py: { xs: 8, md: 12 } }}>
@@ -925,14 +943,12 @@ export function Spa2ServiceDetailsPageView() {
   const { slug } = useParams<{ slug: string }>();
   const service = spa2Services.find((s) => s.slug === slug) ?? spa2Services[0];
 
-  const stepsToShow =
-    service.steps && service.steps.length > 0 ? service.steps : spa2ServiceSteps;
+  const stepsToShow = service.steps && service.steps.length > 0 ? service.steps : spa2ServiceSteps;
   const beforeAftersToShow =
     service.beforeAfters && service.beforeAfters.length > 0
       ? service.beforeAfters
       : spa2BeforeAfters;
-  const faqsToShow =
-    service.faqs && service.faqs.length > 0 ? service.faqs : spa2Faqs;
+  const faqsToShow = service.faqs && service.faqs.length > 0 ? service.faqs : spa2Faqs;
 
   const serviceFeedbacks =
     service.feedbacks && service.feedbacks.length > 0 ? service.feedbacks : [];
@@ -1291,9 +1307,10 @@ export function Spa2TrainingPageView() {
                 title="Vì sao chọn Nature Spa Academy"
                 align="left"
               />
-              <Typography sx={{ color: 'text.secondary', lineHeight: 1.9 }}>
-                {spa2TrainingMission}
-              </Typography>
+              <Box
+                sx={{ color: 'text.secondary', lineHeight: 1.9, '& p': { m: 0 } }}
+                dangerouslySetInnerHTML={{ __html: spa2TrainingMission }}
+              />
             </Grid>
             <Grid xs={12} md={6}>
               <Spa2SoftCard sx={{ p: 0, overflow: 'hidden', cursor: 'pointer' }}>
@@ -1301,9 +1318,7 @@ export function Spa2TrainingPageView() {
                   <Box
                     sx={{
                       height: 280,
-                      backgroundImage: `url(${SPA2_PAGE_IMAGES.training})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
+                      ...spa2ImageBackgroundStyle(spa2TrainingMissionImage),
                     }}
                   />
                   <Box
@@ -1357,7 +1372,10 @@ export function Spa2TrainingPageView() {
                     <Iconify icon="solar:clock-circle-bold" sx={{ color: SPA2_TEAL }} />
                     <Typography sx={{ color: 'text.secondary' }}>{p.duration}</Typography>
                   </Stack>
-                  <Typography sx={{ color: 'text.secondary', mb: 2 }}>{p.outcome}</Typography>
+                  <Box
+                    sx={{ color: 'text.secondary', mb: 2, '& p': { m: 0 } }}
+                    dangerouslySetInnerHTML={{ __html: p.outcome }}
+                  />
                   <Divider sx={{ my: 2 }} />
                   <Typography variant="h5" sx={{ color: SPA2_TEAL, mb: 2 }}>
                     {formatVND(p.price)}
@@ -1421,7 +1439,10 @@ export function Spa2TrainingPageView() {
                       sx={{ bgcolor: 'common.white', color: SPA2_TEAL_DARK }}
                     />
                   </Stack>
-                  <Typography sx={{ color: 'text.secondary' }}>{r.desc}</Typography>
+                  <Box
+                    sx={{ color: 'text.secondary', '& p': { m: 0 } }}
+                    dangerouslySetInnerHTML={{ __html: r.desc }}
+                  />
                 </Box>
               </Stack>
             ))}
@@ -1459,9 +1480,10 @@ export function Spa2TrainingPageView() {
                   <Typography variant="h6" sx={{ color: SPA2_INK, mb: 0.5 }}>
                     {i.name}
                   </Typography>
-                  <Typography sx={{ color: 'text.secondary', fontSize: 14, mb: 1.5 }}>
-                    {i.experience}
-                  </Typography>
+                  <Box
+                    sx={{ color: 'text.secondary', fontSize: 14, mb: 1.5, '& p': { m: 0 } }}
+                    dangerouslySetInnerHTML={{ __html: i.experience }}
+                  />
                   <Stack direction="row" spacing={1} justifyContent="center" flexWrap="wrap">
                     {i.certs.map((c) => (
                       <Chip
@@ -1499,9 +1521,10 @@ export function Spa2TrainingPageView() {
                     <Typography sx={{ color: SPA2_TEAL_DARK, fontWeight: 700, mb: 1 }}>
                       {g.name}
                     </Typography>
-                    <Typography sx={{ color: SPA2_INK, fontStyle: 'italic', mb: 1.5 }}>
-                      &ldquo;{g.review}&rdquo;
-                    </Typography>
+                    <Box
+                      sx={{ color: SPA2_INK, fontStyle: 'italic', mb: 1.5, '& p': { m: 0 } }}
+                      dangerouslySetInnerHTML={{ __html: g.review }}
+                    />
                     <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
                       — {g.student}
                     </Typography>
@@ -1597,10 +1620,11 @@ export function Spa2BlogPageView() {
   return (
     <Spa2PageShell>
       <Spa2PageHero
-        image={SPA2_PAGE_IMAGES.blog}
-        eyebrow="Blog"
-        title="Cẩm nang chăm sóc bản thân"
-        subtitle="Chia sẻ kiến thức về dưỡng da, dinh dưỡng, yoga và lối sống lành mạnh."
+        image={spa2BlogBanner.image.url}
+        imageStyle={spa2BlogBanner.image}
+        eyebrow={spa2BlogBanner.eyebrow}
+        title={spa2BlogBanner.title}
+        subtitle={spa2BlogBanner.subtitle}
       />
 
       {/* Highlight article */}
@@ -2103,19 +2127,25 @@ export function Spa2BlogDetailsPageView() {
 //   );
 // }
 export function Spa2CareersPageView() {
+  const { t } = useTranslate('spa2');
+
   return (
     <Spa2PageShell>
       <Spa2PageHero
-        image={SPA2_PAGE_IMAGES.careers}
-        eyebrow="Tuyển dụng"
-        title={spa2CareersSlogan}
-        subtitle="Nature Spa luôn tìm kiếm những người yêu thiên nhiên và đam mê chăm sóc con người."
+        image={spa2CareersBanner.image.url}
+        imageStyle={spa2CareersBanner.image}
+        eyebrow={spa2CareersBanner.eyebrow}
+        title={spa2CareersBanner.title}
+        subtitle={spa2CareersBanner.subtitle}
       />
 
       {/* Lý do gia nhập */}
       <Box sx={{ py: { xs: 8, md: 10 } }}>
         <Container>
-          <Spa2SectionTitle eyebrow="Vì sao chọn chúng tôi" title="Lý do gia nhập Nature Spa" />
+          <Spa2SectionTitle
+            eyebrow={t('careers.reasonsEyebrow')}
+            title={t('careers.reasonsTitle')}
+          />
           <Grid container spacing={3}>
             {spa2JoinReasons.map((r) => (
               <Grid key={r.text} xs={6} md={3}>
@@ -2132,7 +2162,10 @@ export function Spa2CareersPageView() {
       {/* Danh sách vị trí */}
       <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: SPA2_CREAM }}>
         <Container>
-          <Spa2SectionTitle eyebrow="Vị trí đang tuyển" title="Cơ hội nghề nghiệp" />
+          <Spa2SectionTitle
+            eyebrow={t('careers.positionsEyebrow')}
+            title={t('careers.positionsTitle')}
+          />
           <Stack spacing={2}>
             {spa2Careers.map((c, idx) => (
               <Spa2SoftCard key={c.title}>
@@ -2192,11 +2225,16 @@ export function Spa2CareersPageView() {
                       '&:hover': { bgcolor: SPA2_TEAL_DARK },
                     }}
                   >
-                    Xem chi tiết
+                    {t('careers.viewDetails')}
                   </Button>
                 </Stack>
               </Spa2SoftCard>
             ))}
+            {spa2Careers.length === 0 && (
+              <Typography sx={{ color: 'text.disabled', textAlign: 'center', py: 4 }}>
+                {t('careers.noResults')}
+              </Typography>
+            )}
           </Stack>
         </Container>
       </Box>
@@ -2204,15 +2242,19 @@ export function Spa2CareersPageView() {
       {/* Văn hóa doanh nghiệp preview */}
       <Box sx={{ py: { xs: 8, md: 12 } }}>
         <Container>
-          <Spa2SectionTitle eyebrow="Văn hóa" title="Môi trường làm việc" />
+          <Spa2SectionTitle
+            eyebrow={t('careers.cultureEyebrow')}
+            title={t('careers.cultureTitle')}
+          />
           <Grid container spacing={2}>
-            {spa2WorkplaceGallery.map((src) => (
-              <Grid key={src} xs={6} md={3}>
+            {spa2WorkplaceGallery.map((img, idx) => (
+              <Grid key={idx} xs={6} md={3}>
                 <Box
                   sx={{
+                    width: '100%',
                     aspectRatio: '4/3',
                     borderRadius: 3,
-                    backgroundImage: `url(${src})`,
+                    backgroundImage: `url(${img.url})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                   }}
@@ -2230,6 +2272,7 @@ export function Spa2CareersPageView() {
 // CAREER DETAILS (mới)
 // ======================================================================
 export function Spa2CareerDetailsPageView() {
+  const { t } = useTranslate('spa2');
   const { index } = useParams<{ index: string }>();
   const job = spa2Careers[Number(index) || 0] ?? spa2Careers[0];
   const [appSubmitted, setAppSubmitted] = useState(false);
@@ -2237,8 +2280,9 @@ export function Spa2CareerDetailsPageView() {
   return (
     <Spa2PageShell>
       <Spa2PageHero
-        image={SPA2_PAGE_IMAGES.careers}
-        eyebrow="Tuyển dụng"
+        image={spa2CareersBanner.image.url}
+        imageStyle={spa2CareersBanner.image}
+        eyebrow={spa2CareersBanner.eyebrow}
         title={job.title}
         subtitle={`${job.location} · ${job.type} · ${job.salary}`}
       />
@@ -2248,16 +2292,16 @@ export function Spa2CareerDetailsPageView() {
           <Grid container spacing={5}>
             <Grid xs={12} md={7}>
               <Spa2SectionTitle
-                eyebrow="Mô tả công việc"
-                title="Yêu cầu & quyền lợi"
+                eyebrow={t('careers.detailDescEyebrow')}
+                title={t('careers.detailDescTitle')}
                 align="left"
               />
-              <Typography sx={{ color: 'text.secondary', mb: 3, lineHeight: 1.8 }}>
-                Chúng tôi tìm kiếm ứng viên yêu nghề, có tinh thần cầu tiến và mong muốn phát triển
-                sự nghiệp lâu dài trong ngành chăm sóc sắc đẹp tại {job.location}.
-              </Typography>
+              <Box
+                sx={{ color: 'text.secondary', mb: 3, lineHeight: 1.8, '& p': { m: 0, mb: 1.5 } }}
+                dangerouslySetInnerHTML={{ __html: job.description }}
+              />
               <Typography variant="h6" sx={{ color: SPA2_INK, mb: 1.5 }}>
-                Quyền lợi
+                {t('careers.detailBenefitsTitle')}
               </Typography>
               <Stack spacing={1} sx={{ mb: 4 }}>
                 {job.benefits.map((b) => (
@@ -2270,7 +2314,7 @@ export function Spa2CareerDetailsPageView() {
 
               {/* Quy trình tuyển dụng */}
               <Typography variant="h6" sx={{ color: SPA2_INK, mb: 2 }}>
-                Quy trình tuyển dụng
+                {t('careers.detailProcessTitle')}
               </Typography>
               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                 {spa2RecruitmentProcess.map((p, idx) => (
@@ -2313,22 +2357,22 @@ export function Spa2CareerDetailsPageView() {
                   <Stack alignItems="center" spacing={2} sx={{ py: 3 }}>
                     <Iconify icon="solar:check-circle-bold" width={48} sx={{ color: SPA2_TEAL }} />
                     <Typography variant="h6" sx={{ color: SPA2_INK }}>
-                      Đã gửi hồ sơ ứng tuyển!
+                      {t('careers.submittedTitle')}
                     </Typography>
                     <Typography sx={{ color: 'text.secondary', textAlign: 'center' }}>
-                      Bộ phận nhân sự sẽ liên hệ bạn trong 3 ngày làm việc.
+                      {t('careers.submittedDesc')}
                     </Typography>
                   </Stack>
                 ) : (
                   <>
                     <Typography variant="h6" sx={{ color: SPA2_INK, mb: 2 }}>
-                      Ứng tuyển vị trí này
+                      {t('careers.applyTitle')}
                     </Typography>
                     <Stack spacing={2}>
-                      <TextField fullWidth label="Họ và tên" />
-                      <TextField fullWidth label="Số điện thoại" />
-                      <TextField fullWidth label="Email" />
-                      <TextField fullWidth multiline rows={3} label="Giới thiệu bản thân" />
+                      <TextField fullWidth label={t('careers.formName')} />
+                      <TextField fullWidth label={t('careers.formPhone')} />
+                      <TextField fullWidth label={t('careers.formEmail')} />
+                      <TextField fullWidth multiline rows={3} label={t('careers.formIntro')} />
                       <Button
                         fullWidth
                         component="label"
@@ -2339,7 +2383,7 @@ export function Spa2CareerDetailsPageView() {
                           py: 1.5,
                         }}
                       >
-                        Tải lên CV
+                        {t('careers.formUploadCv')}
                         <input type="file" hidden />
                       </Button>
                       <Button
@@ -2354,7 +2398,7 @@ export function Spa2CareerDetailsPageView() {
                           '&:hover': { bgcolor: SPA2_TEAL_DARK },
                         }}
                       >
-                        Gửi hồ sơ ứng tuyển
+                        {t('careers.formSubmit')}
                       </Button>
                     </Stack>
                   </>
@@ -2368,15 +2412,18 @@ export function Spa2CareerDetailsPageView() {
       {/* Văn hóa doanh nghiệp: Gallery + Video nội bộ */}
       <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: SPA2_CREAM }}>
         <Container>
-          <Spa2SectionTitle eyebrow="Văn hóa doanh nghiệp" title="Cuộc sống tại Nature Spa" />
+          <Spa2SectionTitle
+            eyebrow={t('careers.cultureDetailEyebrow')}
+            title={t('careers.cultureDetailTitle')}
+          />
           <Grid container spacing={2} sx={{ mb: 4 }}>
-            {spa2WorkplaceGallery.map((src) => (
-              <Grid key={src} xs={6} md={3}>
+            {spa2WorkplaceGallery.map((img, idx) => (
+              <Grid key={idx} xs={6} md={3}>
                 <Box
                   sx={{
                     aspectRatio: '4/3',
                     borderRadius: 3,
-                    backgroundImage: `url(${src})`,
+                    backgroundImage: `url(${img})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                   }}
@@ -2420,7 +2467,7 @@ export function Spa2CareerDetailsPageView() {
               </Box>
             </Box>
             <Typography sx={{ p: 2, color: SPA2_INK, fontWeight: 600, textAlign: 'center' }}>
-              Video giới thiệu môi trường làm việc Nature Spa
+              {t('careers.videoCaption')}
             </Typography>
           </Spa2SoftCard>
         </Container>
@@ -2518,6 +2565,7 @@ function Spa2BookingConfirm({
   pkg: (typeof spa2BookingPackages)[number];
   onBack: () => void;
 }) {
+  const { t } = useTranslate('spa2');
   const [submitted, setSubmitted] = useState(false);
 
   if (submitted) {
@@ -2525,13 +2573,11 @@ function Spa2BookingConfirm({
       <Spa2SoftCard sx={{ maxWidth: 560, mx: 'auto', textAlign: 'center' }}>
         <Iconify icon="solar:check-circle-bold" width={56} sx={{ color: SPA2_TEAL, mb: 2 }} />
         <Typography variant="h5" sx={{ color: SPA2_INK, mb: 1 }}>
-          Đặt lịch thành công!
+          {t('booking.successTitle')}
         </Typography>
-        <Typography sx={{ color: 'text.secondary', mb: 3 }}>
-          Chúng tôi sẽ liên hệ xác nhận trong vòng 15 phút.
-        </Typography>
+        <Typography sx={{ color: 'text.secondary', mb: 3 }}>{t('booking.successDesc')}</Typography>
         <Button onClick={onBack} sx={{ color: SPA2_TEAL_DARK }}>
-          Quay lại chọn gói khác
+          {t('booking.backToPackages')}
         </Button>
       </Spa2SoftCard>
     );
@@ -2554,46 +2600,60 @@ function Spa2BookingConfirm({
           <Iconify icon="solar:calendar-bold" width={32} sx={{ color: SPA2_TEAL }} />
         </Box>
         <Typography variant="h5" sx={{ color: SPA2_INK }}>
-          Xác nhận thông tin đặt lịch
+          {t('booking.confirmTitle')}
         </Typography>
       </Stack>
 
       <Stack spacing={1.5} sx={{ mb: 3, p: 2.5, borderRadius: 2, bgcolor: SPA2_CREAM }}>
         <Stack direction="row" justifyContent="space-between">
-          <Typography sx={{ color: 'text.secondary' }}>Gói dịch vụ</Typography>
+          <Typography sx={{ color: 'text.secondary' }}>
+            {t('booking.confirmPackageLabel')}
+          </Typography>
           <Typography sx={{ color: SPA2_INK, fontWeight: 600 }}>{pkg.name}</Typography>
         </Stack>
         <Stack direction="row" justifyContent="space-between">
-          <Typography sx={{ color: 'text.secondary' }}>Số buổi</Typography>
+          <Typography sx={{ color: 'text.secondary' }}>
+            {t('booking.confirmSessionsLabel')}
+          </Typography>
           <Typography sx={{ color: SPA2_INK, fontWeight: 600 }}>{pkg.sessions}</Typography>
         </Stack>
         <Stack direction="row" justifyContent="space-between">
-          <Typography sx={{ color: 'text.secondary' }}>Tổng tiền</Typography>
+          <Typography sx={{ color: 'text.secondary' }}>{t('booking.confirmTotalLabel')}</Typography>
           <Typography sx={{ color: SPA2_TEAL, fontWeight: 700 }}>{formatVND(pkg.price)}</Typography>
         </Stack>
       </Stack>
 
       <Grid container spacing={2} sx={{ mb: 3 }}>
         <Grid xs={12} sm={6}>
-          <TextField fullWidth label="Họ và tên" />
+          <TextField fullWidth label={t('booking.formName')} />
         </Grid>
         <Grid xs={12} sm={6}>
-          <TextField fullWidth label="Số điện thoại" />
+          <TextField fullWidth label={t('booking.formPhone')} />
         </Grid>
         <Grid xs={12} sm={6}>
-          <TextField fullWidth type="date" label="Ngày" InputLabelProps={{ shrink: true }} />
+          <TextField
+            fullWidth
+            type="date"
+            label={t('booking.formDate')}
+            InputLabelProps={{ shrink: true }}
+          />
         </Grid>
         <Grid xs={12} sm={6}>
-          <TextField fullWidth type="time" label="Giờ" InputLabelProps={{ shrink: true }} />
+          <TextField
+            fullWidth
+            type="time"
+            label={t('booking.formTime')}
+            InputLabelProps={{ shrink: true }}
+          />
         </Grid>
         <Grid xs={12}>
-          <TextField fullWidth multiline rows={2} label="Ghi chú" />
+          <TextField fullWidth multiline rows={2} label={t('booking.formNote')} />
         </Grid>
       </Grid>
 
       <Stack direction="row" spacing={2}>
         <Button onClick={onBack} sx={{ color: 'text.secondary' }}>
-          Quay lại
+          {t('booking.backBtn')}
         </Button>
         <Button
           fullWidth
@@ -2607,7 +2667,7 @@ function Spa2BookingConfirm({
             '&:hover': { bgcolor: SPA2_TEAL_DARK },
           }}
         >
-          Xác nhận đặt lịch
+          {t('booking.confirmBtn')}
         </Button>
       </Stack>
     </Spa2SoftCard>
@@ -2615,6 +2675,7 @@ function Spa2BookingConfirm({
 }
 
 export function Spa2BookingPageView() {
+  const { t } = useTranslate('spa2');
   const [tab, setTab] = useState(spa2Services[0].category ?? 'massage');
   const [selectedPkg, setSelectedPkg] = useState<(typeof spa2BookingPackages)[number] | null>(null);
 
@@ -2627,10 +2688,11 @@ export function Spa2BookingPageView() {
   return (
     <Spa2PageShell>
       <Spa2PageHero
-        image={SPA2_PAGE_IMAGES.booking}
-        eyebrow="Đặt lịch"
-        title="Đặt lịch online trong 1 phút"
-        subtitle="Chọn dịch vụ, chi nhánh và thời gian phù hợp – chúng tôi sẽ xác nhận trong vòng 15 phút."
+        image={spa2BookingBanner.image.url}
+        imageStyle={spa2BookingBanner.image}
+        eyebrow={spa2BookingBanner.eyebrow}
+        title={spa2BookingBanner.title}
+        subtitle={spa2BookingBanner.subtitle}
       />
 
       <Box sx={{ py: { xs: 8, md: 12 } }}>
@@ -2640,7 +2702,10 @@ export function Spa2BookingPageView() {
           ) : (
             <>
               {/* Tabs theo dịch vụ */}
-              <Spa2SectionTitle eyebrow="Dịch vụ" title="Chọn nhóm dịch vụ bạn quan tâm" />
+              <Spa2SectionTitle
+                eyebrow={t('booking.servicesEyebrow')}
+                title={t('booking.servicesTitle')}
+              />
               <Tabs
                 value={tab}
                 onChange={(_, v) => setTab(v)}
@@ -2674,7 +2739,7 @@ export function Spa2BookingPageView() {
                         size="small"
                         sx={{ color: SPA2_TEAL_DARK }}
                       >
-                        Xem chi tiết
+                        {t('booking.viewDetails')}
                       </Button>
                     </Spa2SoftCard>
                   </Grid>
@@ -2682,7 +2747,10 @@ export function Spa2BookingPageView() {
               </Grid>
 
               {/* Card giá + Highlight gói hot */}
-              <Spa2SectionTitle eyebrow="Gói liệu trình" title="Chọn gói phù hợp với bạn" />
+              <Spa2SectionTitle
+                eyebrow={t('booking.packagesEyebrow')}
+                title={t('booking.packagesTitle')}
+              />
               <Grid container spacing={3} alignItems="stretch">
                 {spa2BookingPackages.map((p) => (
                   <Grid key={p.slug} xs={12} sm={6} md={3}>
@@ -2696,7 +2764,7 @@ export function Spa2BookingPageView() {
                     >
                       {p.hot && (
                         <Chip
-                          label="PHỔ BIẾN NHẤT"
+                          label={t('booking.mostPopular')}
                           size="small"
                           sx={{
                             position: 'absolute',
@@ -2716,7 +2784,7 @@ export function Spa2BookingPageView() {
                         {formatVND(p.price)}
                       </Typography>
                       <Typography sx={{ color: 'text.secondary', mb: 2 }}>
-                        {p.sessions} buổi
+                        {p.sessions} {t('booking.sessionsSuffix')}
                       </Typography>
                       <Divider sx={{ my: 2 }} />
                       <Stack spacing={1} sx={{ mb: 3, textAlign: 'left' }}>
@@ -2744,7 +2812,7 @@ export function Spa2BookingPageView() {
                           '&:hover': { bgcolor: SPA2_TEAL_DARK, color: 'white' },
                         }}
                       >
-                        Chọn gói
+                        {t('booking.selectPackage')}
                       </Button>
                     </Spa2SoftCard>
                   </Grid>
@@ -2772,10 +2840,11 @@ export function Spa2ContactPageView() {
   return (
     <Spa2PageShell>
       <Spa2PageHero
-        image={SPA2_PAGE_IMAGES.contact}
-        eyebrow="Liên hệ"
-        title="Chúng tôi luôn lắng nghe bạn"
-        subtitle="Để lại lời nhắn, đội ngũ tư vấn sẽ phản hồi trong 30 phút (giờ hành chính)."
+        image={spa2ContactBanner.image.url}
+        imageStyle={spa2ContactBanner.image}
+        eyebrow={spa2ContactBanner.eyebrow}
+        title={spa2ContactBanner.title}
+        subtitle={spa2ContactBanner.subtitle}
       />
       <Box sx={{ py: { xs: 8, md: 12 } }}>
         <Container>
@@ -2915,10 +2984,11 @@ export function Spa2OffersPageView() {
   return (
     <Spa2PageShell>
       <Spa2PageHero
-        image={SPA2_PAGE_IMAGES.offers}
-        eyebrow="Ưu đãi"
-        title="Gói ưu đãi dành riêng cho bạn"
-        subtitle="Tiết kiệm hơn, trải nghiệm trọn vẹn hơn với các ưu đãi thường niên."
+        image={spa2OffersBanner.image.url}
+        imageStyle={spa2OffersBanner.image}
+        eyebrow={spa2OffersBanner.eyebrow}
+        title={spa2OffersBanner.title}
+        subtitle={spa2OffersBanner.subtitle}
       />
 
       {/* Voucher đơn lẻ (giữ nguyên) */}
@@ -2950,7 +3020,10 @@ export function Spa2OffersPageView() {
                   <Typography variant="h6" sx={{ color: SPA2_INK, mb: 1 }}>
                     {o.title}
                   </Typography>
-                  <Typography sx={{ color: 'text.secondary', mb: 2 }}>{o.desc}</Typography>
+                  <Box
+                    sx={{ color: 'text.secondary', mb: 2, '& p': { m: 0 } }}
+                    dangerouslySetInnerHTML={{ __html: o.desc }}
+                  />
                   <Chip
                     label={`MÃ: ${o.code}`}
                     sx={{ bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK, fontWeight: 700, mb: 1 }}
