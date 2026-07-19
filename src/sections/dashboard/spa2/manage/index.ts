@@ -18,3 +18,4 @@ export { Spa2FeedbacksManageView } from 'src/sections/dashboard/spa2/manage/spa2
 export { Spa2TreatmentsManageView } from 'src/sections/dashboard/spa2/manage/spa2-treatments-manage-view';
 export { Spa2PromotionsManageView } from 'src/sections/dashboard/spa2/manage/spa2-promotions-manage-view';
 export { Spa2BeforeAfterManageView } from 'src/sections/dashboard/spa2/manage/spa2-before-after-manage-view';
+export { Spa2ContentPageManageView } from 'src/sections/dashboard/spa2/manage/spa2-content-page-manage-view';

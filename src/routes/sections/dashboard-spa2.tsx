@@ -65,6 +65,14 @@ const ManageSpa2TherapistProfilePage = lazy(() => import('src/pages/dashboard/ma
 const ManageSpa2SleepWellnessPage = lazy(() => import('src/pages/dashboard/manage/spa2/sleep-wellness'));
 const ManageSpa2PrenatalSpaPage = lazy(() => import('src/pages/dashboard/manage/spa2/prenatal-spa'));
 const ManageSpa2WellnessAssessmentPage = lazy(() => import('src/pages/dashboard/manage/spa2/wellness-assessment'));
+const ManageSpa2MenSpaPage = lazy(() => import('src/pages/dashboard/manage/spa2/men-spa'));
+const ManageSpa2HairBeautyPage = lazy(() => import('src/pages/dashboard/manage/spa2/hair-beauty'));
+const ManageSpa2KidsSpaPage = lazy(() => import('src/pages/dashboard/manage/spa2/kids-spa'));
+const ManageSpa2AntiAgingPage = lazy(() => import('src/pages/dashboard/manage/spa2/anti-aging'));
+const ManageSpa2WaterTherapyPage = lazy(() => import('src/pages/dashboard/manage/spa2/water-therapy'));
+const ManageSpa2AyurvedaPage = lazy(() => import('src/pages/dashboard/manage/spa2/ayurveda'));
+const ManageSpa2SpaHotelPage = lazy(() => import('src/pages/dashboard/manage/spa2/spa-hotel'));
+const ManageSpa2CommunityPage = lazy(() => import('src/pages/dashboard/manage/spa2/community'));
 
 // New singleton + detail management pages
 const ManageSpa2HomePage = lazy(() => import('src/pages/dashboard/manage/spa2/home'));
@@ -213,6 +221,14 @@ export const dashboardSpa2Routes = [
       { path: 'sleep-wellness', element: <ManageSpa2SleepWellnessPage /> },
       { path: 'prenatal-spa', element: <ManageSpa2PrenatalSpaPage /> },
       { path: 'wellness-assessment', element: <ManageSpa2WellnessAssessmentPage /> },
+      { path: 'men-spa', element: <ManageSpa2MenSpaPage /> },
+      { path: 'hair-beauty', element: <ManageSpa2HairBeautyPage /> },
+      { path: 'kids-spa', element: <ManageSpa2KidsSpaPage /> },
+      { path: 'anti-aging', element: <ManageSpa2AntiAgingPage /> },
+      { path: 'water-therapy', element: <ManageSpa2WaterTherapyPage /> },
+      { path: 'ayurveda', element: <ManageSpa2AyurvedaPage /> },
+      { path: 'spa-hotel', element: <ManageSpa2SpaHotelPage /> },
+      { path: 'community', element: <ManageSpa2CommunityPage /> },
     ],
   },
 ];
