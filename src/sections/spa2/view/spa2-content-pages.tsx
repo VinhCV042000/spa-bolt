@@ -44,6 +44,13 @@ import { RouterLink } from 'src/routes/components';
 import { useTranslate } from 'src/locales';
 
 import { Iconify } from 'src/components/iconify';
+import {
+  Carousel,
+  useCarousel,
+  CarouselDotButtons,
+  carouselBreakpoints,
+  CarouselArrowBasicButtons,
+} from 'src/components/carousel';
 
 import { spa2ImageBackgroundStyle } from '../spa2-image-utils';
 import {
@@ -91,18 +98,20 @@ import {
   spa2AboutStoryImage,
   spa2PartnerProfiles,
   spa2TrainingMission,
-  spa2TrainingMissionImage,
   spa2TrainingRoadmap,
   spa2BookingPackages,
   spa2TrainingPrograms,
   spa2GraduateShowcase,
+  spa2WorkplaceVideos,
   spa2WorkplaceGallery,
   spa2TreatmentProcess,
   spa2TreatmentExperts,
   spa2ServiceCategories,
   spa2PartnerCategories,
   spa2RecruitmentProcess,
+  spa2InternalVideoUrl,
   spa2InternalVideoThumb,
+  spa2TrainingMissionImage,
   computeSpa2BlogCategories,
 } from '../spa2-pages-data';
 
@@ -962,6 +971,15 @@ export function Spa2ServiceDetailsPageView() {
         ? relatedFeedbacks
         : spa2Feedbacks.slice(0, 3);
 
+  const feedbackCarousel = useCarousel({
+    align: 'start',
+    slidesToShow: { xs: 1, sm: 2, md: 3 },
+    breakpoints: {
+      [carouselBreakpoints.sm]: { slideSpacing: '24px' },
+      [carouselBreakpoints.md]: { slideSpacing: '24px' },
+    },
+  });
+
   return (
     <Spa2PageShell>
       {/* Banner dịch vụ */}
@@ -977,11 +995,10 @@ export function Spa2ServiceDetailsPageView() {
           <Grid container spacing={5}>
             <Grid xs={12} md={8}>
               <Spa2SectionTitle eyebrow="Mô tả" title="Trải nghiệm của bạn" align="left" />
-              <Typography sx={{ color: 'text.secondary', mb: 3, lineHeight: 1.8 }}>
-                Liệu trình {service.name.toLowerCase()} kéo dài {service.duration}, được thiết kế để
-                mang lại sự thư giãn sâu cho cơ thể và tinh thần. Mỗi bước được thực hiện bởi kỹ
-                thuật viên được đào tạo bài bản, sử dụng nguyên liệu hữu cơ chọn lọc.
-              </Typography>
+              <Box
+                dangerouslySetInnerHTML={{ __html: service.description }}
+                sx={{ '& p': { lineHeight: 1.8, color: 'text.secondary', mb: 2 } }}
+              />
               <Typography variant="h6" sx={{ color: SPA2_INK, mb: 2 }}>
                 Lợi ích chính
               </Typography>
@@ -1150,9 +1167,9 @@ export function Spa2ServiceDetailsPageView() {
       <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: SPA2_CREAM }}>
         <Container>
           <Spa2SectionTitle eyebrow="Đánh giá" title="Khách hàng nói gì" />
-          <Grid container spacing={3}>
+          <Carousel carousel={feedbackCarousel}>
             {feedbacksToShow.map((f) => (
-              <Grid key={f.name} xs={12} sm={6} md={4}>
+              <Box key={f.name} sx={{ px: 1 }}>
                 <Spa2SoftCard>
                   <Rating value={f.rating} readOnly size="small" sx={{ mb: 1.5 }} />
                   <Typography sx={{ color: SPA2_INK, lineHeight: 1.7, mb: 2, fontStyle: 'italic' }}>
@@ -1168,9 +1185,26 @@ export function Spa2ServiceDetailsPageView() {
                     </Stack>
                   </Stack>
                 </Spa2SoftCard>
-              </Grid>
+              </Box>
             ))}
-          </Grid>
+          </Carousel>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ mt: 3 }}
+          >
+            <CarouselDotButtons
+              variant="rounded"
+              scrollSnaps={feedbackCarousel.dots.scrollSnaps}
+              selectedIndex={feedbackCarousel.dots.selectedIndex}
+              onClickDot={feedbackCarousel.dots.onClickDot}
+            />
+            <CarouselArrowBasicButtons
+              {...feedbackCarousel.arrows}
+              options={feedbackCarousel.options}
+            />
+          </Stack>
         </Container>
       </Box>
 
@@ -1307,10 +1341,15 @@ export function Spa2TrainingPageView() {
                 title="Vì sao chọn Nature Spa Academy"
                 align="left"
               />
-              <Box
-                sx={{ color: 'text.secondary', lineHeight: 1.9, '& p': { m: 0 } }}
-                dangerouslySetInnerHTML={{ __html: spa2TrainingMission }}
-              />
+              <Stack spacing={2.5}>
+                {spa2TrainingMission.map((m, idx) => (
+                  <Box
+                    key={idx}
+                    sx={{ color: 'text.secondary', lineHeight: 1.9, '& p': { m: 0 } }}
+                    dangerouslySetInnerHTML={{ __html: m }}
+                  />
+                ))}
+              </Stack>
             </Grid>
             <Grid xs={12} md={6}>
               <Spa2SoftCard sx={{ p: 0, overflow: 'hidden', cursor: 'pointer' }}>
@@ -1617,6 +1656,18 @@ export function Spa2BlogPageView() {
   const trending = [...spa2BlogPosts].slice(0, 3);
   const categories = computeSpa2BlogCategories(spa2BlogPosts);
 
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const perPage = 6;
+
+  const filteredRest = useMemo(
+    () => rest.filter((p) => p.title.toLowerCase().includes(search.trim().toLowerCase())),
+    [rest, search]
+  );
+
+  const pageCount = Math.max(1, Math.ceil(filteredRest.length / perPage));
+  const paginatedRest = filteredRest.slice((page - 1) * perPage, page * perPage);
+
   return (
     <Spa2PageShell>
       <Spa2PageHero
@@ -1690,57 +1741,100 @@ export function Spa2BlogPageView() {
         <Container>
           <Grid container spacing={5}>
             <Grid xs={12} md={8}>
-              <Grid container spacing={4}>
-                {rest.map((p) => (
-                  <Grid key={p.slug} xs={12} sm={6}>
-                    <Spa2SoftCard sx={{ p: 0, overflow: 'hidden' }}>
-                      <Box
-                        sx={{
-                          height: 180,
-                          backgroundImage: `url(${p.cover})`,
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center',
-                        }}
-                      />
-                      <Box sx={{ p: 2.5 }}>
-                        <Chip
-                          size="small"
-                          label={p.category}
-                          sx={{ mb: 1.5, bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
+              <TextField
+                fullWidth
+                placeholder="Tìm kiếm bài viết..."
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setPage(1);
+                }}
+                sx={{ mb: 4 }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Iconify icon="solar:magnifer-linear" sx={{ color: SPA2_TEAL }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+
+              {filteredRest.length === 0 ? (
+                <Typography sx={{ textAlign: 'center', color: 'text.secondary', py: 8 }}>
+                  Không tìm thấy bài viết phù hợp.
+                </Typography>
+              ) : (
+                <Grid container spacing={4}>
+                  {paginatedRest.map((p) => (
+                    <Grid key={p.slug} xs={12} sm={6}>
+                      <Spa2SoftCard sx={{ p: 0, overflow: 'hidden' }}>
+                        <Box
+                          sx={{
+                            height: 180,
+                            backgroundImage: `url(${p.cover})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                          }}
                         />
-                        <Typography
-                          variant="h6"
-                          sx={{ color: SPA2_INK, mb: 1, fontSize: 16, lineHeight: 1.4 }}
-                        >
-                          <Link
-                            component={RouterLink}
-                            href={paths.spa2.blogDetails(p.slug)}
-                            sx={{
-                              color: 'inherit',
-                              textDecoration: 'none',
-                              '&:hover': { color: SPA2_TEAL },
-                            }}
+                        <Box sx={{ p: 2.5 }}>
+                          <Chip
+                            size="small"
+                            label={p.category}
+                            sx={{ mb: 1.5, bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
+                          />
+                          <Typography
+                            variant="h6"
+                            sx={{ color: SPA2_INK, mb: 1, fontSize: 16, lineHeight: 1.4 }}
                           >
-                            {p.title}
-                          </Link>
-                        </Typography>
-                        <Typography sx={{ color: 'text.secondary', fontSize: 14, mb: 1.5 }}>
-                          {p.excerpt}
-                        </Typography>
-                        <Stack direction="row" spacing={1} alignItems="center">
-                          <Typography sx={{ fontSize: 12, color: 'text.disabled' }}>
-                            {p.date}
+                            <Link
+                              component={RouterLink}
+                              href={paths.spa2.blogDetails(p.slug)}
+                              sx={{
+                                color: 'inherit',
+                                textDecoration: 'none',
+                                '&:hover': { color: SPA2_TEAL },
+                              }}
+                            >
+                              {p.title}
+                            </Link>
                           </Typography>
-                          <Typography sx={{ fontSize: 12, color: 'text.disabled' }}>·</Typography>
-                          <Typography sx={{ fontSize: 12, color: 'text.disabled' }}>
-                            {p.readTime}
+                          <Typography sx={{ color: 'text.secondary', fontSize: 14, mb: 1.5 }}>
+                            {p.excerpt}
                           </Typography>
-                        </Stack>
-                      </Box>
-                    </Spa2SoftCard>
-                  </Grid>
-                ))}
-              </Grid>
+                          <Stack direction="row" spacing={1} alignItems="center">
+                            <Typography sx={{ fontSize: 12, color: 'text.disabled' }}>
+                              {p.date}
+                            </Typography>
+                            <Typography sx={{ fontSize: 12, color: 'text.disabled' }}>
+                              ·
+                            </Typography>
+                            <Typography sx={{ fontSize: 12, color: 'text.disabled' }}>
+                              {p.readTime}
+                            </Typography>
+                          </Stack>
+                        </Box>
+                      </Spa2SoftCard>
+                    </Grid>
+                  ))}
+                </Grid>
+              )}
+
+              {pageCount > 1 && (
+                <Stack alignItems="center" sx={{ mt: 6 }}>
+                  <Pagination
+                    count={pageCount}
+                    page={page}
+                    onChange={(_, v) => setPage(v)}
+                    shape="rounded"
+                    sx={{
+                      '& .Mui-selected': {
+                        bgcolor: `${SPA2_TEAL} !important`,
+                        color: 'white',
+                      },
+                    }}
+                  />
+                </Stack>
+              )}
             </Grid>
 
             {/* Sidebar */}
@@ -2128,6 +2222,7 @@ export function Spa2BlogDetailsPageView() {
 // }
 export function Spa2CareersPageView() {
   const { t } = useTranslate('spa2');
+  const [openVideoUrl, setOpenVideoUrl] = useState('');
 
   return (
     <Spa2PageShell>
@@ -2167,7 +2262,7 @@ export function Spa2CareersPageView() {
             title={t('careers.positionsTitle')}
           />
           <Stack spacing={2}>
-            {spa2Careers.map((c, idx) => (
+            {spa2Careers.map((c) => (
               <Spa2SoftCard key={c.title}>
                 <Stack
                   direction={{ xs: 'column', md: 'row' }}
@@ -2216,7 +2311,7 @@ export function Spa2CareersPageView() {
                   </Stack>
                   <Button
                     component={RouterLink}
-                    href={paths.spa2.careerDetails(idx)}
+                    href={paths.spa2.careerDetails(c.id)}
                     sx={{
                       borderRadius: 999,
                       px: 3,
@@ -2261,9 +2356,72 @@ export function Spa2CareersPageView() {
                 />
               </Grid>
             ))}
+            {spa2WorkplaceVideos.map((video, idx) => {
+              const hasVideo = !!video.videoUrl;
+              return (
+                <Grid key={`video-${idx}`} xs={6} md={3}>
+                  <Spa2SoftCard sx={{ p: 0, overflow: 'hidden' }}>
+                    <Box
+                      sx={{ position: 'relative', cursor: hasVideo ? 'pointer' : 'default' }}
+                      onClick={() => hasVideo && setOpenVideoUrl(video.videoUrl)}
+                    >
+                      <Box
+                        sx={{
+                          aspectRatio: '4/3',
+                          ...spa2ImageBackgroundStyle(video.thumbnail),
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          inset: 0,
+                          bgcolor: 'rgba(31,42,40,0.3)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            width: 48,
+                            height: 48,
+                            borderRadius: '50%',
+                            bgcolor: 'rgba(255,255,255,0.9)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Iconify icon="solar:play-bold" width={24} sx={{ color: SPA2_TEAL }} />
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Spa2SoftCard>
+                </Grid>
+              );
+            })}
           </Grid>
         </Container>
       </Box>
+
+      {/* Video môi trường làm việc - HTML5 player, only reachable when a video's
+          videoUrl is non-empty; empty ones stay decorative/non-clickable above,
+          mirroring the graceful-fallback convention used on the career details
+          page's singular internal video. */}
+      <Dialog open={!!openVideoUrl} onClose={() => setOpenVideoUrl('')} maxWidth="md" fullWidth>
+        <DialogContent sx={{ p: 0, bgcolor: 'common.black', lineHeight: 0 }}>
+          {openVideoUrl && (
+            // eslint-disable-next-line jsx-a11y/media-has-caption
+            <Box
+              component="video"
+              controls
+              autoPlay
+              src={openVideoUrl}
+              sx={{ width: '100%', display: 'block', maxHeight: '80vh' }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </Spa2PageShell>
   );
 }
@@ -2273,15 +2431,17 @@ export function Spa2CareersPageView() {
 // ======================================================================
 export function Spa2CareerDetailsPageView() {
   const { t } = useTranslate('spa2');
-  const { index } = useParams<{ index: string }>();
-  const job = spa2Careers[Number(index) || 0] ?? spa2Careers[0];
+  const { id } = useParams<{ id: string }>();
+  const job = spa2Careers.find((c) => c.id === Number(id)) ?? spa2Careers[0];
   const [appSubmitted, setAppSubmitted] = useState(false);
+  const [videoOpen, setVideoOpen] = useState(false);
+  const hasInternalVideo = !!spa2InternalVideoUrl;
 
   return (
     <Spa2PageShell>
       <Spa2PageHero
-        image={spa2CareersBanner.image.url}
-        imageStyle={spa2CareersBanner.image}
+        image={(job.image ?? spa2CareersBanner.image).url}
+        imageStyle={job.image ?? spa2CareersBanner.image}
         eyebrow={spa2CareersBanner.eyebrow}
         title={job.title}
         subtitle={`${job.location} · ${job.type} · ${job.salary}`}
@@ -2432,11 +2592,14 @@ export function Spa2CareerDetailsPageView() {
             ))}
           </Grid>
           <Spa2SoftCard sx={{ p: 0, overflow: 'hidden', maxWidth: 700, mx: 'auto' }}>
-            <Box sx={{ position: 'relative', cursor: 'pointer' }}>
+            <Box
+              sx={{ position: 'relative', cursor: hasInternalVideo ? 'pointer' : 'default' }}
+              onClick={() => hasInternalVideo && setVideoOpen(true)}
+            >
               <Box
                 sx={{
                   height: 320,
-                  backgroundImage: `url(${spa2InternalVideoThumb})`,
+                  backgroundImage: `url(${spa2InternalVideoThumb.url})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }}
@@ -2472,6 +2635,24 @@ export function Spa2CareerDetailsPageView() {
           </Spa2SoftCard>
         </Container>
       </Box>
+
+      {/* Video nội bộ - HTML5 player, only reachable when an admin has actually
+          uploaded a video (spa2InternalVideoUrl non-empty); otherwise the thumbnail
+          above stays purely decorative. */}
+      <Dialog open={videoOpen} onClose={() => setVideoOpen(false)} maxWidth="md" fullWidth>
+        <DialogContent sx={{ p: 0, bgcolor: 'common.black', lineHeight: 0 }}>
+          {hasInternalVideo && (
+            // eslint-disable-next-line jsx-a11y/media-has-caption
+            <Box
+              component="video"
+              controls
+              autoPlay
+              src={spa2InternalVideoUrl}
+              sx={{ width: '100%', display: 'block', maxHeight: '80vh' }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </Spa2PageShell>
   );
 }

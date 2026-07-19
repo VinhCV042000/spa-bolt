@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import type { Spa2AdjustableImage } from 'src/_mock/_spa2';
 
 import { useMemo, useState, useCallback } from 'react';
 
@@ -22,6 +21,7 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TextField from '@mui/material/TextField';
+import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -36,14 +36,34 @@ import { uuidv4 } from 'src/utils/uuidv4';
 import { fCurrency } from 'src/utils/format-number';
 
 import { useTranslate } from 'src/locales';
-import { spa2Offers, spa2ComboOffers, spa2OffersBanner } from 'src/_mock/_spa2';
+import { bgBlur, varAlpha } from 'src/theme/styles';
+import {
+  spa2Offers,
+  spa2ComboOffers,
+  spa2OffersBanner,
+  type Spa2ComboStatus,
+  SPA2_COMBO_CATEGORIES,
+  SPA2_OFFER_REDEMPTIONS,
+  type Spa2OfferRedemption,
+  type Spa2AdjustableImage,
+  type Spa2OfferPaymentStatus,
+  type Spa2OfferRedemptionType,
+  type Spa2OfferRedemptionStatus,
+} from 'src/_mock/_spa2';
 
 import { Editor } from 'src/components/editor';
-import { useTable } from 'src/components/table/use-table';
 import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { useTable } from 'src/components/table/use-table';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
 
+import {
+  Spa2Cta,
+  Spa2PageHero,
+  Spa2SoftCard,
+  Spa2SectionTitle,
+} from 'src/sections/spa2/view/spa2-content-pages';
 import {
   SPA2_INK,
   SPA2_TEAL,
@@ -51,15 +71,10 @@ import {
   SPA2_TEAL_DARK,
   SPA2_CREAM_DARK,
 } from 'src/sections/spa2/spa2-pages-data';
-import {
-  Spa2Cta,
-  Spa2PageHero,
-  Spa2SoftCard,
-  Spa2SectionTitle,
-} from 'src/sections/spa2/view/spa2-content-pages';
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2ListAnalytic } from './spa2-list-analytic';
 
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages.tsx's
@@ -88,6 +103,87 @@ const EMPTY_VOUCHER_FORM = {
 };
 
 const formatVND = (n: number) => `${fCurrency(n)} VND`;
+
+// `expires` on a voucher is a free-text field (e.g. "31/12/2026", but also
+// "Trọn năm 2026" / "Không giới hạn") - only attempt the strict dd/mm/yyyy
+// shape, anything else is treated as "not a date" rather than guessed at.
+const parseVNDate = (value: string): Date | null => {
+  const m = value.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (!m) return null;
+  const date = new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
+const isExpiringSoon = (value: string) => {
+  const date = parseVNDate(value);
+  if (!date) return false;
+  const diffDays = (date.getTime() - Date.now()) / (1000 * 60 * 60 * 24);
+  return diffDays >= 0 && diffDays <= 30;
+};
+
+type ComboFilter = 'all' | string;
+
+const EMPTY_COMBO_FORM = {
+  name: '',
+  category: SPA2_COMBO_CATEGORIES[0],
+  status: 'Đang bán' as Spa2ComboStatus,
+  servicesInput: '',
+  originalPrice: 0,
+  salePrice: 0,
+  image: '',
+  perksInput: '',
+};
+
+const COMBO_STATUS_OPTIONS: Spa2ComboStatus[] = ['Đang bán', 'Tạm dừng', 'Ngừng bán'];
+
+const COMBO_STATUS_COLOR: Record<Spa2ComboStatus, 'success' | 'warning' | 'default'> = {
+  'Đang bán': 'success',
+  'Tạm dừng': 'warning',
+  'Ngừng bán': 'default',
+};
+
+const REDEMPTION_STATUS_COLOR: Record<
+  Spa2OfferRedemptionStatus,
+  'info' | 'primary' | 'success' | 'error'
+> = {
+  new: 'info',
+  confirmed: 'primary',
+  used: 'success',
+  cancelled: 'error',
+};
+
+const REDEMPTION_STATUS_LABEL: Record<Spa2OfferRedemptionStatus, string> = {
+  new: 'Mới',
+  confirmed: 'Đã xác nhận',
+  used: 'Đã sử dụng',
+  cancelled: 'Đã huỷ',
+};
+
+const REDEMPTION_STATUS_OPTIONS: Spa2OfferRedemptionStatus[] = [
+  'new',
+  'confirmed',
+  'used',
+  'cancelled',
+];
+
+const REDEMPTION_TYPE_LABEL: Record<Spa2OfferRedemptionType, string> = {
+  combo: 'Combo',
+  voucher: 'Voucher',
+};
+
+const PAYMENT_STATUS_COLOR: Record<Spa2OfferPaymentStatus, 'warning' | 'success' | 'default'> = {
+  unpaid: 'warning',
+  paid: 'success',
+  refunded: 'default',
+};
+
+const PAYMENT_STATUS_LABEL: Record<Spa2OfferPaymentStatus, string> = {
+  unpaid: 'Chưa thanh toán',
+  paid: 'Đã thanh toán',
+  refunded: 'Đã hoàn tiền',
+};
+
+type RedemptionStatusFilter = Spa2OfferRedemptionStatus | 'all';
 
 function SectionCard({
   title,
@@ -190,6 +286,8 @@ function ComboPreviewCard({
   salePrice,
   image,
   perks,
+  category,
+  status,
 }: {
   name: string;
   services: string[];
@@ -197,6 +295,8 @@ function ComboPreviewCard({
   salePrice: number;
   image: string;
   perks: string[];
+  category?: string;
+  status?: Spa2ComboStatus;
 }) {
   const savePercent = originalPrice > 0 ? Math.round((1 - salePrice / originalPrice) * 100) : 0;
   return (
@@ -211,6 +311,20 @@ function ComboPreviewCard({
             backgroundPosition: 'center',
           }}
         />
+        {category && (
+          <Chip
+            size="small"
+            label={category}
+            sx={{
+              position: 'absolute',
+              top: 12,
+              left: 12,
+              bgcolor: 'common.white',
+              color: SPA2_TEAL_DARK,
+              fontWeight: 700,
+            }}
+          />
+        )}
         <Chip
           label={`-${Number.isFinite(savePercent) ? savePercent : 0}%`}
           sx={{
@@ -224,9 +338,14 @@ function ComboPreviewCard({
         />
       </Box>
       <Box sx={{ p: 3 }}>
-        <Typography variant="h6" sx={{ color: SPA2_INK, mb: 1.5 }}>
-          {name || 'Tên combo'}
-        </Typography>
+        <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1.5 }}>
+          <Typography variant="h6" sx={{ color: SPA2_INK }}>
+            {name || 'Tên combo'}
+          </Typography>
+          {status && (
+            <Chip size="small" variant="soft" label={status} color={COMBO_STATUS_COLOR[status]} />
+          )}
+        </Stack>
         <Stack spacing={0.75} sx={{ mb: 2 }}>
           {services.length === 0 && (
             <Typography sx={{ fontSize: 14, color: 'text.disabled' }}>
@@ -245,9 +364,7 @@ function ComboPreviewCard({
           <Typography variant="h5" sx={{ color: SPA2_TEAL }}>
             {formatVND(salePrice)}
           </Typography>
-          <Typography
-            sx={{ color: 'text.disabled', textDecoration: 'line-through', fontSize: 14 }}
-          >
+          <Typography sx={{ color: 'text.disabled', textDecoration: 'line-through', fontSize: 14 }}>
             {formatVND(originalPrice)}
           </Typography>
         </Stack>
@@ -282,6 +399,7 @@ function ComboPreviewCard({
 // -----------------------------------------------------------------------------
 
 export function Spa2OffersManageView() {
+  const theme = useTheme();
   const { t } = useTranslate('spa2-manage');
 
   const [banner, setBanner] = useState(() => ({
@@ -290,7 +408,9 @@ export function Spa2OffersManageView() {
   }));
   const [dirty, setDirty] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
-  const [tab, setTab] = useState<'banner' | 'vouchers' | 'combos' | 'preview'>('banner');
+  const [tab, setTab] = useState<'banner' | 'vouchers' | 'combos' | 'redemptions' | 'preview'>(
+    'banner'
+  );
   const markDirty = () => setDirty(true);
 
   // ---- Banner ----
@@ -308,6 +428,7 @@ export function Spa2OffersManageView() {
     spa2Offers.map((o, i) => ({ ...o, id: i + 1, active: true }))
   );
   const [search, setSearch] = useState('');
+  const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
   const table = useTable({ defaultRowsPerPage: 5 });
   const [openForm, setOpenForm] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
@@ -317,12 +438,24 @@ export function Spa2OffersManageView() {
 
   const filtered = useMemo(
     () =>
-      vouchers.filter(
-        (o) =>
-          o.title.toLowerCase().includes(search.toLowerCase()) ||
-          o.code.toLowerCase().includes(search.toLowerCase())
-      ),
-    [vouchers, search]
+      vouchers.filter((o) => {
+        const q = search.toLowerCase();
+        const matchSearch = o.title.toLowerCase().includes(q) || o.code.toLowerCase().includes(q);
+        const matchStatus =
+          filterStatus === 'all' || (filterStatus === 'active' ? !!o.active : !o.active);
+        return matchSearch && matchStatus;
+      }),
+    [vouchers, search, filterStatus]
+  );
+
+  const voucherCounts = useMemo(
+    () => ({
+      all: vouchers.length,
+      active: vouchers.filter((v) => v.active).length,
+      inactive: vouchers.filter((v) => !v.active).length,
+      expiringSoon: vouchers.filter((v) => isExpiringSoon(v.expires)).length,
+    }),
+    [vouchers]
   );
 
   const handleChange =
@@ -380,27 +513,16 @@ export function Spa2OffersManageView() {
   const [combos, setCombos] = useState<ComboItem[]>(() =>
     spa2ComboOffers.map((c) => withId({ ...c }))
   );
-  const [comboForm, setComboForm] = useState({
-    name: '',
-    servicesInput: '',
-    originalPrice: 0,
-    salePrice: 0,
-    image: '',
-    perksInput: '',
-  });
+  const [comboForm, setComboForm] = useState(EMPTY_COMBO_FORM);
   const [comboDialog, setComboDialog] = useState(false);
   const [comboEditId, setComboEditId] = useState<string | null>(null);
   const [comboDeleteId, setComboDeleteId] = useState<string | null>(null);
+  const [comboSearch, setComboSearch] = useState('');
+  const [comboCategoryFilter, setComboCategoryFilter] = useState<ComboFilter>('all');
+  const [comboStatusFilter, setComboStatusFilter] = useState<'all' | Spa2ComboStatus>('all');
 
   const openCreateCombo = () => {
-    setComboForm({
-      name: '',
-      servicesInput: '',
-      originalPrice: 0,
-      salePrice: 0,
-      image: '',
-      perksInput: '',
-    });
+    setComboForm(EMPTY_COMBO_FORM);
     setComboEditId(null);
     setComboDialog(true);
   };
@@ -408,6 +530,8 @@ export function Spa2OffersManageView() {
   const openEditCombo = (c: ComboItem) => {
     setComboForm({
       name: c.name,
+      category: c.category,
+      status: c.status,
       servicesInput: c.services.join(', '),
       originalPrice: c.originalPrice,
       salePrice: c.salePrice,
@@ -439,6 +563,8 @@ export function Spa2OffersManageView() {
     const next = {
       name: comboForm.name,
       slug: comboForm.name.toLowerCase().replace(/\s+/g, '-'),
+      category: comboForm.category,
+      status: comboForm.status,
       services: comboServicesList,
       originalPrice: Number(comboForm.originalPrice),
       salePrice: Number(comboForm.salePrice),
@@ -460,6 +586,95 @@ export function Spa2OffersManageView() {
     markDirty();
   };
 
+  const filteredCombos = useMemo(
+    () =>
+      combos.filter((c) => {
+        const matchSearch = c.name.toLowerCase().includes(comboSearch.toLowerCase());
+        const matchCategory = comboCategoryFilter === 'all' || c.category === comboCategoryFilter;
+        const matchStatus = comboStatusFilter === 'all' || c.status === comboStatusFilter;
+        return matchSearch && matchCategory && matchStatus;
+      }),
+    [combos, comboSearch, comboCategoryFilter, comboStatusFilter]
+  );
+
+  const comboCategoryCounts = useMemo(
+    () =>
+      ({
+        all: combos.length,
+        ...Object.fromEntries(
+          SPA2_COMBO_CATEGORIES.map((cat): [string, number] => [
+            cat,
+            combos.filter((c) => c.category === cat).length,
+          ])
+        ),
+      }) as Record<string, number>,
+    [combos]
+  );
+
+  const comboStatusCounts = useMemo(
+    () => ({
+      all: combos.length,
+      'Đang bán': combos.filter((c) => c.status === 'Đang bán').length,
+      'Tạm dừng': combos.filter((c) => c.status === 'Tạm dừng').length,
+      'Ngừng bán': combos.filter((c) => c.status === 'Ngừng bán').length,
+    }),
+    [combos]
+  );
+
+  // ---- Khách hàng đặt combo/voucher ----
+  // Hai luồng nghiệp vụ khác nhau: đơn đặt combo (mua để đến sử dụng dịch vụ)
+  // và khách dùng voucher (áp mã giảm giá vào một hoá đơn khác) - tách thành
+  // hai view riêng biệt (bảng + KPI riêng), chuyển qua lại bằng Tabs phụ bên dưới.
+  const [redemptions, setRedemptions] = useState<Spa2OfferRedemption[]>(SPA2_OFFER_REDEMPTIONS);
+  const [redemptionView, setRedemptionView] = useState<Spa2OfferRedemptionType>('combo');
+  const [redemptionSearch, setRedemptionSearch] = useState('');
+  const [redemptionStatus, setRedemptionStatus] = useState<RedemptionStatusFilter>('all');
+  const [viewRedemption, setViewRedemption] = useState<Spa2OfferRedemption | null>(null);
+  const redemptionTable = useTable({ defaultRowsPerPage: 5 });
+
+  const handleChangeRedemptionView = (view: Spa2OfferRedemptionType) => {
+    setRedemptionView(view);
+    setRedemptionStatus('all');
+    setRedemptionSearch('');
+    redemptionTable.onResetPage();
+  };
+
+  const redemptionsByView = useMemo(
+    () => redemptions.filter((r) => r.type === redemptionView),
+    [redemptions, redemptionView]
+  );
+
+  const filteredRedemptions = useMemo(
+    () =>
+      redemptionsByView.filter((r) => {
+        const q = redemptionSearch.toLowerCase();
+        const matchSearch =
+          !q ||
+          r.customer.toLowerCase().includes(q) ||
+          r.phone.includes(redemptionSearch) ||
+          r.itemName.toLowerCase().includes(q);
+        const matchStatus = redemptionStatus === 'all' || r.status === redemptionStatus;
+        return matchSearch && matchStatus;
+      }),
+    [redemptionsByView, redemptionSearch, redemptionStatus]
+  );
+
+  const redemptionCounts = useMemo(
+    () => ({
+      all: redemptionsByView.length,
+      new: redemptionsByView.filter((r) => r.status === 'new').length,
+      confirmed: redemptionsByView.filter((r) => r.status === 'confirmed').length,
+      used: redemptionsByView.filter((r) => r.status === 'used').length,
+      cancelled: redemptionsByView.filter((r) => r.status === 'cancelled').length,
+    }),
+    [redemptionsByView]
+  );
+
+  const handleSetRedemptionStatus = useCallback((id: number, status: Spa2OfferRedemptionStatus) => {
+    setRedemptions((p) => p.map((x) => (x.id === id ? { ...x, status } : x)));
+    setViewRedemption((v) => (v?.id === id ? { ...v, status } : v));
+  }, []);
+
   const handleSave = () => {
     setSavedAt(new Date());
     setDirty(false);
@@ -469,6 +684,7 @@ export function Spa2OffersManageView() {
     setBanner({ ...spa2OffersBanner, image: { ...spa2OffersBanner.image } });
     setVouchers(spa2Offers.map((o, i) => ({ ...o, id: i + 1, active: true })));
     setCombos(spa2ComboOffers.map((c) => withId({ ...c })));
+    setRedemptions(SPA2_OFFER_REDEMPTIONS);
     setDirty(false);
   };
 
@@ -540,12 +756,9 @@ export function Spa2OffersManageView() {
         sx={{
           mb: 3,
           position: 'sticky',
-          top: 65,
+          top: 64,
           zIndex: 10,
-          bgcolor: 'background.paper',
-          '& .MuiTab-root': { minHeight: 56, fontWeight: 600 },
-          '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
-          '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+          ...bgBlur({ color: varAlpha(theme.vars.palette.background.defaultChannel, 0.8) }),
         }}
       >
         <Tab
@@ -564,6 +777,12 @@ export function Spa2OffersManageView() {
           value="combos"
           label={t('offers.combos_section')}
           icon={<Iconify icon="solar:box-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
+          value="redemptions"
+          label="Khách hàng đặt combo/voucher"
+          icon={<Iconify icon="solar:users-group-rounded-bold-duotone" width={20} />}
           iconPosition="start"
         />
         <Tab
@@ -632,6 +851,109 @@ export function Spa2OffersManageView() {
       {/* Vouchers */}
       {tab === 'vouchers' && (
         <Card>
+          <Scrollbar sx={{ minHeight: 108 }}>
+            <Stack spacing={2} direction="row" sx={{ py: 2, px: 1 }}>
+              {[
+                {
+                  key: 'all',
+                  label: 'Tất cả',
+                  value: voucherCounts.all,
+                  icon: 'solar:ticket-sale-bold-duotone',
+                },
+                {
+                  key: 'active',
+                  label: t('offers.status_active'),
+                  value: voucherCounts.active,
+                  icon: 'solar:check-circle-bold-duotone',
+                },
+                {
+                  key: 'inactive',
+                  label: t('offers.status_inactive'),
+                  value: voucherCounts.inactive,
+                  icon: 'solar:close-circle-bold-duotone',
+                },
+              ].map((k) => (
+                <Grid key={k.key} xs={6} md={2.4}>
+                  <Card
+                    onClick={() => {
+                      setFilterStatus(k.key as 'all' | 'active' | 'inactive');
+                      table.onResetPage();
+                    }}
+                    sx={{
+                      p: 2,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1.5,
+                      width: 1,
+                      minWidth: 180,
+                      bgcolor: filterStatus === k.key ? `${SPA2_TEAL}12` : SPA2_CREAM,
+                      transition: 'all .2s',
+                      '&:hover': { borderColor: SPA2_TEAL },
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 1.5,
+                        bgcolor: `${SPA2_TEAL}18`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Iconify icon={k.icon} width={22} sx={{ color: SPA2_TEAL_DARK }} />
+                    </Box>
+                    <Box>
+                      <Typography variant="h6" sx={{ color: SPA2_TEAL_DARK, lineHeight: 1 }}>
+                        {k.value}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {k.label}
+                      </Typography>
+                    </Box>
+                  </Card>
+                </Grid>
+              ))}
+              <Card
+                sx={{
+                  p: 2,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1.5,
+                  bgcolor: SPA2_CREAM,
+                }}
+              >
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 1.5,
+                    bgcolor: `${SPA2_TEAL}18`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Iconify
+                    icon="solar:clock-circle-bold-duotone"
+                    width={22}
+                    sx={{ color: SPA2_TEAL_DARK }}
+                  />
+                </Box>
+                <Box>
+                  <Typography variant="h6" sx={{ color: SPA2_TEAL_DARK, lineHeight: 1 }}>
+                    {voucherCounts.expiringSoon}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Sắp hết hạn
+                  </Typography>
+                </Box>
+              </Card>
+            </Stack>
+          </Scrollbar>
+
           <Box sx={{ p: 2.5, borderBottom: `1px solid ${SPA2_CREAM_DARK}` }}>
             <Stack
               direction={{ xs: 'column', sm: 'row' }}
@@ -719,9 +1041,7 @@ export function Spa2OffersManageView() {
                           >
                             <IconButton size="small" onClick={() => handleCopy(item.code)}>
                               <Iconify
-                                icon={
-                                  copied === item.code ? 'solar:check-bold' : 'solar:copy-bold'
-                                }
+                                icon={copied === item.code ? 'solar:check-bold' : 'solar:copy-bold'}
                                 width={14}
                               />
                             </IconButton>
@@ -807,8 +1127,150 @@ export function Spa2OffersManageView() {
             </Button>
           }
         >
+          <Stack spacing={2.5} sx={{ mb: 2.5 }}>
+            <Grid container spacing={2}>
+              <Grid xs={12} md={6}>
+                <Card sx={{ bgcolor: SPA2_CREAM, height: '100%' }}>
+                  <Typography
+                    variant="overline"
+                    sx={{ display: 'block', fontWeight: 700, px: 2, pt: 2 }}
+                  >
+                    Theo danh mục
+                  </Typography>
+                  <Scrollbar sx={{ minHeight: 108 }}>
+                    <Stack
+                      spacing={1}
+                      direction="row"
+                      divider={
+                        <Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />
+                      }
+                      sx={{ py: 2, px: 1 }}
+                    >
+                      <Spa2ListAnalytic
+                        title="Tất cả"
+                        total={comboCategoryCounts.all}
+                        percent={100}
+                        icon="solar:widget-5-bold-duotone"
+                        color={SPA2_TEAL}
+                        unitLabel="combo"
+                        active={comboCategoryFilter === 'all'}
+                        onClick={() => setComboCategoryFilter('all')}
+                      />
+                      {SPA2_COMBO_CATEGORIES.map((cat) => (
+                        <Spa2ListAnalytic
+                          key={cat}
+                          title={cat}
+                          total={comboCategoryCounts[cat] ?? 0}
+                          percent={
+                            comboCategoryCounts.all
+                              ? ((comboCategoryCounts[cat] ?? 0) / comboCategoryCounts.all) * 100
+                              : 0
+                          }
+                          icon="solar:tag-bold-duotone"
+                          color={SPA2_TEAL_DARK}
+                          unitLabel="combo"
+                          active={comboCategoryFilter === cat}
+                          onClick={() => setComboCategoryFilter(cat)}
+                        />
+                      ))}
+                    </Stack>
+                  </Scrollbar>
+                </Card>
+              </Grid>
+
+              <Grid xs={12} md={6}>
+                <Card sx={{ bgcolor: SPA2_CREAM, height: '100%' }}>
+                  <Typography
+                    variant="overline"
+                    sx={{ display: 'block', fontWeight: 700, px: 2, pt: 2 }}
+                  >
+                    Theo trạng thái
+                  </Typography>
+                  <Scrollbar sx={{ minHeight: 108 }}>
+                    <Stack
+                      spacing={1}
+                      direction="row"
+                      divider={
+                        <Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />
+                      }
+                      sx={{ py: 2, px: 1 }}
+                    >
+                      <Spa2ListAnalytic
+                        title="Tất cả"
+                        total={comboStatusCounts.all}
+                        percent={100}
+                        icon="solar:widget-5-bold-duotone"
+                        color={SPA2_TEAL}
+                        unitLabel="combo"
+                        active={comboStatusFilter === 'all'}
+                        onClick={() => setComboStatusFilter('all')}
+                      />
+                      <Spa2ListAnalytic
+                        title="Đang bán"
+                        total={comboStatusCounts['Đang bán']}
+                        percent={
+                          comboStatusCounts.all
+                            ? (comboStatusCounts['Đang bán'] / comboStatusCounts.all) * 100
+                            : 0
+                        }
+                        icon="solar:check-circle-bold-duotone"
+                        color="#22C55E"
+                        unitLabel="combo"
+                        active={comboStatusFilter === 'Đang bán'}
+                        onClick={() => setComboStatusFilter('Đang bán')}
+                      />
+                      <Spa2ListAnalytic
+                        title="Tạm dừng"
+                        total={comboStatusCounts['Tạm dừng']}
+                        percent={
+                          comboStatusCounts.all
+                            ? (comboStatusCounts['Tạm dừng'] / comboStatusCounts.all) * 100
+                            : 0
+                        }
+                        icon="solar:pause-circle-bold-duotone"
+                        color="#FFAB00"
+                        unitLabel="combo"
+                        active={comboStatusFilter === 'Tạm dừng'}
+                        onClick={() => setComboStatusFilter('Tạm dừng')}
+                      />
+                      <Spa2ListAnalytic
+                        title="Ngừng bán"
+                        total={comboStatusCounts['Ngừng bán']}
+                        percent={
+                          comboStatusCounts.all
+                            ? (comboStatusCounts['Ngừng bán'] / comboStatusCounts.all) * 100
+                            : 0
+                        }
+                        icon="solar:close-circle-bold-duotone"
+                        color="#637381"
+                        unitLabel="combo"
+                        active={comboStatusFilter === 'Ngừng bán'}
+                        onClick={() => setComboStatusFilter('Ngừng bán')}
+                      />
+                    </Stack>
+                  </Scrollbar>
+                </Card>
+              </Grid>
+            </Grid>
+
+            <TextField
+              placeholder={t('offers.search_placeholder')}
+              value={comboSearch}
+              onChange={(e) => setComboSearch(e.target.value)}
+              size="small"
+              sx={{ width: { xs: '100%', sm: 320 } }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Stack>
+
           <Grid container spacing={2.5}>
-            {combos.map((c) => (
+            {filteredCombos.map((c) => (
               <Grid key={c.id} xs={12} sm={6} md={4} sx={{ display: 'flex' }}>
                 <Box sx={{ width: '100%', position: 'relative' }}>
                   <ComboPreviewCard
@@ -818,6 +1280,8 @@ export function Spa2OffersManageView() {
                     salePrice={c.salePrice}
                     image={c.image}
                     perks={c.perks}
+                    category={c.category}
+                    status={c.status}
                   />
                   <Stack
                     direction="row"
@@ -845,7 +1309,7 @@ export function Spa2OffersManageView() {
                 </Box>
               </Grid>
             ))}
-            {combos.length === 0 && (
+            {filteredCombos.length === 0 && (
               <Grid xs={12}>
                 <Typography variant="body2" color="text.secondary">
                   {t('common.no_data')}
@@ -854,6 +1318,483 @@ export function Spa2OffersManageView() {
             )}
           </Grid>
         </SectionCard>
+      )}
+
+      {/* Khách hàng đặt combo/voucher - hai luồng nghiệp vụ tách biệt */}
+      {tab === 'redemptions' && (
+        <Card>
+          <Box sx={{ p: 2.5, borderBottom: `1px solid ${SPA2_CREAM_DARK}` }}>
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <Iconify
+                icon="solar:users-group-rounded-bold-duotone"
+                width={22}
+                sx={{ color: SPA2_TEAL }}
+              />
+              <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                Khách hàng đặt combo/voucher
+              </Typography>
+            </Stack>
+          </Box>
+
+          {/* Chuyển đổi giữa 2 luồng: đơn đặt combo (cần lên lịch sử dụng)
+              và khách dùng voucher (áp mã giảm giá vào hoá đơn khác) */}
+          <Box sx={{ px: 2.5, pt: 2.5 }}>
+            <Tabs
+              value={redemptionView}
+              onChange={(_, v) => handleChangeRedemptionView(v)}
+              sx={{
+                minHeight: 42,
+                '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+                '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
+              }}
+            >
+              <Tab
+                value="combo"
+                label={`Đơn đặt combo (${redemptions.filter((r) => r.type === 'combo').length})`}
+                icon={<Iconify icon="solar:box-bold-duotone" width={18} />}
+                iconPosition="start"
+              />
+              <Tab
+                value="voucher"
+                label={`Khách dùng voucher (${redemptions.filter((r) => r.type === 'voucher').length})`}
+                icon={<Iconify icon="solar:ticket-sale-bold-duotone" width={18} />}
+                iconPosition="start"
+              />
+            </Tabs>
+          </Box>
+
+          {/* KPI */}
+          <Scrollbar sx={{ minHeight: 108 }}>
+            <Stack spacing={2} direction="row" sx={{ py: 2, px: 1 }}>
+              {[
+                {
+                  key: 'all',
+                  label: redemptionView === 'combo' ? 'Tổng đơn combo' : 'Tổng lượt dùng voucher',
+                  value: redemptionCounts.all,
+                  icon:
+                    redemptionView === 'combo'
+                      ? 'solar:box-bold-duotone'
+                      : 'solar:ticket-sale-bold-duotone',
+                },
+                {
+                  key: 'new',
+                  label: REDEMPTION_STATUS_LABEL.new,
+                  value: redemptionCounts.new,
+                  icon: 'solar:bell-bing-bold-duotone',
+                },
+                {
+                  key: 'confirmed',
+                  label: REDEMPTION_STATUS_LABEL.confirmed,
+                  value: redemptionCounts.confirmed,
+                  icon: 'solar:check-circle-bold-duotone',
+                },
+                {
+                  key: 'used',
+                  label: REDEMPTION_STATUS_LABEL.used,
+                  value: redemptionCounts.used,
+                  icon: 'solar:diploma-bold-duotone',
+                },
+                {
+                  key: 'cancelled',
+                  label: REDEMPTION_STATUS_LABEL.cancelled,
+                  value: redemptionCounts.cancelled,
+                  icon: 'solar:close-circle-bold-duotone',
+                },
+              ].map((k) => (
+                <Card
+                  onClick={() => {
+                    setRedemptionStatus(k.key as RedemptionStatusFilter);
+                    redemptionTable.onResetPage();
+                  }}
+                  sx={{
+                    p: 2,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1.5,
+                    width: 1,
+                    minWidth: 220,
+                    bgcolor: redemptionStatus === k.key ? `${SPA2_TEAL}12` : SPA2_CREAM,
+                    transition: 'all .2s',
+                    '&:hover': { borderColor: SPA2_TEAL },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 1.5,
+                      bgcolor: `${SPA2_TEAL}18`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Iconify icon={k.icon} width={22} sx={{ color: SPA2_TEAL_DARK }} />
+                  </Box>
+                  <Box sx={{ flexGrow: 1 }}>
+                    <Typography variant="h6" sx={{ color: SPA2_TEAL_DARK, lineHeight: 1 }}>
+                      {k.value}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {k.label}
+                    </Typography>
+                  </Box>
+                </Card>
+              ))}
+            </Stack>
+          </Scrollbar>
+
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ px: 2.5, pb: 2 }}>
+            <TextField
+              placeholder={
+                redemptionView === 'combo'
+                  ? 'Tìm khách hàng, SĐT, combo...'
+                  : 'Tìm khách hàng, SĐT, voucher...'
+              }
+              value={redemptionSearch}
+              onChange={(e) => {
+                setRedemptionSearch(e.target.value);
+                redemptionTable.onResetPage();
+              }}
+              size="small"
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Stack>
+
+          <Box sx={{ px: 2.5 }}>
+            <Tabs
+              value={redemptionStatus}
+              onChange={(_, v) => {
+                setRedemptionStatus(v);
+                redemptionTable.onResetPage();
+              }}
+              variant="scrollable"
+              sx={{
+                '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+                '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
+              }}
+            >
+              <Tab value="all" label={`Tất cả (${redemptionCounts.all})`} />
+              <Tab value="new" label={`${REDEMPTION_STATUS_LABEL.new} (${redemptionCounts.new})`} />
+              <Tab
+                value="confirmed"
+                label={`${REDEMPTION_STATUS_LABEL.confirmed} (${redemptionCounts.confirmed})`}
+              />
+              <Tab
+                value="used"
+                label={`${REDEMPTION_STATUS_LABEL.used} (${redemptionCounts.used})`}
+              />
+              <Tab
+                value="cancelled"
+                label={`${REDEMPTION_STATUS_LABEL.cancelled} (${redemptionCounts.cancelled})`}
+              />
+            </Tabs>
+          </Box>
+
+          {/* Bảng đơn đặt combo */}
+          {redemptionView === 'combo' && (
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Khách hàng</TableCell>
+                    <TableCell>Combo đã đặt</TableCell>
+                    <TableCell>Giá trị đơn</TableCell>
+                    <TableCell>Thanh toán</TableCell>
+                    <TableCell>Ngày đặt</TableCell>
+                    <TableCell>Trạng thái xử lý</TableCell>
+                    <TableCell align="right">{t('common.actions')}</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {filteredRedemptions
+                    .slice(
+                      redemptionTable.page * redemptionTable.rowsPerPage,
+                      redemptionTable.page * redemptionTable.rowsPerPage +
+                        redemptionTable.rowsPerPage
+                    )
+                    .map((item) => (
+                      <TableRow key={item.id} hover>
+                        <TableCell>
+                          <Stack>
+                            <Typography variant="subtitle2" sx={{ color: SPA2_TEAL_DARK }}>
+                              {item.customer}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              {item.phone}
+                            </Typography>
+                          </Stack>
+                        </TableCell>
+                        <TableCell>
+                          <Stack>
+                            <Typography variant="body2">{item.itemName}</Typography>
+                            <Chip
+                              size="small"
+                              label={item.itemCode}
+                              variant="outlined"
+                              sx={{
+                                mt: 0.5,
+                                width: 'fit-content',
+                                fontFamily: 'monospace',
+                                fontSize: 11,
+                              }}
+                            />
+                          </Stack>
+                        </TableCell>
+                        <TableCell>
+                          <Typography
+                            variant="body2"
+                            fontWeight={700}
+                            sx={{ color: SPA2_TEAL_DARK }}
+                          >
+                            {formatVND(item.orderValue)}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Chip
+                            size="small"
+                            label={PAYMENT_STATUS_LABEL[item.paymentStatus]}
+                            color={PAYMENT_STATUS_COLOR[item.paymentStatus]}
+                            variant="soft"
+                          />
+                        </TableCell>
+                        <TableCell>{item.createdAt}</TableCell>
+                        <TableCell>
+                          <Chip
+                            size="small"
+                            label={REDEMPTION_STATUS_LABEL[item.status]}
+                            color={REDEMPTION_STATUS_COLOR[item.status]}
+                            variant="soft"
+                          />
+                        </TableCell>
+                        <TableCell align="right">
+                          <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
+                            {item.status === 'new' && (
+                              <>
+                                <Tooltip title="Xác nhận">
+                                  <IconButton
+                                    size="small"
+                                    color="success"
+                                    onClick={() => handleSetRedemptionStatus(item.id, 'confirmed')}
+                                  >
+                                    <Iconify icon="solar:check-circle-bold" />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Huỷ">
+                                  <IconButton
+                                    size="small"
+                                    color="error"
+                                    onClick={() => handleSetRedemptionStatus(item.id, 'cancelled')}
+                                  >
+                                    <Iconify icon="solar:close-circle-bold" />
+                                  </IconButton>
+                                </Tooltip>
+                              </>
+                            )}
+                            {item.status === 'confirmed' && (
+                              <>
+                                <Tooltip title="Đã sử dụng">
+                                  <IconButton
+                                    size="small"
+                                    sx={{ color: SPA2_TEAL_DARK }}
+                                    onClick={() => handleSetRedemptionStatus(item.id, 'used')}
+                                  >
+                                    <Iconify icon="solar:diploma-bold" />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Huỷ">
+                                  <IconButton
+                                    size="small"
+                                    color="error"
+                                    onClick={() => handleSetRedemptionStatus(item.id, 'cancelled')}
+                                  >
+                                    <Iconify icon="solar:close-circle-bold" />
+                                  </IconButton>
+                                </Tooltip>
+                              </>
+                            )}
+                            <Tooltip title={t('common.view')}>
+                              <IconButton size="small" onClick={() => setViewRedemption(item)}>
+                                <Iconify icon="solar:eye-bold" />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  {filteredRedemptions.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={7} align="center" sx={{ py: 6, color: 'text.disabled' }}>
+                        {t('common.no_data')}
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+
+          {/* Bảng khách dùng voucher */}
+          {redemptionView === 'voucher' && (
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Khách hàng</TableCell>
+                    <TableCell>Voucher</TableCell>
+                    <TableCell>Giá trị hoá đơn</TableCell>
+                    <TableCell>Đã giảm</TableCell>
+                    <TableCell>Thanh toán</TableCell>
+                    <TableCell>Ngày dùng</TableCell>
+                    <TableCell>Trạng thái</TableCell>
+                    <TableCell align="right">{t('common.actions')}</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {filteredRedemptions
+                    .slice(
+                      redemptionTable.page * redemptionTable.rowsPerPage,
+                      redemptionTable.page * redemptionTable.rowsPerPage +
+                        redemptionTable.rowsPerPage
+                    )
+                    .map((item) => (
+                      <TableRow key={item.id} hover>
+                        <TableCell>
+                          <Stack>
+                            <Typography variant="subtitle2" sx={{ color: SPA2_TEAL_DARK }}>
+                              {item.customer}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              {item.phone}
+                            </Typography>
+                          </Stack>
+                        </TableCell>
+                        <TableCell>
+                          <Stack>
+                            <Typography variant="body2">{item.itemName}</Typography>
+                            <Chip
+                              size="small"
+                              label={item.itemCode}
+                              variant="outlined"
+                              color="primary"
+                              sx={{
+                                mt: 0.5,
+                                width: 'fit-content',
+                                fontFamily: 'monospace',
+                                fontWeight: 700,
+                                fontSize: 11,
+                              }}
+                            />
+                          </Stack>
+                        </TableCell>
+                        <TableCell>{formatVND(item.orderValue)}</TableCell>
+                        <TableCell>
+                          <Typography variant="body2" fontWeight={700} color="error.main">
+                            {item.discountAmount !== undefined
+                              ? formatVND(item.discountAmount)
+                              : '—'}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Chip
+                            size="small"
+                            label={PAYMENT_STATUS_LABEL[item.paymentStatus]}
+                            color={PAYMENT_STATUS_COLOR[item.paymentStatus]}
+                            variant="soft"
+                          />
+                        </TableCell>
+                        <TableCell>{item.createdAt}</TableCell>
+                        <TableCell>
+                          <Chip
+                            size="small"
+                            label={REDEMPTION_STATUS_LABEL[item.status]}
+                            color={REDEMPTION_STATUS_COLOR[item.status]}
+                            variant="soft"
+                          />
+                        </TableCell>
+                        <TableCell align="right">
+                          <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
+                            {item.status === 'new' && (
+                              <>
+                                <Tooltip title="Xác nhận">
+                                  <IconButton
+                                    size="small"
+                                    color="success"
+                                    onClick={() => handleSetRedemptionStatus(item.id, 'confirmed')}
+                                  >
+                                    <Iconify icon="solar:check-circle-bold" />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Huỷ">
+                                  <IconButton
+                                    size="small"
+                                    color="error"
+                                    onClick={() => handleSetRedemptionStatus(item.id, 'cancelled')}
+                                  >
+                                    <Iconify icon="solar:close-circle-bold" />
+                                  </IconButton>
+                                </Tooltip>
+                              </>
+                            )}
+                            {item.status === 'confirmed' && (
+                              <>
+                                <Tooltip title="Đã sử dụng">
+                                  <IconButton
+                                    size="small"
+                                    sx={{ color: SPA2_TEAL_DARK }}
+                                    onClick={() => handleSetRedemptionStatus(item.id, 'used')}
+                                  >
+                                    <Iconify icon="solar:diploma-bold" />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Huỷ">
+                                  <IconButton
+                                    size="small"
+                                    color="error"
+                                    onClick={() => handleSetRedemptionStatus(item.id, 'cancelled')}
+                                  >
+                                    <Iconify icon="solar:close-circle-bold" />
+                                  </IconButton>
+                                </Tooltip>
+                              </>
+                            )}
+                            <Tooltip title={t('common.view')}>
+                              <IconButton size="small" onClick={() => setViewRedemption(item)}>
+                                <Iconify icon="solar:eye-bold" />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  {filteredRedemptions.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={8} align="center" sx={{ py: 6, color: 'text.disabled' }}>
+                        {t('common.no_data')}
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+
+          <TablePaginationCustom
+            count={filteredRedemptions.length}
+            page={redemptionTable.page}
+            rowsPerPage={redemptionTable.rowsPerPage}
+            onPageChange={redemptionTable.onChangePage}
+            onRowsPerPageChange={redemptionTable.onChangeRowsPerPage}
+          />
+        </Card>
       )}
 
       {/* Full-page live preview - pixel-for-pixel same layout/order as the public /spa2/offers page */}
@@ -900,6 +1841,8 @@ export function Spa2OffersManageView() {
                         salePrice={c.salePrice}
                         image={c.image}
                         perks={c.perks}
+                        category={c.category}
+                        status={c.status}
                       />
                     </Grid>
                   ))}
@@ -914,7 +1857,9 @@ export function Spa2OffersManageView() {
 
       {/* Voucher dialog - left: edit, right: live preview */}
       <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="lg" fullWidth>
-        <DialogTitle>{editId !== null ? t('offers.form_edit') : t('offers.form_create')}</DialogTitle>
+        <DialogTitle>
+          {editId !== null ? t('offers.form_edit') : t('offers.form_create')}
+        </DialogTitle>
         <DialogContent dividers>
           <Grid container spacing={3} sx={{ pt: 1 }}>
             <Grid xs={12} md={6}>
@@ -923,9 +1868,7 @@ export function Spa2OffersManageView() {
                   select
                   label={t('common.status')}
                   value={form.active ? 'active' : 'inactive'}
-                  onChange={(e) =>
-                    setForm((p) => ({ ...p, active: e.target.value === 'active' }))
-                  }
+                  onChange={(e) => setForm((p) => ({ ...p, active: e.target.value === 'active' }))}
                   fullWidth
                 >
                   <MenuItem value="active">{t('offers.status_active')}</MenuItem>
@@ -938,7 +1881,10 @@ export function Spa2OffersManageView() {
                   fullWidth
                 />
                 <Box>
-                  <Typography variant="caption" sx={{ color: 'text.secondary', mb: 0.5, display: 'block' }}>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: 'text.secondary', mb: 0.5, display: 'block' }}
+                  >
                     {t('offers.form_desc')}
                   </Typography>
                   <Editor
@@ -973,7 +1919,10 @@ export function Spa2OffersManageView() {
               </Stack>
             </Grid>
             <Grid xs={12} md={6}>
-              <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1, display: 'block' }}>
+              <Typography
+                variant="caption"
+                sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
+              >
                 {t('common.preview_btn')}
               </Typography>
               <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
@@ -1023,6 +1972,36 @@ export function Spa2OffersManageView() {
                   onChange={(e) => setComboForm((p) => ({ ...p, name: e.target.value }))}
                   fullWidth
                 />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    select
+                    label="Danh mục"
+                    value={comboForm.category}
+                    onChange={(e) => setComboForm((p) => ({ ...p, category: e.target.value }))}
+                    fullWidth
+                  >
+                    {SPA2_COMBO_CATEGORIES.map((cat) => (
+                      <MenuItem key={cat} value={cat}>
+                        {cat}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                  <TextField
+                    select
+                    label={t('common.status')}
+                    value={comboForm.status}
+                    onChange={(e) =>
+                      setComboForm((p) => ({ ...p, status: e.target.value as Spa2ComboStatus }))
+                    }
+                    fullWidth
+                  >
+                    {COMBO_STATUS_OPTIONS.map((s) => (
+                      <MenuItem key={s} value={s}>
+                        {s}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Stack>
                 <TextField
                   label={t('offers.combo_services')}
                   value={comboForm.servicesInput}
@@ -1070,7 +2049,10 @@ export function Spa2OffersManageView() {
               </Stack>
             </Grid>
             <Grid xs={12} md={6}>
-              <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1, display: 'block' }}>
+              <Typography
+                variant="caption"
+                sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
+              >
                 {t('common.preview_btn')}
               </Typography>
               <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
@@ -1081,6 +2063,8 @@ export function Spa2OffersManageView() {
                   salePrice={comboForm.salePrice}
                   image={comboForm.image}
                   perks={comboPerksList}
+                  category={comboForm.category}
+                  status={comboForm.status}
                 />
               </Box>
             </Grid>
@@ -1110,6 +2094,92 @@ export function Spa2OffersManageView() {
           </Button>
         }
       />
+
+      {/* Xem chi tiết - khách hàng đặt combo/voucher */}
+      <Dialog
+        open={!!viewRedemption}
+        onClose={() => setViewRedemption(null)}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>
+          Chi tiết {viewRedemption ? REDEMPTION_TYPE_LABEL[viewRedemption.type] : ''} #
+          {viewRedemption?.id}
+        </DialogTitle>
+        <DialogContent dividers>
+          {viewRedemption && (
+            <Stack spacing={1.5}>
+              {(
+                [
+                  ['Khách hàng', viewRedemption.customer],
+                  ['Điện thoại', viewRedemption.phone],
+                  ['Loại', REDEMPTION_TYPE_LABEL[viewRedemption.type]],
+                  [
+                    viewRedemption.type === 'combo' ? 'Combo đã đặt' : 'Voucher',
+                    viewRedemption.itemName,
+                  ],
+                  ['Mã', viewRedemption.itemCode],
+                  [
+                    viewRedemption.type === 'combo' ? 'Giá trị đơn' : 'Giá trị hoá đơn',
+                    formatVND(viewRedemption.orderValue),
+                  ],
+                  ...(viewRedemption.type === 'voucher'
+                    ? ([
+                        [
+                          'Đã giảm',
+                          viewRedemption.discountAmount !== undefined
+                            ? formatVND(viewRedemption.discountAmount)
+                            : '—',
+                        ],
+                      ] as [string, string][])
+                    : []),
+                  ['Thanh toán', PAYMENT_STATUS_LABEL[viewRedemption.paymentStatus]],
+                  [
+                    viewRedemption.type === 'combo' ? 'Ngày đặt' : 'Ngày dùng',
+                    viewRedemption.createdAt,
+                  ],
+                ] as [string, string][]
+              ).map(([label, value]) => (
+                <Box key={label} sx={{ display: 'flex', gap: 1 }}>
+                  <Typography variant="body2" color="text.secondary" sx={{ minWidth: 110 }}>
+                    {label}:
+                  </Typography>
+                  <Typography variant="body2" fontWeight={500}>
+                    {value}
+                  </Typography>
+                </Box>
+              ))}
+              <Divider />
+              <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                <Typography variant="body2" color="text.secondary" sx={{ minWidth: 110 }}>
+                  {t('common.status')}:
+                </Typography>
+                <TextField
+                  select
+                  size="small"
+                  value={viewRedemption.status}
+                  onChange={(e) =>
+                    handleSetRedemptionStatus(
+                      viewRedemption.id,
+                      e.target.value as Spa2OfferRedemptionStatus
+                    )
+                  }
+                  sx={{ flex: 1 }}
+                >
+                  {REDEMPTION_STATUS_OPTIONS.map((s) => (
+                    <MenuItem key={s} value={s}>
+                      {REDEMPTION_STATUS_LABEL[s]}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Box>
+            </Stack>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setViewRedemption(null)}>{t('common.close')}</Button>
+        </DialogActions>
+      </Dialog>
     </Spa2ManageShell>
   );
 }

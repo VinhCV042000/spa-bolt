@@ -1,7 +1,11 @@
 import type { ReactNode } from 'react';
-import type { Spa2AdjustableImage } from 'src/_mock/_spa2';
+import type {
+  Spa2AdjustableImage,
+  Spa2ContactSubmission,
+  Spa2ContactSubmissionStatus,
+} from 'src/_mock/_spa2';
 
-import { useState } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -9,20 +13,45 @@ import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Tabs from '@mui/material/Tabs';
 import Stack from '@mui/material/Stack';
+import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
-import Container from '@mui/material/Container';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
+import TableRow from '@mui/material/TableRow';
 import Grid from '@mui/material/Unstable_Grid2';
+import Container from '@mui/material/Container';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
 import TextField from '@mui/material/TextField';
+import { useTheme } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import InputAdornment from '@mui/material/InputAdornment';
+import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 
 import { useTranslate } from 'src/locales';
-import { spa2ContactInfo, spa2ContactBanner } from 'src/_mock/_spa2';
+import { bgBlur, varAlpha } from 'src/theme/styles';
+import { spa2ContactInfo, spa2ContactBanner, SPA2_CONTACT_SUBMISSIONS } from 'src/_mock/_spa2';
 
+import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { useTable } from 'src/components/table/use-table';
+import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
 
+import {
+  Spa2PageHero,
+  Spa2SoftCard,
+  Spa2SectionTitle,
+} from 'src/sections/spa2/view/spa2-content-pages';
 import {
   SPA2_INK,
   SPA2_TEAL,
@@ -30,11 +59,9 @@ import {
   SPA2_TEAL_DARK,
   SPA2_CREAM_DARK,
 } from 'src/sections/spa2/spa2-pages-data';
-import { Spa2PageHero, Spa2SoftCard, Spa2SectionTitle } from 'src/sections/spa2/view/spa2-content-pages';
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
-
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages.tsx's
 // Spa2ContactPageView renders on the public /spa2/contact page: the page
@@ -46,7 +73,26 @@ import { Spa2ManageShell } from './spa2-manage-shell';
 // can never visually drift from reality.
 // -----------------------------------------------------------------------------
 
-type TabKey = 'banner' | 'info' | 'preview';
+type TabKey = 'banner' | 'info' | 'submissions' | 'preview';
+
+// ---------- Khách hàng liên hệ (contact form submissions) tab ----------
+
+type SubmissionStatusFilter = Spa2ContactSubmissionStatus | 'all';
+
+const SUBMISSION_STATUS_COLOR: Record<Spa2ContactSubmissionStatus, 'info' | 'success' | 'default'> =
+  {
+    new: 'info',
+    replied: 'success',
+    closed: 'default',
+  };
+
+const SUBMISSION_STATUS_LABEL: Record<Spa2ContactSubmissionStatus, string> = {
+  new: 'Mới',
+  replied: 'Đã trả lời',
+  closed: 'Đã đóng',
+};
+
+const SUBMISSION_STATUS_OPTIONS: Spa2ContactSubmissionStatus[] = ['new', 'replied', 'closed'];
 
 function SectionCard({
   title,
@@ -94,6 +140,7 @@ function PreviewFrame({ children }: { children: ReactNode }) {
 }
 
 export function Spa2ContactManageView() {
+  const theme = useTheme();
   const { t } = useTranslate('spa2-manage');
 
   const [banner, setBanner] = useState(() => ({
@@ -105,6 +152,46 @@ export function Spa2ContactManageView() {
   const [savedAt, setSavedAt] = useState<Date | null>(null);
   const [tab, setTab] = useState<TabKey>('banner');
   const markDirty = () => setDirty(true);
+
+  // ---- Khách hàng liên hệ (contact form submissions) ----
+  const [submissions, setSubmissions] = useState<Spa2ContactSubmission[]>(SPA2_CONTACT_SUBMISSIONS);
+  const [submissionSearch, setSubmissionSearch] = useState('');
+  const [submissionStatusFilter, setSubmissionStatusFilter] =
+    useState<SubmissionStatusFilter>('all');
+  const [viewSubmission, setViewSubmission] = useState<Spa2ContactSubmission | null>(null);
+  const submissionsTable = useTable({ defaultRowsPerPage: 5 });
+
+  const filteredSubmissions = useMemo(
+    () =>
+      submissions.filter((s) => {
+        const q = submissionSearch.toLowerCase();
+        const matchSearch =
+          !q ||
+          s.name.toLowerCase().includes(q) ||
+          s.phone.includes(submissionSearch) ||
+          s.email.toLowerCase().includes(q) ||
+          s.subject.toLowerCase().includes(q) ||
+          s.message.toLowerCase().includes(q);
+        const matchStatus = submissionStatusFilter === 'all' || s.status === submissionStatusFilter;
+        return matchSearch && matchStatus;
+      }),
+    [submissions, submissionSearch, submissionStatusFilter]
+  );
+
+  const handleSetSubmissionStatus = useCallback(
+    (id: number, status: Spa2ContactSubmissionStatus) => {
+      setSubmissions((prev) => prev.map((s) => (s.id === id ? { ...s, status } : s)));
+      setViewSubmission((v) => (v?.id === id ? { ...v, status } : v));
+    },
+    []
+  );
+
+  const submissionCounts = {
+    all: submissions.length,
+    new: submissions.filter((s) => s.status === 'new').length,
+    replied: submissions.filter((s) => s.status === 'replied').length,
+    closed: submissions.filter((s) => s.status === 'closed').length,
+  };
 
   const updateBanner = (key: 'eyebrow' | 'title' | 'subtitle', value: string) => {
     setBanner((prev) => ({ ...prev, [key]: value }));
@@ -128,6 +215,7 @@ export function Spa2ContactManageView() {
   const handleReset = () => {
     setBanner({ ...spa2ContactBanner, image: { ...spa2ContactBanner.image } });
     setInfo({ ...spa2ContactInfo });
+    setSubmissions(SPA2_CONTACT_SUBMISSIONS);
     setDirty(false);
   };
 
@@ -246,12 +334,9 @@ export function Spa2ContactManageView() {
         sx={{
           mb: 3,
           position: 'sticky',
-          top: 65,
+          top: 64,
           zIndex: 10,
-          bgcolor: 'background.paper',
-          '& .MuiTab-root': { minHeight: 56, fontWeight: 600 },
-          '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
-          '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+          ...bgBlur({ color: varAlpha(theme.vars.palette.background.defaultChannel, 0.8) }),
         }}
       >
         <Tab
@@ -264,6 +349,12 @@ export function Spa2ContactManageView() {
           value="info"
           label={t('contact.info_section')}
           icon={<Iconify icon="solar:phone-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
+          value="submissions"
+          label="Khách hàng liên hệ"
+          icon={<Iconify icon="solar:chat-round-line-bold-duotone" width={20} />}
           iconPosition="start"
         />
         <Tab
@@ -447,9 +538,7 @@ export function Spa2ContactManageView() {
                         <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
                           {i.label}
                         </Typography>
-                        <Typography sx={{ color: SPA2_INK, fontWeight: 600 }}>
-                          {i.value}
-                        </Typography>
+                        <Typography sx={{ color: SPA2_INK, fontWeight: 600 }}>{i.value}</Typography>
                       </Stack>
                     </Stack>
                   </Spa2SoftCard>
@@ -458,6 +547,291 @@ export function Spa2ContactManageView() {
             </SectionCard>
           </Grid>
         </Grid>
+      )}
+
+      {/* Khách hàng liên hệ - tin nhắn khách gửi qua form liên hệ công khai (dữ liệu vận hành, không đồng bộ với trang public) */}
+      {tab === 'submissions' && (
+        <Card>
+          <Box sx={{ p: 2.5, borderBottom: `1px solid ${SPA2_CREAM_DARK}` }}>
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <Iconify
+                icon="solar:chat-round-line-bold-duotone"
+                width={22}
+                sx={{ color: SPA2_TEAL }}
+              />
+              <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                Khách hàng liên hệ
+              </Typography>
+            </Stack>
+          </Box>
+
+          {/* KPI */}
+          <Scrollbar sx={{ minHeight: 108 }}>
+            <Stack spacing={2} direction="row" sx={{ py: 2, px: 1 }}>
+              {[
+                {
+                  key: 'all',
+                  label: 'Tất cả',
+                  value: submissionCounts.all,
+                  icon: 'solar:chat-round-dots-bold-duotone',
+                },
+                {
+                  key: 'new',
+                  label: SUBMISSION_STATUS_LABEL.new,
+                  value: submissionCounts.new,
+                  icon: 'solar:bell-bing-bold-duotone',
+                },
+                {
+                  key: 'replied',
+                  label: SUBMISSION_STATUS_LABEL.replied,
+                  value: submissionCounts.replied,
+                  icon: 'solar:check-circle-bold-duotone',
+                },
+                {
+                  key: 'closed',
+                  label: SUBMISSION_STATUS_LABEL.closed,
+                  value: submissionCounts.closed,
+                  icon: 'solar:close-circle-bold-duotone',
+                },
+              ].map((k) => (
+                <Card
+                  onClick={() => {
+                    setSubmissionStatusFilter(k.key as SubmissionStatusFilter);
+                    submissionsTable.onResetPage();
+                  }}
+                  sx={{
+                    p: 2,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1.5,
+                    width: 1,
+                    minWidth: 180,
+                    bgcolor: submissionStatusFilter === k.key ? `${SPA2_TEAL}12` : SPA2_CREAM,
+                    transition: 'all .2s',
+                    '&:hover': { borderColor: SPA2_TEAL },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 1.5,
+                      bgcolor: `${SPA2_TEAL}18`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Iconify icon={k.icon} width={22} sx={{ color: SPA2_TEAL_DARK }} />
+                  </Box>
+                  <Box>
+                    <Typography variant="h6" sx={{ color: SPA2_TEAL_DARK, lineHeight: 1 }}>
+                      {k.value}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {k.label}
+                    </Typography>
+                  </Box>
+                </Card>
+              ))}
+            </Stack>
+          </Scrollbar>
+
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ px: 2.5, pb: 2 }}>
+            <TextField
+              placeholder="Tìm theo tên, số điện thoại, email, chủ đề, nội dung..."
+              value={submissionSearch}
+              onChange={(e) => {
+                setSubmissionSearch(e.target.value);
+                submissionsTable.onResetPage();
+              }}
+              size="small"
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Stack>
+
+          <Box sx={{ px: 2.5 }}>
+            <Tabs
+              value={submissionStatusFilter}
+              onChange={(_, v: SubmissionStatusFilter) => {
+                setSubmissionStatusFilter(v);
+                submissionsTable.onResetPage();
+              }}
+              variant="scrollable"
+              sx={{
+                '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+                '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
+              }}
+            >
+              <Tab
+                value="all"
+                label="Tất cả"
+                iconPosition="end"
+                icon={
+                  <Label
+                    variant={(submissionStatusFilter === 'all' && 'filled') || 'soft'}
+                    color="default"
+                  >
+                    {submissionCounts.all}
+                  </Label>
+                }
+              />
+              <Tab
+                value="new"
+                label={`${SUBMISSION_STATUS_LABEL.new}`}
+                iconPosition="end"
+                icon={
+                  <Label
+                    variant={(submissionStatusFilter === 'new' && 'filled') || 'soft'}
+                    color="success"
+                  >
+                    {submissionCounts.new}
+                  </Label>
+                }
+              />
+              <Tab
+                value="replied"
+                label={`${SUBMISSION_STATUS_LABEL.replied}`}
+                iconPosition="end"
+                icon={
+                  <Label
+                    variant={(submissionStatusFilter === 'replied' && 'filled') || 'soft'}
+                    color="info"
+                  >
+                    {submissionCounts.replied}
+                  </Label>
+                }
+              />
+              <Tab
+                value="closed"
+                label={`${SUBMISSION_STATUS_LABEL.closed}`}
+                iconPosition="end"
+                icon={
+                  <Label
+                    variant={(submissionStatusFilter === 'closed' && 'filled') || 'soft'}
+                    color="error"
+                  >
+                    {submissionCounts.closed}
+                  </Label>
+                }
+              />
+            </Tabs>
+          </Box>
+
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Khách hàng</TableCell>
+                  <TableCell>Chủ đề</TableCell>
+                  <TableCell>Nội dung</TableCell>
+                  <TableCell>Ngày gửi</TableCell>
+                  <TableCell>Trạng thái</TableCell>
+                  <TableCell align="right">Thao tác</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredSubmissions
+                  .slice(
+                    submissionsTable.page * submissionsTable.rowsPerPage,
+                    submissionsTable.page * submissionsTable.rowsPerPage +
+                      submissionsTable.rowsPerPage
+                  )
+                  .map((s) => (
+                    <TableRow key={s.id} hover>
+                      <TableCell>
+                        <Stack>
+                          <Typography variant="subtitle2" sx={{ color: SPA2_TEAL_DARK }}>
+                            {s.name}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {s.phone}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {s.email}
+                          </Typography>
+                        </Stack>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">{s.subject}</Typography>
+                      </TableCell>
+                      <TableCell sx={{ maxWidth: 240 }}>
+                        <Tooltip title={s.message}>
+                          <Typography variant="body2" noWrap>
+                            {s.message}
+                          </Typography>
+                        </Tooltip>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">{s.createdAt}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          size="small"
+                          label={SUBMISSION_STATUS_LABEL[s.status]}
+                          color={SUBMISSION_STATUS_COLOR[s.status]}
+                          variant="soft"
+                        />
+                      </TableCell>
+                      <TableCell align="right">
+                        <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
+                          {s.status === 'new' && (
+                            <Tooltip title="Đánh dấu đã trả lời">
+                              <IconButton
+                                size="small"
+                                color="success"
+                                onClick={() => handleSetSubmissionStatus(s.id, 'replied')}
+                              >
+                                <Iconify icon="solar:check-circle-bold" />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                          {s.status !== 'closed' && (
+                            <Tooltip title="Đóng">
+                              <IconButton
+                                size="small"
+                                color="error"
+                                onClick={() => handleSetSubmissionStatus(s.id, 'closed')}
+                              >
+                                <Iconify icon="solar:close-circle-bold" />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                          <Tooltip title="Xem chi tiết">
+                            <IconButton size="small" onClick={() => setViewSubmission(s)}>
+                              <Iconify icon="solar:eye-bold" />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                {filteredSubmissions.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={6} align="center" sx={{ py: 6, color: 'text.disabled' }}>
+                      Không có dữ liệu
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePaginationCustom
+            count={filteredSubmissions.length}
+            page={submissionsTable.page}
+            rowsPerPage={submissionsTable.rowsPerPage}
+            onPageChange={submissionsTable.onChangePage}
+            onRowsPerPageChange={submissionsTable.onChangeRowsPerPage}
+          />
+        </Card>
       )}
 
       {/* Full-page live preview - pixel-for-pixel same layout/order as the public /spa2/contact page */}
@@ -515,6 +889,75 @@ export function Spa2ContactManageView() {
           </Box>
         </Box>
       )}
+
+      {/* Xem chi tiết tin nhắn liên hệ */}
+      <Dialog
+        open={!!viewSubmission}
+        onClose={() => setViewSubmission(null)}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>
+          Chi tiết liên hệ #{viewSubmission?.id}
+        </DialogTitle>
+        <DialogContent dividers>
+          {viewSubmission && (
+            <Stack spacing={1.5}>
+              {[
+                ['Họ và tên', viewSubmission.name],
+                ['Số điện thoại', viewSubmission.phone],
+                ['Email', viewSubmission.email],
+                ['Chủ đề', viewSubmission.subject],
+                ['Ngày gửi', viewSubmission.createdAt],
+              ].map(([label, value]) => (
+                <Box key={label} sx={{ display: 'flex', gap: 1 }}>
+                  <Typography variant="body2" color="text.secondary" sx={{ minWidth: 100 }}>
+                    {label}:
+                  </Typography>
+                  <Typography variant="body2" fontWeight={500}>
+                    {value}
+                  </Typography>
+                </Box>
+              ))}
+              <Box>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+                  Nội dung:
+                </Typography>
+                <Typography variant="body2" fontWeight={500} sx={{ whiteSpace: 'pre-wrap' }}>
+                  {viewSubmission.message}
+                </Typography>
+              </Box>
+              <Divider />
+              <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                <Typography variant="body2" color="text.secondary" sx={{ minWidth: 100 }}>
+                  Trạng thái:
+                </Typography>
+                <TextField
+                  select
+                  size="small"
+                  value={viewSubmission.status}
+                  onChange={(e) =>
+                    handleSetSubmissionStatus(
+                      viewSubmission.id,
+                      e.target.value as Spa2ContactSubmissionStatus
+                    )
+                  }
+                  sx={{ flex: 1 }}
+                >
+                  {SUBMISSION_STATUS_OPTIONS.map((st) => (
+                    <MenuItem key={st} value={st}>
+                      {SUBMISSION_STATUS_LABEL[st]}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Box>
+            </Stack>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setViewSubmission(null)}>Đóng</Button>
+        </DialogActions>
+      </Dialog>
     </Spa2ManageShell>
   );
 }

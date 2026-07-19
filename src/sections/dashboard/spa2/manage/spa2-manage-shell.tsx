@@ -53,9 +53,9 @@ export function Spa2ManageShell({
         sx={{
           position: 'relative',
           overflow: 'hidden',
+          mb:3,
           borderRadius: 3,
           p: { xs: 3, md: 4 },
-          mb: 3,
           color: 'common.white',
           background: `linear-gradient(135deg, ${SPA2_TEAL_DARK} 0%, ${SPA2_TEAL} 55%, ${SPA2_TEAL_LIGHT} 100%)`,
         }}

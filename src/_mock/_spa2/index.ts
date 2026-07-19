@@ -212,6 +212,8 @@ export type Spa2ServiceItem = {
   category: string;
   name: string;
   short: string;
+  /** HTML string produced by the rich-text editor; rendered verbatim on the public page. */
+  description: string;
   duration: string;
   price: number;
   image: string;
@@ -335,6 +337,10 @@ export const SPA2_SERVICES: Spa2ServiceItem[] = [
     category: 'massage',
     name: 'Massage Thảo Dược',
     short: 'Thư giãn sâu với tinh dầu thảo mộc Việt.',
+    description:
+      '<p>Liệu trình Massage Thảo Dược kết hợp kỹ thuật bấm huyệt cổ truyền với tinh dầu chiết xuất từ sả, gừng và ngải cứu Việt Nam, giúp đả thông khí huyết và giải phóng căng cơ tích tụ sau nhiều ngày làm việc.</p>' +
+      '<p>Kỹ thuật viên sẽ điều chỉnh lực tay theo thể trạng từng khách, ưu tiên các vùng vai, gáy và lưng dưới — nơi thường chịu áp lực nhiều nhất.</p>' +
+      '<p>Kết thúc liệu trình, cơ thể được thư giãn toàn diện, tinh thần nhẹ nhõm và giấc ngủ sâu hơn trong những ngày tiếp theo.</p>',
     duration: '60 phút',
     price: 690000,
     icon: SPA2_SERVICE_META[0].icon,
@@ -353,6 +359,10 @@ export const SPA2_SERVICES: Spa2ServiceItem[] = [
     category: 'facial',
     name: 'Facial Organic',
     short: 'Cấp ẩm, phục hồi với nguyên liệu 100% hữu cơ.',
+    description:
+      '<p>Facial Organic sử dụng dưỡng chất chiết xuất từ nha đam, trà xanh và mật ong nguyên chất để làm sạch sâu, cấp ẩm và phục hồi hàng rào bảo vệ da tự nhiên.</p>' +
+      '<p>Quy trình bao gồm tẩy tế bào chết nhẹ nhàng, xông hơi thảo dược và đắp mặt nạ theo từng loại da, giúp làm dịu các dấu hiệu kích ứng và mẩn đỏ.</p>' +
+      '<p>Sau liệu trình, da sáng khỏe hơn rõ rệt, đều màu và mềm mại tự nhiên mà không cần trang điểm.</p>',
     duration: '75 phút',
     price: 890000,
     icon: SPA2_SERVICE_META[1].icon,
@@ -371,6 +381,10 @@ export const SPA2_SERVICES: Spa2ServiceItem[] = [
     category: 'body',
     name: 'Body Scrub & Wrap',
     short: 'Tẩy tế bào chết & ủ dưỡng toàn thân.',
+    description:
+      '<p>Body Scrub & Wrap bắt đầu bằng bước tẩy tế bào chết toàn thân bằng muối biển và cà phê rang xay, loại bỏ lớp da chết và kích thích tuần hoàn máu dưới da.</p>' +
+      '<p>Tiếp theo, cơ thể được ủ dưỡng với hỗn hợp bùn khoáng và tinh dầu thiên nhiên trong khoảng 20 phút, giúp thẩm thấu dưỡng chất sâu vào từng lớp da.</p>' +
+      '<p>Liệu trình khép lại với bước massage nhẹ nhàng, mang lại làn da mịn màng, săn chắc và một mùi hương dễ chịu lưu lại suốt cả ngày.</p>',
     duration: '90 phút',
     price: 990000,
     icon: SPA2_SERVICE_META[2].icon,
@@ -389,6 +403,10 @@ export const SPA2_SERVICES: Spa2ServiceItem[] = [
     category: 'massage',
     name: 'Aromatherapy',
     short: 'Liệu pháp hương thơm Pháp – Nhật.',
+    description:
+      '<p>Aromatherapy kết hợp tinh dầu nhập khẩu từ Pháp và Nhật Bản, được pha chế riêng theo nhu cầu thư giãn hoặc phục hồi năng lượng của từng khách hàng.</p>' +
+      '<p>Hương thơm lan tỏa trong suốt liệu trình giúp cân bằng hệ thần kinh, giảm căng thẳng và cải thiện chất lượng giấc ngủ về đêm.</p>' +
+      '<p>Đây là lựa chọn lý tưởng cho những ai thường xuyên chịu áp lực công việc và cần một khoảng lặng để tái tạo tinh thần.</p>',
     duration: '60 phút',
     price: 790000,
     icon: SPA2_SERVICE_META[3].icon,
@@ -407,6 +425,10 @@ export const SPA2_SERVICES: Spa2ServiceItem[] = [
     category: 'couple',
     name: 'Spa Đôi',
     short: 'Không gian riêng tư cho hai người.',
+    description:
+      '<p>Spa Đôi mang đến một không gian riêng tư, ấm cúng dành cho hai người — lý tưởng cho các cặp đôi hoặc bạn bè muốn cùng nhau tận hưởng giây phút thư giãn.</p>' +
+      '<p>Liệu trình bao gồm massage song song, ngâm bồn hoa và thưởng thức trà thảo mộc cùng trái cây tươi trong không gian được thiết kế riêng biệt.</p>' +
+      '<p>Kết thúc buổi trải nghiệm, mỗi khách còn nhận được một món quà nhỏ như lời tri ân từ Nature Spa.</p>',
     duration: '120 phút',
     price: 1990000,
     icon: SPA2_SERVICE_META[4].icon,
@@ -425,6 +447,10 @@ export const SPA2_SERVICES: Spa2ServiceItem[] = [
     category: 'detox',
     name: 'Detox & Thanh Lọc',
     short: 'Chương trình thải độc cơ thể 3 ngày.',
+    description:
+      '<p>Detox & Thanh Lọc là chương trình 3 ngày kết hợp chế độ dinh dưỡng thanh lọc, liệu pháp xông hơi thảo dược và massage bụng chuyên biệt nhằm hỗ trợ gan và hệ tiêu hóa.</p>' +
+      '<p>Chuyên gia dinh dưỡng theo sát từng khách hàng trong suốt chương trình, điều chỉnh thực đơn detox phù hợp với thể trạng và mục tiêu cá nhân.</p>' +
+      '<p>Sau 3 ngày, cơ thể nhẹ nhàng hơn, làn da tươi sáng và tinh thần tràn đầy năng lượng để bắt đầu một chu kỳ sống lành mạnh mới.</p>',
     duration: '3 ngày',
     price: 4590000,
     icon: SPA2_SERVICE_META[5].icon,
@@ -594,7 +620,18 @@ export function spa2DeletePost(slug: string) {
 
 // ---------- Careers (view + dashboard shared) ----------------------------
 
-export const spa2Careers = [
+export const spa2Careers: Array<{
+  id: number;
+  title: string;
+  location: string;
+  type: string;
+  salary: string;
+  benefits: string[];
+  description: string;
+  // Ảnh banner riêng cho tin tuyển dụng này (tuỳ chọn) - nếu không đặt, trang chi
+  // tiết vị trí (spa2/careers/:id) sẽ dùng ảnh banner chung spa2CareersBanner.image.
+  image?: Spa2AdjustableImage;
+}> = [
   {
     id: 1,
     title: 'Kỹ thuật viên Spa cao cấp',
@@ -604,6 +641,12 @@ export const spa2Careers = [
     benefits: ['Đào tạo quốc tế', 'Bảo hiểm cao cấp', 'Du lịch hằng năm'],
     description:
       'Chúng tôi tìm kiếm ứng viên yêu nghề, có tinh thần cầu tiến và mong muốn phát triển sự nghiệp lâu dài trong ngành chăm sóc sắc đẹp.',
+    image: {
+      url: 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=1600&q=80',
+      focalX: 50,
+      focalY: 50,
+      zoom: 100,
+    },
   },
   {
     id: 2,
@@ -694,11 +737,42 @@ export const spa2InternalVideoThumb: Spa2AdjustableImage = {
   zoom: 100,
 };
 
+// Admin-uploaded internal culture video shown on the career details page play
+// button. Empty string = no video uploaded yet, meaning the public page falls
+// back to the decorative (non-clickable) thumbnail-only behaviour.
+export const spa2InternalVideoUrl = '';
+
+export type Spa2InternalVideo = { thumbnail: Spa2AdjustableImage; videoUrl: string };
+
+export const spa2InternalVideo: Spa2InternalVideo = {
+  thumbnail: spa2InternalVideoThumb,
+  videoUrl: spa2InternalVideoUrl,
+};
+
+// Nhiều video môi trường làm việc (thay cho video đơn spa2InternalVideo phía trên,
+// vẫn giữ lại để tương thích ngược). Hiển thị cùng khu vực với spa2WorkplaceGallery
+// trên trang spa2/careers, mỗi video có ảnh thumbnail + tiêu đề + link video.
+export type Spa2WorkplaceVideo = {
+  title: string;
+  thumbnail: Spa2AdjustableImage;
+  videoUrl: string;
+};
+
+export const spa2WorkplaceVideos: Spa2WorkplaceVideo[] = [
+  {
+    title: 'Hậu trường Nature Spa',
+    thumbnail: spa2InternalVideoThumb,
+    videoUrl: spa2InternalVideoUrl,
+  },
+];
+
 export const SPA2_CAREER_SLOGAN = spa2CareersSlogan;
 export const SPA2_JOIN_REASONS = spa2JoinReasons;
 export const SPA2_RECRUITMENT_PROCESS = spa2RecruitmentProcess;
 export const SPA2_WORKPLACE_GALLERY = spa2WorkplaceGallery;
 export const SPA2_INTERNAL_VIDEO_THUMB = spa2InternalVideoThumb;
+export const SPA2_INTERNAL_VIDEO = spa2InternalVideo;
+export const SPA2_WORKPLACE_VIDEOS = spa2WorkplaceVideos;
 
 // ---------- Bookings (view + dashboard shared) --------------------------
 
@@ -1496,10 +1570,16 @@ export const spa2Promotions = [
   },
 ];
 
+// Danh mục + trạng thái combo - dùng cho thống kê ở manage/offers (tab "Gói combo ưu đãi").
+export const SPA2_COMBO_CATEGORIES = ['Trẻ hoá', 'Cặp đôi', 'Thải độc'];
+export type Spa2ComboStatus = 'Đang bán' | 'Tạm dừng' | 'Ngừng bán';
+
 export const spa2ComboOffers = [
   {
     slug: 'combo-thanh-xuan',
     name: 'Combo Thanh Xuân',
+    category: 'Trẻ hoá',
+    status: 'Đang bán' as Spa2ComboStatus,
     services: ['Facial Organic', 'Massage Thảo Dược', 'Body Scrub'],
     originalPrice: 2570000,
     salePrice: 1890000,
@@ -1509,6 +1589,8 @@ export const spa2ComboOffers = [
   {
     slug: 'combo-doi-lua',
     name: 'Combo Đôi Lứa',
+    category: 'Cặp đôi',
+    status: 'Đang bán' as Spa2ComboStatus,
     services: ['Spa Đôi', 'Aromatherapy', 'Body Wrap'],
     originalPrice: 3570000,
     salePrice: 2790000,
@@ -1518,6 +1600,8 @@ export const spa2ComboOffers = [
   {
     slug: 'combo-detox-toan-dien',
     name: 'Combo Detox Toàn Diện',
+    category: 'Thải độc',
+    status: 'Tạm dừng' as Spa2ComboStatus,
     services: ['Detox 3 ngày', 'Massage Thảo Dược', 'Tư vấn dinh dưỡng'],
     originalPrice: 5970000,
     salePrice: 4290000,
@@ -1607,8 +1691,12 @@ export const spa2TrainingPrograms: Spa2TrainingProgram[] = [
   },
 ];
 
-export const spa2TrainingMission =
-  'Đào tạo thế hệ kỹ thuật viên spa chuyên nghiệp, am hiểu thiên nhiên và tận tâm với khách hàng – chuẩn quốc tế, gốc Việt Nam.';
+// Sứ mệnh học viện - nhiều đoạn nội dung (giống spa2AboutStory), mỗi đoạn có thể là
+// văn bản thuần hoặc HTML ngắn do Editor sinh ra.
+export const spa2TrainingMission: string[] = [
+  'Đào tạo thế hệ kỹ thuật viên spa chuyên nghiệp, am hiểu thiên nhiên và tận tâm với khách hàng – chuẩn quốc tế, gốc Việt Nam.',
+  'Mỗi học viên tốt nghiệp đều được trang bị tay nghề vững vàng, tư duy chăm sóc khách hàng tận tâm và cơ hội việc làm thực tế tại hệ thống Nature Spa.',
+];
 
 export const spa2TrainingRoadmap: Spa2TrainingRoadmapStage[] = [
   {
@@ -1750,3 +1838,375 @@ export const spa2ContactInfo = {
   address: '45 Nguyễn Huệ, Quận 1, TP.HCM',
   workingHours: '9:00 – 22:00 mỗi ngày',
 };
+
+// ---------- Đăng ký dịch vụ (admin-only operational data) ----------------
+// Khách hàng để lại thông tin muốn đặt một dịch vụ cụ thể (khác với
+// SPA2_BOOKINGS - đặt lịch theo gói/buổi hẹn cụ thể).
+
+export type Spa2ServiceRegistrationStatus = 'new' | 'contacted' | 'confirmed' | 'cancelled';
+
+export type Spa2ServiceRegistration = {
+  id: number;
+  customer: string;
+  phone: string;
+  email: string;
+  serviceSlug: string;
+  serviceName: string;
+  branch: string;
+  note: string;
+  createdAt: string;
+  status: Spa2ServiceRegistrationStatus;
+};
+
+export const SPA2_SERVICE_REGISTRATIONS: Spa2ServiceRegistration[] = [
+  {
+    id: 1,
+    customer: 'Nguyễn Thị Lan',
+    phone: '0901 234 567',
+    email: 'lan.nguyen@gmail.com',
+    serviceSlug: 'herbal-massage',
+    serviceName: 'Massage Thảo Dược',
+    branch: 'Chi nhánh Quận 1',
+    note: 'Muốn đặt buổi tối cuối tuần',
+    createdAt: '2026-07-10',
+    status: 'new',
+  },
+  {
+    id: 2,
+    customer: 'Trần Minh Khang',
+    phone: '0912 345 678',
+    email: 'khang.tran@gmail.com',
+    serviceSlug: 'organic-facial',
+    serviceName: 'Facial Organic',
+    branch: 'Chi nhánh Quận 3',
+    note: 'Da nhạy cảm, cần tư vấn trước',
+    createdAt: '2026-07-11',
+    status: 'contacted',
+  },
+  {
+    id: 3,
+    customer: 'Phạm Thu Hằng',
+    phone: '0923 456 789',
+    email: 'hang.pham@gmail.com',
+    serviceSlug: 'couples-spa',
+    serviceName: 'Spa Đôi',
+    branch: 'Chi nhánh Đà Nẵng',
+    note: 'Kỷ niệm ngày cưới',
+    createdAt: '2026-07-12',
+    status: 'confirmed',
+  },
+  {
+    id: 4,
+    customer: 'Lê Anh Tuấn',
+    phone: '0934 567 890',
+    email: 'tuan.le@gmail.com',
+    serviceSlug: 'detox-cleanse',
+    serviceName: 'Detox & Thanh Lọc',
+    branch: 'Chi nhánh Quận 1',
+    note: '',
+    createdAt: '2026-07-13',
+    status: 'new',
+  },
+  {
+    id: 5,
+    customer: 'Ngô Bảo Châu',
+    phone: '0945 678 901',
+    email: 'chau.ngo@gmail.com',
+    serviceSlug: 'aromatherapy',
+    serviceName: 'Aromatherapy',
+    branch: 'Chi nhánh Quận 3',
+    note: 'Khách quen, ưu tiên giờ sáng',
+    createdAt: '2026-07-08',
+    status: 'cancelled',
+  },
+];
+
+// ---------- Đăng ký đào tạo (admin-only operational data) ----------------
+
+export type Spa2TrainingRegistrationStatus = 'new' | 'contacted' | 'enrolled' | 'cancelled';
+
+export type Spa2TrainingRegistration = {
+  id: number;
+  name: string;
+  phone: string;
+  email: string;
+  programName: string;
+  note: string;
+  createdAt: string;
+  status: Spa2TrainingRegistrationStatus;
+};
+
+export const SPA2_TRAINING_REGISTRATIONS: Spa2TrainingRegistration[] = [
+  {
+    id: 1,
+    name: 'Đặng Thị Mai',
+    phone: '0901 111 222',
+    email: 'mai.dang@gmail.com',
+    programName: 'Khóa Massage Trị Liệu Cơ Bản',
+    note: 'Muốn học buổi tối',
+    createdAt: '2026-07-05',
+    status: 'new',
+  },
+  {
+    id: 2,
+    name: 'Vũ Hoàng Long',
+    phone: '0912 222 333',
+    email: 'long.vu@gmail.com',
+    programName: 'Khóa Facial Chuyên Sâu',
+    note: 'Đã có kinh nghiệm 1 năm',
+    createdAt: '2026-07-06',
+    status: 'contacted',
+  },
+  {
+    id: 3,
+    name: 'Trịnh Yến Nhi',
+    phone: '0923 333 444',
+    email: 'nhi.trinh@gmail.com',
+    programName: 'Khóa Massage Trị Liệu Cơ Bản',
+    note: '',
+    createdAt: '2026-07-07',
+    status: 'enrolled',
+  },
+  {
+    id: 4,
+    name: 'Bùi Quốc Huy',
+    phone: '0934 444 555',
+    email: 'huy.bui@gmail.com',
+    programName: 'Khóa Facial Chuyên Sâu',
+    note: 'Xin dời lịch khai giảng',
+    createdAt: '2026-07-01',
+    status: 'cancelled',
+  },
+];
+
+// ---------- Hồ sơ ứng tuyển (admin-only operational data) ----------------
+
+export type Spa2CareerApplicationStatus =
+  | 'new'
+  | 'reviewing'
+  | 'interview'
+  | 'hired'
+  | 'rejected';
+
+export type Spa2CareerApplication = {
+  id: number;
+  name: string;
+  phone: string;
+  email: string;
+  jobId: number;
+  jobTitle: string;
+  avatar: string;
+  cvUrl: string;
+  note: string;
+  createdAt: string;
+  status: Spa2CareerApplicationStatus;
+};
+
+// cvUrl: dùng file PDF mẫu công khai để minh hoạ chức năng xem trước CV trong
+// popup quản lý hồ sơ ứng tuyển (bên trái thông tin/ảnh ứng viên, bên phải preview CV).
+const SPA2_SAMPLE_CV_PDF = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
+
+export const SPA2_CAREER_APPLICATIONS: Spa2CareerApplication[] = [
+  {
+    id: 1,
+    name: 'Hồ Thị Kim Ngân',
+    phone: '0901 555 666',
+    email: 'ngan.ho@gmail.com',
+    jobId: 1,
+    jobTitle: 'Kỹ thuật viên Spa cao cấp',
+    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&q=80',
+    cvUrl: SPA2_SAMPLE_CV_PDF,
+    note: '3 năm kinh nghiệm tại spa 5 sao',
+    createdAt: '2026-07-08',
+    status: 'interview',
+  },
+  {
+    id: 2,
+    name: 'Đỗ Văn Phúc',
+    phone: '0912 666 777',
+    email: 'phuc.do@gmail.com',
+    jobId: 2,
+    jobTitle: 'Chuyên viên tư vấn khách hàng',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&q=80',
+    cvUrl: SPA2_SAMPLE_CV_PDF,
+    note: '',
+    createdAt: '2026-07-09',
+    status: 'new',
+  },
+  {
+    id: 3,
+    name: 'Lương Thị Bích',
+    phone: '0923 777 888',
+    email: 'bich.luong@gmail.com',
+    jobId: 3,
+    jobTitle: 'Quản lý chi nhánh',
+    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=300&q=80',
+    cvUrl: SPA2_SAMPLE_CV_PDF,
+    note: 'Từng quản lý chuỗi 3 chi nhánh',
+    createdAt: '2026-07-04',
+    status: 'reviewing',
+  },
+  {
+    id: 4,
+    name: 'Phan Đức Anh',
+    phone: '0934 888 999',
+    email: 'anh.phan@gmail.com',
+    jobId: 4,
+    jobTitle: 'Nhân viên Marketing nội dung',
+    avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=300&q=80',
+    cvUrl: SPA2_SAMPLE_CV_PDF,
+    note: 'Portfolio TikTok 50k follower',
+    createdAt: '2026-06-30',
+    status: 'hired',
+  },
+  {
+    id: 5,
+    name: 'Trương Gia Bảo',
+    phone: '0945 999 000',
+    email: 'bao.truong@gmail.com',
+    jobId: 1,
+    jobTitle: 'Kỹ thuật viên Spa cao cấp',
+    avatar: 'https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?w=300&q=80',
+    cvUrl: '',
+    note: 'Chưa có kinh nghiệm ngành spa',
+    createdAt: '2026-06-28',
+    status: 'rejected',
+  },
+];
+
+// ---------- Khách hàng liên hệ (admin-only operational data) -------------
+
+export type Spa2ContactSubmissionStatus = 'new' | 'replied' | 'closed';
+
+export type Spa2ContactSubmission = {
+  id: number;
+  name: string;
+  phone: string;
+  email: string;
+  subject: string;
+  message: string;
+  createdAt: string;
+  status: Spa2ContactSubmissionStatus;
+};
+
+export const SPA2_CONTACT_SUBMISSIONS: Spa2ContactSubmission[] = [
+  {
+    id: 1,
+    name: 'Nguyễn Hải Yến',
+    phone: '0901 123 456',
+    email: 'yen.nguyen@gmail.com',
+    subject: 'Hỏi về giá combo',
+    message: 'Cho mình hỏi Combo Đôi Lứa còn ưu đãi không ạ?',
+    createdAt: '2026-07-14',
+    status: 'new',
+  },
+  {
+    id: 2,
+    name: 'Trần Bảo Ngọc',
+    phone: '0912 234 567',
+    email: 'ngoc.tran@gmail.com',
+    subject: 'Góp ý dịch vụ',
+    message: 'Nhân viên tư vấn rất nhiệt tình, cảm ơn spa nhiều.',
+    createdAt: '2026-07-13',
+    status: 'replied',
+  },
+  {
+    id: 3,
+    name: 'Lâm Quốc Việt',
+    phone: '0923 345 678',
+    email: 'viet.lam@gmail.com',
+    subject: 'Hỏi lịch khai giảng khoá học',
+    message: 'Khoá Facial Chuyên Sâu tháng 8 khai giảng ngày nào ạ?',
+    createdAt: '2026-07-09',
+    status: 'closed',
+  },
+];
+
+// ---------- Khách hàng đặt combo / nhận voucher (admin-only) -------------
+
+export type Spa2OfferRedemptionType = 'combo' | 'voucher';
+export type Spa2OfferRedemptionStatus = 'new' | 'confirmed' | 'used' | 'cancelled';
+export type Spa2OfferPaymentStatus = 'unpaid' | 'paid' | 'refunded';
+
+export type Spa2OfferRedemption = {
+  id: number;
+  customer: string;
+  phone: string;
+  type: Spa2OfferRedemptionType;
+  itemCode: string;
+  itemName: string;
+  // Combo: giá trị đơn hàng (giá bán combo). Voucher: giá trị hoá đơn được áp dụng voucher.
+  orderValue: number;
+  // Chỉ áp dụng cho voucher - số tiền/mức giảm thực tế đã áp dụng.
+  discountAmount?: number;
+  paymentStatus: Spa2OfferPaymentStatus;
+  createdAt: string;
+  status: Spa2OfferRedemptionStatus;
+};
+
+export const SPA2_OFFER_REDEMPTIONS: Spa2OfferRedemption[] = [
+  {
+    id: 1,
+    customer: 'Đinh Thu Trang',
+    phone: '0901 987 654',
+    type: 'combo',
+    itemCode: 'combo-thanh-xuan',
+    itemName: 'Combo Thanh Xuân',
+    orderValue: 1890000,
+    paymentStatus: 'paid',
+    createdAt: '2026-07-11',
+    status: 'confirmed',
+  },
+  {
+    id: 2,
+    customer: 'Hoàng Minh Đức',
+    phone: '0912 876 543',
+    type: 'voucher',
+    itemCode: 'NEW30',
+    itemName: 'Ưu đãi khách mới',
+    orderValue: 690000,
+    discountAmount: 207000,
+    paymentStatus: 'paid',
+    createdAt: '2026-07-12',
+    status: 'used',
+  },
+  {
+    id: 3,
+    customer: 'Vương Thị Kim',
+    phone: '0923 765 432',
+    type: 'combo',
+    itemCode: 'combo-doi-lua',
+    itemName: 'Combo Đôi Lứa',
+    orderValue: 2790000,
+    paymentStatus: 'unpaid',
+    createdAt: '2026-07-13',
+    status: 'new',
+  },
+  {
+    id: 4,
+    customer: 'Tạ Văn Sơn',
+    phone: '0934 654 321',
+    type: 'voucher',
+    itemCode: 'BIRTHDAY',
+    itemName: 'Sinh nhật vàng',
+    orderValue: 990000,
+    discountAmount: 500000,
+    paymentStatus: 'refunded',
+    createdAt: '2026-06-25',
+    status: 'cancelled',
+  },
+  {
+    id: 5,
+    customer: 'Chu Bảo Trâm',
+    phone: '0945 543 210',
+    type: 'combo',
+    itemCode: 'combo-detox-toan-dien',
+    itemName: 'Combo Detox Toàn Diện',
+    orderValue: 4290000,
+    paymentStatus: 'unpaid',
+    createdAt: '2026-07-14',
+    status: 'new',
+  },
+];
+
+// ============================== SPA2 - END ====================================
