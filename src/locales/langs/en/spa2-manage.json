@@ -76,7 +76,15 @@
     "before_after": "Before & After",
     "faq": "FAQ",
     "training": "Training",
-    "contact": "Contact"
+    "contact": "Contact",
+    "franchise": "Franchise",
+    "group_booking": "Group Booking",
+    "certificate_wall": "Certificates",
+    "video_guide": "Video Guides",
+    "price_list": "Price List",
+    "wait_list": "Wait List",
+    "voucher_check": "Voucher Check",
+    "accessibility": "Accessibility"
   },
   "services": {
     "page_title": "Services Management",
@@ -469,5 +477,45 @@
     "delete_content": "Are you sure you want to delete this program?",
     "status_open": "Enrolling",
     "status_closed": "Closed"
+  },
+  "franchise": {
+    "page_title": "Franchise Management",
+    "add_btn": "Add Application",
+    "breadcrumb": "Franchise"
+  },
+  "group_booking": {
+    "page_title": "Group Booking Management",
+    "add_btn": "Add Group Booking",
+    "breadcrumb": "Group Booking"
+  },
+  "certificate_wall": {
+    "page_title": "Certificate Management",
+    "add_btn": "Add Certificate",
+    "breadcrumb": "Certificates"
+  },
+  "video_guide": {
+    "page_title": "Video Guide Management",
+    "add_btn": "Add Video",
+    "breadcrumb": "Video Guides"
+  },
+  "price_list": {
+    "page_title": "Price List Management",
+    "add_btn": "Add Item",
+    "breadcrumb": "Price List"
+  },
+  "wait_list": {
+    "page_title": "Wait List Management",
+    "add_btn": "Add to Wait List",
+    "breadcrumb": "Wait List"
+  },
+  "voucher_check": {
+    "page_title": "Voucher & Gift Card Management",
+    "add_btn": "Create Voucher",
+    "breadcrumb": "Voucher Check"
+  },
+  "accessibility": {
+    "page_title": "Accessibility Features",
+    "add_btn": "Add Feature",
+    "breadcrumb": "Accessibility"
   }
 }

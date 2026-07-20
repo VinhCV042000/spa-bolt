@@ -76,7 +76,15 @@
     "before_after": "前后对比",
     "faq": "常见问题",
     "training": "培训课程",
-    "contact": "联系方式"
+    "contact": "联系方式",
+    "franchise": "特许加盟",
+    "group_booking": "团体预约",
+    "certificate_wall": "资质证书",
+    "video_guide": "视频教程",
+    "price_list": "价目表",
+    "wait_list": "等待名单",
+    "voucher_check": "券码核销",
+    "accessibility": "无障碍服务"
   },
   "services": { "page_title": "服务管理", "add_btn": "添加服务", "search_placeholder": "搜索服务...", "col_service": "服务", "col_category": "分类", "col_duration": "时长", "col_price": "价格（越南盾）", "col_status": "状态", "form_create": "添加新服务", "form_edit": "编辑服务", "form_name": "服务名称", "form_category": "分类", "form_short": "简短描述", "form_duration": "时长（如：60分钟）", "form_price": "价格（越南盾）", "form_image": "图片链接", "form_benefits": "优势（用逗号分隔）", "delete_title": "删除服务", "delete_content": "此服务将被永久删除。", "status_active": "活跃", "status_inactive": "停用", "banner_section": "页面横幅", "banner_image": "横幅图片", "banner_image_help": "显示在服务页面横幅右侧的图片。", "banner_eyebrow": "Eyebrow（标题上方小标签）", "banner_title": "横幅标题", "banner_subtitle": "简短描述", "list_section": "服务列表", "preview_title": "预览服务页面" },
   "blog": { "page_title": "博客管理", "add_btn": "写新文章", "search_placeholder": "搜索文章...", "col_post": "文章", "col_category": "分类", "col_author": "作者", "col_date": "日期", "col_read_time": "阅读时间", "col_status": "状态", "form_create": "写新文章", "form_edit": "编辑文章", "form_title": "标题", "form_excerpt": "摘要", "form_author": "作者", "form_category": "分类", "form_date": "发布日期", "form_read_time": "阅读时间", "form_cover": "封面图片链接", "delete_title": "删除文章", "delete_content": "此文章将被永久删除。", "status_published": "已发布", "status_draft": "草稿", "banner_section": "页面横幅", "banner_image": "横幅图片", "banner_image_help": "显示在博客页面横幅右侧的图片。", "banner_eyebrow": "Eyebrow（标题上方小标签）", "banner_title": "横幅标题", "banner_subtitle": "简短描述", "list_section": "文章列表", "preview_title": "预览博客页面" },
@@ -93,5 +101,13 @@
   "partners": { "page_title": "合作伙伴管理", "add_btn": "添加合作伙伴", "search_placeholder": "按名称、国家搜索...", "col_partner": "合作伙伴", "col_country": "国家", "col_specialty": "专长", "col_since": "合作时间", "col_expert": "负责人", "form_create": "添加新合作伙伴", "form_edit": "编辑合作伙伴", "form_name": "名称", "form_abbr": "缩写", "form_country": "国家", "form_since": "合作起始年份", "form_specialty": "专长", "form_desc": "描述", "form_expert": "负责人", "delete_title": "删除合作伙伴", "delete_content": "确定要删除此合作伙伴吗？" },
   "before_after": { "page_title": "前后对比管理", "add_btn": "添加案例", "search_placeholder": "搜索...", "col_case": "疗程", "col_duration": "周期", "col_note": "效果说明", "col_status": "状态", "form_create": "添加前后对比案例", "form_edit": "编辑案例", "form_title": "标题", "form_before": "治疗前图片链接", "form_after": "治疗后图片链接", "form_duration": "疗程周期", "form_note": "效果说明", "detail_title": "案例详情", "delete_title": "删除案例", "delete_content": "确定要删除此案例吗？" },
   "faq": { "page_title": "常见问题管理", "add_btn": "添加问题", "search_placeholder": "搜索问题...", "col_order": "#", "col_question": "问题", "col_answer": "回答", "col_visible": "可见", "form_create": "添加新问题", "form_edit": "编辑问题", "form_question": "问题", "form_answer": "回答", "delete_title": "删除问题", "delete_content": "确定要删除此问题吗？", "status_visible": "可见", "status_hidden": "隐藏" },
-  "training": { "page_title": "培训课程管理", "add_btn": "添加课程", "search_placeholder": "搜索课程...", "col_program": "课程", "col_duration": "时长", "col_level": "级别", "col_price": "学费（越南盾）", "col_enrolled": "已报名", "col_status": "状态", "form_create": "添加新课程", "form_edit": "编辑课程", "form_name": "课程名称", "form_duration": "时长", "form_level": "级别", "form_price": "学费（越南盾）", "form_outcome": "学习成果", "delete_title": "删除课程", "delete_content": "确定要删除此课程吗？", "status_open": "招生中", "status_closed": "已关闭" }
+  "training": { "page_title": "培训课程管理", "add_btn": "添加课程", "search_placeholder": "搜索课程...", "col_program": "课程", "col_duration": "时长", "col_level": "级别", "col_price": "学费（越南盾）", "col_enrolled": "已报名", "col_status": "状态", "form_create": "添加新课程", "form_edit": "编辑课程", "form_name": "课程名称", "form_duration": "时长", "form_level": "级别", "form_price": "学费（越南盾）", "form_outcome": "学习成果", "delete_title": "删除课程", "delete_content": "确定要删除此课程吗？", "status_open": "招生中", "status_closed": "已关闭" },
+  "franchise": { "page_title": "特许加盟管理", "add_btn": "添加申请", "breadcrumb": "特许加盟" },
+  "group_booking": { "page_title": "团体预约管理", "add_btn": "添加团体预约", "breadcrumb": "团体预约" },
+  "certificate_wall": { "page_title": "资质证书管理", "add_btn": "添加证书", "breadcrumb": "资质证书" },
+  "video_guide": { "page_title": "视频教程管理", "add_btn": "添加视频", "breadcrumb": "视频教程" },
+  "price_list": { "page_title": "价目表管理", "add_btn": "添加价格项", "breadcrumb": "价目表" },
+  "wait_list": { "page_title": "等待名单管理", "add_btn": "加入等待名单", "breadcrumb": "等待名单" },
+  "voucher_check": { "page_title": "券码与礼品卡管理", "add_btn": "创建券码", "breadcrumb": "券码核销" },
+  "accessibility": { "page_title": "无障碍服务管理", "add_btn": "添加功能", "breadcrumb": "无障碍服务" }
 }

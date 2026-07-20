@@ -76,7 +76,15 @@
     "before_after": "قبل وبعد",
     "faq": "الأسئلة الشائعة",
     "training": "التدريب",
-    "contact": "اتصل بنا"
+    "contact": "اتصل بنا",
+    "franchise": "الامتياز التجاري",
+    "group_booking": "حجز جماعي",
+    "certificate_wall": "جدار الشهادات",
+    "video_guide": "الفيديوهات الإرشادية",
+    "price_list": "قائمة الأسعار",
+    "wait_list": "قائمة الانتظار",
+    "voucher_check": "فحص الكوبونات",
+    "accessibility": "إمكانية الوصول"
   },
   "services": { "page_title": "إدارة الخدمات", "add_btn": "إضافة خدمة", "search_placeholder": "البحث في الخدمات...", "col_service": "الخدمة", "col_category": "الفئة", "col_duration": "المدة", "col_price": "السعر (دونج)", "col_status": "الحالة", "form_create": "إضافة خدمة جديدة", "form_edit": "تعديل الخدمة", "form_name": "اسم الخدمة", "form_category": "الفئة", "form_short": "وصف مختصر", "form_duration": "المدة (مثال: 60 دقيقة)", "form_price": "السعر (دونج)", "form_image": "رابط الصورة", "form_benefits": "المزايا (مفصولة بفواصل)", "delete_title": "حذف الخدمة", "delete_content": "سيتم حذف هذه الخدمة نهائياً.", "status_active": "نشط", "status_inactive": "غير نشط", "banner_section": "بانر الصفحة", "banner_image": "صورة البانر", "banner_image_help": "الصورة المعروضة على يمين بانر صفحة الخدمات.", "banner_eyebrow": "Eyebrow (تسمية صغيرة أعلى العنوان)", "banner_title": "عنوان البانر", "banner_subtitle": "وصف مختصر", "list_section": "قائمة الخدمات", "preview_title": "معاينة صفحة الخدمات" },
   "blog": { "page_title": "إدارة المدونة", "add_btn": "كتابة مقال جديد", "search_placeholder": "البحث في المقالات...", "col_post": "المقال", "col_category": "الفئة", "col_author": "الكاتب", "col_date": "التاريخ", "col_read_time": "وقت القراءة", "col_status": "الحالة", "form_create": "مقال جديد", "form_edit": "تعديل المقال", "form_title": "العنوان", "form_excerpt": "مقتطف", "form_author": "الكاتب", "form_category": "الفئة", "form_date": "تاريخ النشر", "form_read_time": "وقت القراءة", "form_cover": "رابط صورة الغلاف", "delete_title": "حذف المقال", "delete_content": "سيتم حذف هذا المقال نهائياً.", "status_published": "منشور", "status_draft": "مسودة", "banner_section": "بانر الصفحة", "banner_image": "صورة البانر", "banner_image_help": "الصورة المعروضة على يمين بانر صفحة المدونة.", "banner_eyebrow": "Eyebrow (تسمية صغيرة أعلى العنوان)", "banner_title": "عنوان البانر", "banner_subtitle": "وصف مختصر", "list_section": "قائمة المقالات", "preview_title": "معاينة صفحة المدونة" },
@@ -93,5 +101,13 @@
   "partners": { "page_title": "إدارة الشركاء", "add_btn": "إضافة شريك", "search_placeholder": "البحث بالاسم، الدولة...", "col_partner": "الشريك", "col_country": "الدولة", "col_specialty": "التخصص", "col_since": "منذ", "col_expert": "مدير الحساب", "form_create": "إضافة شريك جديد", "form_edit": "تعديل الشريك", "form_name": "الاسم", "form_abbr": "الاختصار", "form_country": "الدولة", "form_since": "سنة بدء الشراكة", "form_specialty": "التخصص", "form_desc": "الوصف", "form_expert": "مدير الحساب", "delete_title": "حذف الشريك", "delete_content": "هل أنت متأكد من حذف هذا الشريك؟" },
   "before_after": { "page_title": "إدارة قبل وبعد", "add_btn": "إضافة حالة", "search_placeholder": "البحث...", "col_case": "العلاج", "col_duration": "المدة", "col_note": "ملاحظة النتيجة", "col_status": "الحالة", "form_create": "إضافة حالة قبل وبعد", "form_edit": "تعديل الحالة", "form_title": "العنوان", "form_before": "رابط صورة قبل", "form_after": "رابط صورة بعد", "form_duration": "مدة العلاج", "form_note": "ملاحظة النتيجة", "detail_title": "تفاصيل الحالة", "delete_title": "حذف الحالة", "delete_content": "هل أنت متأكد من حذف هذه الحالة؟" },
   "faq": { "page_title": "إدارة الأسئلة الشائعة", "add_btn": "إضافة سؤال", "search_placeholder": "البحث في الأسئلة...", "col_order": "#", "col_question": "السؤال", "col_answer": "الإجابة", "col_visible": "مرئي", "form_create": "إضافة سؤال جديد", "form_edit": "تعديل السؤال", "form_question": "السؤال", "form_answer": "الإجابة", "delete_title": "حذف السؤال", "delete_content": "هل أنت متأكد من حذف هذا السؤال؟", "status_visible": "مرئي", "status_hidden": "مخفي" },
-  "training": { "page_title": "برامج التدريب", "add_btn": "إضافة برنامج", "search_placeholder": "البحث في البرامج...", "col_program": "البرنامج", "col_duration": "المدة", "col_level": "المستوى", "col_price": "الرسوم (دونج)", "col_enrolled": "المسجلون", "col_status": "الحالة", "form_create": "إضافة برنامج جديد", "form_edit": "تعديل البرنامج", "form_name": "اسم البرنامج", "form_duration": "المدة", "form_level": "المستوى", "form_price": "الرسوم (دونج)", "form_outcome": "مخرجات التعلم", "delete_title": "حذف البرنامج", "delete_content": "هل أنت متأكد من حذف هذا البرنامج؟", "status_open": "تسجيل مفتوح", "status_closed": "مغلق" }
+  "training": { "page_title": "برامج التدريب", "add_btn": "إضافة برنامج", "search_placeholder": "البحث في البرامج...", "col_program": "البرنامج", "col_duration": "المدة", "col_level": "المستوى", "col_price": "الرسوم (دونج)", "col_enrolled": "المسجلون", "col_status": "الحالة", "form_create": "إضافة برنامج جديد", "form_edit": "تعديل البرنامج", "form_name": "اسم البرنامج", "form_duration": "المدة", "form_level": "المستوى", "form_price": "الرسوم (دونج)", "form_outcome": "مخرجات التعلم", "delete_title": "حذف البرنامج", "delete_content": "هل أنت متأكد من حذف هذا البرنامج؟", "status_open": "تسجيل مفتوح", "status_closed": "مغلق" },
+  "franchise": { "page_title": "إدارة الامتياز التجاري", "add_btn": "إضافة طلب", "breadcrumb": "الامتياز التجاري" },
+  "group_booking": { "page_title": "إدارة الحجوزات الجماعية", "add_btn": "إضافة حجز جماعي", "breadcrumb": "حجز جماعي" },
+  "certificate_wall": { "page_title": "إدارة الشهادات", "add_btn": "إضافة شهادة", "breadcrumb": "جدار الشهادات" },
+  "video_guide": { "page_title": "إدارة الفيديوهات الإرشادية", "add_btn": "إضافة فيديو", "breadcrumb": "الفيديوهات الإرشادية" },
+  "price_list": { "page_title": "إدارة قائمة الأسعار", "add_btn": "إضافة سعر", "breadcrumb": "قائمة الأسعار" },
+  "wait_list": { "page_title": "إدارة قائمة الانتظار", "add_btn": "إضافة إلى القائمة", "breadcrumb": "قائمة الانتظار" },
+  "voucher_check": { "page_title": "إدارة الكوبونات وبطاقات الهدايا", "add_btn": "إنشاء كوبون", "breadcrumb": "فحص الكوبونات" },
+  "accessibility": { "page_title": "إدارة إمكانية الوصول", "add_btn": "إضافة ميزة", "breadcrumb": "إمكانية الوصول" }
 }

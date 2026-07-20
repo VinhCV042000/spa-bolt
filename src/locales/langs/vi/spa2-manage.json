@@ -76,7 +76,15 @@
     "before_after": "Before & After",
     "faq": "Câu hỏi thường gặp",
     "training": "Đào tạo",
-    "contact": "Liên hệ"
+    "contact": "Liên hệ",
+    "franchise": "Nhượng quyền",
+    "group_booking": "Đặt lịch nhóm",
+    "certificate_wall": "Chứng nhận",
+    "video_guide": "Video hướng dẫn",
+    "price_list": "Bảng giá",
+    "wait_list": "Danh sách chờ",
+    "voucher_check": "Kiểm tra Voucher",
+    "accessibility": "Tiếp cận"
   },
   "services": {
     "page_title": "Quản lý Dịch vụ",
@@ -469,5 +477,45 @@
     "delete_content": "Bạn có chắc muốn xóa khóa học này?",
     "status_open": "Đang tuyển",
     "status_closed": "Tạm đóng"
+  },
+  "franchise": {
+    "page_title": "Quản lý Nhượng quyền",
+    "add_btn": "Thêm đơn ứng tuyển",
+    "breadcrumb": "Nhượng quyền"
+  },
+  "group_booking": {
+    "page_title": "Quản lý Đặt lịch nhóm",
+    "add_btn": "Thêm đặt lịch nhóm",
+    "breadcrumb": "Đặt lịch nhóm"
+  },
+  "certificate_wall": {
+    "page_title": "Quản lý Chứng nhận",
+    "add_btn": "Thêm chứng nhận",
+    "breadcrumb": "Chứng nhận"
+  },
+  "video_guide": {
+    "page_title": "Quản lý Video hướng dẫn",
+    "add_btn": "Thêm video",
+    "breadcrumb": "Video hướng dẫn"
+  },
+  "price_list": {
+    "page_title": "Quản lý Bảng giá",
+    "add_btn": "Thêm mục giá",
+    "breadcrumb": "Bảng giá"
+  },
+  "wait_list": {
+    "page_title": "Quản lý Danh sách chờ",
+    "add_btn": "Thêm vào danh sách chờ",
+    "breadcrumb": "Danh sách chờ"
+  },
+  "voucher_check": {
+    "page_title": "Quản lý Voucher & Thẻ quà",
+    "add_btn": "Tạo voucher mới",
+    "breadcrumb": "Voucher & Thẻ quà"
+  },
+  "accessibility": {
+    "page_title": "Quản lý Tiếp cận",
+    "add_btn": "Thêm tính năng",
+    "breadcrumb": "Tiếp cận"
   }
 }

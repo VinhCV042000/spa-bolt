@@ -73,6 +73,14 @@ const ManageSpa2WaterTherapyPage = lazy(() => import('src/pages/dashboard/manage
 const ManageSpa2AyurvedaPage = lazy(() => import('src/pages/dashboard/manage/spa2/ayurveda'));
 const ManageSpa2SpaHotelPage = lazy(() => import('src/pages/dashboard/manage/spa2/spa-hotel'));
 const ManageSpa2CommunityPage = lazy(() => import('src/pages/dashboard/manage/spa2/community'));
+const ManageSpa2FranchisePage = lazy(() => import('src/pages/dashboard/manage/spa2/franchise'));
+const ManageSpa2GroupBookingPage = lazy(() => import('src/pages/dashboard/manage/spa2/group-booking'));
+const ManageSpa2CertificateWallPage = lazy(() => import('src/pages/dashboard/manage/spa2/certificate-wall'));
+const ManageSpa2VideoGuidePage = lazy(() => import('src/pages/dashboard/manage/spa2/video-guide'));
+const ManageSpa2PriceListPage = lazy(() => import('src/pages/dashboard/manage/spa2/price-list'));
+const ManageSpa2WaitListPage = lazy(() => import('src/pages/dashboard/manage/spa2/wait-list'));
+const ManageSpa2VoucherCheckPage = lazy(() => import('src/pages/dashboard/manage/spa2/voucher-check'));
+const ManageSpa2AccessibilityPage = lazy(() => import('src/pages/dashboard/manage/spa2/accessibility'));
 
 // New singleton + detail management pages
 const ManageSpa2HomePage = lazy(() => import('src/pages/dashboard/manage/spa2/home'));
@@ -229,6 +237,14 @@ export const dashboardSpa2Routes = [
       { path: 'ayurveda', element: <ManageSpa2AyurvedaPage /> },
       { path: 'spa-hotel', element: <ManageSpa2SpaHotelPage /> },
       { path: 'community', element: <ManageSpa2CommunityPage /> },
+      { path: 'franchise', element: <ManageSpa2FranchisePage /> },
+      { path: 'group-booking', element: <ManageSpa2GroupBookingPage /> },
+      { path: 'certificate-wall', element: <ManageSpa2CertificateWallPage /> },
+      { path: 'video-guide', element: <ManageSpa2VideoGuidePage /> },
+      { path: 'price-list', element: <ManageSpa2PriceListPage /> },
+      { path: 'wait-list', element: <ManageSpa2WaitListPage /> },
+      { path: 'voucher-check', element: <ManageSpa2VoucherCheckPage /> },
+      { path: 'accessibility', element: <ManageSpa2AccessibilityPage /> },
     ],
   },
 ];

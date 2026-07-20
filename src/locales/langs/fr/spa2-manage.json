@@ -76,7 +76,15 @@
     "before_after": "Avant & Après",
     "faq": "FAQ",
     "training": "Formation",
-    "contact": "Contact"
+    "contact": "Contact",
+    "franchise": "Franchise",
+    "group_booking": "Réservation de groupe",
+    "certificate_wall": "Certificats",
+    "video_guide": "Guides vidéo",
+    "price_list": "Tarifs",
+    "wait_list": "Liste d'attente",
+    "voucher_check": "Bons cadeaux",
+    "accessibility": "Accessibilité"
   },
   "services": {
     "page_title": "Gestion des Services",
@@ -154,5 +162,13 @@
   "partners": { "page_title": "Gestion des Partenaires", "add_btn": "Ajouter un partenaire", "search_placeholder": "Chercher nom, pays...", "col_partner": "Partenaire", "col_country": "Pays", "col_specialty": "Spécialité", "col_since": "Depuis", "col_expert": "Responsable", "form_create": "Nouveau partenaire", "form_edit": "Modifier le partenaire", "form_name": "Nom", "form_abbr": "Abréviation", "form_country": "Pays", "form_since": "Depuis", "form_specialty": "Spécialité", "form_desc": "Description", "form_expert": "Responsable", "delete_title": "Supprimer le partenaire", "delete_content": "Ce partenaire sera supprimé." },
   "before_after": { "page_title": "Gestion Avant & Après", "add_btn": "Ajouter un cas", "search_placeholder": "Rechercher...", "col_case": "Traitement", "col_duration": "Durée", "col_note": "Résultat", "col_status": "Statut", "form_create": "Nouveau cas Avant/Après", "form_edit": "Modifier le cas", "form_title": "Titre", "form_before": "URL image avant", "form_after": "URL image après", "form_duration": "Durée du traitement", "form_note": "Note de résultat", "detail_title": "Détail du cas", "delete_title": "Supprimer le cas", "delete_content": "Ce cas sera supprimé." },
   "faq": { "page_title": "Gestion FAQ", "add_btn": "Ajouter une question", "search_placeholder": "Rechercher...", "col_order": "#", "col_question": "Question", "col_answer": "Réponse", "col_visible": "Visible", "form_create": "Nouvelle question", "form_edit": "Modifier la question", "form_question": "Question", "form_answer": "Réponse", "delete_title": "Supprimer la question", "delete_content": "Cette question sera supprimée.", "status_visible": "Visible", "status_hidden": "Masqué" },
-  "training": { "page_title": "Programmes de Formation", "add_btn": "Ajouter un programme", "search_placeholder": "Rechercher...", "col_program": "Programme", "col_duration": "Durée", "col_level": "Niveau", "col_price": "Frais (VND)", "col_enrolled": "Inscrits", "col_status": "Statut", "form_create": "Nouveau programme", "form_edit": "Modifier le programme", "form_name": "Nom du programme", "form_duration": "Durée", "form_level": "Niveau", "form_price": "Frais (VND)", "form_outcome": "Résultats attendus", "delete_title": "Supprimer le programme", "delete_content": "Ce programme sera supprimé.", "status_open": "Inscriptions ouvertes", "status_closed": "Fermé" }
+  "training": { "page_title": "Programmes de Formation", "add_btn": "Ajouter un programme", "search_placeholder": "Rechercher...", "col_program": "Programme", "col_duration": "Durée", "col_level": "Niveau", "col_price": "Frais (VND)", "col_enrolled": "Inscrits", "col_status": "Statut", "form_create": "Nouveau programme", "form_edit": "Modifier le programme", "form_name": "Nom du programme", "form_duration": "Durée", "form_level": "Niveau", "form_price": "Frais (VND)", "form_outcome": "Résultats attendus", "delete_title": "Supprimer le programme", "delete_content": "Ce programme sera supprimé.", "status_open": "Inscriptions ouvertes", "status_closed": "Fermé" },
+  "franchise": { "page_title": "Gestion Franchise", "add_btn": "Ajouter une demande", "breadcrumb": "Franchise" },
+  "group_booking": { "page_title": "Réservation de Groupe", "add_btn": "Ajouter une réservation", "breadcrumb": "Réservation de groupe" },
+  "certificate_wall": { "page_title": "Gestion des Certificats", "add_btn": "Ajouter un certificat", "breadcrumb": "Certificats" },
+  "video_guide": { "page_title": "Gestion des Guides Vidéo", "add_btn": "Ajouter une vidéo", "breadcrumb": "Guides vidéo" },
+  "price_list": { "page_title": "Gestion des Tarifs", "add_btn": "Ajouter un tarif", "breadcrumb": "Tarifs" },
+  "wait_list": { "page_title": "Gestion de la Liste d'attente", "add_btn": "Ajouter à la liste", "breadcrumb": "Liste d'attente" },
+  "voucher_check": { "page_title": "Gestion Bons & Cartes Cadeaux", "add_btn": "Créer un bon", "breadcrumb": "Bons cadeaux" },
+  "accessibility": { "page_title": "Gestion Accessibilité", "add_btn": "Ajouter une fonctionnalité", "breadcrumb": "Accessibilité" }
 }
