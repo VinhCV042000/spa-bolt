@@ -1,14 +1,21 @@
+import type { Spa2AdjustableImage } from 'src/_mock/_spa2';
+
 import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
+import Tab from '@mui/material/Tab';
 import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
+import Card from '@mui/material/Card';
+import Tabs from '@mui/material/Tabs';
 import Table from '@mui/material/Table';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Unstable_Grid2';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
@@ -24,17 +31,39 @@ import TableContainer from '@mui/material/TableContainer';
 import { paths } from 'src/routes/paths';
 
 import { useTranslate } from 'src/locales';
-import { DashboardContent } from 'src/layouts/dashboard';
+import { spa2TreatmentsBanner } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
-import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { spa2Treatments } from 'src/sections/spa2/spa2-pages-data';
+import {
+  formatVND,
+  Spa2PageHero,
+  Spa2SoftCard,
+  Spa2SectionTitle,
+} from 'src/sections/spa2/view/spa2-content-pages';
+import {
+  SPA2_INK,
+  SPA2_TEAL,
+  SPA2_CREAM,
+  spa2Treatments,
+  SPA2_TEAL_DARK,
+  SPA2_TEAL_LIGHT,
+  spa2TreatmentProcess,
+} from 'src/sections/spa2/spa2-pages-data';
+
+import { Spa2ImageField } from './spa2-image-field';
+import { Spa2ManageShell } from './spa2-manage-shell';
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Manages every block the public /spa2/treatments page (Spa2TreatmentsPageView)
+// renders that is driven by spa2Treatments: banner + the treatment-card grid.
+// The "Kích hoạt / Tắt" toggle now writes to a real `active` field, so it
+// actually controls whether a treatment appears in the public list —
+// previously the public page ignored this and always rendered every item.
+// ─────────────────────────────────────────────────────────────────────────────
 
-type Treatment = (typeof spa2Treatments)[number] & { id: number; active?: boolean };
+type Treatment = (typeof spa2Treatments)[number];
 
 const EMPTY_FORM = {
   name: '',
@@ -45,13 +74,109 @@ const EMPTY_FORM = {
   includes: '',
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
+function PreviewFrame({ children }: { children: React.ReactNode }) {
+  return (
+    <Box
+      sx={{
+        borderRadius: 3,
+        overflow: 'hidden',
+        border: `1px solid ${SPA2_CREAM}`,
+        transform: 'scale(0.82)',
+        transformOrigin: 'top left',
+        width: '122%',
+      }}
+    >
+      {children}
+    </Box>
+  );
+}
+
+function TreatmentPreviewCard({
+  form,
+}: {
+  form: {
+    name: string;
+    target: string;
+    sessions: number;
+    duration: string;
+    price: number;
+    includes: string[];
+  };
+}) {
+  return (
+    <Spa2SoftCard>
+      <Stack direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ mb: 2 }}>
+        <Stack>
+          <Typography variant="h6" sx={{ color: SPA2_INK }}>
+            {form.name || '(Chưa đặt tên)'}
+          </Typography>
+          <Typography sx={{ color: 'text.secondary' }}>{form.target}</Typography>
+        </Stack>
+        <Chip label={`${form.sessions} buổi`} sx={{ bgcolor: SPA2_TEAL, color: 'white' }} />
+      </Stack>
+      <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+        <Iconify icon="solar:calendar-bold" sx={{ color: SPA2_TEAL }} />
+        <Typography sx={{ color: 'text.secondary' }}>Thời lượng: {form.duration}</Typography>
+      </Stack>
+      <Divider sx={{ my: 2 }} />
+      <Typography sx={{ color: SPA2_INK, mb: 1.5, fontWeight: 600 }}>Bao gồm:</Typography>
+      <Stack spacing={1}>
+        {form.includes.length === 0 ? (
+          <Typography sx={{ fontSize: 13, color: 'text.disabled' }}>—</Typography>
+        ) : (
+          form.includes.map((i) => (
+            <Stack key={i} direction="row" spacing={1.5} alignItems="center">
+              <Iconify icon="solar:check-circle-bold" sx={{ color: SPA2_TEAL }} width={18} />
+              <Typography sx={{ color: 'text.secondary' }}>{i}</Typography>
+            </Stack>
+          ))
+        )}
+      </Stack>
+      <Divider sx={{ my: 2 }} />
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Typography variant="h5" sx={{ color: SPA2_TEAL }}>
+          {formatVND(form.price)}
+        </Typography>
+        <Button
+          disabled
+          sx={{ borderRadius: 999, px: 3, bgcolor: SPA2_TEAL, color: 'white', opacity: 0.7 }}
+        >
+          Đăng ký
+        </Button>
+      </Stack>
+    </Spa2SoftCard>
+  );
+}
 
 export function Spa2TreatmentsManageView() {
   const { t } = useTranslate('spa2-manage');
-  const [items, setItems] = useState<Treatment[]>(
-    spa2Treatments.map((item, i) => ({ ...item, id: i + 1, active: true }))
-  );
+
+  const [banner, setBanner] = useState(() => ({
+    ...spa2TreatmentsBanner,
+    image: { ...spa2TreatmentsBanner.image },
+  }));
+  const [dirty, setDirty] = useState(false);
+  const [savedAt, setSavedAt] = useState<Date | null>(null);
+  const [tab, setTab] = useState<'banner' | 'list' | 'preview'>('banner');
+
+  const updateBanner = (key: 'eyebrow' | 'title' | 'subtitle', value: string) => {
+    setBanner((prev) => ({ ...prev, [key]: value }));
+    setDirty(true);
+  };
+  const updateBannerImage = (img: Spa2AdjustableImage) => {
+    setBanner((prev) => ({ ...prev, image: img }));
+    setDirty(true);
+  };
+  const handleSave = () => {
+    setSavedAt(new Date());
+    setDirty(false);
+  };
+  const handleReset = () => {
+    setBanner({ ...spa2TreatmentsBanner, image: { ...spa2TreatmentsBanner.image } });
+    setDirty(false);
+  };
+
+  const [items, setItems] = useState<Treatment[]>(spa2Treatments);
   const [search, setSearch] = useState('');
   const [openForm, setOpenForm] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
@@ -59,10 +184,15 @@ export function Spa2TreatmentsManageView() {
   const [form, setForm] = useState(EMPTY_FORM);
 
   const filtered = items.filter((item) => item.name.toLowerCase().includes(search.toLowerCase()));
+  const activePreviewItems = items.filter((item) => item.active);
 
   const handleChange =
-    (field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-      setForm((p) => ({ ...p, [field]: e.target.value }));
+    (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setForm((p) => ({
+        ...p,
+        [field]:
+          field === 'sessions' || field === 'price' ? Number(e.target.value) : e.target.value,
+      }));
 
   const openCreate = () => {
     setForm(EMPTY_FORM);
@@ -94,193 +224,433 @@ export function Spa2TreatmentsManageView() {
         .split(',')
         .map((s) => s.trim())
         .filter(Boolean),
-      active: true,
     };
     if (editId !== null) {
       setItems((p) => p.map((x) => (x.id === editId ? { ...x, ...next } : x)));
     } else {
       const newId = Math.max(0, ...items.map((x) => x.id)) + 1;
-      setItems((p) => [...p, { ...next, id: newId }]);
+      setItems((p) => [...p, { ...next, id: newId, active: true }]);
     }
     setOpenForm(false);
+    setDirty(true);
   }, [form, editId, items]);
 
   const handleDelete = useCallback(() => {
     setItems((p) => p.filter((x) => x.id !== deleteId));
     setDeleteId(null);
+    setDirty(true);
   }, [deleteId]);
 
   const handleToggle = useCallback((id: number) => {
     setItems((p) => p.map((x) => (x.id === id ? { ...x, active: !x.active } : x)));
+    setDirty(true);
   }, []);
 
+  const previewForm = {
+    name: form.name,
+    target: form.target,
+    sessions: Number(form.sessions),
+    duration: form.duration,
+    price: Number(form.price),
+    includes: form.includes
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean),
+  };
+
   return (
-    <DashboardContent maxWidth="xl">
-      <CustomBreadcrumbs
-        heading={t('treatments.page_title')}
-        links={[
-          { name: t('common.dashboard'), href: paths.dashboard.root },
-          { name: t('common.spa2'), href: paths.dashboard.spa2.root },
-          { name: t('nav.treatments') },
-        ]}
-        action={
+    <Spa2ManageShell
+      title={t('treatments.page_title')}
+      description="Banner và danh sách liệu trình hiển thị trên trang Liệu trình công khai."
+      breadcrumbLabel={t('nav.treatments')}
+      publicPath={paths.spa2.treatments}
+      actions={
+        <>
+          <Button
+            variant="outlined"
+            onClick={handleReset}
+            disabled={!dirty}
+            sx={{
+              borderRadius: 50,
+              px: 2.5,
+              color: 'common.white',
+              border: '1.5px solid rgba(255,255,255,0.7)',
+              '&:hover': { bgcolor: 'rgba(255,255,255,0.12)', borderColor: 'common.white' },
+            }}
+          >
+            {t('common.discard_changes')}
+          </Button>
           <Button
             variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-            onClick={openCreate}
-          >
-            {t('treatments.add_btn')}
-          </Button>
-        }
-        sx={{ mb: { xs: 3, md: 5 } }}
-      />
-
-      <Card>
-        <Box sx={{ p: 2 }}>
-          <TextField
-            placeholder={t('treatments.search_placeholder')}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            size="small"
-            sx={{ width: 280 }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                </InputAdornment>
-              ),
+            onClick={handleSave}
+            startIcon={<Iconify icon="solar:diskette-bold" />}
+            sx={{
+              borderRadius: 50,
+              px: 3,
+              bgcolor: 'common.white',
+              color: SPA2_TEAL,
+              '&:hover': { bgcolor: 'rgba(255,255,255,0.88)' },
             }}
+          >
+            {t('common.save_changes')}
+          </Button>
+        </>
+      }
+    >
+      <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
+        {dirty && (
+          <Chip
+            size="small"
+            variant="soft"
+            color="warning"
+            label={t('common.unsaved_changes')}
+            icon={<Iconify icon="solar:pen-bold" width={14} />}
           />
-        </Box>
+        )}
+        {savedAt && !dirty && (
+          <Chip
+            size="small"
+            variant="soft"
+            color="success"
+            label={t('common.saved_at', { time: savedAt.toLocaleTimeString('vi-VN') })}
+            icon={<Iconify icon="solar:check-circle-bold" width={14} />}
+          />
+        )}
+      </Stack>
 
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>{t('treatments.col_name')}</TableCell>
-                <TableCell>{t('treatments.col_target')}</TableCell>
-                <TableCell align="center">{t('treatments.col_sessions')}</TableCell>
-                <TableCell>{t('treatments.col_duration')}</TableCell>
-                <TableCell align="right">{t('treatments.col_price')}</TableCell>
-                <TableCell>{t('common.status')}</TableCell>
-                <TableCell align="right">{t('common.actions')}</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filtered.map((item) => (
-                <TableRow key={item.id} hover>
-                  <TableCell>
-                    <Box>
-                      <Typography variant="subtitle2">{item.name}</Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {item.includes.slice(0, 2).join(' · ')}
-                        {item.includes.length > 2 && ' ...'}
-                      </Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell>{item.target}</TableCell>
-                  <TableCell align="center">
-                    <Chip
-                      size="small"
-                      label={`${item.sessions} buổi`}
-                      color="primary"
-                      variant="soft"
-                    />
-                  </TableCell>
-                  <TableCell>{item.duration}</TableCell>
-                  <TableCell align="right">
-                    <Typography variant="body2" fontWeight={600}>
-                      {item.price.toLocaleString('vi-VN')}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      size="small"
-                      label={item.active ? t('common.active') : t('common.inactive')}
-                      color={item.active ? 'success' : 'default'}
-                      variant="soft"
-                    />
-                  </TableCell>
-                  <TableCell align="right">
-                    <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
-                      <Tooltip title={item.active ? t('common.disable') : t('common.enable')}>
-                        <IconButton size="small" onClick={() => handleToggle(item.id)}>
-                          <Iconify
-                            icon={item.active ? 'solar:eye-closed-bold' : 'solar:eye-bold'}
-                            color={item.active ? 'warning.main' : 'success.main'}
-                          />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title={t('common.edit')}>
-                        <IconButton size="small" onClick={() => openEdit(item)}>
-                          <Iconify icon="solar:pen-bold" />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title={t('common.delete')}>
-                        <IconButton size="small" color="error" onClick={() => setDeleteId(item.id)}>
-                          <Iconify icon="solar:trash-bin-trash-bold" />
-                        </IconButton>
-                      </Tooltip>
-                    </Stack>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Card>
+      <Tabs
+        value={tab}
+        onChange={(_, v: typeof tab) => setTab(v)}
+        variant="scrollable"
+        scrollButtons="auto"
+        sx={{
+          mb: 3,
+          position: 'sticky',
+          top: 65,
+          zIndex: 10,
+          bgcolor: 'background.paper',
+          '& .MuiTab-root': { minHeight: 56, fontWeight: 600 },
+          '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
+          '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+        }}
+      >
+        <Tab
+          value="banner"
+          label={t('treatments.banner_section')}
+          icon={<Iconify icon="solar:gallery-wide-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
+          value="list"
+          label={t('treatments.list_section')}
+          icon={<Iconify icon="solar:health-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
+          value="preview"
+          label={t('common.preview_btn')}
+          icon={<Iconify icon="solar:eye-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+      </Tabs>
 
-      <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{editId !== null ? t('treatments.form_edit') : t('treatments.form_create')}</DialogTitle>
-        <DialogContent dividers>
-          <Stack spacing={2} sx={{ pt: 1 }}>
-            <TextField
-              label={t('treatments.form_name')}
-              value={form.name}
-              onChange={handleChange('name')}
-              fullWidth
-            />
-            <TextField
-              label={t('treatments.form_target')}
-              value={form.target}
-              onChange={handleChange('target')}
-              fullWidth
-            />
-            <Stack direction="row" spacing={2}>
-              <TextField
-                label={t('treatments.col_sessions')}
-                type="number"
-                value={form.sessions}
-                onChange={handleChange('sessions')}
-                fullWidth
+      {/* Banner - left: edit, right: live preview (same Spa2PageHero as public page) */}
+      {tab === 'banner' && (
+        <Grid container spacing={3}>
+          <Grid xs={12} md={6}>
+            <Card sx={{ p: 3, borderRadius: 3 }}>
+              <Stack spacing={2}>
+                <Spa2ImageField
+                  label={t('treatments.banner_image')}
+                  value={banner.image}
+                  onChange={updateBannerImage}
+                  height={220}
+                  helperText={t('treatments.banner_image_help')}
+                />
+                <TextField
+                  label={t('treatments.banner_eyebrow')}
+                  value={banner.eyebrow}
+                  onChange={(e) => updateBanner('eyebrow', e.target.value)}
+                  fullWidth
+                  size="small"
+                />
+                <TextField
+                  label={t('treatments.banner_title')}
+                  value={banner.title}
+                  onChange={(e) => updateBanner('title', e.target.value)}
+                  fullWidth
+                  multiline
+                  minRows={2}
+                />
+                <TextField
+                  label={t('treatments.banner_subtitle')}
+                  value={banner.subtitle}
+                  onChange={(e) => updateBanner('subtitle', e.target.value)}
+                  fullWidth
+                  multiline
+                  minRows={3}
+                />
+              </Stack>
+            </Card>
+          </Grid>
+          <Grid xs={12} md={6}>
+            <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1, display: 'block' }}>
+              {t('common.preview_btn')}
+            </Typography>
+            <PreviewFrame>
+              <Spa2PageHero
+                image={banner.image.url}
+                imageStyle={banner.image}
+                eyebrow={banner.eyebrow}
+                title={banner.title}
+                subtitle={banner.subtitle}
               />
-              <TextField
-                label={t('treatments.col_duration')}
-                value={form.duration}
-                onChange={handleChange('duration')}
-                fullWidth
-              />
-            </Stack>
+            </PreviewFrame>
+          </Grid>
+        </Grid>
+      )}
+
+      {/* Danh sách liệu trình */}
+      {tab === 'list' && (
+        <Card>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 2 }}>
             <TextField
-              label={t('treatments.col_price')}
-              type="number"
-              value={form.price}
-              onChange={handleChange('price')}
-              fullWidth
+              placeholder={t('treatments.search_placeholder')}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              size="small"
+              sx={{ width: 280 }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                  </InputAdornment>
+                ),
+              }}
             />
-            <TextField
-              label={t('treatments.form_includes')}
-              value={form.includes}
-              onChange={handleChange('includes')}
-              fullWidth
-              multiline
-              rows={2}
-            />
+            <Button
+              variant="contained"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+              onClick={openCreate}
+              sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
+            >
+              {t('treatments.add_btn')}
+            </Button>
           </Stack>
+
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>{t('treatments.col_name')}</TableCell>
+                  <TableCell>{t('treatments.col_target')}</TableCell>
+                  <TableCell align="center">{t('treatments.col_sessions')}</TableCell>
+                  <TableCell>{t('treatments.col_duration')}</TableCell>
+                  <TableCell align="right">{t('treatments.col_price')}</TableCell>
+                  <TableCell>{t('common.status')}</TableCell>
+                  <TableCell align="right">{t('common.actions')}</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filtered.map((item) => (
+                  <TableRow key={item.id} hover>
+                    <TableCell>
+                      <Box>
+                        <Typography variant="subtitle2">{item.name}</Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {item.includes.slice(0, 2).join(' · ')}
+                          {item.includes.length > 2 && ' ...'}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell>{item.target}</TableCell>
+                    <TableCell align="center">
+                      <Chip
+                        size="small"
+                        label={`${item.sessions} buổi`}
+                        color="primary"
+                        variant="soft"
+                      />
+                    </TableCell>
+                    <TableCell>{item.duration}</TableCell>
+                    <TableCell align="right">
+                      <Typography variant="body2" fontWeight={600}>
+                        {item.price.toLocaleString('vi-VN')}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Chip
+                        size="small"
+                        label={item.active ? t('common.active') : t('common.inactive')}
+                        color={item.active ? 'success' : 'default'}
+                        variant="soft"
+                      />
+                    </TableCell>
+                    <TableCell align="right">
+                      <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
+                        <Tooltip title={item.active ? t('common.disable') : t('common.enable')}>
+                          <IconButton size="small" onClick={() => handleToggle(item.id)}>
+                            <Iconify
+                              icon={item.active ? 'solar:eye-closed-bold' : 'solar:eye-bold'}
+                              color={item.active ? 'warning.main' : 'success.main'}
+                            />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title={t('common.edit')}>
+                          <IconButton size="small" onClick={() => openEdit(item)}>
+                            <Iconify icon="solar:pen-bold" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title={t('common.delete')}>
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => setDeleteId(item.id)}
+                          >
+                            <Iconify icon="solar:trash-bin-trash-bold" />
+                          </IconButton>
+                        </Tooltip>
+                      </Stack>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Card>
+      )}
+
+      {/* Live preview — mirrors Spa2TreatmentsPageView: banner + card grid (active only) + process */}
+      {tab === 'preview' && (
+        <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
+          <Spa2PageHero
+            image={banner.image.url}
+            imageStyle={banner.image}
+            eyebrow={banner.eyebrow}
+            title={banner.title}
+            subtitle={banner.subtitle}
+          />
+
+          <Box sx={{ py: { xs: 6, md: 10 } }}>
+            <Container>
+              {activePreviewItems.length === 0 ? (
+                <Typography variant="body2" color="text.secondary">
+                  Chưa có liệu trình nào đang hiển thị.
+                </Typography>
+              ) : (
+                <Grid container spacing={3}>
+                  {activePreviewItems.map((t2) => (
+                    <Grid key={t2.id} xs={12} md={6}>
+                      <TreatmentPreviewCard form={t2} />
+                    </Grid>
+                  ))}
+                </Grid>
+              )}
+            </Container>
+          </Box>
+
+          <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: SPA2_CREAM }}>
+            <Container maxWidth="md">
+              <Spa2SectionTitle eyebrow="Quy trình" title="4 bước điều trị chuẩn y khoa" />
+              <Grid container spacing={3}>
+                {spa2TreatmentProcess.map((p, idx) => (
+                  <Grid key={p.title} xs={6} md={3}>
+                    <Spa2SoftCard sx={{ textAlign: 'center' }}>
+                      <Typography
+                        variant="h3"
+                        sx={{ color: SPA2_TEAL_LIGHT, fontWeight: 700, mb: 1 }}
+                      >
+                        {idx + 1}
+                      </Typography>
+                      <Typography sx={{ color: SPA2_INK, fontWeight: 600, mb: 1 }}>
+                        {p.title}
+                      </Typography>
+                      <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
+                        {p.desc}
+                      </Typography>
+                    </Spa2SoftCard>
+                  </Grid>
+                ))}
+              </Grid>
+            </Container>
+          </Box>
+        </Box>
+      )}
+
+      {/* Create / Edit dialog - left: form, right: live preview */}
+      <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="md" fullWidth>
+        <DialogTitle>
+          {editId !== null ? t('treatments.form_edit') : t('treatments.form_create')}
+        </DialogTitle>
+        <DialogContent dividers>
+          <Grid container spacing={3} sx={{ pt: 1 }}>
+            <Grid xs={12} md={6}>
+              <Stack spacing={2}>
+                <TextField
+                  label={t('treatments.form_name')}
+                  value={form.name}
+                  onChange={handleChange('name')}
+                  fullWidth
+                />
+                <TextField
+                  label={t('treatments.form_target')}
+                  value={form.target}
+                  onChange={handleChange('target')}
+                  fullWidth
+                />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    label={t('treatments.col_sessions')}
+                    type="number"
+                    value={form.sessions}
+                    onChange={handleChange('sessions')}
+                    fullWidth
+                  />
+                  <TextField
+                    label={t('treatments.col_duration')}
+                    value={form.duration}
+                    onChange={handleChange('duration')}
+                    fullWidth
+                  />
+                </Stack>
+                <TextField
+                  label={t('treatments.col_price')}
+                  type="number"
+                  value={form.price}
+                  onChange={handleChange('price')}
+                  fullWidth
+                />
+                <TextField
+                  label={t('treatments.form_includes')}
+                  value={form.includes}
+                  onChange={handleChange('includes')}
+                  fullWidth
+                  multiline
+                  rows={2}
+                />
+              </Stack>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <Typography
+                variant="caption"
+                sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
+              >
+                {t('common.preview_btn')}
+              </Typography>
+              <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
+                <TreatmentPreviewCard form={previewForm} />
+              </Box>
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenForm(false)}>{t('common.cancel')}</Button>
-          <Button variant="contained" onClick={handleSubmit} disabled={!form.name}>
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            disabled={!form.name}
+            sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
+          >
             {editId !== null ? t('treatments.form_edit') : t('treatments.form_create')}
           </Button>
         </DialogActions>
@@ -297,6 +667,6 @@ export function Spa2TreatmentsManageView() {
           </Button>
         }
       />
-    </DashboardContent>
+    </Spa2ManageShell>
   );
 }

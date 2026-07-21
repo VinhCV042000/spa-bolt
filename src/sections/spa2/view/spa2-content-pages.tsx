@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useMemo, useState, useEffect } from 'react';
+import { Fragment, useMemo, useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -95,21 +95,35 @@ import {
   spa2Certifications,
   spa2Collaborations,
   spa2TrainingBanner,
+  spa2FeedbackBanner,
   spa2AboutStoryImage,
   spa2PartnerProfiles,
   spa2TrainingMission,
   spa2TrainingRoadmap,
   spa2BookingPackages,
+  spa2WorkplaceVideos,
   spa2TrainingPrograms,
   spa2GraduateShowcase,
-  spa2WorkplaceVideos,
   spa2WorkplaceGallery,
   spa2TreatmentProcess,
   spa2TreatmentExperts,
+  spa2InternalVideoUrl,
+  spa2PromotionsBanner,
+  spa2FlashSale,
+  spa2BranchesBanner,
+  spa2AccountBanner,
+  SPA2_ACCOUNT_CONTENT,
+  spa2PartnersBanner,
+  spa2TreatmentsBanner,
+  spa2BeforeAfterBanner,
+  spa2FaqBanner,
+  spa2FaqCategories,
+  spa2PolicyBanner,
+  spa2PolicyArticles,
+  spa2GalleryBanner,
   spa2ServiceCategories,
   spa2PartnerCategories,
   spa2RecruitmentProcess,
-  spa2InternalVideoUrl,
   spa2InternalVideoThumb,
   spa2TrainingMissionImage,
   computeSpa2BlogCategories,
@@ -119,7 +133,7 @@ import {
 // SHARED BUILDING BLOCKS – Nature/cream style with curved organic shapes
 // ----------------------------------------------------------------------
 
-const formatVND = (n: number) => `${new Intl.NumberFormat('vi-VN').format(n)}đ`;
+export const formatVND = (n: number) => `${new Intl.NumberFormat('vi-VN').format(n)}đ`;
 
 export function Spa2PageHero({
   image,
@@ -957,7 +971,10 @@ export function Spa2ServiceDetailsPageView() {
     service.beforeAfters && service.beforeAfters.length > 0
       ? service.beforeAfters
       : spa2BeforeAfters;
-  const faqsToShow = service.faqs && service.faqs.length > 0 ? service.faqs : spa2Faqs;
+  const faqsToShow =
+    service.faqs && service.faqs.length > 0
+      ? service.faqs
+      : spa2Faqs.filter((f) => f.published);
 
   const serviceFeedbacks =
     service.feedbacks && service.feedbacks.length > 0 ? service.feedbacks : [];
@@ -1188,12 +1205,7 @@ export function Spa2ServiceDetailsPageView() {
               </Box>
             ))}
           </Carousel>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            sx={{ mt: 3 }}
-          >
+          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mt: 3 }}>
             <CarouselDotButtons
               variant="rounded"
               scrollSnaps={feedbackCarousel.dots.scrollSnaps}
@@ -1805,9 +1817,7 @@ export function Spa2BlogPageView() {
                             <Typography sx={{ fontSize: 12, color: 'text.disabled' }}>
                               {p.date}
                             </Typography>
-                            <Typography sx={{ fontSize: 12, color: 'text.disabled' }}>
-                              ·
-                            </Typography>
+                            <Typography sx={{ fontSize: 12, color: 'text.disabled' }}>·</Typography>
                             <Typography sx={{ fontSize: 12, color: 'text.disabled' }}>
                               {p.readTime}
                             </Typography>
@@ -3365,13 +3375,16 @@ export function Spa2OffersPageView() {
 
 // them moi
 export function Spa2FeedbackPageView() {
+  const approvedFeedbacks = spa2Feedbacks.filter((f) => f.status === 'approved');
+
   return (
     <Spa2PageShell>
       <Spa2PageHero
-        image={SPA2_PAGE_IMAGES.feedback}
-        eyebrow="Cảm nhận khách hàng"
-        title="25.000+ khách hàng tin yêu"
-        subtitle="Mỗi đánh giá là động lực để chúng tôi không ngừng hoàn thiện."
+        image={spa2FeedbackBanner.image.url}
+        imageStyle={spa2FeedbackBanner.image}
+        eyebrow={spa2FeedbackBanner.eyebrow}
+        title={spa2FeedbackBanner.title}
+        subtitle={spa2FeedbackBanner.subtitle}
       />
 
       {/* Video review */}
@@ -3444,7 +3457,7 @@ export function Spa2FeedbackPageView() {
         <Container>
           <Spa2SectionTitle eyebrow="Đánh giá" title="Tất cả phản hồi" />
           <Grid container spacing={3}>
-            {spa2Feedbacks.map((f) => (
+            {approvedFeedbacks.map((f) => (
               <Grid key={f.name} xs={12} sm={6} md={4}>
                 <Spa2SoftCard>
                   <Rating value={f.rating} readOnly size="small" sx={{ mb: 1.5 }} />
@@ -3474,7 +3487,7 @@ export function Spa2FeedbackPageView() {
 // ======================================================================
 // 12. PROMOTIONS
 // ======================================================================
-function Spa2Countdown({ endsAt }: { endsAt: string }) {
+export function Spa2Countdown({ endsAt }: { endsAt: string }) {
   const calc = () => {
     const diff = +new Date(endsAt) - +new Date();
     if (diff <= 0) return { d: 0, h: 0, m: 0, s: 0, ended: true };
@@ -3598,18 +3611,21 @@ function Spa2Countdown({ endsAt }: { endsAt: string }) {
 // }
 
 export function Spa2PromotionsPageView() {
+  const activePromotions = spa2Promotions.filter((p) => p.active);
+
   return (
     <Spa2PageShell>
       {/* Banner dịch vụ */}
       <Spa2PageHero
-        image={SPA2_PAGE_IMAGES.promotions}
-        eyebrow="Khuyến mãi"
-        title="Sự kiện & khuyến mãi theo mùa"
-        subtitle="Cập nhật các chương trình giới hạn thời gian, ưu đãi cực sốc trong năm."
+        image={spa2PromotionsBanner.image.url}
+        imageStyle={spa2PromotionsBanner.image}
+        eyebrow={spa2PromotionsBanner.eyebrow}
+        title={spa2PromotionsBanner.title}
+        subtitle={spa2PromotionsBanner.subtitle}
       />
 
-      {/* Flash sale countdown nổi bật cho khuyến mãi đầu tiên */}
-      {spa2Promotions[0] && (
+      {/* Flash sale countdown - dedicated banner managed independently of the campaign list */}
+      {spa2FlashSale.active && (
         <Box sx={{ py: { xs: 6, md: 8 } }}>
           <Container>
             <Card
@@ -3633,12 +3649,10 @@ export function Spa2PromotionsPageView() {
                     label="FLASH SALE"
                     sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white', width: 'fit-content' }}
                   />
-                  <Typography variant="h3">{spa2Promotions[0].title}</Typography>
-                  <Typography sx={{ opacity: 0.85 }}>{spa2Promotions[0].save}</Typography>
+                  <Typography variant="h3">{spa2FlashSale.title}</Typography>
+                  <Typography sx={{ opacity: 0.85 }}>{spa2FlashSale.save}</Typography>
                 </Stack>
-                <Spa2Countdown
-                  endsAt={(spa2Promotions[0] as any).endsAt ?? '2026-12-31T23:59:59'}
-                />
+                <Spa2Countdown endsAt={spa2FlashSale.endsAt} />
               </Stack>
             </Card>
           </Container>
@@ -3648,7 +3662,7 @@ export function Spa2PromotionsPageView() {
       <Box sx={{ py: { xs: 4, md: 8 } }}>
         <Container>
           <Stack spacing={4}>
-            {spa2Promotions.map((p, idx) => (
+            {activePromotions.map((p, idx) => (
               <Spa2SoftCard key={p.title} sx={{ p: 0, overflow: 'hidden' }}>
                 <Grid container>
                   <Grid xs={12} md={5} sx={{ order: { md: idx % 2 ? 2 : 1 } }}>
@@ -3677,7 +3691,7 @@ export function Spa2PromotionsPageView() {
                         {p.price}
                       </Typography>
                       <Typography sx={{ color: 'text.secondary', mb: 2 }}>{p.save}</Typography>
-                      {(p as any).endsAt && (
+                      {p.endsAt && (
                         <Box sx={{ mb: 3 }}>
                           <Typography sx={{ fontSize: 13, color: 'text.secondary', mb: 1 }}>
                             Kết thúc sau:
@@ -3690,7 +3704,7 @@ export function Spa2PromotionsPageView() {
                               borderRadius: 2,
                             }}
                           >
-                            <Spa2Countdown endsAt={(p as any).endsAt} />
+                            <Spa2Countdown endsAt={p.endsAt} />
                           </Box>
                         </Box>
                       )}
@@ -3789,10 +3803,11 @@ export function Spa2BranchesPageView() {
   return (
     <Spa2PageShell>
       <Spa2PageHero
-        image={SPA2_PAGE_IMAGES.branches}
-        eyebrow="Hệ thống"
-        title="4 chi nhánh trên toàn quốc"
-        subtitle="Tìm chi nhánh Nature Spa gần bạn nhất – mọi nơi đều cùng một chuẩn dịch vụ."
+        image={spa2BranchesBanner.image.url}
+        imageStyle={spa2BranchesBanner.image}
+        eyebrow={spa2BranchesBanner.eyebrow}
+        title={spa2BranchesBanner.title}
+        subtitle={spa2BranchesBanner.subtitle}
       />
 
       {/* Map tổng + List location */}
@@ -3939,36 +3954,48 @@ export function Spa2BranchesPageView() {
 // 14. ACCOUNT
 // ======================================================================
 export function Spa2AccountPageView() {
+  const {
+    memberName,
+    avatar,
+    membershipTier,
+    loyaltyPoints,
+    sessionsUsed,
+    sessionsTotal,
+    appointments,
+  } = SPA2_ACCOUNT_CONTENT;
+
   return (
     <Spa2PageShell>
       <Spa2PageHero
-        image={SPA2_PAGE_IMAGES.account}
-        eyebrow="Tài khoản"
-        title="Khu vực thành viên"
-        subtitle="Quản lý lịch hẹn, điểm thưởng và liệu trình của bạn."
+        image={spa2AccountBanner.image.url}
+        imageStyle={spa2AccountBanner.image}
+        eyebrow={spa2AccountBanner.eyebrow}
+        title={spa2AccountBanner.title}
+        subtitle={spa2AccountBanner.subtitle}
       />
       <Box sx={{ py: { xs: 8, md: 12 } }}>
         <Container>
           <Grid container spacing={3}>
             <Grid xs={12} md={4}>
               <Spa2SoftCard sx={{ textAlign: 'center' }}>
-                <Avatar
-                  src="https://i.pravatar.cc/200?img=11"
-                  sx={{ width: 88, height: 88, mx: 'auto', mb: 2 }}
-                />
+                <Avatar src={avatar} sx={{ width: 88, height: 88, mx: 'auto', mb: 2 }} />
                 <Typography variant="h6" sx={{ color: SPA2_INK }}>
-                  Lê Minh Anh
+                  {memberName}
                 </Typography>
-                <Chip label="Thẻ Gold" sx={{ bgcolor: SPA2_TEAL, color: 'white', my: 1.5 }} />
+                <Chip label={membershipTier} sx={{ bgcolor: SPA2_TEAL, color: 'white', my: 1.5 }} />
                 <Divider sx={{ my: 2 }} />
                 <Stack spacing={1.5}>
                   <Stack direction="row" justifyContent="space-between">
                     <Typography sx={{ color: 'text.secondary' }}>Điểm tích lũy</Typography>
-                    <Typography sx={{ color: SPA2_TEAL_DARK, fontWeight: 700 }}>3.250</Typography>
+                    <Typography sx={{ color: SPA2_TEAL_DARK, fontWeight: 700 }}>
+                      {loyaltyPoints.toLocaleString('vi-VN')}
+                    </Typography>
                   </Stack>
                   <Stack direction="row" justifyContent="space-between">
                     <Typography sx={{ color: 'text.secondary' }}>Lượt còn lại</Typography>
-                    <Typography sx={{ color: SPA2_TEAL_DARK, fontWeight: 700 }}>6 / 10</Typography>
+                    <Typography sx={{ color: SPA2_TEAL_DARK, fontWeight: 700 }}>
+                      {sessionsUsed} / {sessionsTotal}
+                    </Typography>
                   </Stack>
                 </Stack>
               </Spa2SoftCard>
@@ -3977,26 +4004,7 @@ export function Spa2AccountPageView() {
               <Spa2SoftCard>
                 <Spa2SectionTitle eyebrow="Lịch hẹn" title="Sắp tới" align="left" />
                 <Stack spacing={2}>
-                  {[
-                    {
-                      date: '02/07',
-                      time: '15:00',
-                      service: 'Facial Organic',
-                      branch: 'Q1, TP.HCM',
-                    },
-                    {
-                      date: '12/07',
-                      time: '10:30',
-                      service: 'Massage Thảo Dược',
-                      branch: 'Q1, TP.HCM',
-                    },
-                    {
-                      date: '24/07',
-                      time: '18:00',
-                      service: 'Detox Day 1/3',
-                      branch: 'Q1, TP.HCM',
-                    },
-                  ].map((a) => (
+                  {appointments.map((a) => (
                     <Stack
                       key={a.date + a.time}
                       direction="row"
@@ -4093,10 +4101,11 @@ export function Spa2PartnersPageView() {
   return (
     <Spa2PageShell>
       <Spa2PageHero
-        image={SPA2_PAGE_IMAGES.partners}
-        eyebrow="Cộng sự"
-        title="Đối tác đồng hành"
-        subtitle="Hợp tác cùng các thương hiệu mỹ phẩm và thiết bị spa hàng đầu thế giới."
+        image={spa2PartnersBanner.image.url}
+        imageStyle={spa2PartnersBanner.image}
+        eyebrow={spa2PartnersBanner.eyebrow}
+        title={spa2PartnersBanner.title}
+        subtitle={spa2PartnersBanner.subtitle}
       />
 
       {/* Logo đối tác - grid 4-6 cột */}
@@ -4443,7 +4452,8 @@ export function Spa2PartnersPageView() {
 export function Spa2TreatmentsPageView() {
   const [search, setSearch] = useState('');
 
-  const filtered = spa2Treatments.filter(
+  const activeTreatments = spa2Treatments.filter((t) => t.active);
+  const filtered = activeTreatments.filter(
     (t) =>
       t.name.toLowerCase().includes(search.toLowerCase()) ||
       t.target.toLowerCase().includes(search.toLowerCase())
@@ -4452,10 +4462,11 @@ export function Spa2TreatmentsPageView() {
   return (
     <Spa2PageShell>
       <Spa2PageHero
-        image={SPA2_PAGE_IMAGES.treatments}
-        eyebrow="Gói liệu trình"
-        title="Liệu trình chuyên sâu"
-        subtitle="Lộ trình được thiết kế cá nhân hóa cho từng vấn đề – đảm bảo kết quả rõ rệt."
+        image={spa2TreatmentsBanner.image.url}
+        imageStyle={spa2TreatmentsBanner.image}
+        eyebrow={spa2TreatmentsBanner.eyebrow}
+        title={spa2TreatmentsBanner.title}
+        subtitle={spa2TreatmentsBanner.subtitle}
       />
       <Box sx={{ pb: { xs: 4, md: 6 } }}>
         <Container sx={{ textAlign: 'center' }}>
@@ -4675,7 +4686,7 @@ export function Spa2TreatmentsPageView() {
 //     </Spa2PageShell>
 //   );
 // }
-function Spa2BeforeAfterSlider({ before, after }: { before: string; after: string }) {
+export function Spa2BeforeAfterSlider({ before, after }: { before: string; after: string }) {
   const [pos, setPos] = useState(50);
   return (
     <Box sx={{ position: 'relative', aspectRatio: '4/3', borderRadius: 3, overflow: 'hidden' }}>
@@ -4743,13 +4754,16 @@ function Spa2BeforeAfterSlider({ before, after }: { before: string; after: strin
 }
 
 export function Spa2BeforeAfterPageView() {
+  const approvedBeforeAfters = spa2BeforeAfters.filter((ba) => ba.status === 'approved');
+
   return (
     <Spa2PageShell>
       <Spa2PageHero
-        image={SPA2_PAGE_IMAGES.beforeAfter}
-        eyebrow="Trước & Sau"
-        title="Kết quả thực tế từ khách hàng"
-        subtitle="Hình ảnh được chia sẻ với sự đồng thuận của khách hàng – không qua chỉnh sửa."
+        image={spa2BeforeAfterBanner.image.url}
+        imageStyle={spa2BeforeAfterBanner.image}
+        eyebrow={spa2BeforeAfterBanner.eyebrow}
+        title={spa2BeforeAfterBanner.title}
+        subtitle={spa2BeforeAfterBanner.subtitle}
       />
 
       {/* Slider before/after */}
@@ -4757,7 +4771,7 @@ export function Spa2BeforeAfterPageView() {
         <Container>
           <Spa2SectionTitle eyebrow="Trải nghiệm" title="Kéo để so sánh" />
           <Grid container spacing={4}>
-            {spa2BeforeAfters.map((ba) => (
+            {approvedBeforeAfters.map((ba) => (
               <Grid key={ba.title} xs={12} sm={6}>
                 <Spa2SoftCard sx={{ p: 2 }}>
                   <Spa2BeforeAfterSlider before={ba.before} after={ba.after} />
@@ -4854,7 +4868,10 @@ export function Spa2BeforeAfterPageView() {
       <Box sx={{ py: { xs: 8, md: 12 } }}>
         <Container maxWidth="md">
           <Spa2SectionTitle eyebrow="FAQ" title="Câu hỏi thường gặp" />
-          {spa2Faqs.slice(0, 4).map((f, idx) => (
+          {spa2Faqs
+            .filter((f) => f.published)
+            .slice(0, 4)
+            .map((f, idx) => (
             <Accordion
               key={f.q}
               defaultExpanded={idx === 0}
@@ -4994,110 +5011,6 @@ export function Spa2BeforeAfterPageView() {
 //   );
 // }
 
-type FaqItem = {
-  cat: string;
-  icon: string;
-  q: string;
-  a: string;
-  tag: string;
-};
-
-const FAQ_CATEGORIES = [
-  { value: 'all', label: 'Tất cả', icon: 'solar:list-bold' },
-  { value: 'booking', label: 'Đặt lịch', icon: 'solar:calendar-bold' },
-  { value: 'service', label: 'Dịch vụ', icon: 'solar:spa-bold-duotone' },
-  { value: 'payment', label: 'Thanh toán', icon: 'solar:card-bold' },
-  { value: 'member', label: 'Thành viên', icon: 'solar:star-bold' },
-  { value: 'product', label: 'Sản phẩm', icon: 'solar:leaf-bold' },
-];
-
-const FAQ_DATA: FaqItem[] = [
-  {
-    cat: 'booking',
-    icon: 'solar:calendar-bold',
-    q: 'Tôi cần đặt lịch trước bao lâu?',
-    a: 'Ngày thường tối thiểu 2 giờ. Cuối tuần và lễ nên đặt trước 1 ngày để có khung giờ đẹp. Có thể đặt qua website, app, hotline 1900 6789 hoặc Zalo.',
-    tag: 'Đặt lịch',
-  },
-  {
-    cat: 'booking',
-    icon: 'solar:bell-bold',
-    q: 'Tôi có nhận được nhắc nhở trước giờ hẹn không?',
-    a: 'Hệ thống tự động gửi SMS và Zalo trước 2 giờ. Bạn cũng có thể xem và quản lý lịch hẹn trong ứng dụng Nature Spa.',
-    tag: 'Đặt lịch',
-  },
-  {
-    cat: 'booking',
-    icon: 'solar:close-circle-bold',
-    q: 'Tôi có thể hủy hoặc đổi lịch không?',
-    a: 'Hủy trước 4 giờ: miễn phí, hoàn 100%. Trong vòng 4 giờ: phí 20%. Không đến (no-show): phí 50%. Trường hợp khẩn cấp có giấy tờ sẽ được xem xét miễn phí.',
-    tag: 'Đặt lịch',
-  },
-  {
-    cat: 'service',
-    icon: 'solar:face-scan-circle-bold-duotone',
-    q: 'Dịch vụ có an toàn cho da nhạy cảm không?',
-    a: 'Tất cả sản phẩm 100% hữu cơ, không cồn, không paraben. An toàn cho da nhạy cảm, phụ nữ mang thai (từ tam cá nguyệt 2) và trẻ trên 12 tuổi. KTV tư vấn kỹ trước mỗi liệu trình.',
-    tag: 'Dịch vụ',
-  },
-  {
-    cat: 'service',
-    icon: 'solar:clock-circle-bold',
-    q: 'Mỗi liệu trình kéo dài bao lâu?',
-    a: 'Massage thảo dược 60 phút, Facial Organic 75 phút, Body Scrub & Wrap 90 phút, Spa Đôi 120 phút, Detox 3 ngày. Thời gian tư vấn đầu và cuối chưa tính vào.',
-    tag: 'Dịch vụ',
-  },
-  {
-    cat: 'service',
-    icon: 'solar:user-bold',
-    q: 'Có cần chuẩn bị gì trước khi đến không?',
-    a: 'Không cần chuẩn bị đặc biệt. Đến trước 10 phút để lễ tân tư vấn và điền phiếu đánh giá da sơ bộ. Tránh ăn quá no trước liệu trình massage.',
-    tag: 'Dịch vụ',
-  },
-  {
-    cat: 'payment',
-    icon: 'solar:card-bold',
-    q: 'Hỗ trợ thanh toán trả góp không?',
-    a: 'Có. Trả góp 0% lãi suất qua thẻ tín dụng của 15 ngân hàng đối tác (Vietcombank, BIDV, Techcombank, ACB…) cho hóa đơn từ 3 triệu đồng.',
-    tag: 'Thanh toán',
-  },
-  {
-    cat: 'payment',
-    icon: 'solar:recive-money-bold',
-    q: 'Có thể hoàn tiền khi đổi ý không?',
-    a: 'Gói chưa dùng: hoàn 100%. Đã dùng một phần: hoàn theo tỷ lệ buổi còn lại. Voucher khuyến mãi không hoàn tiền mặt nhưng có thể đổi sang dịch vụ cùng giá trị. Thời gian xử lý 3–7 ngày làm việc.',
-    tag: 'Hoàn tiền',
-  },
-  {
-    cat: 'member',
-    icon: 'solar:star-bold',
-    q: 'Điểm tích lũy được quy đổi như thế nào?',
-    a: '10.000đ = 1 điểm. 1 điểm = 1.000đ khi đổi quà hoặc giảm trừ hóa đơn. Điểm có hiệu lực 24 tháng. Thẻ Vàng nhân đôi điểm cuối tuần, Bạch Kim nhân ba trong tháng sinh nhật.',
-    tag: 'Thành viên',
-  },
-  {
-    cat: 'member',
-    icon: 'solar:crown-bold',
-    q: 'Làm sao để nâng hạng thẻ thành viên?',
-    a: 'Bạc: từ 0đ. Vàng: tổng chi 10 triệu đ. Bạch Kim: tổng chi 30 triệu đ. Hệ thống tự động nâng hạng và thông báo khi đủ điều kiện. Hạng giữ nguyên nếu còn giao dịch trong 12 tháng.',
-    tag: 'Thành viên',
-  },
-  {
-    cat: 'product',
-    icon: 'solar:leaf-bold',
-    q: 'Sản phẩm có được kiểm định không?',
-    a: 'Tất cả sản phẩm có đầy đủ CO, CQ và giấy phép Bộ Y tế. Kiểm định lô hàng mỗi 6 tháng bởi SGS Vietnam. Thành phần và nguồn gốc công khai tại phòng trị liệu và website.',
-    tag: 'Sản phẩm',
-  },
-  {
-    cat: 'product',
-    icon: 'solar:shield-check-bold',
-    q: 'Có cam kết bảo đảm chất lượng không?',
-    a: 'Có. Nature Spa bảo đảm kết quả theo phác đồ đã tư vấn. Nếu sau 3 buổi không có chuyển biến, KTV sẽ điều chỉnh liệu trình miễn phí hoặc hoàn tiền theo quy định.',
-    tag: 'Sản phẩm',
-  },
-];
-
 // ─────────────────────────────────────────────────────────────────────
 // SHARED BLOCKS
 // ─────────────────────────────────────────────────────────────────────
@@ -5209,15 +5122,17 @@ export function Spa2FaqPageView() {
   const [search, setSearch] = useState('');
   const [cat, setCat] = useState('all');
 
+  const publishedFaqs = useMemo(() => spa2Faqs.filter((f) => f.published), []);
+
   const filtered = useMemo(() => {
-    let list = FAQ_DATA;
+    let list = publishedFaqs;
     if (cat !== 'all') list = list.filter((f) => f.cat === cat);
     if (search.trim()) {
       const q = search.toLowerCase();
       list = list.filter((f) => f.q.toLowerCase().includes(q) || f.a.toLowerCase().includes(q));
     }
     return list;
-  }, [search, cat]);
+  }, [publishedFaqs, search, cat]);
 
   const stats = [
     { n: '98%', l: 'Khách hàng hài lòng' },
@@ -5276,14 +5191,17 @@ export function Spa2FaqPageView() {
 
         <Container sx={{ position: 'relative' }}>
           <Stack spacing={2.5} alignItems="center" sx={{ textAlign: 'center', mb: 5 }}>
-            <Typography variant="overline" sx={{ color: SPA2_TEAL, letterSpacing: 3 }}>
-              HỖ TRỢ KHÁCH HÀNG
+            <Typography
+              variant="overline"
+              sx={{ color: SPA2_TEAL, letterSpacing: 3, textTransform: 'uppercase' }}
+            >
+              {spa2FaqBanner.eyebrow}
             </Typography>
             <Typography variant="h1" sx={{ color: SPA2_INK, fontWeight: 600, lineHeight: 1.1 }}>
-              Câu hỏi thường gặp
+              {spa2FaqBanner.title}
             </Typography>
             <Typography sx={{ color: 'text.secondary', fontSize: 17, maxWidth: 520 }}>
-              Tìm câu trả lời nhanh hoặc liên hệ đội ngũ tư vấn — chúng tôi luôn sẵn sàng.
+              {spa2FaqBanner.subtitle}
             </Typography>
 
             {/* search bar */}
@@ -5351,7 +5269,7 @@ export function Spa2FaqPageView() {
         <Container maxWidth="md">
           {/* Category chips */}
           <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mb: 4, gap: 1 }}>
-            {FAQ_CATEGORIES.map((c) => (
+            {spa2FaqCategories.map((c) => (
               <Chip
                 key={c.value}
                 label={c.label}
@@ -5380,7 +5298,7 @@ export function Spa2FaqPageView() {
             <Typography sx={{ fontSize: 13, color: 'text.secondary', mb: 2 }}>
               Tìm thấy <strong style={{ color: SPA2_TEAL }}>{filtered.length}</strong> câu hỏi
               {cat !== 'all' &&
-                ` trong danh mục "${FAQ_CATEGORIES.find((c) => c.value === cat)?.label}"`}
+                ` trong danh mục "${spa2FaqCategories.find((c) => c.value === cat)?.label}"`}
             </Typography>
           )}
 
@@ -5635,16 +5553,6 @@ export function Spa2FaqPageView() {
 //   );
 // }
 
-const POL_NAV = [
-  { id: 'booking', label: 'Đặt lịch', icon: 'solar:calendar-bold', article: 'Điều 1' },
-  { id: 'cancel', label: 'Hủy / Đổi lịch', icon: 'solar:close-circle-bold', article: 'Điều 2' },
-  { id: 'refund', label: 'Hoàn tiền', icon: 'solar:refresh-bold', article: 'Điều 3' },
-  { id: 'member', label: 'Thành viên', icon: 'solar:crown-bold', article: 'Điều 4' },
-  { id: 'privacy', label: 'Bảo mật', icon: 'solar:lock-bold', article: 'Điều 5' },
-  { id: 'product', label: 'Sản phẩm', icon: 'solar:leaf-bold', article: 'Điều 6' },
-  { id: 'dispute', label: 'Khiếu nại', icon: 'solar:bill-list-bold', article: 'Điều 7' },
-];
-
 function PolSectionHeader({
   id,
   icon,
@@ -5833,51 +5741,30 @@ export function Spa2PolicyPageView() {
                 >
                   <Iconify icon="solar:clock-circle-bold" width={13} sx={{ color: SPA2_TEAL }} />
                   <Typography sx={{ fontSize: 12, color: SPA2_TEAL_DARK }}>
-                    Cập nhật 01/07/2026 · Phiên bản 3.2
+                    {spa2PolicyBanner.versionLabel}
                   </Typography>
                 </Box>
                 <Typography variant="overline" sx={{ color: SPA2_TEAL, letterSpacing: 3 }}>
-                  QUY ĐỊNH & CHÍNH SÁCH
+                  {spa2PolicyBanner.eyebrow.toUpperCase()}
                 </Typography>
                 <Typography variant="h1" sx={{ color: SPA2_INK, fontWeight: 600, lineHeight: 1.1 }}>
-                  Minh bạch,
-                  <br />
-                  Công bằng,
-                  <br />
-                  Tôn trọng khách hàng.
+                  {spa2PolicyBanner.titleLines.map((line, idx) => (
+                    <Fragment key={line}>
+                      {idx > 0 && <br />}
+                      {line}
+                    </Fragment>
+                  ))}
                 </Typography>
                 <Typography
                   sx={{ color: 'text.secondary', fontSize: 16, lineHeight: 1.7, maxWidth: 480 }}
                 >
-                  Mọi quy định đều được xây dựng để bảo vệ quyền lợi của bạn. Đọc kỹ để trải nghiệm
-                  tốt nhất tại Nature Spa.
+                  {spa2PolicyBanner.subtitle}
                 </Typography>
               </Stack>
             </Grid>
             <Grid xs={12} md={5}>
               <Grid container spacing={2}>
-                {[
-                  {
-                    icon: 'solar:shield-check-bold-duotone',
-                    label: 'Bảo mật tuyệt đối',
-                    sub: 'AES-256 · Nghị định 13/2023',
-                  },
-                  {
-                    icon: 'solar:diploma-bold-duotone',
-                    label: 'Chứng nhận ISO 9001',
-                    sub: 'Quản lý chất lượng quốc tế',
-                  },
-                  {
-                    icon: 'solar:hand-heart-bold-duotone',
-                    label: 'Cam kết hoàn tiền',
-                    sub: 'Hoàn 100% nếu chưa dùng',
-                  },
-                  {
-                    icon: 'solar:leaf-bold-duotone',
-                    label: 'Sản phẩm hữu cơ',
-                    sub: 'Kiểm định SGS Vietnam',
-                  },
-                ].map((item) => (
+                {spa2PolicyBanner.highlights.map((item) => (
                   <Grid key={item.label} xs={6}>
                     <Spa2SoftCard sx={{ textAlign: 'center', py: 3 }}>
                       <Iconify icon={item.icon} width={32} sx={{ color: SPA2_TEAL, mb: 1 }} />
@@ -5919,7 +5806,7 @@ export function Spa2PolicyPageView() {
               minHeight: 50,
             }}
           >
-            {POL_NAV.map((n, idx) => (
+            {spa2PolicyArticles.map((n, idx) => (
               <Tab
                 key={n.id}
                 label={n.label}
@@ -6530,10 +6417,11 @@ export function Spa2GalleryPageView() {
   return (
     <Spa2PageShell>
       <Spa2PageHero
-        image={SPA2_PAGE_IMAGES.gallery}
-        eyebrow="Gallery"
-        title="Khoảnh khắc tại Nature Spa"
-        subtitle="Không gian, sản phẩm và những cảm xúc được lưu giữ qua khung hình."
+        image={spa2GalleryBanner.image.url}
+        imageStyle={spa2GalleryBanner.image}
+        eyebrow={spa2GalleryBanner.eyebrow}
+        title={spa2GalleryBanner.title}
+        subtitle={spa2GalleryBanner.subtitle}
       />
       <Box sx={{ py: { xs: 8, md: 12 } }}>
         <Container>

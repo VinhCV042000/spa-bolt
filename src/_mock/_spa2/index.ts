@@ -10,6 +10,9 @@
 // previously created an import cycle (spa2-pages-data <-> _mock/_spa2).
 // ----------------------------------------------------------------------
 
+import { IconifyIcon } from '@iconify/react';
+import { ReactNode } from 'react';
+
 // ---------- Page imagery & UI meta ---------------------------------------
 
 export const SPA2_PAGE_IMAGES = {
@@ -108,22 +111,45 @@ export const SPA2_CONTACT_CONTENT: Spa2ContactContent = {
   address: 'Q1, TP.HCM',
 };
 
+// ---------- Account banner (view + dashboard shared) ------------------------
+
+export type Spa2AccountBanner = Spa2PageBanner;
+
+export const spa2AccountBanner: Spa2AccountBanner = {
+  image: { url: SPA2_PAGE_IMAGES.account, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'Tài khoản',
+  title: 'Khu vực thành viên',
+  subtitle: 'Quản lý lịch hẹn, điểm thưởng và liệu trình của bạn.',
+};
+
+export type Spa2Appointment = {
+  date: string;
+  time: string;
+  service: string;
+  branch: string;
+};
+
 export type Spa2AccountContent = {
-  greetingTitle: string;
-  greetingSubtitle: string;
-  defaultAvatar: string;
-  menuItems: { key: string; label: string; icon: string }[];
+  memberName: string;
+  avatar: string;
+  membershipTier: string;
+  loyaltyPoints: number;
+  sessionsUsed: number;
+  sessionsTotal: number;
+  appointments: Spa2Appointment[];
 };
 
 export const SPA2_ACCOUNT_CONTENT: Spa2AccountContent = {
-  greetingTitle: 'Xin chào, Khách hàng',
-  greetingSubtitle: 'Quản lý thông tin cá nhân, đặt lịch và ưu đãi của bạn.',
-  defaultAvatar: 'https://i.pravatar.cc/200?img=32',
-  menuItems: [
-    { key: 'profile', label: 'Hồ sơ', icon: 'solar:user-bold-duotone' },
-    { key: 'bookings', label: 'Lịch đặt', icon: 'solar:calendar-bold-duotone' },
-    { key: 'favorites', label: 'Yêu thích', icon: 'solar:heart-bold-duotone' },
-    { key: 'rewards', label: 'Ưu đãi', icon: 'solar:gift-bold-duotone' },
+  memberName: 'Lê Minh Anh',
+  avatar: 'https://i.pravatar.cc/200?img=11',
+  membershipTier: 'Thẻ Gold',
+  loyaltyPoints: 3250,
+  sessionsUsed: 6,
+  sessionsTotal: 10,
+  appointments: [
+    { date: '02/07', time: '15:00', service: 'Facial Organic', branch: 'Q1, TP.HCM' },
+    { date: '12/07', time: '10:30', service: 'Massage Thảo Dược', branch: 'Q1, TP.HCM' },
+    { date: '24/07', time: '18:00', service: 'Detox Day 1/3', branch: 'Q1, TP.HCM' },
   ],
 };
 
@@ -180,6 +206,7 @@ export type Spa2ServiceStep = {
   title: string;
   desc: string;
 };
+export type Spa2BeforeAfterStatus = 'pending' | 'approved' | 'rejected';
 
 export type Spa2BeforeAfter = {
   id: string;
@@ -188,6 +215,7 @@ export type Spa2BeforeAfter = {
   after: string;
   duration: string;
   note: string;
+  status: Spa2BeforeAfterStatus;
 };
 
 export type Spa2Feedback = {
@@ -201,6 +229,10 @@ export type Spa2Feedback = {
 };
 
 export type Spa2Faq = {
+  published: unknown;
+  cat: string;
+  icon: string | IconifyIcon;
+  tag: ReactNode;
   id: string;
   q: string;
   a: string;
@@ -256,21 +288,37 @@ const DEFAULT_FAQS = [
     id: 'f1',
     q: 'Tôi cần đặt lịch trước bao lâu?',
     a: 'Bạn nên đặt lịch trước ít nhất 2 giờ. Vào cuối tuần nên đặt trước 1 ngày để có khung giờ đẹp.',
+    published: true,
+    cat: 'booking',
+    icon: 'solar:calendar-bold-duotone',
+    tag: 'Booking',
   },
   {
     id: 'f2',
     q: 'Sản phẩm sử dụng có an toàn cho da nhạy cảm?',
     a: 'Chúng tôi sử dụng 100% nguyên liệu hữu cơ, không cồn, không paraben, an toàn cho cả da nhạy cảm và phụ nữ mang thai.',
+    published: true,
+    cat: 'product',
+    icon: 'solar:leaf-bold-duotone',
+    tag: 'Product',
   },
   {
     id: 'f3',
     q: 'Có hỗ trợ thanh toán trả góp không?',
     a: 'Có. Nature Spa hỗ trợ trả góp 0% qua thẻ tín dụng của 12 ngân hàng đối tác.',
+    published: true,
+    cat: 'payment',
+    icon: 'solar:wallet-bold-duotone',
+    tag: 'Payment',
   },
   {
     id: 'f4',
     q: 'Tôi có thể đổi/hủy lịch không?',
     a: 'Bạn có thể đổi hoặc hủy lịch miễn phí trước 4 giờ so với giờ hẹn.',
+    published: true,
+    cat: 'booking',
+    icon: 'solar:calendar-bold-duotone',
+    tag: 'Booking',
   },
 ];
 
@@ -311,7 +359,7 @@ const DEFAULT_GALLERY = [
   'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=600&q=80',
 ];
 
-const DEFAULT_BEFORE_AFTERS = [
+const DEFAULT_BEFORE_AFTERS: Spa2BeforeAfter[] = [
   {
     id: 'ba1',
     title: 'Trị mụn – 8 buổi',
@@ -319,6 +367,7 @@ const DEFAULT_BEFORE_AFTERS = [
     after: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&q=80',
     duration: '2 tháng',
     note: 'Giảm 90% mụn viêm, da đều màu, lỗ chân lông se nhỏ.',
+    status: 'approved',
   },
   {
     id: 'ba2',
@@ -327,6 +376,7 @@ const DEFAULT_BEFORE_AFTERS = [
     after: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=600&q=80',
     duration: '2 tháng',
     note: 'Nâng cơ, mờ nếp nhăn, da săn chắc tự nhiên.',
+    status: 'approved',
   },
 ];
 
@@ -1138,9 +1188,34 @@ export const spa2Certifications: Spa2AboutCertification[] = [
   },
 ];
 
+// ---------- Partners banner (view + dashboard shared) ----------------------
+
+export type Spa2PartnersBanner = Spa2PageBanner;
+
+export const spa2PartnersBanner: Spa2PartnersBanner = {
+  image: { url: SPA2_PAGE_IMAGES.partners, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'Cộng sự',
+  title: 'Đối tác đồng hành',
+  subtitle: 'Hợp tác cùng các thương hiệu mỹ phẩm và thiết bị spa hàng đầu thế giới.',
+};
+
 // ---------- Partners --------------------------------------------------
 
-export const spa2PartnerProfiles = [
+// `category` matches a spa2PartnerCategories key ('cosmetics' | 'equipment' |
+// 'training' | 'tech') and drives which "Đối tác chiến lược" group a partner
+// appears in on the public page — the same value the dashboard form sets.
+export type Spa2PartnerProfile = {
+  name: string;
+  country: string;
+  logo: string;
+  specialty: string;
+  since: string;
+  desc: string;
+  expert: string;
+  category: string;
+};
+
+export const spa2PartnerProfiles: Spa2PartnerProfile[] = [
   {
     name: 'Comfort Zone',
     country: 'Italy',
@@ -1149,6 +1224,7 @@ export const spa2PartnerProfiles = [
     since: '2017',
     desc: 'Thương hiệu mỹ phẩm sinh học hàng đầu Ý, chuyên các dòng sản phẩm chống lão hóa và phục hồi da.',
     expert: 'Chuyên viên: Trần Minh Khôi',
+    category: 'cosmetics',
   },
   {
     name: 'Thalgo',
@@ -1158,6 +1234,7 @@ export const spa2PartnerProfiles = [
     since: '2018',
     desc: 'Tiên phong trong công nghệ tảo biển trị liệu, phục hồi và tái tạo làn da từ sâu bên trong.',
     expert: 'Chuyên viên: Phạm Hồng Nhi',
+    category: 'cosmetics',
   },
   {
     name: 'Dermalogica',
@@ -1167,6 +1244,7 @@ export const spa2PartnerProfiles = [
     since: '2016',
     desc: 'Thương hiệu skincare chuyên nghiệp được tin dùng bởi các spa cao cấp toàn cầu.',
     expert: 'Chuyên viên: Nguyễn Thảo Vy',
+    category: 'cosmetics',
   },
   {
     name: 'Shiseido Pro',
@@ -1176,6 +1254,7 @@ export const spa2PartnerProfiles = [
     since: '2019',
     desc: 'Công nghệ làm đẹp Nhật Bản với triết lý chăm sóc da bền vững, an toàn.',
     expert: 'Chuyên viên: Lê Gia Huy',
+    category: 'tech',
   },
   {
     name: 'Yon-Ka Paris',
@@ -1185,6 +1264,7 @@ export const spa2PartnerProfiles = [
     since: '2020',
     desc: 'Liệu pháp hương thơm từ tinh chất thực vật, cân bằng làn da và tinh thần.',
     expert: 'Chuyên viên: Trần Minh Khôi',
+    category: 'cosmetics',
   },
   {
     name: 'Eminence Organic',
@@ -1194,6 +1274,7 @@ export const spa2PartnerProfiles = [
     since: '2021',
     desc: '100% nguyên liệu hữu cơ, không hóa chất, an toàn cho mọi loại da.',
     expert: 'Chuyên viên: Phạm Hồng Nhi',
+    category: 'cosmetics',
   },
 ];
 
@@ -1280,9 +1361,33 @@ export const spa2QualityCerts = [
   },
 ];
 
+// ---------- Feedback banner (view + dashboard shared) ---------------------
+
+export type Spa2FeedbackBanner = Spa2PageBanner;
+
+export const spa2FeedbackBanner: Spa2FeedbackBanner = {
+  image: { url: SPA2_PAGE_IMAGES.feedback, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'Cảm nhận khách hàng',
+  title: '25.000+ khách hàng tin yêu',
+  subtitle: 'Mỗi đánh giá là động lực để chúng tôi không ngừng hoàn thiện.',
+};
+
 // ---------- Feedback / Video reviews ---------------------------------
 
-export const spa2Feedbacks = [
+// Only feedback with status 'approved' renders on the public /spa2/feedback
+// page — moderation in the dashboard (Duyệt / Từ chối) directly controls
+// what customers see, so the manage view and public view never drift apart.
+export type Spa2FeedbackStatus = 'pending' | 'approved' | 'rejected';
+
+export const spa2Feedbacks: {
+  name: string;
+  role: string;
+  rating: number;
+  avatar: string;
+  comment: string;
+  service: string;
+  status: Spa2FeedbackStatus;
+}[] = [
   {
     name: 'Minh Anh',
     role: 'Khách hàng VIP',
@@ -1291,6 +1396,7 @@ export const spa2Feedbacks = [
     comment:
       'Không gian xanh mát, tinh dầu thơm dịu, kỹ thuật viên rất chuyên nghiệp. Cảm thấy như đang đi nghỉ dưỡng giữa thiên nhiên.',
     service: 'Facial Organic',
+    status: 'approved',
   },
   {
     name: 'Thu Hà',
@@ -1299,6 +1405,7 @@ export const spa2Feedbacks = [
     avatar: 'https://i.pravatar.cc/150?img=16',
     comment: 'Liệu trình trị mụn rõ rệt sau 4 buổi. Da đều màu hơn, mụn giảm gần như hoàn toàn.',
     service: 'Liệu trình trị mụn',
+    status: 'approved',
   },
   {
     name: 'Hoàng Nam',
@@ -1307,6 +1414,7 @@ export const spa2Feedbacks = [
     avatar: 'https://i.pravatar.cc/150?img=23',
     comment: 'Lần đầu đi spa nhưng cảm giác rất thoải mái, đặc biệt là phòng xông đá muối.',
     service: 'Massage thảo dược',
+    status: 'approved',
   },
   {
     name: 'Bích Ngọc',
@@ -1315,6 +1423,7 @@ export const spa2Feedbacks = [
     avatar: 'https://i.pravatar.cc/150?img=32',
     comment: 'Detox 3 ngày giúp mình giảm 2kg và cảm thấy nhẹ nhõm hẳn. Sẽ quay lại nhiều lần nữa.',
     service: 'Detox 3 ngày',
+    status: 'approved',
   },
   {
     name: 'Thanh Phương',
@@ -1323,6 +1432,7 @@ export const spa2Feedbacks = [
     avatar: 'https://i.pravatar.cc/150?img=47',
     comment: 'Nhân viên thân thiện, không gian sạch sẽ, mùi hương dễ chịu suốt buổi.',
     service: 'Aromatherapy',
+    status: 'pending',
   },
   {
     name: 'Quốc Bảo',
@@ -1331,6 +1441,7 @@ export const spa2Feedbacks = [
     avatar: 'https://i.pravatar.cc/150?img=51',
     comment: 'Gói đôi rất lãng mạn, vợ mình rất thích. Cảm ơn Nature Spa!',
     service: 'Spa đôi',
+    status: 'pending',
   },
 ];
 
@@ -1355,40 +1466,59 @@ export const spa2VideoReviews = [
   },
 ];
 
+// ---------- Before / After banner (view + dashboard shared) ----------------
+
+export type Spa2BeforeAfterBanner = Spa2PageBanner;
+
+export const spa2BeforeAfterBanner: Spa2BeforeAfterBanner = {
+  image: { url: SPA2_PAGE_IMAGES.beforeAfter, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'Trước & Sau',
+  title: 'Kết quả thực tế từ khách hàng',
+  subtitle: 'Hình ảnh được chia sẻ với sự đồng thuận của khách hàng – không qua chỉnh sửa.',
+};
+
 // ---------- Before / After ---------------------------------------------
 
-export const spa2BeforeAfters = [
+// Only cases with status 'approved' render on the public /spa2/before-after
+// page — moderation in the dashboard (Duyệt / Từ chối) directly controls what
+// customers see, same discipline as spa2Feedbacks.
+
+export const spa2BeforeAfters: Spa2BeforeAfter[] = [
   {
-    id: 1,
+    id: '1',
     title: 'Trị mụn – 8 buổi',
     before: 'https://images.unsplash.com/photo-1556228841-a3c527ebefe5?w=600&q=80',
     after: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&q=80',
     duration: '2 tháng',
     note: 'Giảm 90% mụn viêm, da đều màu, lỗ chân lông se nhỏ.',
+    status: 'approved',
   },
   {
-    id: 2,
+    id: '2',
     title: 'Trẻ hóa da – 10 buổi',
     before: 'https://images.unsplash.com/photo-1559599101-f09722fb4948?w=600&q=80',
     after: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=600&q=80',
     duration: '2 tháng',
     note: 'Nâng cơ, mờ nếp nhăn, da săn chắc tự nhiên.',
+    status: 'approved',
   },
   {
-    id: 3,
-    title: 'Giảm béo – 12 buổi',
+    id: '3',
+    title: 'Giảm béo – 10 buổi',
     before: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80',
     after: 'https://images.unsplash.com/photo-1517363898874-737b62a7db91?w=600&q=80',
     duration: '3 tháng',
     note: 'Giảm 8cm vòng eo, săn chắc cơ bụng, không xâm lấn.',
+    status: 'pending',
   },
   {
-    id: 4,
+    id: '4',
     title: 'Trắng sáng – 6 buổi',
     before: 'https://images.unsplash.com/photo-1516975698824-571cb39ceee6?w=600&q=80',
     after: 'https://images.unsplash.com/photo-1531123414780-f3d9d2c46c6c?w=600&q=80',
     duration: '6 tuần',
     note: 'Tăng 2 tone, da đều màu, hết thâm sạm.',
+    status: 'pending',
   },
 ];
 
@@ -1435,9 +1565,33 @@ export const spa2TreatmentProcess = [
   { title: 'Theo dõi', desc: 'Đánh giá kết quả định kỳ, điều chỉnh phác đồ nếu cần.' },
 ];
 
+// ---------- Treatments banner (view + dashboard shared) ---------------------
+
+export type Spa2TreatmentsBanner = Spa2PageBanner;
+
+export const spa2TreatmentsBanner: Spa2TreatmentsBanner = {
+  image: { url: SPA2_PAGE_IMAGES.treatments, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'Gói liệu trình',
+  title: 'Liệu trình chuyên sâu',
+  subtitle: 'Lộ trình được thiết kế cá nhân hóa cho từng vấn đề – đảm bảo kết quả rõ rệt.',
+};
+
 // ---------- Treatments ---------------------------------------------------
 
-export const spa2Treatments = [
+// `active: false` hides a treatment from the public /spa2/treatments list —
+// the dashboard's "Kích hoạt / Tắt" toggle directly controls this.
+export type Spa2Treatment = {
+  id: number;
+  name: string;
+  sessions: number;
+  duration: string;
+  price: number;
+  target: string;
+  includes: string[];
+  active: boolean;
+};
+
+export const spa2Treatments: Spa2Treatment[] = [
   {
     id: 1,
     name: 'Liệu Trình Trẻ Hóa 10 Buổi',
@@ -1446,6 +1600,7 @@ export const spa2Treatments = [
     price: 12900000,
     target: 'Da lão hóa, chùng nhão',
     includes: ['Facial Collagen', 'RF nâng cơ', 'Mặt nạ vàng 24K', 'Massage cổ vai gáy'],
+    active: true,
   },
   {
     id: 2,
@@ -1455,6 +1610,7 @@ export const spa2Treatments = [
     price: 7900000,
     target: 'Da mụn, lỗ chân lông to',
     includes: ['Lấy nhân mụn chuẩn y khoa', 'Ánh sáng sinh học', 'Peel nhẹ', 'Phục hồi cấp ẩm'],
+    active: true,
   },
   {
     id: 3,
@@ -1464,6 +1620,7 @@ export const spa2Treatments = [
     price: 14900000,
     target: 'Giảm mỡ bụng, đùi, eo',
     includes: ['Sóng RF tan mỡ', 'Massage dẫn lưu', 'Ủ thảo dược', 'Tư vấn dinh dưỡng'],
+    active: true,
   },
   {
     id: 4,
@@ -1473,12 +1630,33 @@ export const spa2Treatments = [
     price: 6900000,
     target: 'Da xỉn màu, không đều',
     includes: ['Tế bào gốc', 'Mặt nạ ngọc trai', 'Vitamin C điện di', 'Mặt nạ lạnh'],
+    active: true,
   },
 ];
 
+// ---------- Branches banner (view + dashboard shared) ----------------------
+
+export type Spa2BranchesBanner = Spa2PageBanner;
+
+export const spa2BranchesBanner: Spa2BranchesBanner = {
+  image: { url: SPA2_PAGE_IMAGES.branches, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'Hệ thống',
+  title: '4 chi nhánh trên toàn quốc',
+  subtitle: 'Tìm chi nhánh Nature Spa gần bạn nhất – mọi nơi đều cùng một chuẩn dịch vụ.',
+};
+
 // ---------- Branches -----------------------------------------------------
 
-export const spa2Branches = [
+export type Spa2Branch = {
+  city: string;
+  name: string;
+  address: string;
+  phone: string;
+  hours: string;
+  image: string;
+};
+
+export const spa2Branches: Spa2Branch[] = [
   {
     city: 'TP. Hồ Chí Minh',
     name: 'Nature Spa Quận 1',
@@ -1546,13 +1724,58 @@ export const spa2Offers = [
   },
 ];
 
-export const spa2Promotions = [
+// ---------- Promotions banner (view + dashboard shared) --------------------
+
+export type Spa2PromotionsBanner = Spa2PageBanner;
+
+export const spa2PromotionsBanner: Spa2PromotionsBanner = {
+  image: { url: SPA2_PAGE_IMAGES.promotions, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'Khuyến mãi',
+  title: 'Sự kiện & khuyến mãi theo mùa',
+  subtitle: 'Cập nhật các chương trình giới hạn thời gian, ưu đãi cực sốc trong năm.',
+};
+
+// Only `active` promotions render on the public /spa2/promotions page, so
+// tạm dừng (pause) in the dashboard actually hides the campaign from
+// customers instead of being a purely cosmetic dashboard-only toggle.
+// `endsAt` (ISO datetime) drives the flash-sale countdown when present.
+export type Spa2Promotion = {
+  title: string;
+  period: string;
+  price: string;
+  save: string;
+  image: string;
+  active: boolean;
+  endsAt?: string;
+};
+
+// Dedicated flash-sale banner shown at the top of /spa2/promotions — decoupled
+// from the campaign list below (`spa2Promotions`) so admins can run a flash
+// sale independent of any single listed promotion. `active` toggles the whole
+// banner off; `endsAt` (ISO datetime) drives the Spa2Countdown.
+export type Spa2FlashSale = {
+  active: boolean;
+  title: string;
+  save: string;
+  endsAt: string;
+};
+
+export const spa2FlashSale: Spa2FlashSale = {
+  active: true,
+  title: 'Mùa hè xanh – Detox 3 ngày',
+  save: 'Tiết kiệm 1.200.000đ',
+  endsAt: '2026-08-31T23:59:59',
+};
+
+export const spa2Promotions: Spa2Promotion[] = [
   {
     title: 'Mùa hè xanh – Detox 3 ngày',
     period: '01/06 – 31/08/2026',
     price: '4.590.000đ',
     save: 'Tiết kiệm 1.200.000đ',
     image: 'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=900&q=80',
+    active: true,
+    endsAt: '2026-08-31T23:59:59',
   },
   {
     title: 'Trung Thu – Quà tặng vàng',
@@ -1560,6 +1783,7 @@ export const spa2Promotions = [
     price: 'Tặng kèm hộp trà sen',
     save: 'Giá trị 350.000đ',
     image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=900&q=80',
+    active: true,
   },
   {
     title: 'Black Friday Spa Day',
@@ -1567,6 +1791,7 @@ export const spa2Promotions = [
     price: 'Giảm đến 50%',
     save: 'Toàn bộ liệu trình',
     image: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=900&q=80',
+    active: true,
   },
 ];
 
@@ -1749,39 +1974,217 @@ export const spa2GraduateShowcase: Spa2TrainingGraduate[] = [
   },
 ];
 
+// ---------- FAQ banner (view + dashboard shared) -----------------------
+
+export type Spa2FaqBanner = {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+};
+
+export const spa2FaqBanner: Spa2FaqBanner = {
+  eyebrow: 'Hỗ trợ khách hàng',
+  title: 'Câu hỏi thường gặp',
+  subtitle: 'Tìm câu trả lời nhanh hoặc liên hệ đội ngũ tư vấn — chúng tôi luôn sẵn sàng.',
+};
+
 // ---------- FAQ / Policies / Gallery / Contact ----------------------------
 
-export const spa2Faqs = [
+export type Spa2FaqCategory = {
+  value: string;
+  label: string;
+  icon: string;
+};
+
+export const spa2FaqCategories: Spa2FaqCategory[] = [
+  { value: 'all', label: 'Tất cả', icon: 'solar:list-bold' },
+  { value: 'booking', label: 'Đặt lịch', icon: 'solar:calendar-bold' },
+  { value: 'service', label: 'Dịch vụ', icon: 'solar:spa-bold-duotone' },
+  { value: 'payment', label: 'Thanh toán', icon: 'solar:card-bold' },
+  { value: 'member', label: 'Thành viên', icon: 'solar:star-bold' },
+  { value: 'product', label: 'Sản phẩm', icon: 'solar:leaf-bold' },
+];
+
+// `published: false` hides a FAQ from the public /spa2/faq page (and every
+// other place spa2Faqs is reused, e.g. the before/after page's FAQ teaser) —
+// the dashboard's "Hiện / Ẩn" toggle directly controls this.
+
+export const spa2Faqs: Spa2Faq[] = [
   {
     id: 1,
+    cat: 'booking',
+    icon: 'solar:calendar-bold',
     q: 'Tôi cần đặt lịch trước bao lâu?',
-    a: 'Bạn nên đặt lịch trước ít nhất 2 giờ. Vào cuối tuần nên đặt trước 1 ngày để có khung giờ đẹp.',
+    a: 'Ngày thường tối thiểu 2 giờ. Cuối tuần và lễ nên đặt trước 1 ngày để có khung giờ đẹp. Có thể đặt qua website, app, hotline 1900 6789 hoặc Zalo.',
+    tag: 'Đặt lịch',
+    published: true,
   },
   {
     id: 2,
-    q: 'Sản phẩm sử dụng có an toàn cho da nhạy cảm?',
-    a: 'Chúng tôi sử dụng 100% nguyên liệu hữu cơ, không cồn, không paraben, an toàn cho cả da nhạy cảm và phụ nữ mang thai.',
+    cat: 'booking',
+    icon: 'solar:bell-bold',
+    q: 'Tôi có nhận được nhắc nhở trước giờ hẹn không?',
+    a: 'Hệ thống tự động gửi SMS và Zalo trước 2 giờ. Bạn cũng có thể xem và quản lý lịch hẹn trong ứng dụng Nature Spa.',
+    tag: 'Đặt lịch',
+    published: true,
   },
   {
     id: 3,
-    q: 'Có hỗ trợ thanh toán trả góp không?',
-    a: 'Có. Nature Spa hỗ trợ trả góp 0% qua thẻ tín dụng của 12 ngân hàng đối tác.',
+    cat: 'booking',
+    icon: 'solar:close-circle-bold',
+    q: 'Tôi có thể hủy hoặc đổi lịch không?',
+    a: 'Hủy trước 4 giờ: miễn phí, hoàn 100%. Trong vòng 4 giờ: phí 20%. Không đến (no-show): phí 50%. Trường hợp khẩn cấp có giấy tờ sẽ được xem xét miễn phí.',
+    tag: 'Đặt lịch',
+    published: true,
   },
   {
     id: 4,
-    q: 'Tôi có thể đổi/hủy lịch không?',
-    a: 'Bạn có thể đổi hoặc hủy lịch miễn phí trước 4 giờ so với giờ hẹn.',
+    cat: 'service',
+    icon: 'solar:face-scan-circle-bold-duotone',
+    q: 'Dịch vụ có an toàn cho da nhạy cảm không?',
+    a: 'Tất cả sản phẩm 100% hữu cơ, không cồn, không paraben. An toàn cho da nhạy cảm, phụ nữ mang thai (từ tam cá nguyệt 2) và trẻ trên 12 tuổi. KTV tư vấn kỹ trước mỗi liệu trình.',
+    tag: 'Dịch vụ',
+    published: true,
   },
   {
     id: 5,
-    q: 'Có phòng riêng cho cặp đôi không?',
-    a: 'Có 6 phòng VIP đôi tại các chi nhánh, kèm bồn tắm hoa và khu nghỉ riêng tư.',
+    cat: 'service',
+    icon: 'solar:clock-circle-bold',
+    q: 'Mỗi liệu trình kéo dài bao lâu?',
+    a: 'Massage thảo dược 60 phút, Facial Organic 75 phút, Body Scrub & Wrap 90 phút, Spa Đôi 120 phút, Detox 3 ngày. Thời gian tư vấn đầu và cuối chưa tính vào.',
+    tag: 'Dịch vụ',
+    published: true,
   },
   {
     id: 6,
-    q: 'Spa có chương trình thẻ thành viên không?',
-    a: 'Có 3 hạng thẻ: Silver, Gold, Platinum với ưu đãi 5–15% và quà tặng sinh nhật.',
+    cat: 'service',
+    icon: 'solar:user-bold',
+    q: 'Có cần chuẩn bị gì trước khi đến không?',
+    a: 'Không cần chuẩn bị đặc biệt. Đến trước 10 phút để lễ tân tư vấn và điền phiếu đánh giá da sơ bộ. Tránh ăn quá no trước liệu trình massage.',
+    tag: 'Dịch vụ',
+    published: true,
   },
+  {
+    id: 7,
+    cat: 'payment',
+    icon: 'solar:card-bold',
+    q: 'Hỗ trợ thanh toán trả góp không?',
+    a: 'Có. Trả góp 0% lãi suất qua thẻ tín dụng của 15 ngân hàng đối tác (Vietcombank, BIDV, Techcombank, ACB…) cho hóa đơn từ 3 triệu đồng.',
+    tag: 'Thanh toán',
+    published: true,
+  },
+  {
+    id: 8,
+    cat: 'payment',
+    icon: 'solar:recive-money-bold',
+    q: 'Có thể hoàn tiền khi đổi ý không?',
+    a: 'Gói chưa dùng: hoàn 100%. Đã dùng một phần: hoàn theo tỷ lệ buổi còn lại. Voucher khuyến mãi không hoàn tiền mặt nhưng có thể đổi sang dịch vụ cùng giá trị. Thời gian xử lý 3–7 ngày làm việc.',
+    tag: 'Hoàn tiền',
+    published: true,
+  },
+  {
+    id: 9,
+    cat: 'member',
+    icon: 'solar:star-bold',
+    q: 'Điểm tích lũy được quy đổi như thế nào?',
+    a: '10.000đ = 1 điểm. 1 điểm = 1.000đ khi đổi quà hoặc giảm trừ hóa đơn. Điểm có hiệu lực 24 tháng. Thẻ Vàng nhân đôi điểm cuối tuần, Bạch Kim nhân ba trong tháng sinh nhật.',
+    tag: 'Thành viên',
+    published: true,
+  },
+  {
+    id: 10,
+    cat: 'member',
+    icon: 'solar:crown-bold',
+    q: 'Làm sao để nâng hạng thẻ thành viên?',
+    a: 'Bạc: từ 0đ. Vàng: tổng chi 10 triệu đ. Bạch Kim: tổng chi 30 triệu đ. Hệ thống tự động nâng hạng và thông báo khi đủ điều kiện. Hạng giữ nguyên nếu còn giao dịch trong 12 tháng.',
+    tag: 'Thành viên',
+    published: true,
+  },
+  {
+    id: 11,
+    cat: 'product',
+    icon: 'solar:leaf-bold',
+    q: 'Sản phẩm có được kiểm định không?',
+    a: 'Tất cả sản phẩm có đầy đủ CO, CQ và giấy phép Bộ Y tế. Kiểm định lô hàng mỗi 6 tháng bởi SGS Vietnam. Thành phần và nguồn gốc công khai tại phòng trị liệu và website.',
+    tag: 'Sản phẩm',
+    published: true,
+  },
+  {
+    id: 12,
+    cat: 'product',
+    icon: 'solar:shield-check-bold',
+    q: 'Có cam kết bảo đảm chất lượng không?',
+    a: 'Có. Nature Spa bảo đảm kết quả theo phác đồ đã tư vấn. Nếu sau 3 buổi không có chuyển biến, KTV sẽ điều chỉnh liệu trình miễn phí hoặc hoàn tiền theo quy định.',
+    tag: 'Sản phẩm',
+    published: true,
+  },
+];
+
+// ---------- Policy banner + hero highlights (view + dashboard shared) ------
+
+export type Spa2PolicyHighlight = {
+  icon: string;
+  label: string;
+  sub: string;
+};
+
+export type Spa2PolicyBanner = {
+  eyebrow: string;
+  titleLines: string[];
+  subtitle: string;
+  versionLabel: string;
+  highlights: Spa2PolicyHighlight[];
+};
+
+export const spa2PolicyBanner: Spa2PolicyBanner = {
+  eyebrow: 'Quy định & chính sách',
+  titleLines: ['Minh bạch,', 'Công bằng,', 'Tôn trọng khách hàng.'],
+  subtitle:
+    'Mọi quy định đều được xây dựng để bảo vệ quyền lợi của bạn. Đọc kỹ để trải nghiệm tốt nhất tại Nature Spa.',
+  versionLabel: 'Cập nhật 01/07/2026 · Phiên bản 3.2',
+  highlights: [
+    {
+      icon: 'solar:shield-check-bold-duotone',
+      label: 'Bảo mật tuyệt đối',
+      sub: 'AES-256 · Nghị định 13/2023',
+    },
+    {
+      icon: 'solar:diploma-bold-duotone',
+      label: 'Chứng nhận ISO 9001',
+      sub: 'Quản lý chất lượng quốc tế',
+    },
+    {
+      icon: 'solar:hand-heart-bold-duotone',
+      label: 'Cam kết hoàn tiền',
+      sub: 'Hoàn 100% nếu chưa dùng',
+    },
+    {
+      icon: 'solar:leaf-bold-duotone',
+      label: 'Sản phẩm hữu cơ',
+      sub: 'Kiểm định SGS Vietnam',
+    },
+  ],
+};
+
+// The sticky nav tabs on /spa2/policy — the actual clause body text for each
+// article stays hand-authored in Spa2PolicyPageView (long-form legal content
+// isn't a realistic WYSIWYG target), but the label/icon/article-number/order
+// admins see on that page is real, shared, editable data.
+export type Spa2PolicyArticle = {
+  id: string;
+  label: string;
+  icon: string;
+  article: string;
+};
+
+export const spa2PolicyArticles: Spa2PolicyArticle[] = [
+  { id: 'booking', label: 'Đặt lịch', icon: 'solar:calendar-bold', article: 'Điều 1' },
+  { id: 'cancel', label: 'Hủy / Đổi lịch', icon: 'solar:close-circle-bold', article: 'Điều 2' },
+  { id: 'refund', label: 'Hoàn tiền', icon: 'solar:refresh-bold', article: 'Điều 3' },
+  { id: 'member', label: 'Thành viên', icon: 'solar:crown-bold', article: 'Điều 4' },
+  { id: 'privacy', label: 'Bảo mật', icon: 'solar:lock-bold', article: 'Điều 5' },
+  { id: 'product', label: 'Sản phẩm', icon: 'solar:leaf-bold', article: 'Điều 6' },
+  { id: 'dispute', label: 'Khiếu nại', icon: 'solar:bill-list-bold', article: 'Điều 7' },
 ];
 
 export const spa2Policies = [
@@ -1818,6 +2221,17 @@ export const spa2Policies = [
     ],
   },
 ];
+
+// ---------- Gallery banner (view + dashboard shared) -----------------------
+
+export type Spa2GalleryBanner = Spa2PageBanner;
+
+export const spa2GalleryBanner: Spa2GalleryBanner = {
+  image: { url: SPA2_PAGE_IMAGES.gallery, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'Gallery',
+  title: 'Khoảnh khắc tại Nature Spa',
+  subtitle: 'Không gian, sản phẩm và những cảm xúc được lưu giữ qua khung hình.',
+};
 
 export const spa2Gallery = [
   'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=900&q=80',
@@ -1981,12 +2395,7 @@ export const SPA2_TRAINING_REGISTRATIONS: Spa2TrainingRegistration[] = [
 
 // ---------- Hồ sơ ứng tuyển (admin-only operational data) ----------------
 
-export type Spa2CareerApplicationStatus =
-  | 'new'
-  | 'reviewing'
-  | 'interview'
-  | 'hired'
-  | 'rejected';
+export type Spa2CareerApplicationStatus = 'new' | 'reviewing' | 'interview' | 'hired' | 'rejected';
 
 export type Spa2CareerApplication = {
   id: number;
@@ -2004,7 +2413,8 @@ export type Spa2CareerApplication = {
 
 // cvUrl: dùng file PDF mẫu công khai để minh hoạ chức năng xem trước CV trong
 // popup quản lý hồ sơ ứng tuyển (bên trái thông tin/ảnh ứng viên, bên phải preview CV).
-const SPA2_SAMPLE_CV_PDF = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
+const SPA2_SAMPLE_CV_PDF =
+  'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
 
 export const SPA2_CAREER_APPLICATIONS: Spa2CareerApplication[] = [
   {

@@ -1,4 +1,5 @@
 export { Spa2FaqManageView } from 'src/sections/dashboard/spa2/manage/spa2-faq-manage-view';
+export { Spa2AccountManageView } from 'src/sections/dashboard/spa2/manage/spa2-account-manage-view';
 export { Spa2BlogManageView } from 'src/sections/dashboard/spa2/manage/spa2-blog-manage-view';
 export { Spa2BlogEditorView } from 'src/sections/dashboard/spa2/manage/spa2-blog-editor-view';
 export { Spa2AboutManageView } from 'src/sections/dashboard/spa2/manage/spa2-about-manage-view';
@@ -19,3 +20,4 @@ export { Spa2TreatmentsManageView } from 'src/sections/dashboard/spa2/manage/spa
 export { Spa2PromotionsManageView } from 'src/sections/dashboard/spa2/manage/spa2-promotions-manage-view';
 export { Spa2BeforeAfterManageView } from 'src/sections/dashboard/spa2/manage/spa2-before-after-manage-view';
 export { Spa2ContentPageManageView } from 'src/sections/dashboard/spa2/manage/spa2-content-page-manage-view';
+export { Spa2PolicyManageView } from 'src/sections/dashboard/spa2/manage/spa2-policy-manage-view';

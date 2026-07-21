@@ -121,7 +121,7 @@ const STATUS_OPTIONS: Spa2ServiceStatus[] = ['Đang hiển thị', 'Bản nháp'
 const STATUS_META: Record<Spa2ServiceStatus, { icon: string; color: string }> = {
   'Đang hiển thị': { icon: 'solar:check-circle-bold', color: 'success.main' },
   'Bản nháp': { icon: 'solar:pen-bold', color: 'warning.main' },
-  'Ẩn': { icon: 'solar:eye-closed-bold', color: 'text.disabled' },
+  Ẩn: { icon: 'solar:eye-closed-bold', color: 'text.disabled' },
 };
 
 const CATEGORIES = [
@@ -545,19 +545,20 @@ export function Spa2ServiceEditorView() {
 
   // ── Before/After CRUD ──
   const addBeforeAfter = useCallback(() => {
-    const item: BeforeAfterItem = {
+    const item: Spa2BeforeAfter = {
       id: genId(),
       title: 'Kết quả mới',
       before: '',
       after: '',
       duration: '',
       note: '',
+      status: 'pending',
     };
     update('beforeAfters', [...value.beforeAfters, item]);
   }, [value.beforeAfters, update]);
 
   const updateBeforeAfter = useCallback(
-    (id: string, field: keyof BeforeAfterItem, v: string) =>
+    (id: string, field: keyof Spa2BeforeAfter, v: string) =>
       update(
         'beforeAfters',
         value.beforeAfters.map((b) => (b.id === id ? { ...b, [field]: v } : b))
@@ -620,7 +621,13 @@ export function Spa2ServiceEditorView() {
 
   // ── FAQs CRUD ──
   const addFaq = useCallback(() => {
-    const item: Spa2Faq = { id: genId(), q: 'Câu hỏi mới', a: '' };
+    const item: Spa2Faq = {
+      id: genId(), q: 'Câu hỏi mới', a: '',
+      published: undefined,
+      cat: '',
+      icon: '',
+      tag: undefined
+    };
     update('faqs', [...value.faqs, item]);
   }, [value.faqs, update]);
 
@@ -973,152 +980,159 @@ export function Spa2ServiceEditorView() {
       {/* ── STEPS TAB ── */}
       {tab === 'steps' && (
         <Grid container spacing={3}>
-        <Grid xs={12} md={7}>
-        <Card sx={{ p: 3, borderRadius: 4, border: `1px solid ${SPA2_CREAM_DARK}` }}>
-          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 700, color: SPA2_INK }}>
-              Quy trình ({value.steps.length})
-            </Typography>
-            <Button
-              size="small"
-              startIcon={<Iconify icon="mingcute:add-line" />}
-              onClick={addStep}
-              sx={{ color: SPA2_TEAL_DARK }}
-            >
-              Thêm bước
-            </Button>
-          </Stack>
-          <Divider sx={{ mb: 2 }} />
-          <Stack spacing={1.5}>
-            {value.steps.map((step, idx) => (
-              <Card
-                key={step.id}
-                sx={{
-                  p: 2,
-                  borderRadius: 3,
-                  bgcolor: SPA2_CREAM,
-                  border: `1px solid ${SPA2_CREAM_DARK}`,
-                }}
+          <Grid xs={12} md={7}>
+            <Card sx={{ p: 3, borderRadius: 4, border: `1px solid ${SPA2_CREAM_DARK}` }}>
+              <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
+                sx={{ mb: 2 }}
               >
-                <Stack direction="row" spacing={1.5} alignItems="flex-start">
-                  <Box
+                <Typography variant="subtitle1" sx={{ fontWeight: 700, color: SPA2_INK }}>
+                  Quy trình ({value.steps.length})
+                </Typography>
+                <Button
+                  size="small"
+                  startIcon={<Iconify icon="mingcute:add-line" />}
+                  onClick={addStep}
+                  sx={{ color: SPA2_TEAL_DARK }}
+                >
+                  Thêm bước
+                </Button>
+              </Stack>
+              <Divider sx={{ mb: 2 }} />
+              <Stack spacing={1.5}>
+                {value.steps.map((step, idx) => (
+                  <Card
+                    key={step.id}
                     sx={{
-                      width: 32,
-                      height: 32,
-                      borderRadius: '50%',
-                      bgcolor: SPA2_TEAL,
-                      color: 'white',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontWeight: 700,
-                      flexShrink: 0,
-                      fontSize: 14,
+                      p: 2,
+                      borderRadius: 3,
+                      bgcolor: SPA2_CREAM,
+                      border: `1px solid ${SPA2_CREAM_DARK}`,
                     }}
                   >
-                    {idx + 1}
-                  </Box>
-                  <Stack spacing={1} sx={{ flex: 1 }}>
-                    <TextField
-                      size="small"
-                      label="Tiêu đề"
-                      value={step.title}
-                      onChange={(e) => updateStep(step.id, 'title', e.target.value)}
-                    />
-                    <TextField
-                      size="small"
-                      label="Mô tả"
-                      multiline
-                      rows={2}
-                      value={step.desc}
-                      onChange={(e) => updateStep(step.id, 'desc', e.target.value)}
-                    />
-                  </Stack>
-                  <Stack direction="column">
-                    <IconButton
-                      size="small"
-                      disabled={idx === 0}
-                      onClick={() => moveStep(step.id, -1)}
-                    >
-                      <Iconify icon="solar:alt-arrow-up-bold" />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      disabled={idx === value.steps.length - 1}
-                      onClick={() => moveStep(step.id, 1)}
-                    >
-                      <Iconify icon="solar:alt-arrow-down-bold" />
-                    </IconButton>
-                    <IconButton size="small" color="error" onClick={() => removeStep(step.id)}>
-                      <Iconify icon="solar:trash-bin-trash-bold" />
-                    </IconButton>
-                  </Stack>
-                </Stack>
-              </Card>
-            ))}
-            {value.steps.length === 0 && (
-              <Box sx={{ textAlign: 'center', py: 5, color: 'text.secondary' }}>
-                <Iconify icon="solar:list-linear" width={40} sx={{ color: SPA2_SAGE, mb: 1 }} />
-                <Typography>Chưa có bước nào. Nhấn &ldquo;Thêm bước&rdquo; để bắt đầu.</Typography>
-              </Box>
-            )}
-          </Stack>
-        </Card>
-        </Grid>
-        <Grid xs={12} md={5}>
-          <SectionCard title="Xem trước" icon="solar:eye-bold-duotone">
-            <PreviewFrame>
-              <Box sx={{ py: 6, bgcolor: SPA2_CREAM }}>
-                <Container maxWidth="md">
-                  <Spa2SectionTitle
-                    eyebrow="Quy trình"
-                    title={`${value.steps.length} bước trải nghiệm`}
-                  />
-                  <Stack spacing={0}>
-                    {value.steps.map((step, idx) => (
-                      <Stack key={step.id} direction="row" spacing={3}>
-                        <Stack alignItems="center" sx={{ minWidth: 56 }}>
-                          <Box
-                            sx={{
-                              width: 44,
-                              height: 44,
-                              borderRadius: '50%',
-                              bgcolor: SPA2_TEAL,
-                              color: 'white',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontWeight: 700,
-                              flexShrink: 0,
-                            }}
-                          >
-                            {idx + 1}
-                          </Box>
-                          {idx < value.steps.length - 1 && (
-                            <Box
-                              sx={{ width: 2, flexGrow: 1, bgcolor: SPA2_TEAL_LIGHT, my: 0.5 }}
-                            />
-                          )}
-                        </Stack>
-                        <Box sx={{ pb: 4 }}>
-                          <Typography variant="h6" sx={{ color: SPA2_INK, mb: 0.5 }}>
-                            {step.title}
-                          </Typography>
-                          <Typography sx={{ color: 'text.secondary' }}>{step.desc}</Typography>
-                        </Box>
+                    <Stack direction="row" spacing={1.5} alignItems="flex-start">
+                      <Box
+                        sx={{
+                          width: 32,
+                          height: 32,
+                          borderRadius: '50%',
+                          bgcolor: SPA2_TEAL,
+                          color: 'white',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontWeight: 700,
+                          flexShrink: 0,
+                          fontSize: 14,
+                        }}
+                      >
+                        {idx + 1}
+                      </Box>
+                      <Stack spacing={1} sx={{ flex: 1 }}>
+                        <TextField
+                          size="small"
+                          label="Tiêu đề"
+                          value={step.title}
+                          onChange={(e) => updateStep(step.id, 'title', e.target.value)}
+                        />
+                        <TextField
+                          size="small"
+                          label="Mô tả"
+                          multiline
+                          rows={2}
+                          value={step.desc}
+                          onChange={(e) => updateStep(step.id, 'desc', e.target.value)}
+                        />
                       </Stack>
-                    ))}
-                    {value.steps.length === 0 && (
-                      <Typography sx={{ color: 'text.secondary', textAlign: 'center', py: 3 }}>
-                        Chưa có bước nào để xem trước.
-                      </Typography>
-                    )}
-                  </Stack>
-                </Container>
-              </Box>
-            </PreviewFrame>
-          </SectionCard>
-        </Grid>
+                      <Stack direction="column">
+                        <IconButton
+                          size="small"
+                          disabled={idx === 0}
+                          onClick={() => moveStep(step.id, -1)}
+                        >
+                          <Iconify icon="solar:alt-arrow-up-bold" />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          disabled={idx === value.steps.length - 1}
+                          onClick={() => moveStep(step.id, 1)}
+                        >
+                          <Iconify icon="solar:alt-arrow-down-bold" />
+                        </IconButton>
+                        <IconButton size="small" color="error" onClick={() => removeStep(step.id)}>
+                          <Iconify icon="solar:trash-bin-trash-bold" />
+                        </IconButton>
+                      </Stack>
+                    </Stack>
+                  </Card>
+                ))}
+                {value.steps.length === 0 && (
+                  <Box sx={{ textAlign: 'center', py: 5, color: 'text.secondary' }}>
+                    <Iconify icon="solar:list-linear" width={40} sx={{ color: SPA2_SAGE, mb: 1 }} />
+                    <Typography>
+                      Chưa có bước nào. Nhấn &ldquo;Thêm bước&rdquo; để bắt đầu.
+                    </Typography>
+                  </Box>
+                )}
+              </Stack>
+            </Card>
+          </Grid>
+          <Grid xs={12} md={5}>
+            <SectionCard title="Xem trước" icon="solar:eye-bold-duotone">
+              <PreviewFrame>
+                <Box sx={{ py: 6, bgcolor: SPA2_CREAM }}>
+                  <Container maxWidth="md">
+                    <Spa2SectionTitle
+                      eyebrow="Quy trình"
+                      title={`${value.steps.length} bước trải nghiệm`}
+                    />
+                    <Stack spacing={0}>
+                      {value.steps.map((step, idx) => (
+                        <Stack key={step.id} direction="row" spacing={3}>
+                          <Stack alignItems="center" sx={{ minWidth: 56 }}>
+                            <Box
+                              sx={{
+                                width: 44,
+                                height: 44,
+                                borderRadius: '50%',
+                                bgcolor: SPA2_TEAL,
+                                color: 'white',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontWeight: 700,
+                                flexShrink: 0,
+                              }}
+                            >
+                              {idx + 1}
+                            </Box>
+                            {idx < value.steps.length - 1 && (
+                              <Box
+                                sx={{ width: 2, flexGrow: 1, bgcolor: SPA2_TEAL_LIGHT, my: 0.5 }}
+                              />
+                            )}
+                          </Stack>
+                          <Box sx={{ pb: 4 }}>
+                            <Typography variant="h6" sx={{ color: SPA2_INK, mb: 0.5 }}>
+                              {step.title}
+                            </Typography>
+                            <Typography sx={{ color: 'text.secondary' }}>{step.desc}</Typography>
+                          </Box>
+                        </Stack>
+                      ))}
+                      {value.steps.length === 0 && (
+                        <Typography sx={{ color: 'text.secondary', textAlign: 'center', py: 3 }}>
+                          Chưa có bước nào để xem trước.
+                        </Typography>
+                      )}
+                    </Stack>
+                  </Container>
+                </Box>
+              </PreviewFrame>
+            </SectionCard>
+          </Grid>
         </Grid>
       )}
 
@@ -1301,7 +1315,11 @@ export function Spa2ServiceEditorView() {
                     </IconButton>
                   </Stack>
                   <Divider sx={{ my: 1.5 }} />
-                  <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{ display: 'block', mb: 1 }}
+                  >
                     Xem trước
                   </Typography>
                   <FeedbackPreviewCard f={f} />
@@ -1323,113 +1341,118 @@ export function Spa2ServiceEditorView() {
       {/* ── FAQ TAB ── */}
       {tab === 'faq' && (
         <Grid container spacing={3}>
-        <Grid xs={12} md={7}>
-        <Card sx={{ p: 3, borderRadius: 4, border: `1px solid ${SPA2_CREAM_DARK}` }}>
-          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 700, color: SPA2_INK }}>
-              Câu hỏi thường gặp ({value.faqs.length})
-            </Typography>
-            <Button
-              size="small"
-              startIcon={<Iconify icon="mingcute:add-line" />}
-              onClick={addFaq}
-              sx={{ color: SPA2_TEAL_DARK }}
-            >
-              Thêm câu hỏi
-            </Button>
-          </Stack>
-          <Divider sx={{ mb: 2 }} />
-          <Stack spacing={1.5}>
-            {value.faqs.map((f) => (
-              <Card
-                key={f.id}
-                sx={{
-                  p: 2,
-                  borderRadius: 3,
-                  bgcolor: SPA2_CREAM,
-                  border: `1px solid ${SPA2_CREAM_DARK}`,
-                }}
+          <Grid xs={12} md={7}>
+            <Card sx={{ p: 3, borderRadius: 4, border: `1px solid ${SPA2_CREAM_DARK}` }}>
+              <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
+                sx={{ mb: 2 }}
               >
-                <Stack spacing={1}>
-                  <Stack direction="row" spacing={1} alignItems="flex-start">
+                <Typography variant="subtitle1" sx={{ fontWeight: 700, color: SPA2_INK }}>
+                  Câu hỏi thường gặp ({value.faqs.length})
+                </Typography>
+                <Button
+                  size="small"
+                  startIcon={<Iconify icon="mingcute:add-line" />}
+                  onClick={addFaq}
+                  sx={{ color: SPA2_TEAL_DARK }}
+                >
+                  Thêm câu hỏi
+                </Button>
+              </Stack>
+              <Divider sx={{ mb: 2 }} />
+              <Stack spacing={1.5}>
+                {value.faqs.map((f) => (
+                  <Card
+                    key={f.id}
+                    sx={{
+                      p: 2,
+                      borderRadius: 3,
+                      bgcolor: SPA2_CREAM,
+                      border: `1px solid ${SPA2_CREAM_DARK}`,
+                    }}
+                  >
+                    <Stack spacing={1}>
+                      <Stack direction="row" spacing={1} alignItems="flex-start">
+                        <Iconify
+                          icon="solar:question-circle-bold-duotone"
+                          sx={{ color: SPA2_TEAL, mt: 0.5 }}
+                        />
+                        <TextField
+                          size="small"
+                          label="Câu hỏi"
+                          fullWidth
+                          value={f.q}
+                          onChange={(e) => updateFaq(f.id, 'q', e.target.value)}
+                        />
+                        <IconButton size="small" color="error" onClick={() => removeFaq(f.id)}>
+                          <Iconify icon="solar:trash-bin-trash-bold" />
+                        </IconButton>
+                      </Stack>
+                      <TextField
+                        size="small"
+                        label="Câu trả lời"
+                        multiline
+                        rows={2}
+                        value={f.a}
+                        onChange={(e) => updateFaq(f.id, 'a', e.target.value)}
+                      />
+                    </Stack>
+                  </Card>
+                ))}
+                {value.faqs.length === 0 && (
+                  <Box sx={{ textAlign: 'center', py: 5, color: 'text.secondary' }}>
                     <Iconify
-                      icon="solar:question-circle-bold-duotone"
-                      sx={{ color: SPA2_TEAL, mt: 0.5 }}
+                      icon="solar:question-circle-linear"
+                      width={40}
+                      sx={{ color: SPA2_SAGE, mb: 1 }}
                     />
-                    <TextField
-                      size="small"
-                      label="Câu hỏi"
-                      fullWidth
-                      value={f.q}
-                      onChange={(e) => updateFaq(f.id, 'q', e.target.value)}
-                    />
-                    <IconButton size="small" color="error" onClick={() => removeFaq(f.id)}>
-                      <Iconify icon="solar:trash-bin-trash-bold" />
-                    </IconButton>
-                  </Stack>
-                  <TextField
-                    size="small"
-                    label="Câu trả lời"
-                    multiline
-                    rows={2}
-                    value={f.a}
-                    onChange={(e) => updateFaq(f.id, 'a', e.target.value)}
-                  />
-                </Stack>
-              </Card>
-            ))}
-            {value.faqs.length === 0 && (
-              <Box sx={{ textAlign: 'center', py: 5, color: 'text.secondary' }}>
-                <Iconify
-                  icon="solar:question-circle-linear"
-                  width={40}
-                  sx={{ color: SPA2_SAGE, mb: 1 }}
-                />
-                <Typography>Chưa có câu hỏi nào.</Typography>
-              </Box>
-            )}
-          </Stack>
-        </Card>
-        </Grid>
-        <Grid xs={12} md={5}>
-          <SectionCard title="Xem trước" icon="solar:eye-bold-duotone">
-            <PreviewFrame>
-              <Box sx={{ py: 6 }}>
-                <Container maxWidth="md">
-                  <Spa2SectionTitle eyebrow="FAQ" title="Câu hỏi thường gặp" />
-                  {value.faqs.slice(0, 4).map((f, idx) => (
-                    <Accordion
-                      key={f.id}
-                      defaultExpanded={idx === 0}
-                      sx={{
-                        mb: 1.5,
-                        borderRadius: '12px !important',
-                        border: `1px solid ${SPA2_CREAM_DARK}`,
-                        boxShadow: 'none',
-                        '&:before': { display: 'none' },
-                        '&.Mui-expanded': { borderColor: SPA2_TEAL_LIGHT },
-                      }}
-                    >
-                      <AccordionSummary expandIcon={<Iconify icon="solar:alt-arrow-down-bold" />}>
-                        <Typography sx={{ fontWeight: 600, color: SPA2_INK }}>{f.q}</Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <Typography sx={{ color: 'text.secondary', lineHeight: 1.8 }}>
-                          {f.a}
-                        </Typography>
-                      </AccordionDetails>
-                    </Accordion>
-                  ))}
-                  {value.faqs.length === 0 && (
-                    <Typography sx={{ color: 'text.secondary', textAlign: 'center', py: 3 }}>
-                      Chưa có câu hỏi nào để xem trước.
-                    </Typography>
-                  )}
-                </Container>
-              </Box>
-            </PreviewFrame>
-          </SectionCard>
-        </Grid>
+                    <Typography>Chưa có câu hỏi nào.</Typography>
+                  </Box>
+                )}
+              </Stack>
+            </Card>
+          </Grid>
+          <Grid xs={12} md={5}>
+            <SectionCard title="Xem trước" icon="solar:eye-bold-duotone">
+              <PreviewFrame>
+                <Box sx={{ py: 6 }}>
+                  <Container maxWidth="md">
+                    <Spa2SectionTitle eyebrow="FAQ" title="Câu hỏi thường gặp" />
+                    {value.faqs.slice(0, 4).map((f, idx) => (
+                      <Accordion
+                        key={f.id}
+                        defaultExpanded={idx === 0}
+                        sx={{
+                          mb: 1.5,
+                          borderRadius: '12px !important',
+                          border: `1px solid ${SPA2_CREAM_DARK}`,
+                          boxShadow: 'none',
+                          '&:before': { display: 'none' },
+                          '&.Mui-expanded': { borderColor: SPA2_TEAL_LIGHT },
+                        }}
+                      >
+                        <AccordionSummary expandIcon={<Iconify icon="solar:alt-arrow-down-bold" />}>
+                          <Typography sx={{ fontWeight: 600, color: SPA2_INK }}>{f.q}</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          <Typography sx={{ color: 'text.secondary', lineHeight: 1.8 }}>
+                            {f.a}
+                          </Typography>
+                        </AccordionDetails>
+                      </Accordion>
+                    ))}
+                    {value.faqs.length === 0 && (
+                      <Typography sx={{ color: 'text.secondary', textAlign: 'center', py: 3 }}>
+                        Chưa có câu hỏi nào để xem trước.
+                      </Typography>
+                    )}
+                  </Container>
+                </Box>
+              </PreviewFrame>
+            </SectionCard>
+          </Grid>
         </Grid>
       )}
 
