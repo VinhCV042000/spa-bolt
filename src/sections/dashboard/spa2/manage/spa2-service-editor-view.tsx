@@ -623,10 +623,12 @@ export function Spa2ServiceEditorView() {
   const addFaq = useCallback(() => {
     const item: Spa2Faq = {
       id: genId(), q: 'Câu hỏi mới', a: '',
-      published: undefined,
+      published: true,
       cat: '',
       icon: '',
-      tag: undefined
+      tag: '',
+      likes: 0,
+      dislikes: 0
     };
     update('faqs', [...value.faqs, item]);
   }, [value.faqs, update]);

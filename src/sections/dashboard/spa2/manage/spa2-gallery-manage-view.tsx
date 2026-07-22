@@ -10,6 +10,7 @@ import Tabs from '@mui/material/Tabs';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import CardMedia from '@mui/material/CardMedia';
 import Container from '@mui/material/Container';
@@ -27,10 +28,12 @@ import { useTranslate } from 'src/locales';
 import { spa2GalleryBanner } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
-import { Spa2PageHero } from 'src/sections/spa2/view/spa2-content-pages';
+import { Spa2SoftCard, Spa2PageHero } from 'src/sections/spa2/view/spa2-content-pages';
 import {
+  SPA2_INK,
   SPA2_TEAL,
   spa2Gallery,
   SPA2_CREAM,
@@ -39,6 +42,8 @@ import {
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2ListAnalytic } from './spa2-list-analytic';
+import { Spa2SimpleImageField } from './spa2-simple-image-field';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Manages every block the public /spa2/gallery page (Spa2GalleryPageView)
@@ -68,6 +73,63 @@ function PreviewFrame({ children }: { children: React.ReactNode }) {
     >
       {children}
     </Box>
+  );
+}
+
+function PhotoPreviewCard({ form }: { form: { url: string; caption: string } }) {
+  return (
+    <Spa2SoftCard sx={{ p: 1 }}>
+      <Box
+        sx={{
+          aspectRatio: '4/5',
+          borderRadius: 3,
+          overflow: 'hidden',
+          backgroundImage: form.url ? `url(${form.url})` : 'none',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          bgcolor: SPA2_CREAM,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        {!form.url && (
+          <Iconify icon="solar:gallery-wide-linear" width={32} sx={{ color: 'text.disabled' }} />
+        )}
+      </Box>
+      <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }} noWrap>
+        {form.caption || '(Chưa có chú thích)'}
+      </Typography>
+    </Spa2SoftCard>
+  );
+}
+
+function StatCard({ icon, label, value }: { icon: string; label: string; value: string | number }) {
+  return (
+    <Card sx={{ p: 2, borderRadius: 2.5, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+      <Box
+        sx={{
+          width: 40,
+          height: 40,
+          borderRadius: 2,
+          bgcolor: SPA2_CREAM,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0,
+        }}
+      >
+        <Iconify icon={icon} width={20} sx={{ color: SPA2_TEAL }} />
+      </Box>
+      <Box>
+        <Typography variant="h6" sx={{ color: SPA2_INK, lineHeight: 1.2 }}>
+          {value}
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          {label}
+        </Typography>
+      </Box>
+    </Card>
   );
 }
 
@@ -105,27 +167,63 @@ export function Spa2GalleryManageView() {
   const [addUrl, setAddUrl] = useState('');
   const [addCaption, setAddCaption] = useState('');
   const [openAdd, setOpenAdd] = useState(false);
+  const [editId, setEditId] = useState<number | null>(null);
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [viewUrl, setViewUrl] = useState<string | null>(null);
+  const [captionFilter, setCaptionFilter] = useState<'all' | 'captioned' | 'uncaptioned'>('all');
+
+  const isAutoCaption = (item: GalleryImage) => item.caption === `Ảnh ${item.id}`;
+
+  const openCreate = () => {
+    setAddUrl('');
+    setAddCaption('');
+    setEditId(null);
+    setOpenAdd(true);
+  };
+  const openEdit = (item: GalleryImage) => {
+    setAddUrl(item.url);
+    setAddCaption(isAutoCaption(item) ? '' : item.caption);
+    setEditId(item.id);
+    setOpenAdd(true);
+  };
 
   const handleAdd = useCallback(() => {
     if (!addUrl.trim()) return;
-    const newId = Math.max(0, ...items.map((x) => x.id)) + 1;
-    setItems((p) => [
-      ...p,
-      { id: newId, url: addUrl.trim(), caption: addCaption.trim() || `Ảnh ${newId}` },
-    ]);
+    if (editId !== null) {
+      setItems((p) =>
+        p.map((x) =>
+          x.id === editId
+            ? { ...x, url: addUrl.trim(), caption: addCaption.trim() || `Ảnh ${x.id}` }
+            : x
+        )
+      );
+    } else {
+      const newId = Math.max(0, ...items.map((x) => x.id)) + 1;
+      setItems((p) => [
+        ...p,
+        { id: newId, url: addUrl.trim(), caption: addCaption.trim() || `Ảnh ${newId}` },
+      ]);
+    }
     setAddUrl('');
     setAddCaption('');
+    setEditId(null);
     setOpenAdd(false);
     setDirty(true);
-  }, [addUrl, addCaption, items]);
+  }, [addUrl, addCaption, editId, items]);
 
   const handleDelete = useCallback(() => {
     setItems((p) => p.filter((x) => x.id !== deleteId));
     setDeleteId(null);
     setDirty(true);
   }, [deleteId]);
+
+  const captionedCount = items.filter((x) => !isAutoCaption(x)).length;
+  const uncaptionedCount = items.length - captionedCount;
+  const filteredItems = items.filter((item) => {
+    if (captionFilter === 'captioned') return !isAutoCaption(item);
+    if (captionFilter === 'uncaptioned') return isAutoCaption(item);
+    return true;
+  });
 
   return (
     <Spa2ManageShell
@@ -281,79 +379,139 @@ export function Spa2GalleryManageView() {
 
       {/* Bộ sưu tập ảnh */}
       {tab === 'list' && (
-        <Card sx={{ p: 2 }}>
-          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
-            <Typography variant="body2" color="text.secondary">
-              {t('gallery.count', { count: items.length })}
-            </Typography>
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon="solar:gallery-add-bold" />}
-              onClick={() => setOpenAdd(true)}
-              sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
+        <Stack spacing={2.5}>
+          <Card sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
+            <Typography
+              variant="overline"
+              sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
             >
-              {t('gallery.add_btn')}
-            </Button>
-          </Stack>
+              {t('gallery.stat_by_caption')}
+            </Typography>
+            <Scrollbar sx={{ maxHeight: 120 }}>
+              <Stack
+                direction="row"
+                divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+                spacing={2}
+                sx={{ py: 1 }}
+              >
+                <Spa2ListAnalytic
+                  icon="solar:gallery-wide-bold-duotone"
+                  title={t('common.all')}
+                  total={items.length}
+                  percent={100}
+                  active={captionFilter === 'all'}
+                  onClick={() => setCaptionFilter('all')}
+                />
+                <Spa2ListAnalytic
+                  icon="solar:pen-new-square-bold-duotone"
+                  title={t('gallery.stat_captioned')}
+                  total={captionedCount}
+                  percent={items.length ? (captionedCount / items.length) * 100 : 0}
+                  color="success"
+                  active={captionFilter === 'captioned'}
+                  onClick={() => setCaptionFilter('captioned')}
+                />
+                <Spa2ListAnalytic
+                  icon="solar:gallery-minimalistic-bold-duotone"
+                  title={t('gallery.stat_uncaptioned')}
+                  total={uncaptionedCount}
+                  percent={items.length ? (uncaptionedCount / items.length) * 100 : 0}
+                  color="warning"
+                  active={captionFilter === 'uncaptioned'}
+                  onClick={() => setCaptionFilter('uncaptioned')}
+                />
+              </Stack>
+            </Scrollbar>
+          </Card>
 
-          <Grid container spacing={2}>
-            {items.map((item) => (
-              <Grid key={item.id} xs={12} sm={6} md={4} lg={3}>
-                <Card sx={{ position: 'relative', '&:hover .actions': { opacity: 1 } }}>
-                  <CardMedia
-                    component="img"
-                    height={160}
-                    image={item.url}
-                    alt={item.caption}
-                    sx={{ objectFit: 'cover', cursor: 'pointer' }}
-                    onClick={() => setViewUrl(item.url)}
-                  />
-                  <Box
-                    className="actions"
-                    sx={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      height: 160,
-                      bgcolor: 'rgba(0,0,0,0.4)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: 1,
-                      opacity: 0,
-                      transition: 'opacity 0.2s',
-                    }}
-                  >
-                    <Tooltip title={t('common.view')}>
-                      <IconButton
-                        sx={{ bgcolor: 'white', '&:hover': { bgcolor: 'white' } }}
-                        size="small"
-                        onClick={() => setViewUrl(item.url)}
-                      >
-                        <Iconify icon="solar:eye-bold" />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title={t('common.delete')}>
-                      <IconButton
-                        sx={{ bgcolor: 'white', '&:hover': { bgcolor: 'white' } }}
-                        size="small"
-                        onClick={() => setDeleteId(item.id)}
-                      >
-                        <Iconify icon="solar:trash-bin-trash-bold" color="error.main" />
-                      </IconButton>
-                    </Tooltip>
-                  </Box>
-                  <Box sx={{ p: 1 }}>
-                    <Typography variant="caption" color="text.secondary" noWrap>
-                      {item.caption}
-                    </Typography>
-                  </Box>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Card>
+          <Card sx={{ p: 2 }}>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              sx={{ mb: 2 }}
+            >
+              <Typography variant="body2" color="text.secondary">
+                {t('gallery.count', { count: filteredItems.length })}
+              </Typography>
+              <Button
+                variant="contained"
+                startIcon={<Iconify icon="solar:gallery-add-bold" />}
+                onClick={openCreate}
+                sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
+              >
+                {t('gallery.add_btn')}
+              </Button>
+            </Stack>
+
+            <Grid container spacing={2}>
+              {filteredItems.map((item) => (
+                <Grid key={item.id} xs={12} sm={6} md={4} lg={3}>
+                  <Card sx={{ position: 'relative', '&:hover .actions': { opacity: 1 } }}>
+                    <CardMedia
+                      component="img"
+                      height={160}
+                      image={item.url}
+                      alt={item.caption}
+                      sx={{ objectFit: 'cover', cursor: 'pointer' }}
+                      onClick={() => setViewUrl(item.url)}
+                    />
+                    <Box
+                      className="actions"
+                      sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: 160,
+                        bgcolor: 'rgba(0,0,0,0.4)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 1,
+                        opacity: 0,
+                        transition: 'opacity 0.2s',
+                      }}
+                    >
+                      <Tooltip title={t('common.view')}>
+                        <IconButton
+                          sx={{ bgcolor: 'white', '&:hover': { bgcolor: 'white' } }}
+                          size="small"
+                          onClick={() => setViewUrl(item.url)}
+                        >
+                          <Iconify icon="solar:eye-bold" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title={t('common.edit')}>
+                        <IconButton
+                          sx={{ bgcolor: 'white', '&:hover': { bgcolor: 'white' } }}
+                          size="small"
+                          onClick={() => openEdit(item)}
+                        >
+                          <Iconify icon="solar:pen-bold" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title={t('common.delete')}>
+                        <IconButton
+                          sx={{ bgcolor: 'white', '&:hover': { bgcolor: 'white' } }}
+                          size="small"
+                          onClick={() => setDeleteId(item.id)}
+                        >
+                          <Iconify icon="solar:trash-bin-trash-bold" color="error.main" />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                    <Box sx={{ p: 1 }}>
+                      <Typography variant="caption" color="text.secondary" noWrap>
+                        {item.caption}
+                      </Typography>
+                    </Box>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Card>
+        </Stack>
       )}
 
       {/* Live preview — mirrors Spa2GalleryPageView's hero + masonry grid */}
@@ -391,36 +549,40 @@ export function Spa2GalleryManageView() {
         </Box>
       )}
 
-      {/* Add dialog */}
-      <Dialog open={openAdd} onClose={() => setOpenAdd(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{t('gallery.form_create')}</DialogTitle>
+      {/* Add / Edit dialog - left: form, right: live preview */}
+      <Dialog open={openAdd} onClose={() => setOpenAdd(false)} maxWidth="md" fullWidth>
+        <DialogTitle>{editId !== null ? t('common.edit') : t('gallery.form_create')}</DialogTitle>
         <DialogContent dividers>
-          <Stack spacing={2} sx={{ pt: 1 }}>
-            <TextField
-              label={t('gallery.form_url')}
-              value={addUrl}
-              onChange={(e) => setAddUrl(e.target.value)}
-              fullWidth
-              placeholder="https://images.unsplash.com/..."
-            />
-            <TextField
-              label={t('gallery.form_caption')}
-              value={addCaption}
-              onChange={(e) => setAddCaption(e.target.value)}
-              fullWidth
-            />
-            {addUrl && (
-              <Box
-                component="img"
-                src={addUrl}
-                alt="preview"
-                sx={{ width: '100%', height: 180, objectFit: 'cover', borderRadius: 1 }}
-                onError={(e: any) => {
-                  e.target.style.display = 'none';
-                }}
-              />
-            )}
-          </Stack>
+          <Grid container spacing={3} sx={{ pt: 1 }}>
+            <Grid xs={12} sm={7}>
+              <Stack spacing={2}>
+                <Spa2SimpleImageField
+                  label={t('gallery.form_url')}
+                  value={addUrl}
+                  onChange={setAddUrl}
+                  height={180}
+                  helperText={t('gallery.form_url_help')}
+                />
+                <TextField
+                  label={t('gallery.form_caption')}
+                  value={addCaption}
+                  onChange={(e) => setAddCaption(e.target.value)}
+                  fullWidth
+                />
+              </Stack>
+            </Grid>
+            <Grid xs={12} sm={5}>
+              <Typography
+                variant="caption"
+                sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
+              >
+                {t('common.preview_btn')}
+              </Typography>
+              <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
+                <PhotoPreviewCard form={{ url: addUrl, caption: addCaption }} />
+              </Box>
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenAdd(false)}>{t('common.cancel')}</Button>
@@ -430,7 +592,7 @@ export function Spa2GalleryManageView() {
             disabled={!addUrl.trim()}
             sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
           >
-            {t('gallery.add_btn')}
+            {editId !== null ? t('common.edit') : t('gallery.add_btn')}
           </Button>
         </DialogActions>
       </Dialog>

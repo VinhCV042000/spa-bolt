@@ -10,9 +10,6 @@
 // previously created an import cycle (spa2-pages-data <-> _mock/_spa2).
 // ----------------------------------------------------------------------
 
-import { IconifyIcon } from '@iconify/react';
-import { ReactNode } from 'react';
-
 // ---------- Page imagery & UI meta ---------------------------------------
 
 export const SPA2_PAGE_IMAGES = {
@@ -45,6 +42,12 @@ export const SPA2_PAGE_IMAGES = {
   gallery2: 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=600&q=80',
   gallery3: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&q=80',
   gallery4: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=600&q=80',
+  membership: 'https://images.unsplash.com/photo-1552693673-1bf958298935?w=1600&q=80',
+  giftCard: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=1600&q=80',
+  wellnessPackage: 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=1600&q=80',
+  skinQuiz: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=1600&q=80',
+  corporate: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1600&q=80',
+  shop: 'https://images.unsplash.com/photo-1531112068337-3cd6d0d2b56b?w=1600&q=80',
 };
 
 export const SPA2_SERVICE_META = [
@@ -229,13 +232,16 @@ export type Spa2Feedback = {
 };
 
 export type Spa2Faq = {
-  published: unknown;
-  cat: string;
-  icon: string | IconifyIcon;
-  tag: ReactNode;
   id: string;
+  cat: string;
+  icon: string;
+  tag: string;
   q: string;
   a: string;
+  published: boolean;
+  /** Helpful-vote counters shown in the FAQ manage view's stats tab. */
+  likes: number;
+  dislikes: number;
 };
 
 export type Spa2ServiceItem = {
@@ -292,6 +298,8 @@ const DEFAULT_FAQS = [
     cat: 'booking',
     icon: 'solar:calendar-bold-duotone',
     tag: 'Booking',
+    likes: 0,
+    dislikes: 0,
   },
   {
     id: 'f2',
@@ -301,6 +309,8 @@ const DEFAULT_FAQS = [
     cat: 'product',
     icon: 'solar:leaf-bold-duotone',
     tag: 'Product',
+    likes: 0,
+    dislikes: 0,
   },
   {
     id: 'f3',
@@ -310,6 +320,8 @@ const DEFAULT_FAQS = [
     cat: 'payment',
     icon: 'solar:wallet-bold-duotone',
     tag: 'Payment',
+    likes: 0,
+    dislikes: 0,
   },
   {
     id: 'f4',
@@ -319,6 +331,8 @@ const DEFAULT_FAQS = [
     cat: 'booking',
     icon: 'solar:calendar-bold-duotone',
     tag: 'Booking',
+    likes: 1,
+    dislikes: 0,
   },
 ];
 
@@ -1287,14 +1301,16 @@ export const spa2Partners = [
   { name: 'Eminence Organic', country: 'Hungary', logo: 'EO' },
 ];
 
-export const spa2PartnerCategories = [
+export type Spa2PartnerCategory = { key: string; label: string; icon: string };
+
+export const spa2PartnerCategories: Spa2PartnerCategory[] = [
   { key: 'cosmetics', label: 'Mỹ phẩm', icon: 'solar:flask-bold-duotone' },
   { key: 'equipment', label: 'Thiết bị', icon: 'solar:settings-bold-duotone' },
   { key: 'training', label: 'Đào tạo', icon: 'solar:book-bold-duotone' },
   { key: 'tech', label: 'Công nghệ', icon: 'solar:cpu-bolt-bold-duotone' },
 ];
 
-export const spa2ExtraPartners = [
+export const spa2ExtraPartners: Spa2PartnerProfile[] = [
   {
     name: 'Lumiere Tech',
     country: 'Germany',
@@ -1317,7 +1333,9 @@ export const spa2ExtraPartners = [
   },
 ];
 
-export const spa2Collaborations = [
+export type Spa2Collaboration = { title: string; partner: string; year: string; image: string };
+
+export const spa2Collaborations: Spa2Collaboration[] = [
   {
     title: 'Ra mắt dòng sản phẩm Eco-Line',
     partner: 'Eminence Organic',
@@ -1338,7 +1356,9 @@ export const spa2Collaborations = [
   },
 ];
 
-export const spa2QualityCerts = [
+export type Spa2QualityCert = { name: string; desc: string; icon: string };
+
+export const spa2QualityCerts: Spa2QualityCert[] = [
   {
     name: 'FDA',
     desc: 'Sản phẩm đạt chuẩn an toàn FDA Hoa Kỳ',
@@ -1976,16 +1996,24 @@ export const spa2GraduateShowcase: Spa2TrainingGraduate[] = [
 
 // ---------- FAQ banner (view + dashboard shared) -----------------------
 
+export type Spa2FaqStat = { n: string; l: string };
+
 export type Spa2FaqBanner = {
   eyebrow: string;
   title: string;
   subtitle: string;
+  stats: Spa2FaqStat[];
 };
 
 export const spa2FaqBanner: Spa2FaqBanner = {
   eyebrow: 'Hỗ trợ khách hàng',
   title: 'Câu hỏi thường gặp',
   subtitle: 'Tìm câu trả lời nhanh hoặc liên hệ đội ngũ tư vấn — chúng tôi luôn sẵn sàng.',
+  stats: [
+    { n: '98%', l: 'Khách hàng hài lòng' },
+    { n: "15'", l: 'Phản hồi trung bình' },
+    { n: '24/7', l: 'Hỗ trợ trực tuyến' },
+  ],
 };
 
 // ---------- FAQ / Policies / Gallery / Contact ----------------------------
@@ -2011,112 +2039,136 @@ export const spa2FaqCategories: Spa2FaqCategory[] = [
 
 export const spa2Faqs: Spa2Faq[] = [
   {
-    id: 1,
+    id: '1',
     cat: 'booking',
     icon: 'solar:calendar-bold',
     q: 'Tôi cần đặt lịch trước bao lâu?',
     a: 'Ngày thường tối thiểu 2 giờ. Cuối tuần và lễ nên đặt trước 1 ngày để có khung giờ đẹp. Có thể đặt qua website, app, hotline 1900 6789 hoặc Zalo.',
     tag: 'Đặt lịch',
     published: true,
+    likes: 128,
+    dislikes: 4,
   },
   {
-    id: 2,
+    id: '2',
     cat: 'booking',
     icon: 'solar:bell-bold',
     q: 'Tôi có nhận được nhắc nhở trước giờ hẹn không?',
     a: 'Hệ thống tự động gửi SMS và Zalo trước 2 giờ. Bạn cũng có thể xem và quản lý lịch hẹn trong ứng dụng Nature Spa.',
     tag: 'Đặt lịch',
     published: true,
+    likes: 96,
+    dislikes: 6,
   },
   {
-    id: 3,
+    id: '3',
     cat: 'booking',
     icon: 'solar:close-circle-bold',
     q: 'Tôi có thể hủy hoặc đổi lịch không?',
     a: 'Hủy trước 4 giờ: miễn phí, hoàn 100%. Trong vòng 4 giờ: phí 20%. Không đến (no-show): phí 50%. Trường hợp khẩn cấp có giấy tờ sẽ được xem xét miễn phí.',
     tag: 'Đặt lịch',
     published: true,
+    likes: 142,
+    dislikes: 9,
   },
   {
-    id: 4,
+    id: '4',
     cat: 'service',
     icon: 'solar:face-scan-circle-bold-duotone',
     q: 'Dịch vụ có an toàn cho da nhạy cảm không?',
     a: 'Tất cả sản phẩm 100% hữu cơ, không cồn, không paraben. An toàn cho da nhạy cảm, phụ nữ mang thai (từ tam cá nguyệt 2) và trẻ trên 12 tuổi. KTV tư vấn kỹ trước mỗi liệu trình.',
     tag: 'Dịch vụ',
     published: true,
+    likes: 87,
+    dislikes: 3,
   },
   {
-    id: 5,
+    id: '5',
     cat: 'service',
     icon: 'solar:clock-circle-bold',
     q: 'Mỗi liệu trình kéo dài bao lâu?',
     a: 'Massage thảo dược 60 phút, Facial Organic 75 phút, Body Scrub & Wrap 90 phút, Spa Đôi 120 phút, Detox 3 ngày. Thời gian tư vấn đầu và cuối chưa tính vào.',
     tag: 'Dịch vụ',
     published: true,
+    likes: 65,
+    dislikes: 2,
   },
   {
-    id: 6,
+    id: '6',
     cat: 'service',
     icon: 'solar:user-bold',
     q: 'Có cần chuẩn bị gì trước khi đến không?',
     a: 'Không cần chuẩn bị đặc biệt. Đến trước 10 phút để lễ tân tư vấn và điền phiếu đánh giá da sơ bộ. Tránh ăn quá no trước liệu trình massage.',
     tag: 'Dịch vụ',
     published: true,
+    likes: 54,
+    dislikes: 5,
   },
   {
-    id: 7,
+    id: '7',
     cat: 'payment',
     icon: 'solar:card-bold',
     q: 'Hỗ trợ thanh toán trả góp không?',
     a: 'Có. Trả góp 0% lãi suất qua thẻ tín dụng của 15 ngân hàng đối tác (Vietcombank, BIDV, Techcombank, ACB…) cho hóa đơn từ 3 triệu đồng.',
     tag: 'Thanh toán',
     published: true,
+    likes: 73,
+    dislikes: 11,
   },
   {
-    id: 8,
+    id: '8',
     cat: 'payment',
     icon: 'solar:recive-money-bold',
     q: 'Có thể hoàn tiền khi đổi ý không?',
     a: 'Gói chưa dùng: hoàn 100%. Đã dùng một phần: hoàn theo tỷ lệ buổi còn lại. Voucher khuyến mãi không hoàn tiền mặt nhưng có thể đổi sang dịch vụ cùng giá trị. Thời gian xử lý 3–7 ngày làm việc.',
     tag: 'Hoàn tiền',
     published: true,
+    likes: 61,
+    dislikes: 4,
   },
   {
-    id: 9,
+    id: '9',
     cat: 'member',
     icon: 'solar:star-bold',
     q: 'Điểm tích lũy được quy đổi như thế nào?',
     a: '10.000đ = 1 điểm. 1 điểm = 1.000đ khi đổi quà hoặc giảm trừ hóa đơn. Điểm có hiệu lực 24 tháng. Thẻ Vàng nhân đôi điểm cuối tuần, Bạch Kim nhân ba trong tháng sinh nhật.',
     tag: 'Thành viên',
     published: true,
+    likes: 102,
+    dislikes: 3,
   },
   {
-    id: 10,
+    id: '10',
     cat: 'member',
     icon: 'solar:crown-bold',
     q: 'Làm sao để nâng hạng thẻ thành viên?',
     a: 'Bạc: từ 0đ. Vàng: tổng chi 10 triệu đ. Bạch Kim: tổng chi 30 triệu đ. Hệ thống tự động nâng hạng và thông báo khi đủ điều kiện. Hạng giữ nguyên nếu còn giao dịch trong 12 tháng.',
     tag: 'Thành viên',
     published: true,
+    likes: 58,
+    dislikes: 2,
   },
   {
-    id: 11,
+    id: '11',
     cat: 'product',
     icon: 'solar:leaf-bold',
     q: 'Sản phẩm có được kiểm định không?',
     a: 'Tất cả sản phẩm có đầy đủ CO, CQ và giấy phép Bộ Y tế. Kiểm định lô hàng mỗi 6 tháng bởi SGS Vietnam. Thành phần và nguồn gốc công khai tại phòng trị liệu và website.',
     tag: 'Sản phẩm',
     published: true,
+    likes: 44,
+    dislikes: 3,
   },
   {
-    id: 12,
+    id: '12',
     cat: 'product',
     icon: 'solar:shield-check-bold',
     q: 'Có cam kết bảo đảm chất lượng không?',
     a: 'Có. Nature Spa bảo đảm kết quả theo phác đồ đã tư vấn. Nếu sau 3 buổi không có chuyển biến, KTV sẽ điều chỉnh liệu trình miễn phí hoặc hoàn tiền theo quy định.',
     tag: 'Sản phẩm',
     published: true,
+    likes: 39,
+    dislikes: 6,
   },
 ];
 
@@ -2166,10 +2218,8 @@ export const spa2PolicyBanner: Spa2PolicyBanner = {
   ],
 };
 
-// The sticky nav tabs on /spa2/policy — the actual clause body text for each
-// article stays hand-authored in Spa2PolicyPageView (long-form legal content
-// isn't a realistic WYSIWYG target), but the label/icon/article-number/order
-// admins see on that page is real, shared, editable data.
+// The sticky nav tabs on /spa2/policy — label/icon/article-number/order,
+// fully editable from the policy manage view.
 export type Spa2PolicyArticle = {
   id: string;
   label: string;
@@ -2186,6 +2236,213 @@ export const spa2PolicyArticles: Spa2PolicyArticle[] = [
   { id: 'product', label: 'Sản phẩm', icon: 'solar:leaf-bold', article: 'Điều 6' },
   { id: 'dispute', label: 'Khiếu nại', icon: 'solar:bill-list-bold', article: 'Điều 7' },
 ];
+
+// ---------- Policy article BODY content (view + dashboard shared) --------
+// Each article's body is one of a few recurring shapes seen across the 7
+// clauses on /spa2/policy: info cards, a comparison table (cancel), a
+// timeline (refund), membership tier cards (member), a plain bullet list
+// (product), certification chips (product), and a trailing alert banner.
+// A given article only fills in the shape(s) it actually uses; the public
+// page and the policy manage view both render whichever fields are present.
+export type Spa2PolicyCard = { icon: string; title: string; desc: string };
+export type Spa2PolicyTimelineStep = { title: string; desc: string };
+export type Spa2PolicyTableRow = { time: string; fee: string; refund: string; change: string };
+export type Spa2PolicyTier = { label: string; color: string; textColor: string; perks: string[] };
+export type Spa2PolicyCertChip = { label: string; icon: string };
+export type Spa2PolicyAlert = { severity: 'info' | 'success' | 'warning'; text: string };
+
+export type Spa2PolicyArticleContent = {
+  id: string;
+  title: string;
+  cards?: Spa2PolicyCard[];
+  tableRows?: Spa2PolicyTableRow[];
+  timelineSteps?: Spa2PolicyTimelineStep[];
+  tiers?: Spa2PolicyTier[];
+  listItems?: string[];
+  certChips?: Spa2PolicyCertChip[];
+  alert?: Spa2PolicyAlert;
+};
+
+export const spa2PolicyArticleContent: Record<string, Spa2PolicyArticleContent> = {
+  booking: {
+    id: 'booking',
+    title: 'Chính sách đặt lịch',
+    cards: [
+      {
+        icon: 'solar:clock-circle-bold',
+        title: 'Thời gian đặt trước',
+        desc: 'Ngày thường: tối thiểu 2 giờ. Cuối tuần & lễ: trước 1 ngày để có khung giờ đẹp.',
+      },
+      {
+        icon: 'solar:device-mobile-bold',
+        title: 'Kênh đặt lịch',
+        desc: 'Website, app, hotline 1900 6789, Zalo hoặc trực tiếp tại quầy lễ tân.',
+      },
+      {
+        icon: 'solar:bell-bold',
+        title: 'Xác nhận & nhắc lịch',
+        desc: 'SMS + email xác nhận trong 15 phút. Nhắc tự động 2 giờ trước giờ hẹn.',
+      },
+    ],
+    alert: {
+      severity: 'info',
+      text: 'Vui lòng đến trước 10 phút để hoàn tất thủ tục lễ tân và thư giãn trước khi vào liệu trình.',
+    },
+  },
+  cancel: {
+    id: 'cancel',
+    title: 'Chính sách hủy & đổi lịch',
+    tableRows: [
+      { time: 'Trước 24 giờ', fee: 'Miễn phí', refund: '100%', change: 'Không giới hạn' },
+      { time: 'Trước 4–24 giờ', fee: 'Miễn phí', refund: '100%', change: '1 lần' },
+      { time: 'Trong vòng 4 giờ', fee: '20% giá dịch vụ', refund: '80%', change: 'Không' },
+      { time: 'Không đến (no-show)', fee: '50% giá dịch vụ', refund: 'Không', change: 'Không' },
+    ],
+    alert: {
+      severity: 'warning',
+      text: 'Trường hợp khẩn cấp có giấy tờ chứng minh (bệnh viện, tai nạn…) sẽ được miễn phí hủy lịch theo từng trường hợp cụ thể.',
+    },
+  },
+  refund: {
+    id: 'refund',
+    title: 'Chính sách hoàn tiền',
+    timelineSteps: [
+      {
+        title: 'Gửi yêu cầu hoàn tiền',
+        desc: 'Qua hotline, Zalo hoặc quầy lễ tân. Cần cung cấp mã đơn hàng và lý do cụ thể.',
+      },
+      {
+        title: 'Xét duyệt trong 24 giờ',
+        desc: 'Bộ phận CSKH xem xét và thông báo kết quả qua SMS và email đã đăng ký.',
+      },
+      {
+        title: 'Hoàn tiền trong 3–7 ngày làm việc',
+        desc: 'Chuyển khoản về tài khoản gốc hoặc cộng điểm thưởng (tùy chọn của khách hàng).',
+      },
+      {
+        title: 'Xác nhận hoàn tất',
+        desc: 'Email xác nhận kèm biên lai điện tử gửi về địa chỉ đã đăng ký.',
+      },
+    ],
+    alert: {
+      severity: 'success',
+      text: 'Gói chưa sử dụng: hoàn 100%. Đã dùng một phần: hoàn theo tỷ lệ buổi còn lại. Voucher khuyến mãi không hoàn tiền mặt nhưng có thể đổi sang dịch vụ cùng giá trị.',
+    },
+  },
+  member: {
+    id: 'member',
+    title: 'Chính sách thành viên',
+    tiers: [
+      {
+        label: 'Thẻ Bạc',
+        color: '#B4B2A9',
+        textColor: '#5F5E5A',
+        perks: ['Từ 0đ chi tiêu', 'Giảm 5% mọi dịch vụ', 'Quà sinh nhật 200K', '1đ / 10.000đ'],
+      },
+      {
+        label: 'Thẻ Vàng',
+        color: '#EF9F27',
+        textColor: '#854F0B',
+        perks: [
+          'Từ 10 triệu đ',
+          'Giảm 10% + ưu tiên giờ',
+          'Quà sinh nhật 500K',
+          '2đ / 10K cuối tuần',
+        ],
+      },
+      {
+        label: 'Thẻ Bạch Kim',
+        color: '#7F77DD',
+        textColor: '#534AB7',
+        perks: [
+          'Từ 30 triệu đ',
+          'Giảm 15% + concierge',
+          'Quà sinh nhật 1 triệu đ',
+          '3đ / 10K tháng sinh nhật',
+        ],
+      },
+    ],
+    listItems: [
+      'Thẻ có hiệu lực 24 tháng, gia hạn tự động khi còn giao dịch trong 12 tháng gần nhất.',
+      'Điểm tích lũy: 10.000đ = 1 điểm. 1 điểm = 1.000đ khi giảm trừ hóa đơn hoặc đổi quà.',
+      'Chuyển nhượng thẻ cho người thân tối đa 1 lần, cần xác nhận bằng văn bản tại quầy.',
+    ],
+  },
+  privacy: {
+    id: 'privacy',
+    title: 'Chính sách bảo mật thông tin',
+    cards: [
+      {
+        icon: 'solar:database-bold',
+        title: 'Dữ liệu thu thập',
+        desc: 'Họ tên, SĐT, email, lịch sử dịch vụ, tình trạng da. Không thu thập CCCD hay thông tin tài chính nhạy cảm.',
+      },
+      {
+        icon: 'solar:shield-bold',
+        title: 'Bảo vệ dữ liệu',
+        desc: 'Mã hóa AES-256, máy chủ tại Việt Nam, tuân thủ Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân.',
+      },
+      {
+        icon: 'solar:eye-closed-bold',
+        title: 'Không chia sẻ',
+        desc: 'Không bán hoặc chia sẻ thông tin với bên thứ ba khi chưa có sự đồng ý bằng văn bản của khách hàng.',
+      },
+      {
+        icon: 'solar:camera-slash-bold',
+        title: 'Hình ảnh khách hàng',
+        desc: 'Ảnh trước/sau chỉ sử dụng khi có biên bản đồng thuận ký tay. Có thể rút lại sự đồng ý bất kỳ lúc nào.',
+      },
+    ],
+    alert: {
+      severity: 'info',
+      text: 'Khách hàng có quyền yêu cầu xem, chỉnh sửa hoặc xóa toàn bộ dữ liệu cá nhân bất kỳ lúc nào qua email privacy@naturespa.vn. Yêu cầu được xử lý trong vòng 7 ngày làm việc theo Nghị định 13/2023/NĐ-CP.',
+    },
+  },
+  product: {
+    id: 'product',
+    title: 'Chính sách sản phẩm & nguyên liệu',
+    listItems: [
+      '100% nguyên liệu hữu cơ, không paraben, không cồn biến tính, không thử nghiệm trên động vật.',
+      'Sản phẩm nhập khẩu có đầy đủ CO, CQ và giấy phép lưu hành tại Việt Nam do Bộ Y tế cấp.',
+      'Kiểm định lô hàng mỗi 6 tháng bởi bên thứ ba độc lập (SGS Vietnam) — kết quả công khai trên website.',
+      'An toàn cho da nhạy cảm, phụ nữ mang thai (từ tam cá nguyệt 2) và trẻ trên 12 tuổi.',
+      'Thành phần và nguồn gốc từng sản phẩm công khai tại bảng thông tin trong phòng trị liệu.',
+      'Bao bì tái chế 100%, giảm thiểu nhựa dùng một lần, phù hợp chứng nhận Eco-Spa quốc tế.',
+    ],
+    certChips: [
+      { label: 'FDA Certified', icon: 'solar:verified-check-bold' },
+      { label: 'CE Mark', icon: 'solar:shield-check-bold' },
+      { label: 'ISO 9001:2015', icon: 'solar:medal-star-bold' },
+      { label: 'Eco-Spa 2021', icon: 'solar:leaf-bold' },
+      { label: 'CIDESCO', icon: 'solar:diploma-bold' },
+    ],
+  },
+  dispute: {
+    id: 'dispute',
+    title: 'Chính sách khiếu nại & giải quyết tranh chấp',
+    cards: [
+      {
+        icon: 'solar:chat-unread-bold',
+        title: 'Gửi khiếu nại',
+        desc: 'Hotline, email care@naturespa.vn hoặc form online. Cung cấp mã đơn và mô tả sự việc.',
+      },
+      {
+        icon: 'solar:clock-circle-bold',
+        title: 'Xử lý trong 48 giờ',
+        desc: 'Phản hồi sơ bộ trong 4 giờ làm việc. Giải quyết triệt để trong 5 ngày làm việc.',
+      },
+      {
+        icon: 'solar:balance-bold',
+        title: 'Phán quyết cuối cùng',
+        desc: 'Nếu không đạt thỏa thuận, tranh chấp giải quyết tại TAND TP.HCM theo pháp luật Việt Nam.',
+      },
+    ],
+    alert: {
+      severity: 'info',
+      text: 'Khách hàng được bảo lưu quyền khiếu nại trong 30 ngày kể từ ngày xảy ra sự việc. Nature Spa cam kết xử lý mọi phản ánh một cách trung thực và thiện chí.',
+    },
+  },
+};
 
 export const spa2Policies = [
   {
@@ -2616,6 +2873,769 @@ export const SPA2_OFFER_REDEMPTIONS: Spa2OfferRedemption[] = [
     paymentStatus: 'unpaid',
     createdAt: '2026-07-14',
     status: 'new',
+  },
+];
+
+// ---------- Membership banner + tiers (view + dashboard shared) ------------
+
+export type Spa2MembershipBanner = Spa2PageBanner;
+
+export const spa2MembershipBanner: Spa2MembershipBanner = {
+  image: { url: SPA2_PAGE_IMAGES.membership, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'Thành viên',
+  title: 'Trở thành thành viên Nature Spa',
+  subtitle: 'Tích điểm, nhận ưu đãi và trải nghiệm dịch vụ đẳng cấp cao hơn mỗi ngày.',
+};
+
+export type Spa2MembershipTier = {
+  id: string;
+  name: string;
+  price: number;
+  color: string;
+  accent: string;
+  desc: string;
+  perks: string[];
+  notIncluded: string[];
+  hot: boolean;
+};
+
+export const spa2MembershipTiers: Spa2MembershipTier[] = [
+  {
+    id: 'silver',
+    name: 'Silver',
+    price: 0,
+    color: '#9E9E9E',
+    accent: '#F5F5F5',
+    desc: 'Dành cho khách mới – bắt đầu hành trình chăm sóc sức khỏe.',
+    perks: [
+      'Giảm 5% mọi dịch vụ',
+      'Tích 1đ / 10.000đ',
+      'Quà sinh nhật 200K',
+      'Đặt lịch ưu tiên',
+      'Bản tin sức khỏe hàng tháng',
+    ],
+    notIncluded: [
+      'Nhân đôi điểm cuối tuần',
+      'Buổi check-up da miễn phí',
+      'Concierge riêng',
+      'Spa Đôi tặng thêm',
+    ],
+    hot: false,
+  },
+  {
+    id: 'gold',
+    name: 'Gold',
+    price: 990000,
+    color: '#EF9F27',
+    accent: '#FFF8EE',
+    desc: 'Phổ biến nhất – dành cho những ai yêu thích dịch vụ chăm sóc đều đặn.',
+    perks: [
+      'Giảm 10% + ưu tiên giờ vàng',
+      'Tích 2đ / 10.000đ cuối tuần',
+      'Quà sinh nhật 500K',
+      '1 buổi check-up da / năm',
+      'Nhân đôi điểm cuối tuần',
+      'Hỗ trợ 24/7 qua Zalo',
+    ],
+    notIncluded: ['Concierge riêng', 'Spa Đôi tặng thêm'],
+    hot: true,
+  },
+  {
+    id: 'platinum',
+    name: 'Platinum',
+    price: 2990000,
+    color: '#7F77DD',
+    accent: '#F3F2FF',
+    desc: 'Trải nghiệm cao cấp nhất – dành cho thành viên VIP của Nature Spa.',
+    perks: [
+      'Giảm 15% + concierge riêng',
+      'Tích 3đ / 10.000đ tháng SN',
+      'Quà sinh nhật 1 triệu đ',
+      '2 buổi check-up da / năm',
+      'Nhân đôi điểm mọi ngày',
+      '2 buổi Spa Đôi / năm',
+      'Đường dây hotline riêng 24/7',
+    ],
+    notIncluded: [],
+    hot: false,
+  },
+];
+
+export type Spa2MembershipCompareRow = {
+  feature: string;
+  silver: string;
+  gold: string;
+  platinum: string;
+};
+
+export const spa2MembershipCompareRows: Spa2MembershipCompareRow[] = [
+  { feature: 'Giảm giá dịch vụ', silver: '5%', gold: '10%', platinum: '15%' },
+  {
+    feature: 'Tích điểm',
+    silver: '1đ/10K',
+    gold: '2đ/10K (cuối tuần)',
+    platinum: '3đ/10K (tháng SN)',
+  },
+  { feature: 'Quà sinh nhật', silver: '200.000đ', gold: '500.000đ', platinum: '1.000.000đ' },
+  { feature: 'Buổi check-up da', silver: '—', gold: '1 buổi/năm', platinum: '2 buổi/năm' },
+  { feature: 'Buổi Spa Đôi tặng', silver: '—', gold: '—', platinum: '2 buổi/năm' },
+  { feature: 'Concierge riêng', silver: '—', gold: '—', platinum: '✓' },
+  { feature: 'Ưu tiên giờ vàng', silver: '—', gold: '✓', platinum: '✓' },
+  { feature: 'Hotline 24/7', silver: '—', gold: 'Zalo', platinum: 'Số riêng' },
+];
+
+export type Spa2MembershipSignupStatus = 'active' | 'expired' | 'cancelled';
+
+export type Spa2MembershipSignup = {
+  id: number;
+  customer: string;
+  phone: string;
+  email?: string;
+  tier: string;
+  billing: 'monthly' | 'yearly';
+  joinedAt: string;
+  status: Spa2MembershipSignupStatus;
+  note?: string;
+};
+
+export const SPA2_MEMBERSHIP_SIGNUPS: Spa2MembershipSignup[] = [
+  {
+    id: 1,
+    customer: 'Phạm Thị Ngọc',
+    phone: '0901 112 233',
+    email: 'ngoc.pham@example.com',
+    tier: 'Gold',
+    billing: 'yearly',
+    joinedAt: '2026-02-14',
+    status: 'active',
+    note: 'Khách quen, hay đặt lịch cuối tuần.',
+  },
+  {
+    id: 2,
+    customer: 'Lâm Quốc Huy',
+    phone: '0912 223 344',
+    email: 'huy.lam@example.com',
+    tier: 'Platinum',
+    billing: 'monthly',
+    joinedAt: '2026-05-03',
+    status: 'active',
+    note: '',
+  },
+  {
+    id: 3,
+    customer: 'Đỗ Thu Hà',
+    phone: '0923 334 455',
+    email: 'ha.do@example.com',
+    tier: 'Silver',
+    billing: 'monthly',
+    joinedAt: '2026-01-20',
+    status: 'cancelled',
+    note: 'Đã huỷ do chuyển sang chi nhánh khác.',
+  },
+  {
+    id: 4,
+    customer: 'Ngô Bảo Châu',
+    phone: '0934 445 566',
+    email: 'chau.ngo@example.com',
+    tier: 'Gold',
+    billing: 'monthly',
+    joinedAt: '2025-06-11',
+    status: 'expired',
+    note: 'Chưa gia hạn sau khi hết hạn.',
+  },
+  {
+    id: 5,
+    customer: 'Vũ Minh Anh',
+    phone: '0945 556 677',
+    email: 'anh.vu@example.com',
+    tier: 'Platinum',
+    billing: 'yearly',
+    joinedAt: '2026-06-30',
+    status: 'active',
+    note: 'Thành viên VIP, ưu tiên chăm sóc.',
+  },
+];
+
+// ---------- Gift Card banner + catalog (view + dashboard shared) -----------
+
+export type Spa2GiftCardBanner = Spa2PageBanner;
+
+export const spa2GiftCardBanner: Spa2GiftCardBanner = {
+  image: { url: SPA2_PAGE_IMAGES.giftCard, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'Tặng quà',
+  title: 'Thẻ quà tặng Nature Spa',
+  subtitle: 'Món quà hoàn hảo cho người thân và bạn bè — trải nghiệm spa sang trọng, giao tận tay.',
+};
+
+export const spa2GiftCardDenominations: number[] = [200000, 500000, 1000000, 2000000, 5000000];
+
+export type Spa2GiftCardDesign = { id: string; label: string; bg: string; emoji: string };
+
+export const spa2GiftCardDesigns: Spa2GiftCardDesign[] = [
+  {
+    id: 'nature',
+    label: 'Thiên nhiên',
+    bg: 'linear-gradient(135deg, #2E8B7A 0%, #1D6B5C 100%)',
+    emoji: '🌿',
+  },
+  {
+    id: 'sakura',
+    label: 'Hoa anh đào',
+    bg: 'linear-gradient(135deg, #F48FB1 0%, #C2185B 100%)',
+    emoji: '🌸',
+  },
+  {
+    id: 'sunset',
+    label: 'Hoàng hôn',
+    bg: 'linear-gradient(135deg, #FFB74D 0%, #E64A19 100%)',
+    emoji: '🌅',
+  },
+  {
+    id: 'ocean',
+    label: 'Đại dương',
+    bg: 'linear-gradient(135deg, #4FC3F7 0%, #0277BD 100%)',
+    emoji: '🌊',
+  },
+];
+
+export type Spa2GiftCardOrderStatus = 'issued' | 'redeemed' | 'expired' | 'cancelled';
+
+export type Spa2GiftCardOrder = {
+  id: number;
+  code: string;
+  senderName: string;
+  receiverName: string;
+  receiverEmail: string;
+  amount: number;
+  designId: string;
+  message: string;
+  createdAt: string;
+  status: Spa2GiftCardOrderStatus;
+};
+
+export const SPA2_GIFT_CARD_ORDERS: Spa2GiftCardOrder[] = [
+  {
+    id: 1,
+    code: 'GIFT-1001',
+    senderName: 'Nguyễn Văn An',
+    receiverName: 'Nguyễn Thị Lan',
+    receiverEmail: 'lan.nguyen@example.com',
+    amount: 500000,
+    designId: 'nature',
+    message: 'Chúc mừng sinh nhật chị!',
+    createdAt: '2026-07-10',
+    status: 'issued',
+  },
+  {
+    id: 2,
+    code: 'GIFT-1002',
+    senderName: 'Trần Thị Bích',
+    receiverName: 'Trần Văn Cường',
+    receiverEmail: 'cuong.tran@example.com',
+    amount: 1000000,
+    designId: 'sakura',
+    message: 'Kỷ niệm ngày cưới của chúng ta.',
+    createdAt: '2026-07-05',
+    status: 'redeemed',
+  },
+  {
+    id: 3,
+    code: 'GIFT-1003',
+    senderName: 'Lê Hoàng Dũng',
+    receiverName: 'Lê Thị Mai',
+    receiverEmail: 'mai.le@example.com',
+    amount: 2000000,
+    designId: 'sunset',
+    message: 'Cảm ơn vì tất cả!',
+    createdAt: '2026-06-18',
+    status: 'issued',
+  },
+  {
+    id: 4,
+    code: 'GIFT-1004',
+    senderName: 'Phạm Quốc Việt',
+    receiverName: 'Phạm Thu Trang',
+    receiverEmail: 'trang.pham@example.com',
+    amount: 200000,
+    designId: 'ocean',
+    message: '',
+    createdAt: '2025-11-02',
+    status: 'expired',
+  },
+  {
+    id: 5,
+    code: 'GIFT-1005',
+    senderName: 'Hoàng Thị Yến',
+    receiverName: 'Hoàng Văn Nam',
+    receiverEmail: 'nam.hoang@example.com',
+    amount: 5000000,
+    designId: 'nature',
+    message: 'Quà Tết gửi anh trai.',
+    createdAt: '2026-07-15',
+    status: 'cancelled',
+  },
+];
+
+export type Spa2GiftCardReason = { id: string; icon: string; title: string; desc: string };
+
+export const spa2GiftCardReasons: Spa2GiftCardReason[] = [
+  {
+    id: 'meaningful',
+    icon: 'solar:gift-bold-duotone',
+    title: 'Quà tặng ý nghĩa',
+    desc: 'Phù hợp mọi dịp: sinh nhật, lễ, Tết, kỷ niệm, thăng chức.',
+  },
+  {
+    id: 'instant',
+    icon: 'solar:send-bold-duotone',
+    title: 'Giao tức thì qua email',
+    desc: 'Thẻ điện tử gửi trong vài giây, không cần chờ ship.',
+  },
+  {
+    id: 'valid-12m',
+    icon: 'solar:clock-circle-bold-duotone',
+    title: 'Hiệu lực 12 tháng',
+    desc: 'Người nhận dùng linh hoạt trong vòng 1 năm kể từ ngày nhận.',
+  },
+  {
+    id: 'all-branches',
+    icon: 'solar:map-point-bold-duotone',
+    title: 'Dùng ở mọi chi nhánh',
+    desc: 'Áp dụng tại 4 chi nhánh: TP.HCM, Hà Nội, Đà Nẵng, Nha Trang.',
+  },
+];
+
+// ---------- Wellness Package banner + catalog (view + dashboard shared) ----
+
+export type Spa2WellnessPackageBanner = Spa2PageBanner;
+
+export const spa2WellnessPackageBanner: Spa2WellnessPackageBanner = {
+  image: { url: SPA2_PAGE_IMAGES.wellnessPackage, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'Wellness',
+  title: 'Gói nghỉ dưỡng & phục hồi sức khỏe',
+  subtitle: 'Trọn gói từ sáng đến chiều — để cơ thể và tâm trí được hồi phục hoàn toàn.',
+};
+
+export type Spa2WellnessPackageItem = {
+  id: string;
+  name: string;
+  duration: string;
+  price: number;
+  image: string;
+  includes: string[];
+  tag: string;
+  hot: boolean;
+};
+
+export const spa2WellnessPackages: Spa2WellnessPackageItem[] = [
+  {
+    id: 'relax-day',
+    name: 'Relax Day',
+    duration: '4 giờ',
+    price: 1890000,
+    image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80',
+    includes: [
+      'Massage toàn thân 60p',
+      'Facial cơ bản 45p',
+      'Trà thảo mộc & snack',
+      'Xông hơi đá muối 20p',
+    ],
+    tag: 'Cơ bản',
+    hot: false,
+  },
+  {
+    id: 'renewal-day',
+    name: 'Renewal Day',
+    duration: '6 giờ',
+    price: 2990000,
+    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&q=80',
+    includes: [
+      'Massage thảo dược 90p',
+      'Facial Organic 75p',
+      'Body Scrub 45p',
+      'Trà & bữa nhẹ',
+      'Xông hơi 30p',
+    ],
+    tag: 'Phổ biến',
+    hot: true,
+  },
+  {
+    id: 'retreat-day',
+    name: 'Retreat Day',
+    duration: '8 giờ',
+    price: 4590000,
+    image: 'https://images.unsplash.com/photo-1596178060671-7a80dc8059ea?w=800&q=80',
+    includes: [
+      'Massage 120p',
+      'Facial nâng cao 90p',
+      'Body Wrap 60p',
+      'Detox juice 500ml',
+      'Bữa trưa healthy',
+      'Phòng VIP cả ngày',
+    ],
+    tag: 'Cao cấp',
+    hot: false,
+  },
+];
+
+export type Spa2WellnessAddon = { id: string; name: string; price: number; icon: string };
+
+export const spa2WellnessAddons: Spa2WellnessAddon[] = [
+  { id: 'aromatherapy', name: 'Bổ sung Aromatherapy', price: 290000, icon: 'solar:leaf-bold' },
+  { id: 'vip-room', name: 'Upgrade phòng VIP', price: 490000, icon: 'solar:crown-bold' },
+  { id: 'detox-juice', name: 'Thêm Detox Juice Box', price: 190000, icon: 'solar:cup-bold' },
+  { id: 'photo', name: 'Chụp ảnh kỷ niệm', price: 0, icon: 'solar:camera-bold' },
+  { id: 'flowers', name: 'Bouquet hoa tươi', price: 390000, icon: 'solar:heart-bold' },
+  { id: 'cake-card', name: 'Bánh & thiệp mừng', price: 250000, icon: 'solar:gift-bold' },
+];
+
+// ---------- Skin Quiz banner + questions + results (shared with dashboard
+// "manage" view) ----------
+
+export type Spa2SkinQuizBanner = Spa2PageBanner;
+
+export const spa2SkinQuizBanner: Spa2SkinQuizBanner = {
+  image: { url: SPA2_PAGE_IMAGES.skinQuiz, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'Chăm sóc da',
+  title: 'Trắc nghiệm loại da & liệu trình phù hợp',
+  subtitle: '4 câu hỏi đơn giản — nhận gợi ý chăm sóc da được cá nhân hóa riêng cho bạn.',
+};
+
+export type Spa2SkinQuizQuestion = { id: string; question: string; options: string[] };
+
+export const spa2SkinQuizQuestions: Spa2SkinQuizQuestion[] = [
+  {
+    id: 'q1',
+    question: 'Da bạn có cảm giác thế nào vào buổi sáng?',
+    options: [
+      'Căng khô, bong tróc',
+      'Dầu bóng toàn mặt',
+      'Dầu vùng T, khô vùng má',
+      'Bình thường, thoải mái',
+    ],
+  },
+  {
+    id: 'q2',
+    question: 'Sau khi rửa mặt, da bạn cảm thấy?',
+    options: ['Rất căng và khô', 'Vẫn còn nhờn', 'Căng ở má, nhờn ở mũi', 'Thoải mái, cân bằng'],
+  },
+  {
+    id: 'q3',
+    question: 'Bạn thường gặp vấn đề gì với da?',
+    options: [
+      'Da bong tróc, thiếu ẩm',
+      'Lỗ chân lông to, mụn đầu đen',
+      'Mụn vùng T, căng vùng má',
+      'Thỉnh thoảng mẩn đỏ nhẹ',
+    ],
+  },
+  {
+    id: 'q4',
+    question: 'Sau 4 giờ không chăm sóc, da bạn?',
+    options: [
+      'Khô rát, có đường nứt nhỏ',
+      'Bóng dầu rõ rệt',
+      'Bóng vùng trán, khô má',
+      'Hầu như không thay đổi',
+    ],
+  },
+];
+
+// Index of each result matches the tally index (0-3) computed from the most
+// frequently picked option position across all 4 questions - keep this array
+// order unchanged, or the public quiz's scoring logic will point at the
+// wrong result.
+export type Spa2SkinQuizResult = {
+  id: string;
+  type: string;
+  desc: string;
+  services: string[];
+  icon: string;
+};
+
+export const spa2SkinQuizResults: Spa2SkinQuizResult[] = [
+  {
+    id: 'dry',
+    type: 'Da khô',
+    desc: 'Da bạn thiếu độ ẩm và dầu tự nhiên. Cần liệu trình cấp ẩm chuyên sâu và phục hồi hàng rào bảo vệ da.',
+    services: ['Facial Organic', 'Aromatherapy', 'Body Scrub & Wrap'],
+    icon: 'solar:drop-bold-duotone',
+  },
+  {
+    id: 'oily',
+    type: 'Da dầu',
+    desc: 'Tuyến bã nhờn hoạt động mạnh. Cần liệu trình kiểm soát dầu, làm sạch sâu và thu nhỏ lỗ chân lông.',
+    services: ['Facial Organic', 'Body Scrub & Wrap', 'Detox & Thanh Lọc'],
+    icon: 'solar:sun-bold-duotone',
+  },
+  {
+    id: 'combination',
+    type: 'Da hỗn hợp',
+    desc: 'Vùng T dầu, vùng má khô — cần liệu trình cân bằng dầu nước và chăm sóc theo vùng.',
+    services: ['Facial Organic', 'Aromatherapy', 'Massage Thảo Dược'],
+    icon: 'solar:cloud-sun-bold-duotone',
+  },
+  {
+    id: 'normal',
+    type: 'Da thường',
+    desc: 'Làn da lý tưởng — duy trì bằng liệu trình dưỡng ẩm và phòng ngừa lão hóa sớm.',
+    services: ['Massage Thảo Dược', 'Aromatherapy', 'Spa Đôi'],
+    icon: 'solar:star-bold-duotone',
+  },
+];
+
+// ---------- Corporate wellness banner + benefits + plans + service
+// channels (shared with dashboard "manage" view) ----------
+
+export type Spa2CorporateBanner = Spa2PageBanner;
+
+export const spa2CorporateBanner: Spa2CorporateBanner = {
+  image: { url: SPA2_PAGE_IMAGES.corporate, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'Doanh nghiệp',
+  title: 'Chương trình Wellness cho doanh nghiệp',
+  subtitle: 'Đầu tư vào sức khỏe nhân viên — nâng cao năng suất và giữ chân nhân tài.',
+};
+
+export type Spa2CorporateBenefit = { id: string; icon: string; title: string; desc: string };
+
+export const spa2CorporateBenefits: Spa2CorporateBenefit[] = [
+  {
+    id: 'productivity',
+    icon: 'solar:health-bold-duotone',
+    title: 'Tăng năng suất',
+    desc: 'Nhân viên khỏe mạnh làm việc hiệu quả hơn 25% theo nghiên cứu Harvard Business Review.',
+  },
+  {
+    id: 'engagement',
+    icon: 'solar:users-group-rounded-bold-duotone',
+    title: 'Gắn kết đội ngũ',
+    desc: 'Hoạt động chăm sóc sức khỏe chung giúp tăng sự gắn kết và tinh thần đồng đội.',
+  },
+  {
+    id: 'sick-leave',
+    icon: 'solar:chart-2-bold-duotone',
+    title: 'Giảm nghỉ phép',
+    desc: 'Doanh nghiệp đầu tư vào wellness giảm 30% ngày nghỉ ốm đau của nhân viên.',
+  },
+  {
+    id: 'retention',
+    icon: 'solar:medal-star-bold-duotone',
+    title: 'Giữ chân nhân tài',
+    desc: 'Phúc lợi sức khỏe là yếu tố quan trọng thứ 2 khi nhân viên chọn nơi làm việc.',
+  },
+];
+
+export type Spa2CorporatePlan = {
+  id: string;
+  name: string;
+  members: string;
+  price: number;
+  period: string;
+  hot: boolean;
+  perks: string[];
+};
+
+export const spa2CorporatePlans: Spa2CorporatePlan[] = [
+  {
+    id: 'starter',
+    name: 'Starter',
+    members: '5–15 người',
+    price: 3900000,
+    period: 'tháng',
+    hot: false,
+    perks: [
+      'Giảm 20% cho đội nhóm',
+      'Đặt lịch theo nhóm',
+      'Báo cáo sức khỏe hàng quý',
+      'Hotline riêng',
+    ],
+  },
+  {
+    id: 'business',
+    name: 'Business',
+    members: '16–50 người',
+    price: 8900000,
+    period: 'tháng',
+    hot: true,
+    perks: [
+      'Giảm 25% cho đội nhóm',
+      'Workshop sức khỏe 1 buổi/tháng',
+      'Chuyên gia đến tận nơi 2 lần/năm',
+      'Báo cáo sức khỏe hàng tháng',
+      'Account manager riêng',
+    ],
+  },
+  {
+    id: 'enterprise',
+    name: 'Enterprise',
+    members: '50+ người',
+    price: 0,
+    period: '',
+    hot: false,
+    perks: [
+      'Giảm tối đa 35%',
+      'Chương trình wellbeing tùy chỉnh',
+      'Workshop không giới hạn',
+      'Bác sĩ tư vấn hàng tháng',
+      'Dashboard theo dõi online',
+      'Hợp đồng SLA',
+    ],
+  },
+];
+
+export type Spa2CorporateServiceChannel = { id: string; label: string; items: string[] };
+
+export const spa2CorporateServiceChannels: Spa2CorporateServiceChannel[] = [
+  {
+    id: 'office',
+    label: 'Tại văn phòng',
+    items: [
+      'Massage vai gáy 20 phút tại bàn',
+      'Workshop stress management',
+      'Yoga nhẹ cho văn phòng',
+      'Tư vấn dinh dưỡng tại chỗ',
+      'Thiết lập góc thư giãn tại VP',
+    ],
+  },
+  {
+    id: 'spa',
+    label: 'Tại spa',
+    items: [
+      'Spa Day theo nhóm (tối đa 20 người)',
+      'Gói Retreat cuối tuần cho team',
+      'Liệu trình chăm sóc da nhóm',
+      'Detox package cho đội ngũ',
+      'Bữa tiệc kết hợp spa',
+    ],
+  },
+  {
+    id: 'online',
+    label: 'Online',
+    items: [
+      'Webinar sức khỏe hàng tháng',
+      'Coaching 1-1 qua Zoom',
+      'App theo dõi sức khỏe cá nhân',
+      'Tư vấn da liễu trực tuyến',
+      'Thư viện video yoga & thiền',
+    ],
+  },
+];
+
+// ---------- Shop banner + categories + products (shared with dashboard
+// "manage" view) ----------
+
+export type Spa2ShopBanner = Spa2PageBanner;
+
+export const spa2ShopBanner: Spa2ShopBanner = {
+  image: { url: SPA2_PAGE_IMAGES.shop, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'Cửa hàng',
+  title: 'Sản phẩm hữu cơ Nature Spa',
+  subtitle: 'Mang hương thơm và dưỡng chất thiên nhiên vào không gian sống của bạn.',
+};
+
+// 'all' is a public-page-only filter chip, not a real product category - the
+// admin manage view excludes it from the per-product category select.
+export type Spa2ShopCategory = { value: string; label: string };
+
+export const spa2ShopCategories: Spa2ShopCategory[] = [
+  { value: 'all', label: 'Tất cả' },
+  { value: 'skincare', label: 'Skincare' },
+  { value: 'essential-oil', label: 'Tinh dầu' },
+  { value: 'bath', label: 'Tắm & Body' },
+  { value: 'set', label: 'Bộ sản phẩm' },
+];
+
+export type Spa2ShopProduct = {
+  id: string;
+  name: string;
+  price: number;
+  rating: number;
+  reviews: number;
+  image: string;
+  tag: string;
+  category: string;
+};
+
+export const spa2ShopProducts: Spa2ShopProduct[] = [
+  {
+    id: 'tinh-dau-sa-gung',
+    name: 'Tinh Dầu Sả Gừng',
+    price: 290000,
+    rating: 4.8,
+    reviews: 124,
+    image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400&q=80',
+    tag: 'Bestseller',
+    category: 'essential-oil',
+  },
+  {
+    id: 'kem-duong-hoa-hong',
+    name: 'Kem Dưỡng Hoa Hồng Hữu Cơ',
+    price: 490000,
+    rating: 4.9,
+    reviews: 89,
+    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400&q=80',
+    tag: 'Mới',
+    category: 'skincare',
+  },
+  {
+    id: 'muoi-khoang-tam-lavender',
+    name: 'Muối Khoáng Tắm Lavender',
+    price: 180000,
+    rating: 4.7,
+    reviews: 203,
+    image: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=400&q=80',
+    tag: '',
+    category: 'bath',
+  },
+  {
+    id: 'serum-te-bao-goc',
+    name: 'Tinh Chất Serum Tế Bào Gốc',
+    price: 890000,
+    rating: 4.8,
+    reviews: 56,
+    image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&q=80',
+    tag: 'Hot',
+    category: 'skincare',
+  },
+  {
+    id: 'bo-cham-soc-da-kho',
+    name: 'Bộ Chăm Sóc Da Khô (3 món)',
+    price: 1290000,
+    rating: 4.9,
+    reviews: 34,
+    image: 'https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=400&q=80',
+    tag: 'Combo',
+    category: 'set',
+  },
+  {
+    id: 'tinh-dau-bac-ha-tram-tra',
+    name: 'Tinh Dầu Bạc Hà & Tràm Trà',
+    price: 220000,
+    rating: 4.6,
+    reviews: 178,
+    image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400&q=80',
+    tag: '',
+    category: 'essential-oil',
+  },
+  {
+    id: 'tay-da-chet-mat-ong-yen-mach',
+    name: 'Tẩy Da Chết Mật Ong & Yến Mạch',
+    price: 320000,
+    rating: 4.7,
+    reviews: 92,
+    image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400&q=80',
+    tag: '',
+    category: 'bath',
+  },
+  {
+    id: 'bo-wellness-gift-set',
+    name: 'Bộ Wellness Gift Set',
+    price: 2490000,
+    rating: 5.0,
+    reviews: 18,
+    image: 'https://images.unsplash.com/photo-1596178060671-7a80dc8059ea?w=400&q=80',
+    tag: 'Gift',
+    category: 'set',
   },
 ];
 

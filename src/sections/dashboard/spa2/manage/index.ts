@@ -21,3 +21,9 @@ export { Spa2PromotionsManageView } from 'src/sections/dashboard/spa2/manage/spa
 export { Spa2BeforeAfterManageView } from 'src/sections/dashboard/spa2/manage/spa2-before-after-manage-view';
 export { Spa2ContentPageManageView } from 'src/sections/dashboard/spa2/manage/spa2-content-page-manage-view';
 export { Spa2PolicyManageView } from 'src/sections/dashboard/spa2/manage/spa2-policy-manage-view';
+export { Spa2MembershipManageView } from 'src/sections/dashboard/spa2/manage/spa2-membership-manage-view';
+export { Spa2GiftCardManageView } from 'src/sections/dashboard/spa2/manage/spa2-gift-card-manage-view';
+export { Spa2WellnessPackageManageView } from 'src/sections/dashboard/spa2/manage/spa2-wellness-package-manage-view';
+export { Spa2SkinQuizManageView } from 'src/sections/dashboard/spa2/manage/spa2-skin-quiz-manage-view';
+export { Spa2CorporateManageView } from 'src/sections/dashboard/spa2/manage/spa2-corporate-manage-view';
+export { Spa2ShopManageView } from 'src/sections/dashboard/spa2/manage/spa2-shop-manage-view';

@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { Fragment, useMemo, useState, useEffect } from 'react';
+import { useMemo, Fragment, useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -67,6 +67,8 @@ import {
   spa2Services,
   spa2BlogPosts,
   spa2Feedbacks,
+  spa2FlashSale,
+  spa2FaqBanner,
   spa2AboutStory,
   SPA2_TEAL_DARK,
   spa2Treatments,
@@ -86,16 +88,23 @@ import {
   spa2QualityCerts,
   spa2Technologies,
   spa2OffersBanner,
+  spa2PolicyBanner,
   spa2BookingBanner,
   spa2CareersBanner,
   spa2VisionMission,
   spa2ExtraPartners,
   spa2ContactBanner,
+  spa2AccountBanner,
+  spa2FaqCategories,
+  spa2GalleryBanner,
   spa2ServicesBanner,
   spa2Certifications,
   spa2Collaborations,
   spa2TrainingBanner,
   spa2FeedbackBanner,
+  spa2BranchesBanner,
+  spa2PartnersBanner,
+  spa2PolicyArticles,
   spa2AboutStoryImage,
   spa2PartnerProfiles,
   spa2TrainingMission,
@@ -109,22 +118,14 @@ import {
   spa2TreatmentExperts,
   spa2InternalVideoUrl,
   spa2PromotionsBanner,
-  spa2FlashSale,
-  spa2BranchesBanner,
-  spa2AccountBanner,
   SPA2_ACCOUNT_CONTENT,
-  spa2PartnersBanner,
   spa2TreatmentsBanner,
   spa2BeforeAfterBanner,
-  spa2FaqBanner,
-  spa2FaqCategories,
-  spa2PolicyBanner,
-  spa2PolicyArticles,
-  spa2GalleryBanner,
   spa2ServiceCategories,
   spa2PartnerCategories,
   spa2RecruitmentProcess,
   spa2InternalVideoThumb,
+  spa2PolicyArticleContent,
   spa2TrainingMissionImage,
   computeSpa2BlogCategories,
 } from '../spa2-pages-data';
@@ -972,9 +973,7 @@ export function Spa2ServiceDetailsPageView() {
       ? service.beforeAfters
       : spa2BeforeAfters;
   const faqsToShow =
-    service.faqs && service.faqs.length > 0
-      ? service.faqs
-      : spa2Faqs.filter((f) => f.published);
+    service.faqs && service.faqs.length > 0 ? service.faqs : spa2Faqs.filter((f) => f.published);
 
   const serviceFeedbacks =
     service.feedbacks && service.feedbacks.length > 0 ? service.feedbacks : [];
@@ -4872,26 +4871,26 @@ export function Spa2BeforeAfterPageView() {
             .filter((f) => f.published)
             .slice(0, 4)
             .map((f, idx) => (
-            <Accordion
-              key={f.q}
-              defaultExpanded={idx === 0}
-              sx={{
-                mb: 1.5,
-                borderRadius: '12px !important',
-                border: `1px solid ${SPA2_CREAM_DARK}`,
-                boxShadow: 'none',
-                '&:before': { display: 'none' },
-                '&.Mui-expanded': { borderColor: SPA2_TEAL_LIGHT },
-              }}
-            >
-              <AccordionSummary expandIcon={<Iconify icon="solar:alt-arrow-down-bold" />}>
-                <Typography sx={{ fontWeight: 600, color: SPA2_INK }}>{f.q}</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography sx={{ color: 'text.secondary', lineHeight: 1.8 }}>{f.a}</Typography>
-              </AccordionDetails>
-            </Accordion>
-          ))}
+              <Accordion
+                key={f.q}
+                defaultExpanded={idx === 0}
+                sx={{
+                  mb: 1.5,
+                  borderRadius: '12px !important',
+                  border: `1px solid ${SPA2_CREAM_DARK}`,
+                  boxShadow: 'none',
+                  '&:before': { display: 'none' },
+                  '&.Mui-expanded': { borderColor: SPA2_TEAL_LIGHT },
+                }}
+              >
+                <AccordionSummary expandIcon={<Iconify icon="solar:alt-arrow-down-bold" />}>
+                  <Typography sx={{ fontWeight: 600, color: SPA2_INK }}>{f.q}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography sx={{ color: 'text.secondary', lineHeight: 1.8 }}>{f.a}</Typography>
+                </AccordionDetails>
+              </Accordion>
+            ))}
         </Container>
       </Box>
 
@@ -5070,13 +5069,16 @@ export function Spa2BeforeAfterPageView() {
 // ======================================================================
 // ─────────────────────────────────────────────────────────────────────
 
-function FaqHelpfulVote({ idx }: { idx: number }) {
+function FaqHelpfulVote({ likes, dislikes }: { likes: number; dislikes: number }) {
   const [voted, setVoted] = useState<'yes' | 'no' | null>(null);
+  const displayLikes = likes + (voted === 'yes' ? 1 : 0);
+  const displayDislikes = dislikes + (voted === 'no' ? 1 : 0);
   return (
     <Stack
       direction="row"
       spacing={1.5}
       alignItems="center"
+      flexWrap="wrap"
       sx={{ mt: 2, pt: 1.5, borderTop: `1px solid ${SPA2_CREAM_DARK}` }}
     >
       <Typography sx={{ fontSize: 12, color: 'text.disabled' }}>
@@ -5084,7 +5086,7 @@ function FaqHelpfulVote({ idx }: { idx: number }) {
       </Typography>
       <Button
         size="small"
-        onClick={() => setVoted('yes')}
+        onClick={() => setVoted((v) => (v === 'yes' ? null : 'yes'))}
         startIcon={<Iconify icon="solar:like-bold" width={14} />}
         sx={{
           borderRadius: 99,
@@ -5096,11 +5098,11 @@ function FaqHelpfulVote({ idx }: { idx: number }) {
           '&:hover': { bgcolor: SPA2_CREAM, borderColor: SPA2_TEAL_LIGHT },
         }}
       >
-        Có
+        Có ({displayLikes})
       </Button>
       <Button
         size="small"
-        onClick={() => setVoted('no')}
+        onClick={() => setVoted((v) => (v === 'no' ? null : 'no'))}
         startIcon={<Iconify icon="solar:dislike-bold" width={14} />}
         sx={{
           borderRadius: 99,
@@ -5112,17 +5114,27 @@ function FaqHelpfulVote({ idx }: { idx: number }) {
           '&:hover': { bgcolor: SPA2_CREAM, borderColor: SPA2_TEAL_LIGHT },
         }}
       >
-        Chưa
+        Chưa ({displayDislikes})
       </Button>
     </Stack>
   );
 }
 
-export function Spa2FaqPageView() {
+// `banner`/`faqs` are optional so the FAQ manage view's "preview full page" tab
+// can render this exact same component fed by its own in-progress edits —
+// the public /spa2/faq route renders it with no props (falls back to the
+// live mock data), keeping the two call sites in perfect visual parity.
+export function Spa2FaqPageView({
+  banner = spa2FaqBanner,
+  faqs = spa2Faqs,
+}: {
+  banner?: typeof spa2FaqBanner;
+  faqs?: typeof spa2Faqs;
+} = {}) {
   const [search, setSearch] = useState('');
   const [cat, setCat] = useState('all');
 
-  const publishedFaqs = useMemo(() => spa2Faqs.filter((f) => f.published), []);
+  const publishedFaqs = useMemo(() => faqs.filter((f) => f.published), [faqs]);
 
   const filtered = useMemo(() => {
     let list = publishedFaqs;
@@ -5134,11 +5146,7 @@ export function Spa2FaqPageView() {
     return list;
   }, [publishedFaqs, search, cat]);
 
-  const stats = [
-    { n: '98%', l: 'Khách hàng hài lòng' },
-    { n: "15'", l: 'Phản hồi trung bình' },
-    { n: '24/7', l: 'Hỗ trợ trực tuyến' },
-  ];
+  const { stats } = banner;
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
@@ -5195,13 +5203,13 @@ export function Spa2FaqPageView() {
               variant="overline"
               sx={{ color: SPA2_TEAL, letterSpacing: 3, textTransform: 'uppercase' }}
             >
-              {spa2FaqBanner.eyebrow}
+              {banner.eyebrow}
             </Typography>
             <Typography variant="h1" sx={{ color: SPA2_INK, fontWeight: 600, lineHeight: 1.1 }}>
-              {spa2FaqBanner.title}
+              {banner.title}
             </Typography>
             <Typography sx={{ color: 'text.secondary', fontSize: 17, maxWidth: 520 }}>
-              {spa2FaqBanner.subtitle}
+              {banner.subtitle}
             </Typography>
 
             {/* search bar */}
@@ -5398,7 +5406,7 @@ export function Spa2FaqPageView() {
                             '& .MuiChip-icon': { color: SPA2_TEAL },
                           }}
                         />
-                        <FaqHelpfulVote idx={idx} />
+                        <FaqHelpfulVote likes={f.likes} dislikes={f.dislikes} />
                       </Box>
                     </Box>
                   </AccordionDetails>
@@ -5553,7 +5561,7 @@ export function Spa2FaqPageView() {
 //   );
 // }
 
-function PolSectionHeader({
+export function Spa2PolicySectionHeader({
   id,
   icon,
   title,
@@ -5590,7 +5598,15 @@ function PolSectionHeader({
   );
 }
 
-function PolCard({ icon, title, desc }: { icon: string; title: string; desc: string }) {
+export function Spa2PolicyCardBlock({
+  icon,
+  title,
+  desc,
+}: {
+  icon: string;
+  title: string;
+  desc: string;
+}) {
   return (
     <Card
       sx={{
@@ -5625,7 +5641,7 @@ function PolCard({ icon, title, desc }: { icon: string; title: string; desc: str
   );
 }
 
-function PolListItem({ children }: { children: React.ReactNode }) {
+export function Spa2PolicyListItem({ children }: { children: React.ReactNode }) {
   return (
     <Stack
       component="li"
@@ -5646,7 +5662,15 @@ function PolListItem({ children }: { children: React.ReactNode }) {
   );
 }
 
-function TimelineStep({ title, desc, last }: { title: string; desc: string; last?: boolean }) {
+export function Spa2PolicyTimelineStepBlock({
+  title,
+  desc,
+  last,
+}: {
+  title: string;
+  desc: string;
+  last?: boolean;
+}) {
   return (
     <Stack direction="row" spacing={2}>
       <Stack alignItems="center" sx={{ width: 28, flexShrink: 0 }}>
@@ -5674,7 +5698,15 @@ function TimelineStep({ title, desc, last }: { title: string; desc: string; last
   );
 }
 
-export function Spa2PolicyPageView() {
+export function Spa2PolicyPageView({
+  banner = spa2PolicyBanner,
+  articles = spa2PolicyArticles,
+  content: contentMap = spa2PolicyArticleContent,
+}: {
+  banner?: typeof spa2PolicyBanner;
+  articles?: typeof spa2PolicyArticles;
+  content?: typeof spa2PolicyArticleContent;
+} = {}) {
   const [activeTab, setActiveTab] = useState(0);
   const [privacyAgreed, setPrivacyAgreed] = useState(false);
 
@@ -5741,14 +5773,14 @@ export function Spa2PolicyPageView() {
                 >
                   <Iconify icon="solar:clock-circle-bold" width={13} sx={{ color: SPA2_TEAL }} />
                   <Typography sx={{ fontSize: 12, color: SPA2_TEAL_DARK }}>
-                    {spa2PolicyBanner.versionLabel}
+                    {banner.versionLabel}
                   </Typography>
                 </Box>
                 <Typography variant="overline" sx={{ color: SPA2_TEAL, letterSpacing: 3 }}>
-                  {spa2PolicyBanner.eyebrow.toUpperCase()}
+                  {banner.eyebrow.toUpperCase()}
                 </Typography>
                 <Typography variant="h1" sx={{ color: SPA2_INK, fontWeight: 600, lineHeight: 1.1 }}>
-                  {spa2PolicyBanner.titleLines.map((line, idx) => (
+                  {banner.titleLines.map((line, idx) => (
                     <Fragment key={line}>
                       {idx > 0 && <br />}
                       {line}
@@ -5758,13 +5790,13 @@ export function Spa2PolicyPageView() {
                 <Typography
                   sx={{ color: 'text.secondary', fontSize: 16, lineHeight: 1.7, maxWidth: 480 }}
                 >
-                  {spa2PolicyBanner.subtitle}
+                  {banner.subtitle}
                 </Typography>
               </Stack>
             </Grid>
             <Grid xs={12} md={5}>
               <Grid container spacing={2}>
-                {spa2PolicyBanner.highlights.map((item) => (
+                {banner.highlights.map((item) => (
                   <Grid key={item.label} xs={6}>
                     <Spa2SoftCard sx={{ textAlign: 'center', py: 3 }}>
                       <Iconify icon={item.icon} width={32} sx={{ color: SPA2_TEAL, mb: 1 }} />
@@ -5806,7 +5838,7 @@ export function Spa2PolicyPageView() {
               minHeight: 50,
             }}
           >
-            {spa2PolicyArticles.map((n, idx) => (
+            {articles.map((n, idx) => (
               <Tab
                 key={n.id}
                 label={n.label}
@@ -5845,497 +5877,262 @@ export function Spa2PolicyPageView() {
             01/07/2026. Các chính sách cũ hơn không còn hiệu lực.
           </Alert>
 
-          {/* ── Điều 1: Đặt lịch ── */}
-          <Box id="pol-booking" sx={{ mb: 6, scrollMarginTop: 130 }}>
-            <PolSectionHeader
-              id=""
-              icon="solar:calendar-bold"
-              title="Chính sách đặt lịch"
-              article="Điều 1"
-            />
-            <Grid container spacing={2} sx={{ mb: 2 }}>
-              <Grid xs={12} sm={4}>
-                <PolCard
-                  icon="solar:clock-circle-bold"
-                  title="Thời gian đặt trước"
-                  desc="Ngày thường: tối thiểu 2 giờ. Cuối tuần & lễ: trước 1 ngày để có khung giờ đẹp."
-                />
-              </Grid>
-              <Grid xs={12} sm={4}>
-                <PolCard
-                  icon="solar:device-mobile-bold"
-                  title="Kênh đặt lịch"
-                  desc="Website, app, hotline 1900 6789, Zalo hoặc trực tiếp tại quầy lễ tân."
-                />
-              </Grid>
-              <Grid xs={12} sm={4}>
-                <PolCard
-                  icon="solar:bell-bold"
-                  title="Xác nhận & nhắc lịch"
-                  desc="SMS + email xác nhận trong 15 phút. Nhắc tự động 2 giờ trước giờ hẹn."
-                />
-              </Grid>
-            </Grid>
-            <Alert
-              icon={<Iconify icon="solar:info-circle-bold" />}
-              severity="info"
-              sx={{
-                borderRadius: 2.5,
-                bgcolor: '#EBF5FF',
-                color: '#0C447C',
-                '& .MuiAlert-icon': { color: '#378ADD' },
-              }}
-            >
-              Vui lòng đến trước 10 phút để hoàn tất thủ tục lễ tân và thư giãn trước khi vào liệu
-              trình.
-            </Alert>
-          </Box>
+          {articles.map((article, idx) => {
+            const articleData = contentMap[article.id];
+            if (!articleData) return null;
+            const isLast = idx === articles.length - 1;
+            return (
+              <Fragment key={article.id}>
+                <Box id={`pol-${article.id}`} sx={{ mb: 6, scrollMarginTop: 130 }}>
+                  <Spa2PolicySectionHeader
+                    id=""
+                    icon={article.icon}
+                    title={articleData.title}
+                    article={article.article}
+                  />
 
-          <Divider sx={{ mb: 5, borderColor: SPA2_CREAM_DARK }} />
+                  {articleData.cards && (
+                    <Grid container spacing={2} sx={{ mb: 2 }}>
+                      {articleData.cards.map((c) => (
+                        <Grid key={c.title} xs={12} sm={articleData.cards!.length === 3 ? 4 : 6}>
+                          <Spa2PolicyCardBlock icon={c.icon} title={c.title} desc={c.desc} />
+                        </Grid>
+                      ))}
+                    </Grid>
+                  )}
 
-          {/* ── Điều 2: Hủy / đổi lịch ── */}
-          <Box id="pol-cancel" sx={{ mb: 6, scrollMarginTop: 130 }}>
-            <PolSectionHeader
-              id=""
-              icon="solar:close-circle-bold"
-              title="Chính sách hủy & đổi lịch"
-              article="Điều 2"
-            />
-            <TableContainer
-              component={Card}
-              sx={{
-                borderRadius: 3,
-                border: `0.5px solid ${SPA2_CREAM_DARK}`,
-                boxShadow: 'none',
-                mb: 2,
-              }}
-            >
-              <Table size="small">
-                <TableHead>
-                  <TableRow sx={{ bgcolor: SPA2_CREAM }}>
-                    {['Thời điểm hủy', 'Phí hủy', 'Hoàn tiền', 'Đổi lịch'].map((h) => (
-                      <TableCell
-                        key={h}
-                        sx={{ fontWeight: 600, color: SPA2_TEAL_DARK, fontSize: 13 }}
-                      >
-                        {h}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {[
-                    ['Trước 24 giờ', 'Miễn phí', true, true],
-                    ['Trước 4–24 giờ', 'Miễn phí', true, '1 lần'],
-                    ['Trong vòng 4 giờ', '20% giá dịch vụ', '80%', false],
-                    ['Không đến (no-show)', '50% giá dịch vụ', false, false],
-                  ].map(([time, fee, refund, change], i) => (
-                    <TableRow
-                      key={i}
+                  {articleData.tableRows && (
+                    <TableContainer
+                      component={Card}
                       sx={{
-                        '&:last-child td': { border: 0 },
-                        '&:hover td': { bgcolor: SPA2_CREAM },
+                        borderRadius: 3,
+                        border: `0.5px solid ${SPA2_CREAM_DARK}`,
+                        boxShadow: 'none',
+                        mb: 2,
                       }}
                     >
-                      <TableCell sx={{ fontSize: 13, fontWeight: 500, color: SPA2_INK }}>
-                        {time as string}
-                      </TableCell>
-                      <TableCell sx={{ fontSize: 13, color: 'text.secondary' }}>
-                        {fee as string}
-                      </TableCell>
-                      <TableCell>
-                        {refund === true ? (
-                          <Stack direction="row" spacing={0.5} alignItems="center">
-                            <Iconify
-                              icon="solar:check-circle-bold"
-                              sx={{ color: SPA2_TEAL }}
-                              width={16}
-                            />
-                            <Typography sx={{ fontSize: 13, color: SPA2_TEAL }}>100%</Typography>
-                          </Stack>
-                        ) : refund === false ? (
-                          <Iconify
-                            icon="solar:close-circle-bold"
-                            sx={{ color: 'error.main' }}
-                            width={16}
-                          />
-                        ) : (
-                          <Stack direction="row" spacing={0.5} alignItems="center">
-                            <Iconify
-                              icon="solar:check-circle-bold"
-                              sx={{ color: SPA2_TEAL }}
-                              width={16}
-                            />
-                            <Typography sx={{ fontSize: 13, color: SPA2_TEAL }}>
-                              {refund as string}
+                      <Table size="small">
+                        <TableHead>
+                          <TableRow sx={{ bgcolor: SPA2_CREAM }}>
+                            {['Thời điểm hủy', 'Phí hủy', 'Hoàn tiền', 'Đổi lịch'].map((h) => (
+                              <TableCell
+                                key={h}
+                                sx={{ fontWeight: 600, color: SPA2_TEAL_DARK, fontSize: 13 }}
+                              >
+                                {h}
+                              </TableCell>
+                            ))}
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {articleData.tableRows.map((row) => (
+                            <TableRow
+                              key={row.time}
+                              sx={{
+                                '&:last-child td': { border: 0 },
+                                '&:hover td': { bgcolor: SPA2_CREAM },
+                              }}
+                            >
+                              <TableCell sx={{ fontSize: 13, fontWeight: 500, color: SPA2_INK }}>
+                                {row.time}
+                              </TableCell>
+                              <TableCell sx={{ fontSize: 13, color: 'text.secondary' }}>
+                                {row.fee}
+                              </TableCell>
+                              <TableCell>
+                                {row.refund === 'Không' ? (
+                                  <Iconify
+                                    icon="solar:close-circle-bold"
+                                    sx={{ color: 'error.main' }}
+                                    width={16}
+                                  />
+                                ) : (
+                                  <Stack direction="row" spacing={0.5} alignItems="center">
+                                    <Iconify
+                                      icon="solar:check-circle-bold"
+                                      sx={{ color: SPA2_TEAL }}
+                                      width={16}
+                                    />
+                                    <Typography sx={{ fontSize: 13, color: SPA2_TEAL }}>
+                                      {row.refund}
+                                    </Typography>
+                                  </Stack>
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                {row.change === 'Không' ? (
+                                  <Iconify
+                                    icon="solar:close-circle-bold"
+                                    sx={{ color: 'error.main' }}
+                                    width={16}
+                                  />
+                                ) : (
+                                  <Stack direction="row" spacing={0.5} alignItems="center">
+                                    <Iconify
+                                      icon="solar:check-circle-bold"
+                                      sx={{ color: SPA2_TEAL }}
+                                      width={16}
+                                    />
+                                    <Typography sx={{ fontSize: 13, color: SPA2_TEAL }}>
+                                      {row.change}
+                                    </Typography>
+                                  </Stack>
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  )}
+
+                  {articleData.timelineSteps && (
+                    <Box sx={{ mb: 3 }}>
+                      {articleData.timelineSteps.map((s, i) => (
+                        <Spa2PolicyTimelineStepBlock
+                          key={s.title}
+                          title={s.title}
+                          desc={s.desc}
+                          last={i === articleData.timelineSteps!.length - 1}
+                        />
+                      ))}
+                    </Box>
+                  )}
+
+                  {articleData.tiers && (
+                    <Grid container spacing={2} sx={{ mb: 3 }}>
+                      {articleData.tiers.map((tier) => (
+                        <Grid key={tier.label} xs={12} sm={4}>
+                          <Card
+                            sx={{
+                              p: 2.5,
+                              borderRadius: 3,
+                              border: `0.5px solid ${SPA2_CREAM_DARK}`,
+                              borderTop: `3px solid ${tier.color}`,
+                              boxShadow: 'none',
+                              height: '100%',
+                            }}
+                          >
+                            <Typography
+                              sx={{ fontWeight: 600, fontSize: 14, color: tier.textColor, mb: 1.5 }}
+                            >
+                              {tier.label}
                             </Typography>
-                          </Stack>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {change === true ? (
-                          <Stack direction="row" spacing={0.5} alignItems="center">
-                            <Iconify
-                              icon="solar:check-circle-bold"
-                              sx={{ color: SPA2_TEAL }}
-                              width={16}
-                            />
-                            <Typography sx={{ fontSize: 13, color: SPA2_TEAL }}>
-                              Không giới hạn
-                            </Typography>
-                          </Stack>
-                        ) : change === false ? (
-                          <Iconify
-                            icon="solar:close-circle-bold"
-                            sx={{ color: 'error.main' }}
-                            width={16}
-                          />
-                        ) : (
-                          <Stack direction="row" spacing={0.5} alignItems="center">
-                            <Iconify
-                              icon="solar:check-circle-bold"
-                              sx={{ color: SPA2_TEAL }}
-                              width={16}
-                            />
-                            <Typography sx={{ fontSize: 13, color: SPA2_TEAL }}>
-                              {change as string}
-                            </Typography>
-                          </Stack>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <Alert
-              icon={<Iconify icon="solar:danger-triangle-bold" />}
-              severity="warning"
-              sx={{ borderRadius: 2.5 }}
-            >
-              Trường hợp khẩn cấp có giấy tờ chứng minh (bệnh viện, tai nạn…) sẽ được miễn phí hủy
-              lịch theo từng trường hợp cụ thể.
-            </Alert>
-          </Box>
+                            <Stack component="ul" sx={{ listStyle: 'none', gap: 0.75 }}>
+                              {tier.perks.map((p) => (
+                                <Spa2PolicyListItem key={p}>{p}</Spa2PolicyListItem>
+                              ))}
+                            </Stack>
+                          </Card>
+                        </Grid>
+                      ))}
+                    </Grid>
+                  )}
 
-          <Divider sx={{ mb: 5, borderColor: SPA2_CREAM_DARK }} />
-
-          {/* ── Điều 3: Hoàn tiền ── */}
-          <Box id="pol-refund" sx={{ mb: 6, scrollMarginTop: 130 }}>
-            <PolSectionHeader
-              id=""
-              icon="solar:refresh-bold"
-              title="Chính sách hoàn tiền"
-              article="Điều 3"
-            />
-            <Box sx={{ mb: 3 }}>
-              {[
-                {
-                  t: 'Gửi yêu cầu hoàn tiền',
-                  d: 'Qua hotline, Zalo hoặc quầy lễ tân. Cần cung cấp mã đơn hàng và lý do cụ thể.',
-                },
-                {
-                  t: 'Xét duyệt trong 24 giờ',
-                  d: 'Bộ phận CSKH xem xét và thông báo kết quả qua SMS và email đã đăng ký.',
-                },
-                {
-                  t: 'Hoàn tiền trong 3–7 ngày làm việc',
-                  d: 'Chuyển khoản về tài khoản gốc hoặc cộng điểm thưởng (tùy chọn của khách hàng).',
-                },
-                {
-                  t: 'Xác nhận hoàn tất',
-                  d: 'Email xác nhận kèm biên lai điện tử gửi về địa chỉ đã đăng ký.',
-                  last: true,
-                },
-              ].map((s, i) => (
-                <TimelineStep key={i} title={s.t} desc={s.d} last={s.last} />
-              ))}
-            </Box>
-            <Alert
-              icon={<Iconify icon="solar:check-circle-bold" />}
-              severity="success"
-              sx={{ borderRadius: 2.5 }}
-            >
-              Gói chưa sử dụng: hoàn 100%. Đã dùng một phần: hoàn theo tỷ lệ buổi còn lại. Voucher
-              khuyến mãi không hoàn tiền mặt nhưng có thể đổi sang dịch vụ cùng giá trị.
-            </Alert>
-          </Box>
-
-          <Divider sx={{ mb: 5, borderColor: SPA2_CREAM_DARK }} />
-
-          {/* ── Điều 4: Thành viên ── */}
-          <Box id="pol-member" sx={{ mb: 6, scrollMarginTop: 130 }}>
-            <PolSectionHeader
-              id=""
-              icon="solar:crown-bold"
-              title="Chính sách thành viên"
-              article="Điều 4"
-            />
-            <Grid container spacing={2} sx={{ mb: 3 }}>
-              {[
-                {
-                  label: 'Thẻ Bạc',
-                  color: '#B4B2A9',
-                  textColor: '#5F5E5A',
-                  perks: [
-                    'Từ 0đ chi tiêu',
-                    'Giảm 5% mọi dịch vụ',
-                    'Quà sinh nhật 200K',
-                    '1đ / 10.000đ',
-                  ],
-                },
-                {
-                  label: 'Thẻ Vàng',
-                  color: '#EF9F27',
-                  textColor: '#854F0B',
-                  perks: [
-                    'Từ 10 triệu đ',
-                    'Giảm 10% + ưu tiên giờ',
-                    'Quà sinh nhật 500K',
-                    '2đ / 10K cuối tuần',
-                  ],
-                },
-                {
-                  label: 'Thẻ Bạch Kim',
-                  color: '#7F77DD',
-                  textColor: '#534AB7',
-                  perks: [
-                    'Từ 30 triệu đ',
-                    'Giảm 15% + concierge',
-                    'Quà sinh nhật 1 triệu đ',
-                    '3đ / 10K tháng sinh nhật',
-                  ],
-                },
-              ].map((tier) => (
-                <Grid key={tier.label} xs={12} sm={4}>
-                  <Card
-                    sx={{
-                      p: 2.5,
-                      borderRadius: 3,
-                      border: `0.5px solid ${SPA2_CREAM_DARK}`,
-                      borderTop: `3px solid ${tier.color}`,
-                      boxShadow: 'none',
-                      height: '100%',
-                    }}
-                  >
-                    <Typography
-                      sx={{ fontWeight: 600, fontSize: 14, color: tier.textColor, mb: 1.5 }}
-                    >
-                      {tier.label}
-                    </Typography>
-                    <Stack component="ul" sx={{ listStyle: 'none', gap: 0.75 }}>
-                      {tier.perks.map((p) => (
-                        <PolListItem key={p}>{p}</PolListItem>
+                  {articleData.listItems && (
+                    <Stack component="ul" sx={{ listStyle: 'none', gap: 1 }}>
+                      {articleData.listItems.map((item) => (
+                        <Spa2PolicyListItem key={item}>{item}</Spa2PolicyListItem>
                       ))}
                     </Stack>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-            <Stack component="ul" sx={{ listStyle: 'none', gap: 1 }}>
-              <PolListItem>
-                Thẻ có hiệu lực 24 tháng, gia hạn tự động khi còn giao dịch trong 12 tháng gần nhất.
-              </PolListItem>
-              <PolListItem>
-                Điểm tích lũy: 10.000đ = 1 điểm. 1 điểm = 1.000đ khi giảm trừ hóa đơn hoặc đổi quà.
-              </PolListItem>
-              <PolListItem>
-                Chuyển nhượng thẻ cho người thân tối đa 1 lần, cần xác nhận bằng văn bản tại quầy.
-              </PolListItem>
-            </Stack>
-          </Box>
+                  )}
 
-          <Divider sx={{ mb: 5, borderColor: SPA2_CREAM_DARK }} />
+                  {articleData.certChips && (
+                    <Box sx={{ mt: 3 }}>
+                      <Typography sx={{ fontSize: 13, color: 'text.secondary', mb: 1.5 }}>
+                        Chứng nhận hiện có:
+                      </Typography>
+                      <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ gap: 1 }}>
+                        {articleData.certChips.map((c) => (
+                          <Chip
+                            key={c.label}
+                            label={c.label}
+                            icon={<Iconify icon={c.icon} width={14} />}
+                            size="small"
+                            sx={{
+                              bgcolor: SPA2_CREAM,
+                              color: SPA2_TEAL_DARK,
+                              border: `1px solid ${SPA2_CREAM_DARK}`,
+                              '& .MuiChip-icon': { color: SPA2_TEAL },
+                            }}
+                          />
+                        ))}
+                      </Stack>
+                    </Box>
+                  )}
 
-          {/* ── Điều 5: Bảo mật ── */}
-          <Box id="pol-privacy" sx={{ mb: 6, scrollMarginTop: 130 }}>
-            <PolSectionHeader
-              id=""
-              icon="solar:lock-bold"
-              title="Chính sách bảo mật thông tin"
-              article="Điều 5"
-            />
-            <Grid container spacing={2} sx={{ mb: 2 }}>
-              <Grid xs={12} sm={6}>
-                <PolCard
-                  icon="solar:database-bold"
-                  title="Dữ liệu thu thập"
-                  desc="Họ tên, SĐT, email, lịch sử dịch vụ, tình trạng da. Không thu thập CCCD hay thông tin tài chính nhạy cảm."
-                />
-              </Grid>
-              <Grid xs={12} sm={6}>
-                <PolCard
-                  icon="solar:shield-bold"
-                  title="Bảo vệ dữ liệu"
-                  desc="Mã hóa AES-256, máy chủ tại Việt Nam, tuân thủ Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân."
-                />
-              </Grid>
-              <Grid xs={12} sm={6}>
-                <PolCard
-                  icon="solar:eye-closed-bold"
-                  title="Không chia sẻ"
-                  desc="Không bán hoặc chia sẻ thông tin với bên thứ ba khi chưa có sự đồng ý bằng văn bản của khách hàng."
-                />
-              </Grid>
-              <Grid xs={12} sm={6}>
-                <PolCard
-                  icon="solar:camera-slash-bold"
-                  title="Hình ảnh khách hàng"
-                  desc="Ảnh trước/sau chỉ sử dụng khi có biên bản đồng thuận ký tay. Có thể rút lại sự đồng ý bất kỳ lúc nào."
-                />
-              </Grid>
-            </Grid>
+                  {article.id === 'privacy' && (
+                    <Card
+                      sx={{
+                        p: 2.5,
+                        borderRadius: 3,
+                        bgcolor: SPA2_CREAM,
+                        border: `1px solid ${SPA2_CREAM_DARK}`,
+                        boxShadow: 'none',
+                        mt: articleData.cards ? 0 : 2,
+                      }}
+                    >
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={privacyAgreed}
+                            onChange={(e) => setPrivacyAgreed(e.target.checked)}
+                            sx={{ color: SPA2_TEAL, '&.Mui-checked': { color: SPA2_TEAL } }}
+                          />
+                        }
+                        label={
+                          <Typography
+                            sx={{
+                              fontSize: 13,
+                              color: privacyAgreed ? SPA2_TEAL_DARK : 'text.secondary',
+                              lineHeight: 1.65,
+                            }}
+                          >
+                            Tôi đã đọc và đồng ý với chính sách bảo mật thông tin của Nature Spa.
+                            Tôi hiểu rằng mình có thể yêu cầu xóa dữ liệu bất kỳ lúc nào qua{' '}
+                            <Link href="mailto:privacy@naturespa.vn" sx={{ color: SPA2_TEAL }}>
+                              privacy@naturespa.vn
+                            </Link>
+                            .
+                          </Typography>
+                        }
+                      />
+                    </Card>
+                  )}
 
-            {/* Consent checkbox */}
-            <Card
-              sx={{
-                p: 2.5,
-                borderRadius: 3,
-                bgcolor: SPA2_CREAM,
-                border: `1px solid ${SPA2_CREAM_DARK}`,
-                boxShadow: 'none',
-              }}
-            >
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={privacyAgreed}
-                    onChange={(e) => setPrivacyAgreed(e.target.checked)}
-                    sx={{ color: SPA2_TEAL, '&.Mui-checked': { color: SPA2_TEAL } }}
-                  />
-                }
-                label={
-                  <Typography
-                    sx={{
-                      fontSize: 13,
-                      color: privacyAgreed ? SPA2_TEAL_DARK : 'text.secondary',
-                      lineHeight: 1.65,
-                    }}
-                  >
-                    Tôi đã đọc và đồng ý với chính sách bảo mật thông tin của Nature Spa. Tôi hiểu
-                    rằng mình có thể yêu cầu xóa dữ liệu bất kỳ lúc nào qua{' '}
-                    <Link href="mailto:privacy@naturespa.vn" sx={{ color: SPA2_TEAL }}>
-                      privacy@naturespa.vn
-                    </Link>
-                    .
-                  </Typography>
-                }
-              />
-            </Card>
-          </Box>
+                  {articleData.alert && (
+                    <Alert
+                      icon={
+                        <Iconify
+                          icon={
+                            articleData.alert.severity === 'warning'
+                              ? 'solar:danger-triangle-bold'
+                              : articleData.alert.severity === 'success'
+                                ? 'solar:check-circle-bold'
+                                : 'solar:info-circle-bold'
+                          }
+                        />
+                      }
+                      severity={articleData.alert.severity}
+                      sx={{
+                        borderRadius: 2.5,
+                        mt: article.id === 'privacy' ? 2 : 0,
+                        ...(articleData.alert.severity === 'info' && {
+                          bgcolor: '#EBF5FF',
+                          color: '#0C447C',
+                          '& .MuiAlert-icon': { color: '#378ADD' },
+                        }),
+                      }}
+                    >
+                      {articleData.alert.text}
+                    </Alert>
+                  )}
+                </Box>
 
-          <Divider sx={{ mb: 5, borderColor: SPA2_CREAM_DARK }} />
-
-          {/* ── Điều 6: Sản phẩm ── */}
-          <Box id="pol-product" sx={{ mb: 6, scrollMarginTop: 130 }}>
-            <PolSectionHeader
-              id=""
-              icon="solar:leaf-bold"
-              title="Chính sách sản phẩm & nguyên liệu"
-              article="Điều 6"
-            />
-            <Stack component="ul" sx={{ listStyle: 'none', gap: 1.5 }}>
-              <PolListItem>
-                100% nguyên liệu hữu cơ, không paraben, không cồn biến tính, không thử nghiệm trên
-                động vật.
-              </PolListItem>
-              <PolListItem>
-                Sản phẩm nhập khẩu có đầy đủ CO, CQ và giấy phép lưu hành tại Việt Nam do Bộ Y tế
-                cấp.
-              </PolListItem>
-              <PolListItem>
-                Kiểm định lô hàng mỗi 6 tháng bởi bên thứ ba độc lập (SGS Vietnam) — kết quả công
-                khai trên website.
-              </PolListItem>
-              <PolListItem>
-                An toàn cho da nhạy cảm, phụ nữ mang thai (từ tam cá nguyệt 2) và trẻ trên 12 tuổi.
-              </PolListItem>
-              <PolListItem>
-                Thành phần và nguồn gốc từng sản phẩm công khai tại bảng thông tin trong phòng trị
-                liệu.
-              </PolListItem>
-              <PolListItem>
-                Bao bì tái chế 100%, giảm thiểu nhựa dùng một lần, phù hợp chứng nhận Eco-Spa quốc
-                tế.
-              </PolListItem>
-            </Stack>
-
-            <Box sx={{ mt: 3 }}>
-              <Typography sx={{ fontSize: 13, color: 'text.secondary', mb: 1.5 }}>
-                Chứng nhận hiện có:
-              </Typography>
-              <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ gap: 1 }}>
-                {[
-                  { label: 'FDA Certified', icon: 'solar:verified-check-bold' },
-                  { label: 'CE Mark', icon: 'solar:shield-check-bold' },
-                  { label: 'ISO 9001:2015', icon: 'solar:medal-star-bold' },
-                  { label: 'Eco-Spa 2021', icon: 'solar:leaf-bold' },
-                  { label: 'CIDESCO', icon: 'solar:diploma-bold' },
-                ].map((c) => (
-                  <Chip
-                    key={c.label}
-                    label={c.label}
-                    icon={<Iconify icon={c.icon} width={14} />}
-                    size="small"
-                    sx={{
-                      bgcolor: SPA2_CREAM,
-                      color: SPA2_TEAL_DARK,
-                      border: `1px solid ${SPA2_CREAM_DARK}`,
-                      '& .MuiChip-icon': { color: SPA2_TEAL },
-                    }}
-                  />
-                ))}
-              </Stack>
-            </Box>
-          </Box>
-
-          <Divider sx={{ mb: 5, borderColor: SPA2_CREAM_DARK }} />
-
-          {/* ── Điều 7: Khiếu nại ── */}
-          <Box id="pol-dispute" sx={{ mb: 6, scrollMarginTop: 130 }}>
-            <PolSectionHeader
-              id=""
-              icon="solar:bill-list-bold"
-              title="Chính sách khiếu nại & giải quyết tranh chấp"
-              article="Điều 7"
-            />
-            <Grid container spacing={2} sx={{ mb: 2 }}>
-              <Grid xs={12} sm={4}>
-                <PolCard
-                  icon="solar:chat-unread-bold"
-                  title="Gửi khiếu nại"
-                  desc="Hotline, email care@naturespa.vn hoặc form online. Cung cấp mã đơn và mô tả sự việc."
-                />
-              </Grid>
-              <Grid xs={12} sm={4}>
-                <PolCard
-                  icon="solar:clock-circle-bold"
-                  title="Xử lý trong 48 giờ"
-                  desc="Phản hồi sơ bộ trong 4 giờ làm việc. Giải quyết triệt để trong 5 ngày làm việc."
-                />
-              </Grid>
-              <Grid xs={12} sm={4}>
-                <PolCard
-                  icon="solar:balance-bold"
-                  title="Phán quyết cuối cùng"
-                  desc="Nếu không đạt thỏa thuận, tranh chấp giải quyết tại TAND TP.HCM theo pháp luật Việt Nam."
-                />
-              </Grid>
-            </Grid>
-            <Alert
-              icon={<Iconify icon="solar:info-circle-bold" />}
-              severity="info"
-              sx={{
-                borderRadius: 2.5,
-                bgcolor: '#EBF5FF',
-                color: '#0C447C',
-                '& .MuiAlert-icon': { color: '#378ADD' },
-              }}
-            >
-              Khách hàng được bảo lưu quyền khiếu nại trong <strong>30 ngày</strong> kể từ ngày xảy
-              ra sự việc. Nature Spa cam kết xử lý mọi phản ánh một cách trung thực và thiện chí.
-            </Alert>
-          </Box>
+                {!isLast && <Divider sx={{ mb: 5, borderColor: SPA2_CREAM_DARK }} />}
+              </Fragment>
+            );
+          })}
 
           {/* ── Bottom CTA ── */}
           <Card

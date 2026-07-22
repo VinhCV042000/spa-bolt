@@ -2,11 +2,9 @@ import { Helmet } from 'react-helmet-async';
 
 import { CONFIG } from 'src/config-global';
 
-import { SPA2_MANAGE_CONFIGS } from 'src/sections/dashboard/spa2/manage/spa2-manage-configs';
-import { Spa2GenericManageView } from 'src/sections/dashboard/spa2/manage/spa2-generic-manage-view';
+import { Spa2GiftCardManageView } from 'src/sections/dashboard/spa2/manage';
 
-const config = SPA2_MANAGE_CONFIGS['gift-card'];
-const metadata = { title: `${config.title} | Spa2 - ${CONFIG.appName}` };
+const metadata = { title: `Quản lý Thẻ quà tặng | Spa2 - ${CONFIG.appName}` };
 
 export default function Page() {
   return (
@@ -14,7 +12,7 @@ export default function Page() {
       <Helmet>
         <title>{metadata.title}</title>
       </Helmet>
-      <Spa2GenericManageView config={config} />
+      <Spa2GiftCardManageView />
     </>
   );
 }
