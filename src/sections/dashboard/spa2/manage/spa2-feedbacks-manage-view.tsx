@@ -2,8 +2,6 @@ import type { Spa2AdjustableImage } from 'src/_mock/_spa2';
 
 import { useState, useCallback } from 'react';
 
-import { uuidv4 } from 'src/utils/uuidv4';
-
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
@@ -33,6 +31,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
+
+import { uuidv4 } from 'src/utils/uuidv4';
 
 import { useTranslate } from 'src/locales';
 import { spa2VideoReviews, spa2FeedbackBanner } from 'src/_mock/_spa2';

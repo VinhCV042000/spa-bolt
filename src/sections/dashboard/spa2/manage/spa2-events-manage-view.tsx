@@ -8,7 +8,6 @@ import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Tabs from '@mui/material/Tabs';
 import Stack from '@mui/material/Stack';
-import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
@@ -21,6 +20,7 @@ import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import LinearProgress from '@mui/material/LinearProgress';
 
 import { paths } from 'src/routes/paths';
 
@@ -30,11 +30,11 @@ import { fCurrency } from 'src/utils/format-number';
 import { useTranslate } from 'src/locales';
 import { bgBlur, varAlpha } from 'src/theme/styles';
 import {
-  spa2ShopBanner,
-  spa2ShopProducts,
-  spa2ShopCategories,
-  type Spa2ShopProduct,
-  type Spa2ShopCategory,
+  spa2Events,
+  type Spa2Event,
+  spa2EventsBanner,
+  spa2EventCategories,
+  type Spa2EventCategory,
   type Spa2AdjustableImage,
 } from 'src/_mock/_spa2';
 
@@ -42,8 +42,12 @@ import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
 import { Spa2SoftCard } from 'src/sections/spa2/view/spa2-content-pages';
-import { Spa2ShopPageView, Spa2ContentPageHero } from 'src/sections/spa2/view/spa2-content-pages2';
 import {
+  Spa2EventsPageView,
+  Spa2ContentPageHero,
+} from 'src/sections/spa2/view/spa2-content-pages2';
+import {
+  SPA2_INK,
   SPA2_TEAL,
   SPA2_CREAM,
   SPA2_TEAL_DARK,
@@ -56,26 +60,28 @@ import { Spa2SimpleImageField } from './spa2-simple-image-field';
 
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages2.tsx's
-// Spa2ShopPageView renders on the public /spa2/shop page: the page banner,
-// the category filter chips and the product catalog - read from and written
-// back in the same shape as src/_mock/_spa2, the single source of truth
-// shared with the public view. The "banner" tab reuses Spa2ContentPageHero
-// and the "preview" tab reuses Spa2ShopPageView itself, fed with the
-// in-progress edited state.
+// Spa2EventsPageView renders on the public /spa2/events page: the page
+// banner, the category filter chips and the workshop/event catalog - read
+// from and written back in the same shape as src/_mock/_spa2, the single
+// source of truth shared with the public view. The "banner" tab reuses
+// Spa2ContentPageHero and the "preview" tab reuses Spa2EventsPageView itself,
+// fed with the in-progress edited state.
 // -----------------------------------------------------------------------------
 
 const withId = <T extends object>(item: T): T & { id: string } => ({ id: uuidv4(), ...item });
 
 const formatVND = (n: number) => `${fCurrency(n)} VND`;
 
-const EMPTY_PRODUCT_FORM = {
-  name: '',
+const EMPTY_EVENT_FORM = {
+  title: '',
+  date: '',
+  time: '',
+  location: '',
+  seats: 20,
+  booked: 0,
   price: 0,
-  rating: 5,
-  reviews: 0,
   image: '',
-  tag: '',
-  category: 'skincare',
+  category: 'workshop',
 };
 
 function SectionCard({
@@ -123,21 +129,30 @@ function PreviewFrame({ children }: { children: ReactNode }) {
   );
 }
 
-function ProductPreviewCard({
-  name,
+// Mirrors the exact event-card markup on the public /spa2/events page (image
+// + price/free chip + sold-out overlay + date/location rows + seats-left
+// progress bar) so the admin preview looks identical.
+function EventPreviewCard({
+  title,
+  date,
+  time,
+  location,
+  seats,
+  booked,
   price,
-  rating,
-  reviews,
   image,
-  tag,
 }: {
-  name: string;
+  title: string;
+  date: string;
+  time: string;
+  location: string;
+  seats: number;
+  booked: number;
   price: number;
-  rating: number;
-  reviews: number;
   image: string;
-  tag: string;
 }) {
+  const pct = seats > 0 ? Math.round((booked / seats) * 100) : 0;
+  const full = seats > 0 && booked >= seats;
   return (
     <Spa2SoftCard sx={{ p: 0, overflow: 'hidden' }}>
       <Box sx={{ position: 'relative' }}>
@@ -150,48 +165,87 @@ function ProductPreviewCard({
             backgroundPosition: 'center',
           }}
         />
-        {tag && (
-          <Chip
-            label={tag}
-            size="small"
+        <Chip
+          label={price ? formatVND(price) : 'Miễn phí'}
+          size="small"
+          sx={{
+            position: 'absolute',
+            top: 10,
+            right: 10,
+            bgcolor: price ? SPA2_TEAL : '#2E7D32',
+            color: 'white',
+            fontWeight: 700,
+          }}
+        />
+        {full && (
+          <Box
             sx={{
               position: 'absolute',
-              top: 8,
-              left: 8,
-              bgcolor: SPA2_TEAL,
-              color: 'white',
-              fontWeight: 700,
+              inset: 0,
+              bgcolor: 'rgba(0,0,0,0.5)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
-          />
+          >
+            <Chip label="HẾT CHỖ" sx={{ bgcolor: 'error.main', color: 'white', fontWeight: 700 }} />
+          </Box>
         )}
       </Box>
-      <Box sx={{ p: 1.5 }}>
-        <Typography sx={{ fontWeight: 600, fontSize: 13, mb: 0.5 }}>
-          {name || 'Tên sản phẩm'}
+      <Box sx={{ p: 1.75 }}>
+        <Typography sx={{ fontWeight: 600, color: SPA2_INK, mb: 1, fontSize: 13.5 }}>
+          {title || 'Tên sự kiện'}
         </Typography>
-        <Stack direction="row" alignItems="center" spacing={0.5} sx={{ mb: 1 }}>
-          <Rating value={rating} readOnly size="small" precision={0.1} sx={{ fontSize: 13 }} />
-          <Typography sx={{ fontSize: 11, color: 'text.secondary' }}>({reviews})</Typography>
+        <Stack spacing={0.5} sx={{ mb: 1.5 }}>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Iconify icon="solar:calendar-bold" width={13} sx={{ color: SPA2_TEAL }} />
+            <Typography sx={{ fontSize: 11.5, color: 'text.secondary' }}>
+              {date || 'DD/MM/YYYY'} · {time || 'Giờ'}
+            </Typography>
+          </Stack>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Iconify icon="solar:map-point-bold" width={13} sx={{ color: SPA2_TEAL }} />
+            <Typography sx={{ fontSize: 11.5, color: 'text.secondary' }}>
+              {location || 'Địa điểm'}
+            </Typography>
+          </Stack>
         </Stack>
-        <Typography sx={{ fontWeight: 700, color: SPA2_TEAL, fontSize: 14 }}>
-          {formatVND(price)}
-        </Typography>
+        <Stack direction="row" justifyContent="space-between" sx={{ mb: 0.5 }}>
+          <Typography sx={{ fontSize: 11, color: 'text.secondary' }}>
+            Chỗ trống: {Math.max(seats - booked, 0)}/{seats}
+          </Typography>
+          <Typography
+            sx={{ fontSize: 11, color: pct >= 90 ? 'error.main' : SPA2_TEAL, fontWeight: 500 }}
+          >
+            {pct}%
+          </Typography>
+        </Stack>
+        <LinearProgress
+          variant="determinate"
+          value={Math.min(pct, 100)}
+          sx={{
+            height: 5,
+            borderRadius: 99,
+            bgcolor: SPA2_CREAM_DARK,
+            '& .MuiLinearProgress-bar': { bgcolor: pct >= 90 ? 'error.main' : SPA2_TEAL },
+          }}
+        />
       </Box>
     </Spa2SoftCard>
   );
 }
 
-export function Spa2ShopManageView() {
+export function Spa2EventsManageView() {
   const theme = useTheme();
   const { t } = useTranslate('spa2-manage');
 
   const [banner, setBanner] = useState(() => ({
-    ...spa2ShopBanner,
-    image: { ...spa2ShopBanner.image },
+    ...spa2EventsBanner,
+    image: { ...spa2EventsBanner.image },
   }));
   const [dirty, setDirty] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
-  const [tab, setTab] = useState<'banner' | 'categories' | 'products' | 'preview'>('banner');
+  const [tab, setTab] = useState<'banner' | 'categories' | 'events' | 'preview'>('banner');
   const markDirty = () => setDirty(true);
 
   // ---- Banner ----
@@ -205,12 +259,12 @@ export function Spa2ShopManageView() {
   };
 
   // ---- Categories ----
-  const [categories, setCategories] = useState<Spa2ShopCategory[]>(() =>
-    spa2ShopCategories.map((c) => ({ ...c }))
+  const [categories, setCategories] = useState<Spa2EventCategory[]>(() =>
+    spa2EventCategories.map((c) => ({ ...c }))
   );
   const realCategories = useMemo(() => categories.filter((c) => c.value !== 'all'), [categories]);
 
-  const updateCategory = (idx: number, patch: Partial<Spa2ShopCategory>) => {
+  const updateCategory = (idx: number, patch: Partial<Spa2EventCategory>) => {
     setCategories((prev) => prev.map((c, i) => (i === idx ? { ...c, ...patch } : c)));
     markDirty();
   };
@@ -223,53 +277,52 @@ export function Spa2ShopManageView() {
     markDirty();
   };
 
-  // ---- Products ----
-  const [products, setProducts] = useState<Spa2ShopProduct[]>(() =>
-    spa2ShopProducts.map((p) => ({ ...p }))
-  );
-  const [productForm, setProductForm] = useState(EMPTY_PRODUCT_FORM);
-  const [productDialog, setProductDialog] = useState(false);
-  const [productEditId, setProductEditId] = useState<string | null>(null);
-  const [productDeleteId, setProductDeleteId] = useState<string | null>(null);
-  const [productFilter, setProductFilter] = useState('all');
+  // ---- Events ----
+  const [events, setEvents] = useState<Spa2Event[]>(() => spa2Events.map((e) => ({ ...e })));
+  const [eventForm, setEventForm] = useState(EMPTY_EVENT_FORM);
+  const [eventDialog, setEventDialog] = useState(false);
+  const [eventEditId, setEventEditId] = useState<string | null>(null);
+  const [eventDeleteId, setEventDeleteId] = useState<string | null>(null);
+  const [eventFilter, setEventFilter] = useState('all');
 
-  const filteredProducts = useMemo(
-    () =>
-      productFilter === 'all' ? products : products.filter((p) => p.category === productFilter),
-    [products, productFilter]
+  const filteredEvents = useMemo(
+    () => (eventFilter === 'all' ? events : events.filter((e) => e.category === eventFilter)),
+    [events, eventFilter]
   );
 
-  const openCreateProduct = () => {
-    setProductForm({ ...EMPTY_PRODUCT_FORM, category: realCategories[0]?.value ?? 'skincare' });
-    setProductEditId(null);
-    setProductDialog(true);
+  const openCreateEvent = () => {
+    setEventForm({ ...EMPTY_EVENT_FORM, category: realCategories[0]?.value ?? 'workshop' });
+    setEventEditId(null);
+    setEventDialog(true);
   };
-  const openEditProduct = (item: Spa2ShopProduct) => {
-    setProductForm({
-      name: item.name,
+  const openEditEvent = (item: Spa2Event) => {
+    setEventForm({
+      title: item.title,
+      date: item.date,
+      time: item.time,
+      location: item.location,
+      seats: item.seats,
+      booked: item.booked,
       price: item.price,
-      rating: item.rating,
-      reviews: item.reviews,
       image: item.image,
-      tag: item.tag,
       category: item.category,
     });
-    setProductEditId(item.id);
-    setProductDialog(true);
+    setEventEditId(item.id);
+    setEventDialog(true);
   };
-  const submitProduct = () => {
-    const next = { ...productForm };
-    if (productEditId) {
-      setProducts((prev) => prev.map((p) => (p.id === productEditId ? { ...p, ...next } : p)));
+  const submitEvent = () => {
+    const next = { ...eventForm };
+    if (eventEditId) {
+      setEvents((prev) => prev.map((e) => (e.id === eventEditId ? { ...e, ...next } : e)));
     } else {
-      setProducts((prev) => [...prev, withId(next)]);
+      setEvents((prev) => [...prev, withId(next)]);
     }
-    setProductDialog(false);
+    setEventDialog(false);
     markDirty();
   };
-  const confirmDeleteProduct = () => {
-    setProducts((prev) => prev.filter((p) => p.id !== productDeleteId));
-    setProductDeleteId(null);
+  const confirmDeleteEvent = () => {
+    setEvents((prev) => prev.filter((e) => e.id !== eventDeleteId));
+    setEventDeleteId(null);
     markDirty();
   };
 
@@ -279,18 +332,18 @@ export function Spa2ShopManageView() {
   };
 
   const handleReset = () => {
-    setBanner({ ...spa2ShopBanner, image: { ...spa2ShopBanner.image } });
-    setCategories(spa2ShopCategories.map((c) => ({ ...c })));
-    setProducts(spa2ShopProducts.map((p) => ({ ...p })));
+    setBanner({ ...spa2EventsBanner, image: { ...spa2EventsBanner.image } });
+    setCategories(spa2EventCategories.map((c) => ({ ...c })));
+    setEvents(spa2Events.map((e) => ({ ...e })));
     setDirty(false);
   };
 
   return (
     <Spa2ManageShell
-      title={t('shop.page_title')}
+      title={t('events.page_title')}
       description={banner.subtitle}
-      breadcrumbLabel={t('nav.shop')}
-      publicPath={paths.spa2.shop}
+      breadcrumbLabel={t('nav.events')}
+      publicPath={paths.spa2.events}
       actions={
         <>
           <Button
@@ -360,20 +413,20 @@ export function Spa2ShopManageView() {
       >
         <Tab
           value="banner"
-          label={t('shop.banner_section')}
+          label={t('events.banner_section')}
           icon={<Iconify icon="solar:gallery-wide-bold-duotone" width={20} />}
           iconPosition="start"
         />
         <Tab
           value="categories"
-          label={t('shop.categories_section')}
+          label={t('events.categories_section')}
           icon={<Iconify icon="solar:tag-bold-duotone" width={20} />}
           iconPosition="start"
         />
         <Tab
-          value="products"
-          label={t('shop.products_section')}
-          icon={<Iconify icon="solar:bag-4-bold-duotone" width={20} />}
+          value="events"
+          label={t('events.events_section')}
+          icon={<Iconify icon="solar:calendar-bold-duotone" width={20} />}
           iconPosition="start"
         />
         <Tab
@@ -388,24 +441,24 @@ export function Spa2ShopManageView() {
       {tab === 'banner' && (
         <Grid container spacing={3}>
           <Grid xs={12} md={6}>
-            <SectionCard title={t('shop.banner_section')} icon="solar:gallery-wide-bold-duotone">
+            <SectionCard title={t('events.banner_section')} icon="solar:gallery-wide-bold-duotone">
               <Stack spacing={2}>
                 <Spa2ImageField
-                  label={t('shop.banner_image')}
+                  label={t('events.banner_image')}
                   value={banner.image}
                   onChange={updateBannerImage}
                   height={200}
-                  helperText={t('shop.banner_image_help')}
+                  helperText={t('events.banner_image_help')}
                 />
                 <TextField
-                  label={t('shop.banner_eyebrow')}
+                  label={t('events.banner_eyebrow')}
                   value={banner.eyebrow}
                   onChange={(e) => updateBanner('eyebrow', e.target.value)}
                   fullWidth
                   size="small"
                 />
                 <TextField
-                  label={t('shop.banner_title')}
+                  label={t('events.banner_title')}
                   value={banner.title}
                   onChange={(e) => updateBanner('title', e.target.value)}
                   fullWidth
@@ -413,7 +466,7 @@ export function Spa2ShopManageView() {
                   minRows={2}
                 />
                 <TextField
-                  label={t('shop.banner_subtitle')}
+                  label={t('events.banner_subtitle')}
                   value={banner.subtitle}
                   onChange={(e) => updateBanner('subtitle', e.target.value)}
                   fullWidth
@@ -444,14 +497,14 @@ export function Spa2ShopManageView() {
         <Card sx={{ p: 3, borderRadius: 3 }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-              {t('shop.categories_section')}
+              {t('events.categories_section')}
             </Typography>
             <Button
               size="small"
               startIcon={<Iconify icon="mingcute:add-line" />}
               onClick={addCategory}
             >
-              {t('shop.add_category_btn')}
+              {t('events.add_category_btn')}
             </Button>
           </Stack>
           <Stack spacing={1.5}>
@@ -459,13 +512,13 @@ export function Spa2ShopManageView() {
               <Stack key={c.value} direction="row" spacing={1.5} alignItems="center">
                 <Chip
                   size="small"
-                  label={c.value === 'all' ? t('shop.category_all_locked') : c.value}
+                  label={c.value === 'all' ? t('events.category_all_locked') : c.value}
                   sx={{ bgcolor: SPA2_CREAM, minWidth: 100 }}
                 />
                 <TextField
                   size="small"
                   fullWidth
-                  label={t('shop.form_category_label')}
+                  label={t('events.form_category_label')}
                   value={c.label}
                   onChange={(e) => updateCategory(idx, { label: e.target.value })}
                 />
@@ -480,8 +533,8 @@ export function Spa2ShopManageView() {
         </Card>
       )}
 
-      {/* Products */}
-      {tab === 'products' && (
+      {/* Events */}
+      {tab === 'events' && (
         <Card sx={{ p: 3, borderRadius: 3 }}>
           <Stack
             direction="row"
@@ -493,14 +546,14 @@ export function Spa2ShopManageView() {
             gap={1}
           >
             <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-              {t('shop.products_section')}
+              {t('events.events_section')}
             </Typography>
             <Stack direction="row" spacing={1.5} alignItems="center">
               <TextField
                 select
                 size="small"
-                value={productFilter}
-                onChange={(e) => setProductFilter(e.target.value)}
+                value={eventFilter}
+                onChange={(e) => setEventFilter(e.target.value)}
                 sx={{ minWidth: 160 }}
               >
                 {categories.map((c) => (
@@ -512,7 +565,7 @@ export function Spa2ShopManageView() {
               <Button
                 variant="contained"
                 startIcon={<Iconify icon="mingcute:add-line" />}
-                onClick={openCreateProduct}
+                onClick={openCreateEvent}
                 sx={{
                   bgcolor: SPA2_TEAL,
                   '&:hover': { bgcolor: SPA2_TEAL_DARK },
@@ -520,15 +573,15 @@ export function Spa2ShopManageView() {
                   px: 3,
                 }}
               >
-                {t('shop.add_product_btn')}
+                {t('events.add_event_btn')}
               </Button>
             </Stack>
           </Stack>
           <Grid container spacing={2}>
-            {filteredProducts.map((item) => (
-              <Grid key={item.id} xs={12} sm={6} md={3}>
+            {filteredEvents.map((item) => (
+              <Grid key={item.id} xs={12} sm={6} md={4}>
                 <Box sx={{ position: 'relative' }}>
-                  <ProductPreviewCard {...item} />
+                  <EventPreviewCard {...item} />
                   <Stack
                     direction="row"
                     spacing={0.5}
@@ -536,7 +589,7 @@ export function Spa2ShopManageView() {
                   >
                     <IconButton
                       size="small"
-                      onClick={() => openEditProduct(item)}
+                      onClick={() => openEditEvent(item)}
                       sx={{ bgcolor: 'common.white', boxShadow: 1 }}
                     >
                       <Iconify icon="solar:pen-bold" width={14} />
@@ -544,7 +597,7 @@ export function Spa2ShopManageView() {
                     <IconButton
                       size="small"
                       color="error"
-                      onClick={() => setProductDeleteId(item.id)}
+                      onClick={() => setEventDeleteId(item.id)}
                       sx={{ bgcolor: 'common.white', boxShadow: 1 }}
                     >
                       <Iconify icon="solar:trash-bin-trash-bold" width={14} />
@@ -553,14 +606,14 @@ export function Spa2ShopManageView() {
                 </Box>
               </Grid>
             ))}
-            {filteredProducts.length === 0 && (
+            {filteredEvents.length === 0 && (
               <Grid xs={12}>
                 <Typography
                   variant="body2"
                   color="text.disabled"
                   sx={{ py: 3, textAlign: 'center' }}
                 >
-                  {t('shop.no_products')}
+                  {t('events.no_events')}
                 </Typography>
               </Grid>
             )}
@@ -571,37 +624,37 @@ export function Spa2ShopManageView() {
       {/* Full page preview */}
       {tab === 'preview' && (
         <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
-          <Spa2ShopPageView banner={banner} categories={categories} products={products} />
+          <Spa2EventsPageView banner={banner} categories={categories} events={events} />
         </Box>
       )}
 
-      {/* Product add/edit dialog */}
-      <Dialog open={productDialog} onClose={() => setProductDialog(false)} maxWidth="md" fullWidth>
-        <DialogTitle>{productEditId ? t('common.edit') : t('shop.add_product_btn')}</DialogTitle>
+      {/* Event add/edit dialog */}
+      <Dialog open={eventDialog} onClose={() => setEventDialog(false)} maxWidth="lg" fullWidth>
+        <DialogTitle>{eventEditId ? t('common.edit') : t('events.add_event_btn')}</DialogTitle>
         <DialogContent>
           <Grid container spacing={3} sx={{ mt: 0.5 }}>
             <Grid xs={12} sm={7}>
               <Stack spacing={2}>
                 <Spa2SimpleImageField
-                  label={t('shop.form_product_image')}
-                  value={productForm.image}
-                  onChange={(url) => setProductForm((p) => ({ ...p, image: url }))}
+                  label={t('events.form_event_image')}
+                  value={eventForm.image}
+                  onChange={(url) => setEventForm((p) => ({ ...p, image: url }))}
                   height={140}
                 />
                 <TextField
-                  label={t('shop.form_product_name')}
+                  label={t('events.form_event_title')}
                   fullWidth
                   size="small"
-                  value={productForm.name}
-                  onChange={(e) => setProductForm((p) => ({ ...p, name: e.target.value }))}
+                  value={eventForm.title}
+                  onChange={(e) => setEventForm((p) => ({ ...p, title: e.target.value }))}
                 />
                 <TextField
                   select
-                  label={t('shop.form_product_category')}
+                  label={t('events.form_event_category')}
                   fullWidth
                   size="small"
-                  value={productForm.category}
-                  onChange={(e) => setProductForm((p) => ({ ...p, category: e.target.value }))}
+                  value={eventForm.category}
+                  onChange={(e) => setEventForm((p) => ({ ...p, category: e.target.value }))}
                 >
                   {realCategories.map((c) => (
                     <MenuItem key={c.value} value={c.value}>
@@ -611,44 +664,56 @@ export function Spa2ShopManageView() {
                 </TextField>
                 <Stack direction="row" spacing={2}>
                   <TextField
+                    label={t('events.form_event_date')}
+                    size="small"
+                    value={eventForm.date}
+                    onChange={(e) => setEventForm((p) => ({ ...p, date: e.target.value }))}
+                    sx={{ flex: 1 }}
+                    helperText="20/07/2026"
+                  />
+                  <TextField
+                    label={t('events.form_event_time')}
+                    size="small"
+                    value={eventForm.time}
+                    onChange={(e) => setEventForm((p) => ({ ...p, time: e.target.value }))}
+                    sx={{ flex: 1 }}
+                    helperText="9:00 – 12:00"
+                  />
+                </Stack>
+                <TextField
+                  label={t('events.form_event_location')}
+                  fullWidth
+                  size="small"
+                  value={eventForm.location}
+                  onChange={(e) => setEventForm((p) => ({ ...p, location: e.target.value }))}
+                />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    label={t('events.form_event_seats')}
+                    type="number"
+                    size="small"
+                    value={eventForm.seats}
+                    onChange={(e) => setEventForm((p) => ({ ...p, seats: Number(e.target.value) }))}
+                    sx={{ flex: 1 }}
+                  />
+                  <TextField
+                    label={t('events.form_event_booked')}
+                    type="number"
+                    size="small"
+                    value={eventForm.booked}
+                    onChange={(e) =>
+                      setEventForm((p) => ({ ...p, booked: Number(e.target.value) }))
+                    }
+                    sx={{ flex: 1 }}
+                  />
+                  <TextField
                     label={t('common.price_vnd')}
                     type="number"
                     size="small"
-                    value={productForm.price}
-                    onChange={(e) =>
-                      setProductForm((p) => ({ ...p, price: Number(e.target.value) }))
-                    }
+                    value={eventForm.price}
+                    onChange={(e) => setEventForm((p) => ({ ...p, price: Number(e.target.value) }))}
                     sx={{ flex: 1 }}
-                  />
-                  <TextField
-                    label={t('shop.form_product_tag')}
-                    size="small"
-                    value={productForm.tag}
-                    onChange={(e) => setProductForm((p) => ({ ...p, tag: e.target.value }))}
-                    sx={{ flex: 1 }}
-                  />
-                </Stack>
-                <Stack direction="row" spacing={2}>
-                  <TextField
-                    label={t('shop.form_product_rating')}
-                    type="number"
-                    size="small"
-                    inputProps={{ step: 0.1, min: 0, max: 5 }}
-                    value={productForm.rating}
-                    onChange={(e) =>
-                      setProductForm((p) => ({ ...p, rating: Number(e.target.value) }))
-                    }
-                    sx={{ flex: 1 }}
-                  />
-                  <TextField
-                    label={t('shop.form_product_reviews')}
-                    type="number"
-                    size="small"
-                    value={productForm.reviews}
-                    onChange={(e) =>
-                      setProductForm((p) => ({ ...p, reviews: Number(e.target.value) }))
-                    }
-                    sx={{ flex: 1 }}
+                    helperText={t('events.form_event_price_help')}
                   />
                 </Stack>
               </Stack>
@@ -658,30 +723,30 @@ export function Spa2ShopManageView() {
                 {t('common.preview_btn')}
               </Typography>
               <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
-                <ProductPreviewCard {...productForm} />
+                <EventPreviewCard {...eventForm} />
               </Box>
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setProductDialog(false)}>{t('common.cancel')}</Button>
+          <Button onClick={() => setEventDialog(false)}>{t('common.cancel')}</Button>
           <Button
             variant="contained"
-            onClick={submitProduct}
+            onClick={submitEvent}
             sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
           >
-            {productEditId ? t('common.update') : t('common.create')}
+            {eventEditId ? t('common.update') : t('common.create')}
           </Button>
         </DialogActions>
       </Dialog>
 
       <ConfirmDialog
-        open={!!productDeleteId}
-        onClose={() => setProductDeleteId(null)}
+        open={!!eventDeleteId}
+        onClose={() => setEventDeleteId(null)}
         title={t('common.delete')}
         content={t('common.confirm_delete')}
         action={
-          <Button variant="contained" color="error" onClick={confirmDeleteProduct}>
+          <Button variant="contained" color="error" onClick={confirmDeleteEvent}>
             {t('common.yes_delete')}
           </Button>
         }

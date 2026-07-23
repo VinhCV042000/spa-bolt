@@ -1,4 +1,4 @@
-import type { Spa2AdjustableImage, Spa2Appointment } from 'src/_mock/_spa2';
+import type { Spa2Appointment, Spa2AdjustableImage } from 'src/_mock/_spa2';
 
 import { useState } from 'react';
 
@@ -19,18 +19,19 @@ import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 
-import { useTranslate } from 'src/locales';
 import { uuidv4 } from 'src/utils/uuidv4';
+
+import { useTranslate } from 'src/locales';
 import { spa2AccountBanner, SPA2_ACCOUNT_CONTENT } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
 
+import { SPA2_INK, SPA2_TEAL, SPA2_CREAM, SPA2_TEAL_DARK } from 'src/sections/spa2/spa2-pages-data';
 import {
   Spa2PageHero,
   Spa2SoftCard,
   Spa2SectionTitle,
 } from 'src/sections/spa2/view/spa2-content-pages';
-import { SPA2_INK, SPA2_TEAL, SPA2_CREAM, SPA2_TEAL_DARK } from 'src/sections/spa2/spa2-pages-data';
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';

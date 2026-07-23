@@ -40,11 +40,11 @@ import {
   spa2GiftCardReasons,
   spa2GiftCardDesigns,
   SPA2_GIFT_CARD_ORDERS,
+  type Spa2GiftCardOrder,
+  type Spa2GiftCardDesign,
+  type Spa2GiftCardReason,
   type Spa2AdjustableImage,
   spa2GiftCardDenominations,
-  type Spa2GiftCardDesign,
-  type Spa2GiftCardOrder,
-  type Spa2GiftCardReason,
   type Spa2GiftCardOrderStatus,
 } from 'src/_mock/_spa2';
 
@@ -948,7 +948,7 @@ export function Spa2GiftCardManageView() {
       )}
 
       {/* Design add/edit dialog */}
-      <Dialog open={designDialog} onClose={() => setDesignDialog(false)} maxWidth="sm" fullWidth>
+      <Dialog open={designDialog} onClose={() => setDesignDialog(false)} maxWidth="lg" fullWidth>
         <DialogTitle>{designEditId ? t('common.edit') : t('gift_card.add_design_btn')}</DialogTitle>
         <DialogContent>
           <Grid container spacing={3} sx={{ mt: 0.5 }}>
@@ -1027,7 +1027,7 @@ export function Spa2GiftCardManageView() {
       />
 
       {/* Reason add/edit dialog */}
-      <Dialog open={reasonDialog} onClose={() => setReasonDialog(false)} maxWidth="sm" fullWidth>
+      <Dialog open={reasonDialog} onClose={() => setReasonDialog(false)} maxWidth="lg" fullWidth>
         <DialogTitle>{reasonEditId ? t('common.edit') : t('gift_card.add_reason_btn')}</DialogTitle>
         <DialogContent>
           <Grid container spacing={3} sx={{ mt: 0.5 }}>
@@ -1098,7 +1098,7 @@ export function Spa2GiftCardManageView() {
 
       {/* Order detail dialog */}
       {orderDetail && (
-        <Dialog open={!!orderDetail} onClose={() => setOrderDetailId(null)} maxWidth="sm" fullWidth>
+        <Dialog open={!!orderDetail} onClose={() => setOrderDetailId(null)} maxWidth="md" fullWidth>
           <DialogTitle>{t('gift_card.order_detail_title')}</DialogTitle>
           <DialogContent>
             <Grid container spacing={3} sx={{ mt: 0.5 }}>

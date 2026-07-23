@@ -580,70 +580,84 @@ export function Spa2TreatmentsManageView() {
       {/* Danh sách liệu trình */}
       {tab === 'list' && (
         <Stack spacing={2.5}>
+          {/* 1. KPI tổng quan - quét nhanh các chỉ số chính */}
           <Grid container spacing={2}>
-            <Grid xs={12} md={8}>
-              <Card sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2, height: '100%' }}>
-                <Typography
-                  variant="overline"
-                  sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
-                >
-                  {t('treatments.stat_by_status')}
-                </Typography>
-                <Scrollbar sx={{ maxHeight: 120 }}>
-                  <Stack
-                    direction="row"
-                    divider={
-                      <Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />
-                    }
-                    spacing={2}
-                    sx={{ py: 1 }}
-                  >
-                    <Spa2ListAnalytic
-                      icon="solar:health-bold-duotone"
-                      title={t('common.all')}
-                      total={stats.total}
-                      percent={100}
-                      active={statusFilter === 'all'}
-                      onClick={() => setStatusFilter('all')}
-                    />
-                    <Spa2ListAnalytic
-                      icon="solar:eye-bold-duotone"
-                      title={t('common.active')}
-                      total={stats.active}
-                      percent={stats.total ? (stats.active / stats.total) * 100 : 0}
-                      color="success"
-                      active={statusFilter === 'active'}
-                      onClick={() => setStatusFilter('active')}
-                    />
-                    <Spa2ListAnalytic
-                      icon="solar:eye-closed-bold-duotone"
-                      title={t('common.inactive')}
-                      total={stats.inactive}
-                      percent={stats.total ? (stats.inactive / stats.total) * 100 : 0}
-                      color="warning"
-                      active={statusFilter === 'inactive'}
-                      onClick={() => setStatusFilter('inactive')}
-                    />
-                  </Stack>
-                </Scrollbar>
-              </Card>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:health-bold-duotone"
+                label={t('treatments.stat_total')}
+                value={stats.total}
+              />
             </Grid>
-            <Grid xs={6} md={2}>
+            <Grid xs={6} md={3}>
               <StatCard
                 icon="solar:tag-price-bold"
                 label={t('treatments.stat_avg_price')}
                 value={formatVNDShort(stats.avgPrice)}
               />
             </Grid>
-            <Grid xs={6} md={2}>
+            <Grid xs={6} md={3}>
               <StatCard
                 icon="solar:calendar-bold"
                 label={t('treatments.stat_avg_sessions')}
                 value={`${stats.avgSessions} buổi`}
               />
             </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:banknote-bold"
+                label={t('treatments.stat_price_range')}
+                value={`${formatVNDShort(stats.minPrice)} - ${formatVNDShort(stats.maxPrice)}`}
+              />
+            </Grid>
           </Grid>
 
+          {/* 2. Phân bổ theo trạng thái - bộ lọc chi tiết, đặt riêng để dễ thao tác */}
+          <Card sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
+            <Typography
+              variant="overline"
+              sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
+            >
+              {t('treatments.stat_by_status')}
+            </Typography>
+            <Scrollbar sx={{ maxHeight: 120 }}>
+              <Stack
+                direction="row"
+                divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+                spacing={2}
+                sx={{ py: 1 }}
+              >
+                <Spa2ListAnalytic
+                  icon="solar:health-bold-duotone"
+                  title={t('common.all')}
+                  total={stats.total}
+                  percent={100}
+                  active={statusFilter === 'all'}
+                  onClick={() => setStatusFilter('all')}
+                />
+                <Spa2ListAnalytic
+                  icon="solar:eye-bold-duotone"
+                  title={t('common.active')}
+                  total={stats.active}
+                  percent={stats.total ? (stats.active / stats.total) * 100 : 0}
+                  color="success"
+                  active={statusFilter === 'active'}
+                  onClick={() => setStatusFilter('active')}
+                />
+                <Spa2ListAnalytic
+                  icon="solar:eye-closed-bold-duotone"
+                  title={t('common.inactive')}
+                  total={stats.inactive}
+                  percent={stats.total ? (stats.inactive / stats.total) * 100 : 0}
+                  color="warning"
+                  active={statusFilter === 'inactive'}
+                  onClick={() => setStatusFilter('inactive')}
+                />
+              </Stack>
+            </Scrollbar>
+          </Card>
+
+          {/* 3. Danh sách + tìm kiếm + thêm mới */}
           <Card>
             <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 2 }}>
               <TextField
@@ -779,7 +793,7 @@ export function Spa2TreatmentsManageView() {
               >
                 {t('common.drag_hint')}
               </Typography>
-                <Spa2SortableGrid items={process} onReorder={reorderProcess}>
+              <Spa2SortableGrid items={process} onReorder={reorderProcess}>
                 {process.map((step: ProcessStep, idx: number) => (
                   <Spa2SortableItem key={step.id} id={step.id}>
                     {(sortable) => (
@@ -837,7 +851,7 @@ export function Spa2TreatmentsManageView() {
                     )}
                   </Spa2SortableItem>
                 ))}
-                </Spa2SortableGrid>
+              </Spa2SortableGrid>
             </SectionCard>
           </Grid>
           <Grid xs={12} md={6}>

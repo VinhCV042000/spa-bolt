@@ -28,16 +28,9 @@ import InputAdornment from '@mui/material/InputAdornment';
 import TableContainer from '@mui/material/TableContainer';
 
 import {
-  SPA2_INK,
-  SPA2_TEAL,
-  SPA2_CREAM,
-  SPA2_TEAL_DARK,
-  SPA2_CREAM_DARK,
-} from 'src/sections/spa2/spa2-pages-data';
-import {
   SPA2_CONTENT_PAGES,
-  spa2ContentPublicPath,
   type Spa2ContentFaq,
+  spa2ContentPublicPath,
   type Spa2ContentStatus,
   type Spa2ContentPackage,
   type Spa2ContentService,
@@ -48,6 +41,14 @@ import {
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
+
+import {
+  SPA2_INK,
+  SPA2_TEAL,
+  SPA2_CREAM,
+  SPA2_TEAL_DARK,
+  SPA2_CREAM_DARK,
+} from 'src/sections/spa2/spa2-pages-data';
 
 import { Spa2ManageShell } from './spa2-manage-shell';
 

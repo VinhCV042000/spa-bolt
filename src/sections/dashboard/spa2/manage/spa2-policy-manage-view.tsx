@@ -4,8 +4,8 @@ import type {
   Spa2PolicyAlert,
   Spa2PolicyCertChip,
   Spa2PolicyTableRow,
-  Spa2PolicyArticleContent,
   Spa2PolicyTimelineStep,
+  Spa2PolicyArticleContent,
 } from 'src/_mock/_spa2';
 
 import { useState, useCallback } from 'react';
@@ -48,20 +48,20 @@ import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
 import {
-  Spa2SoftCard,
-  Spa2PolicyListItem,
-  Spa2PolicyCardBlock,
-  Spa2PolicyPageView,
-  Spa2PolicySectionHeader,
-  Spa2PolicyTimelineStepBlock,
-} from 'src/sections/spa2/view/spa2-content-pages';
-import {
   SPA2_INK,
   SPA2_TEAL,
   SPA2_CREAM,
   SPA2_TEAL_DARK,
   SPA2_CREAM_DARK,
 } from 'src/sections/spa2/spa2-pages-data';
+import {
+  Spa2SoftCard,
+  Spa2PolicyListItem,
+  Spa2PolicyPageView,
+  Spa2PolicyCardBlock,
+  Spa2PolicySectionHeader,
+  Spa2PolicyTimelineStepBlock,
+} from 'src/sections/spa2/view/spa2-content-pages';
 
 import { Spa2ManageShell } from './spa2-manage-shell';
 import { Spa2ListAnalytic } from './spa2-list-analytic';
@@ -756,54 +756,30 @@ export function Spa2PolicyManageView() {
       {/* Banner - eyebrow/title/subtitle/version + highlight cards + nav order */}
       {tab === 'banner' && (
         <Stack spacing={2.5}>
+          {/* 1. KPI tổng quan */}
           <Grid container spacing={2}>
-            <Grid xs={12} md={8}>
-              <Card sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2, height: '100%' }}>
-                <Typography
-                  variant="overline"
-                  sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
-                >
-                  {t('policy.stat_by_article')}
-                </Typography>
-                <Scrollbar sx={{ maxHeight: 120 }}>
-                  <Stack
-                    direction="row"
-                    divider={
-                      <Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />
-                    }
-                    spacing={2}
-                    sx={{ py: 1 }}
-                  >
-                    {byArticle.map((a) => (
-                      <Spa2ListAnalytic
-                        key={a.id}
-                        icon={a.icon}
-                        title={a.label}
-                        total={a.count}
-                        percent={totalItems ? (a.count / totalItems) * 100 : 0}
-                        active={tab === a.id}
-                        onClick={() => setTab(a.id)}
-                        secondaryLine={
-                          a.hasAlert ? (
-                            <Box component="span" sx={{ fontSize: 12, color: 'warning.main' }}>
-                              ⚠ {t('policy.stat_with_alert')}
-                            </Box>
-                          ) : undefined
-                        }
-                      />
-                    ))}
-                  </Stack>
-                </Scrollbar>
-              </Card>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:document-text-bold"
+                label={t('policy.stat_total_articles')}
+                value={articles.length}
+              />
             </Grid>
-            <Grid xs={6} md={2}>
+            <Grid xs={6} md={3}>
               <StatCard
                 icon="solar:widget-5-bold"
                 label={t('policy.stat_total_items')}
                 value={totalItems}
               />
             </Grid>
-            <Grid xs={6} md={2}>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:danger-triangle-bold"
+                label={t('policy.stat_with_alert')}
+                value={withAlert}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
               <StatCard
                 icon="solar:clock-circle-bold"
                 label={t('policy.stat_last_updated')}
@@ -811,6 +787,43 @@ export function Spa2PolicyManageView() {
               />
             </Grid>
           </Grid>
+
+          {/* 2. Phân bổ theo điều khoản - bộ điều hướng nhanh, full width để dễ xem/thao tác */}
+          <Card sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
+            <Typography
+              variant="overline"
+              sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
+            >
+              {t('policy.stat_by_article')}
+            </Typography>
+            <Scrollbar sx={{ maxHeight: 120 }}>
+              <Stack
+                direction="row"
+                divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+                spacing={2}
+                sx={{ py: 1 }}
+              >
+                {byArticle.map((a) => (
+                  <Spa2ListAnalytic
+                    key={a.id}
+                    icon={a.icon}
+                    title={a.label}
+                    total={a.count}
+                    percent={totalItems ? (a.count / totalItems) * 100 : 0}
+                    active={tab === a.id}
+                    onClick={() => setTab(a.id)}
+                    secondaryLine={
+                      a.hasAlert ? (
+                        <Box component="span" sx={{ fontSize: 12, color: 'warning.main' }}>
+                          ⚠ {t('policy.stat_with_alert')}
+                        </Box>
+                      ) : undefined
+                    }
+                  />
+                ))}
+              </Stack>
+            </Scrollbar>
+          </Card>
 
           <Grid container spacing={3}>
             <Grid xs={12} md={6}>
@@ -1469,7 +1482,7 @@ export function Spa2PolicyManageView() {
       )}
 
       {/* Edit dialog for nav label/icon/article number - left: form, right: live preview */}
-      <Dialog open={!!editId} onClose={() => setEditId(null)} maxWidth="sm" fullWidth>
+      <Dialog open={!!editId} onClose={() => setEditId(null)} maxWidth="md" fullWidth>
         <DialogTitle>{t('policy.form_edit')}</DialogTitle>
         <DialogContent dividers>
           <Grid container spacing={3} sx={{ pt: 1 }}>

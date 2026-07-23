@@ -26,6 +26,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import InputAdornment from '@mui/material/InputAdornment';
+import LinearProgress from '@mui/material/LinearProgress';
 import TableContainer from '@mui/material/TableContainer';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -234,11 +235,17 @@ export function Spa2FaqManageView() {
       .filter((c) => c.value !== 'all')
       .map((c) => {
         const inCat = items.filter((f) => f.cat === c.value);
+        const inCatPublished = inCat.filter((f) => f.published).length;
+        const likes = inCat.reduce((sum, f) => sum + f.likes, 0);
+        const dislikes = inCat.reduce((sum, f) => sum + f.dislikes, 0);
         return {
           ...c,
           count: inCat.length,
-          likes: inCat.reduce((sum, f) => sum + f.likes, 0),
-          dislikes: inCat.reduce((sum, f) => sum + f.dislikes, 0),
+          published: inCatPublished,
+          hidden: inCat.length - inCatPublished,
+          likes,
+          dislikes,
+          satisfaction: likes + dislikes ? Math.round((likes / (likes + dislikes)) * 100) : null,
         };
       });
     return {
@@ -247,6 +254,10 @@ export function Spa2FaqManageView() {
       hidden: items.length - published,
       totalLikes,
       totalDislikes,
+      satisfaction:
+        totalLikes + totalDislikes
+          ? Math.round((totalLikes / (totalLikes + totalDislikes)) * 100)
+          : null,
       byCategory,
     };
   }, [items]);
@@ -717,75 +728,150 @@ export function Spa2FaqManageView() {
         </Card>
       )}
 
-      {/* Thống kê — breakdown dạng Spa2ListAnalytic, giống tab "combo packages" của Offers */}
+      {/* Thống kê — bố cục 3 tầng: KPI tổng quan → phân bổ theo danh mục (lọc nhanh)
+          → bảng chi tiết từng danh mục, giúp dễ quét số liệu và dễ thao tác lọc */}
       {tab === 'stats' && (
         <Stack spacing={2.5}>
+          {/* 1. KPI tổng quan */}
           <Grid container spacing={2}>
-            <Grid xs={12} md={8}>
-              <Card sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2, height: '100%' }}>
-                <Typography
-                  variant="overline"
-                  sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
-                >
-                  {t('faq.stat_by_category')}
-                </Typography>
-                <Scrollbar sx={{ maxHeight: 120 }}>
-                  <Stack
-                    direction="row"
-                    divider={
-                      <Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />
-                    }
-                    spacing={2}
-                    sx={{ py: 1 }}
-                  >
-                    <Spa2ListAnalytic
-                      icon="solar:question-circle-bold-duotone"
-                      title={t('common.all')}
-                      total={stats.total}
-                      percent={100}
-                      active={categoryFilter === 'all'}
-                      onClick={() => setCategoryFilter('all')}
-                    />
-                    {stats.byCategory.map((c) => (
-                      <Spa2ListAnalytic
-                        key={c.value}
-                        icon={c.icon}
-                        title={c.label}
-                        total={c.count}
-                        percent={stats.total ? (c.count / stats.total) * 100 : 0}
-                        active={categoryFilter === c.value}
-                        onClick={() => setCategoryFilter(c.value)}
-                        secondaryLine={
-                          <Stack direction="row" spacing={1}>
-                            <Box component="span" sx={{ fontSize: 12, color: 'success.main' }}>
-                              👍 {c.likes}
-                            </Box>
-                            <Box component="span" sx={{ fontSize: 12, color: 'error.main' }}>
-                              👎 {c.dislikes}
-                            </Box>
-                          </Stack>
-                        }
-                      />
-                    ))}
-                  </Stack>
-                </Scrollbar>
-              </Card>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:question-circle-bold"
+                label={t('faq.stat_total')}
+                value={stats.total}
+              />
             </Grid>
-            <Grid xs={6} md={2}>
+            <Grid xs={6} md={3}>
               <StatCard
                 icon="solar:eye-bold"
                 label={t('faq.stat_visibility')}
                 value={`${stats.published}/${stats.hidden}`}
               />
             </Grid>
-            <Grid xs={6} md={2}>
+            <Grid xs={6} md={3}>
               <StatCard
                 icon="solar:like-bold"
                 label={t('faq.stat_likes')}
                 value={`${stats.totalLikes} / ${stats.totalDislikes}`}
               />
             </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:medal-star-bold"
+                label={t('faq.stat_satisfaction')}
+                value={stats.satisfaction === null ? '—' : `${stats.satisfaction}%`}
+              />
+            </Grid>
           </Grid>
+
+          {/* 2. Phân bổ theo danh mục - bộ lọc nhanh, full width để dễ xem/thao tác */}
+          <Card sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
+            <Typography
+              variant="overline"
+              sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
+            >
+              {t('faq.stat_by_category')}
+            </Typography>
+            <Scrollbar sx={{ maxHeight: 120 }}>
+              <Stack
+                direction="row"
+                divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+                spacing={2}
+                sx={{ py: 1 }}
+              >
+                <Spa2ListAnalytic
+                  icon="solar:question-circle-bold-duotone"
+                  title={t('common.all')}
+                  total={stats.total}
+                  percent={100}
+                  active={categoryFilter === 'all'}
+                  onClick={() => setCategoryFilter('all')}
+                />
+                {stats.byCategory.map((c) => (
+                  <Spa2ListAnalytic
+                    key={c.value}
+                    icon={c.icon}
+                    title={c.label}
+                    total={c.count}
+                    percent={stats.total ? (c.count / stats.total) * 100 : 0}
+                    active={categoryFilter === c.value}
+                    onClick={() => setCategoryFilter(c.value)}
+                  />
+                ))}
+              </Stack>
+            </Scrollbar>
+          </Card>
+
+          {/* 3. Bảng chi tiết theo danh mục - dễ xem từng chỉ số + tỷ lệ hài lòng */}
+          <Card>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>{t('faq.col_category')}</TableCell>
+                    <TableCell align="center">{t('faq.stat_col_count')}</TableCell>
+                    <TableCell align="center">{t('faq.stat_visibility')}</TableCell>
+                    <TableCell align="center">{t('faq.stat_likes')}</TableCell>
+                    <TableCell sx={{ minWidth: 180 }}>{t('faq.stat_satisfaction')}</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {stats.byCategory.map((c) => (
+                    <TableRow key={c.value} hover>
+                      <TableCell>
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          <Iconify icon={c.icon} width={18} sx={{ color: SPA2_TEAL }} />
+                          <Typography variant="body2">{c.label}</Typography>
+                        </Stack>
+                      </TableCell>
+                      <TableCell align="center">{c.count}</TableCell>
+                      <TableCell align="center">
+                        <Chip
+                          size="small"
+                          label={`${c.published}/${c.hidden}`}
+                          sx={{ bgcolor: SPA2_CREAM }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <Stack direction="row" spacing={1} justifyContent="center">
+                          <Box component="span" sx={{ fontSize: 13, color: 'success.main' }}>
+                            👍 {c.likes}
+                          </Box>
+                          <Box component="span" sx={{ fontSize: 13, color: 'error.main' }}>
+                            👎 {c.dislikes}
+                          </Box>
+                        </Stack>
+                      </TableCell>
+                      <TableCell>
+                        {c.satisfaction === null ? (
+                          <Typography variant="caption" color="text.disabled">
+                            —
+                          </Typography>
+                        ) : (
+                          <Stack direction="row" spacing={1.5} alignItems="center">
+                            <LinearProgress
+                              variant="determinate"
+                              value={c.satisfaction}
+                              sx={{
+                                flex: 1,
+                                height: 6,
+                                borderRadius: 3,
+                                bgcolor: SPA2_CREAM_DARK,
+                                '& .MuiLinearProgress-bar': { bgcolor: SPA2_TEAL },
+                              }}
+                            />
+                            <Typography variant="caption" sx={{ minWidth: 34, fontWeight: 600 }}>
+                              {c.satisfaction}%
+                            </Typography>
+                          </Stack>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Card>
         </Stack>
       )}
 
@@ -798,7 +884,7 @@ export function Spa2FaqManageView() {
       )}
 
       {/* Create / Edit dialog - left: form, right: live preview */}
-      <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="md" fullWidth>
+      <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="lg" fullWidth>
         <DialogTitle>{editId !== null ? t('faq.form_edit') : t('faq.form_create')}</DialogTitle>
         <DialogContent dividers>
           <Grid container spacing={3} sx={{ pt: 1 }}>

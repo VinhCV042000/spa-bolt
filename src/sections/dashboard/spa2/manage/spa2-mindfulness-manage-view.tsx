@@ -8,7 +8,7 @@ import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Tabs from '@mui/material/Tabs';
 import Stack from '@mui/material/Stack';
-import Switch from '@mui/material/Switch';
+import Slider from '@mui/material/Slider';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
@@ -20,7 +20,6 @@ import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { paths } from 'src/routes/paths';
 
@@ -30,25 +29,26 @@ import { fCurrency } from 'src/utils/format-number';
 import { useTranslate } from 'src/locales';
 import { bgBlur, varAlpha } from 'src/theme/styles';
 import {
-  spa2CorporatePlans,
-  spa2CorporateBanner,
-  spa2CorporateBenefits,
-  type Spa2CorporatePlan,
+  spa2MindfulnessBanner,
+  spa2MindfulnessBenefits,
+  spa2MindfulnessPrograms,
   type Spa2AdjustableImage,
-  type Spa2CorporateBenefit,
-  spa2CorporateServiceChannels,
-  type Spa2CorporateServiceChannel,
+  spa2MindfulnessChallenge,
+  type Spa2MindfulnessBanner,
+  type Spa2MindfulnessBenefit,
+  type Spa2MindfulnessProgram,
+  type Spa2MindfulnessChallenge,
 } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
-import { Spa2SoftCard } from 'src/sections/spa2/view/spa2-content-pages';
 import {
-  Spa2ContentPageHero,
-  Spa2CorporatePageView,
-} from 'src/sections/spa2/view/spa2-content-pages2';
+  Spa2ContentPageHero3,
+  Spa2MindfulnessPageView,
+} from 'src/sections/spa2/view/spa2-content-pages3';
 import {
+  SPA2_INK,
   SPA2_TEAL,
   SPA2_CREAM,
   SPA2_TEAL_DARK,
@@ -57,30 +57,32 @@ import {
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2SimpleImageField } from './spa2-simple-image-field';
 
 // -----------------------------------------------------------------------------
-// Manages every block src/sections/spa2/view/spa2-content-pages2.tsx's
-// Spa2CorporatePageView renders on the public /spa2/corporate page: the page
-// banner, the "why invest" benefits, the pricing plans and the per-channel
-// service checklist (office/spa/online) - read from and written back in the
+// Manages every block src/sections/spa2/view/spa2-content-pages3.tsx's
+// Spa2MindfulnessPageView renders on the public /spa2/mindfulness page: the
+// page banner, the science-of-mindfulness benefit grid, the weekly class
+// catalog and the 7-day challenge card - read from and written back in the
 // same shape as src/_mock/_spa2, the single source of truth shared with the
-// public view. The "banner" tab reuses Spa2ContentPageHero and the "preview"
-// tab reuses Spa2CorporatePageView itself, fed with the in-progress edited
-// state.
+// public view. The "banner" tab reuses Spa2ContentPageHero3 and the
+// "preview" tab reuses Spa2MindfulnessPageView itself, fed with the
+// in-progress edited state.
 // -----------------------------------------------------------------------------
 
 const withId = <T extends object>(item: T): T & { id: string } => ({ id: uuidv4(), ...item });
 
 const formatVND = (n: number) => `${fCurrency(n)} VND`;
 
-const EMPTY_BENEFIT_FORM = { icon: 'solar:health-bold-duotone', title: '', desc: '' };
-const EMPTY_PLAN_FORM = {
+const EMPTY_BENEFIT_FORM = { icon: 'solar:brain-bold-duotone', title: '', desc: '' };
+const EMPTY_PROGRAM_FORM = {
   name: '',
-  members: '',
+  duration: '',
+  schedule: '',
+  instructor: '',
+  level: 'Mọi cấp độ',
   price: 0,
-  period: 'tháng',
-  hot: false,
-  perks: '',
+  image: '',
 };
 
 function SectionCard({
@@ -128,138 +130,176 @@ function PreviewFrame({ children }: { children: ReactNode }) {
   );
 }
 
+// Mirrors a single benefit SoftCard on the public page.
 function BenefitPreviewCard({ icon, title, desc }: { icon: string; title: string; desc: string }) {
-  return (
-    <Spa2SoftCard>
-      <Iconify
-        icon={icon || 'solar:health-bold-duotone'}
-        width={40}
-        sx={{ color: SPA2_TEAL, mb: 1.5 }}
-      />
-      <Typography sx={{ fontWeight: 600, mb: 0.75 }}>{title || 'Tiêu đề lợi ích'}</Typography>
-      <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
-        {desc || 'Mô tả ngắn…'}
-      </Typography>
-    </Spa2SoftCard>
-  );
-}
-
-// Mirrors the exact pricing-tier <Card> markup rendered on the public
-// /spa2/corporate page (see the `plans.map` block in Spa2CorporatePageView,
-// src/sections/spa2/view/spa2-content-pages2.tsx) so the admin preview looks
-// identical: full-width "PHỔ BIẾN NHẤT" top bar for hot plans, member Chip,
-// baseline price row, Divider, checkmark perks and the CTA button.
-function PlanPreviewCard({
-  name,
-  members,
-  price,
-  period,
-  hot,
-  perks,
-}: {
-  name: string;
-  members: string;
-  price: number;
-  period: string;
-  hot: boolean;
-  perks: string[];
-}) {
   return (
     <Card
       sx={{
-        borderRadius: 4,
-        overflow: 'hidden',
-        border: hot ? `2px solid ${SPA2_TEAL}` : `1px solid ${SPA2_CREAM_DARK}`,
-        boxShadow: hot ? `0 16px 40px rgba(46,139,122,0.18)` : 'none',
+        p: 2.5,
+        borderRadius: 3,
+        textAlign: 'center',
+        border: `1px solid ${SPA2_CREAM_DARK}`,
+        boxShadow: 'none',
       }}
     >
-      {hot && (
-        <Box
-          sx={{
-            bgcolor: SPA2_TEAL,
-            color: 'white',
-            textAlign: 'center',
-            py: 0.75,
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: 1,
-          }}
-        >
-          PHỔ BIẾN NHẤT
-        </Box>
-      )}
-      <Box sx={{ p: 3 }}>
-        <Typography variant="h5" sx={{ mb: 0.5 }}>
-          {name || 'Tên gói'}
-        </Typography>
+      <Iconify
+        icon={icon || 'solar:brain-bold-duotone'}
+        width={40}
+        sx={{ color: SPA2_TEAL, mb: 1.5 }}
+      />
+      <Typography sx={{ fontWeight: 600, color: SPA2_INK, mb: 0.75, fontSize: 14 }}>
+        {title || 'Tiêu đề lợi ích'}
+      </Typography>
+      <Typography sx={{ fontSize: 12.5, color: 'text.secondary', lineHeight: 1.7 }}>
+        {desc || 'Mô tả ngắn…'}
+      </Typography>
+    </Card>
+  );
+}
+
+// Mirrors a single weekly-program card exactly as rendered on the public
+// page (cover image + level chip + name + schedule/instructor + price).
+function ProgramPreviewCard({
+  name,
+  duration,
+  schedule,
+  instructor,
+  level,
+  price,
+  image,
+}: Spa2MindfulnessProgram) {
+  return (
+    <Card
+      sx={{ p: 0, overflow: 'hidden', border: `1px solid ${SPA2_CREAM_DARK}`, boxShadow: 'none' }}
+    >
+      <Box
+        sx={{
+          height: 140,
+          bgcolor: SPA2_CREAM,
+          backgroundImage: image ? `url(${image})` : undefined,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          position: 'relative',
+        }}
+      >
         <Chip
-          label={members || 'Số lượng người'}
+          label={level || 'Cấp độ'}
           size="small"
-          sx={{ mb: 2, bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
+          sx={{ position: 'absolute', top: 10, right: 10, bgcolor: SPA2_INK, color: 'white' }}
         />
-        <Box sx={{ mb: 2 }}>
-          {price === 0 ? (
-            <Typography variant="h4" sx={{ color: SPA2_TEAL }}>
-              Liên hệ báo giá
+      </Box>
+      <Box sx={{ p: 2 }}>
+        <Typography sx={{ fontWeight: 600, color: SPA2_INK, mb: 1, fontSize: 14 }}>
+          {name || 'Tên chương trình'}
+        </Typography>
+        <Stack spacing={0.5} sx={{ mb: 1.5 }}>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Iconify icon="solar:clock-circle-bold" width={13} sx={{ color: SPA2_TEAL }} />
+            <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>
+              {duration || 'Thời lượng'} · {schedule || 'Lịch học'}
             </Typography>
-          ) : (
-            <Stack direction="row" alignItems="baseline" spacing={0.5}>
-              <Typography variant="h4" sx={{ color: SPA2_TEAL }}>
-                {formatVND(price)}
-              </Typography>
-              <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>/{period}</Typography>
-            </Stack>
-          )}
-        </Box>
-        <Divider sx={{ mb: 2 }} />
-        <Stack spacing={1.25} sx={{ mb: 3 }}>
-          {perks.map((p) => (
-            <Stack key={p} direction="row" spacing={1.5} alignItems="flex-start">
-              <Iconify
-                icon="solar:check-circle-bold"
-                width={16}
-                sx={{ color: SPA2_TEAL, flexShrink: 0, mt: '3px' }}
-              />
-              <Typography sx={{ fontSize: 13.5, color: 'text.secondary', lineHeight: 1.7 }}>
-                {p}
-              </Typography>
-            </Stack>
-          ))}
+          </Stack>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Iconify icon="solar:user-bold" width={13} sx={{ color: SPA2_TEAL }} />
+            <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>
+              {instructor || 'Giảng viên'}
+            </Typography>
+          </Stack>
+        </Stack>
+        <Typography sx={{ fontWeight: 700, color: SPA2_TEAL, fontSize: 14 }}>
+          {price ? formatVND(price) : 'Miễn phí'}
+        </Typography>
+      </Box>
+    </Card>
+  );
+}
+
+// Mirrors the "Thử thách 7 ngày chánh niệm" card exactly as rendered on the
+// public page (teal header + numbered day checklist + CTA button).
+function ChallengePreviewCard({
+  title,
+  subtitle,
+  buttonLabel,
+  days,
+  completedDays,
+}: Spa2MindfulnessChallenge) {
+  return (
+    <Card sx={{ borderRadius: 3, overflow: 'hidden', border: `2px solid ${SPA2_TEAL}` }}>
+      <Box sx={{ bgcolor: SPA2_TEAL, p: 2.5, color: 'white', textAlign: 'center' }}>
+        <Typography sx={{ fontWeight: 700, fontSize: 16, mb: 0.5 }}>
+          {title || 'Tiêu đề thử thách'}
+        </Typography>
+        <Typography sx={{ opacity: 0.85, fontSize: 12.5 }}>{subtitle || 'Mô tả ngắn…'}</Typography>
+      </Box>
+      <Box sx={{ p: 2.5 }}>
+        <Stack spacing={1}>
+          {days.map((d, i) => {
+            const done = i < completedDays;
+            return (
+              <Stack
+                key={d}
+                direction="row"
+                spacing={1.5}
+                alignItems="center"
+                sx={{
+                  p: 1,
+                  borderRadius: 2,
+                  bgcolor: done ? SPA2_CREAM : 'transparent',
+                  border: `1px solid ${done ? SPA2_TEAL : SPA2_CREAM_DARK}`,
+                }}
+              >
+                <Box
+                  sx={{
+                    width: 22,
+                    height: 22,
+                    borderRadius: '50%',
+                    bgcolor: done ? SPA2_TEAL : SPA2_CREAM_DARK,
+                    color: done ? 'white' : 'text.secondary',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 11,
+                    fontWeight: 700,
+                    flexShrink: 0,
+                  }}
+                >
+                  {i + 1}
+                </Box>
+                <Typography sx={{ fontSize: 12.5, color: done ? SPA2_INK : 'text.secondary' }}>
+                  {d}
+                </Typography>
+              </Stack>
+            );
+          })}
         </Stack>
         <Button
           fullWidth
-          disabled
           sx={{
-            borderRadius: 999,
-            py: 1.4,
-            bgcolor: hot ? SPA2_TEAL : 'transparent',
-            color: hot ? 'white' : SPA2_TEAL_DARK,
-            border: hot ? 'none' : `1.5px solid ${SPA2_TEAL}`,
-            '&.Mui-disabled': {
-              bgcolor: hot ? SPA2_TEAL : 'transparent',
-              color: hot ? 'white' : SPA2_TEAL_DARK,
-              opacity: 0.9,
-            },
+            mt: 2,
+            borderRadius: 99,
+            bgcolor: SPA2_TEAL,
+            color: 'white',
+            '&:hover': { bgcolor: SPA2_TEAL_DARK },
           }}
         >
-          {price === 0 ? 'Liên hệ tư vấn' : 'Đăng ký dùng thử'}
+          {buttonLabel || 'Nút kêu gọi hành động'}
         </Button>
       </Box>
     </Card>
   );
 }
 
-export function Spa2CorporateManageView() {
+export function Spa2MindfulnessManageView() {
   const theme = useTheme();
   const { t } = useTranslate('spa2-manage');
 
-  const [banner, setBanner] = useState(() => ({
-    ...spa2CorporateBanner,
-    image: { ...spa2CorporateBanner.image },
+  const [banner, setBanner] = useState<Spa2MindfulnessBanner>(() => ({
+    ...spa2MindfulnessBanner,
+    image: { ...spa2MindfulnessBanner.image },
   }));
   const [dirty, setDirty] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
-  const [tab, setTab] = useState<'banner' | 'benefits' | 'plans' | 'services' | 'preview'>(
+  const [tab, setTab] = useState<'banner' | 'benefits' | 'programs' | 'challenge' | 'preview'>(
     'banner'
   );
   const markDirty = () => setDirty(true);
@@ -275,8 +315,8 @@ export function Spa2CorporateManageView() {
   };
 
   // ---- Benefits ----
-  const [benefits, setBenefits] = useState<Spa2CorporateBenefit[]>(() =>
-    spa2CorporateBenefits.map((b) => ({ ...b }))
+  const [benefits, setBenefits] = useState<Spa2MindfulnessBenefit[]>(() =>
+    spa2MindfulnessBenefits.map((b) => ({ ...b }))
   );
   const [benefitForm, setBenefitForm] = useState(EMPTY_BENEFIT_FORM);
   const [benefitDialog, setBenefitDialog] = useState(false);
@@ -288,17 +328,18 @@ export function Spa2CorporateManageView() {
     setBenefitEditId(null);
     setBenefitDialog(true);
   };
-  const openEditBenefit = (item: Spa2CorporateBenefit) => {
+  const openEditBenefit = (item: Spa2MindfulnessBenefit) => {
     setBenefitForm({ icon: item.icon, title: item.title, desc: item.desc });
     setBenefitEditId(item.id);
     setBenefitDialog(true);
   };
   const submitBenefit = () => {
-    const next = { icon: benefitForm.icon, title: benefitForm.title, desc: benefitForm.desc };
     if (benefitEditId) {
-      setBenefits((prev) => prev.map((b) => (b.id === benefitEditId ? { ...b, ...next } : b)));
+      setBenefits((prev) =>
+        prev.map((b) => (b.id === benefitEditId ? { ...b, ...benefitForm } : b))
+      );
     } else {
-      setBenefits((prev) => [...prev, withId(next)]);
+      setBenefits((prev) => [...prev, withId(benefitForm)]);
     }
     setBenefitDialog(false);
     markDirty();
@@ -309,91 +350,68 @@ export function Spa2CorporateManageView() {
     markDirty();
   };
 
-  // ---- Plans ----
-  const [plans, setPlans] = useState<Spa2CorporatePlan[]>(() =>
-    spa2CorporatePlans.map((p) => ({ ...p, perks: [...p.perks] }))
+  // ---- Programs ----
+  const [programs, setPrograms] = useState<Spa2MindfulnessProgram[]>(() =>
+    spa2MindfulnessPrograms.map((p) => ({ ...p }))
   );
-  const [planForm, setPlanForm] = useState(EMPTY_PLAN_FORM);
-  const [planDialog, setPlanDialog] = useState(false);
-  const [planEditId, setPlanEditId] = useState<string | null>(null);
-  const [planDeleteId, setPlanDeleteId] = useState<string | null>(null);
+  const [programForm, setProgramForm] = useState(EMPTY_PROGRAM_FORM);
+  const [programDialog, setProgramDialog] = useState(false);
+  const [programEditId, setProgramEditId] = useState<string | null>(null);
+  const [programDeleteId, setProgramDeleteId] = useState<string | null>(null);
 
-  const openCreatePlan = () => {
-    setPlanForm(EMPTY_PLAN_FORM);
-    setPlanEditId(null);
-    setPlanDialog(true);
+  const openCreateProgram = () => {
+    setProgramForm(EMPTY_PROGRAM_FORM);
+    setProgramEditId(null);
+    setProgramDialog(true);
   };
-  const openEditPlan = (item: Spa2CorporatePlan) => {
-    setPlanForm({
+  const openEditProgram = (item: Spa2MindfulnessProgram) => {
+    setProgramForm({
       name: item.name,
-      members: item.members,
+      duration: item.duration,
+      schedule: item.schedule,
+      instructor: item.instructor,
+      level: item.level,
       price: item.price,
-      period: item.period,
-      hot: item.hot,
-      perks: item.perks.join('\n'),
+      image: item.image,
     });
-    setPlanEditId(item.id);
-    setPlanDialog(true);
+    setProgramEditId(item.id);
+    setProgramDialog(true);
   };
-  const planPerksPreview = planForm.perks
-    .split('\n')
-    .map((p) => p.trim())
-    .filter(Boolean);
-  const submitPlan = () => {
-    const next = {
-      name: planForm.name,
-      members: planForm.members,
-      price: planForm.price,
-      period: planForm.period,
-      hot: planForm.hot,
-      perks: planPerksPreview,
-    };
-    if (planEditId) {
-      setPlans((prev) => prev.map((p) => (p.id === planEditId ? { ...p, ...next } : p)));
+  const submitProgram = () => {
+    const next = { ...programForm, price: Number(programForm.price) };
+    if (programEditId) {
+      setPrograms((prev) => prev.map((p) => (p.id === programEditId ? { ...p, ...next } : p)));
     } else {
-      setPlans((prev) => [...prev, withId(next)]);
+      setPrograms((prev) => [...prev, withId(next)]);
     }
-    setPlanDialog(false);
+    setProgramDialog(false);
     markDirty();
   };
-  const confirmDeletePlan = () => {
-    setPlans((prev) => prev.filter((p) => p.id !== planDeleteId));
-    setPlanDeleteId(null);
+  const confirmDeleteProgram = () => {
+    setPrograms((prev) => prev.filter((p) => p.id !== programDeleteId));
+    setProgramDeleteId(null);
     markDirty();
   };
 
-  // ---- Service channels ----
-  const [channels, setChannels] = useState<Spa2CorporateServiceChannel[]>(() =>
-    spa2CorporateServiceChannels.map((c) => ({ ...c, items: [...c.items] }))
-  );
-  const [channelTab, setChannelTab] = useState(0);
-
-  const updateChannelItem = (channelIdx: number, itemIdx: number, value: string) => {
-    setChannels((prev) =>
-      prev.map((c, ci) =>
-        ci === channelIdx
-          ? { ...c, items: c.items.map((it, ii) => (ii === itemIdx ? value : it)) }
-          : c
-      )
-    );
+  // ---- Challenge ----
+  const [challenge, setChallenge] = useState<Spa2MindfulnessChallenge>(() => ({
+    ...spa2MindfulnessChallenge,
+    days: [...spa2MindfulnessChallenge.days],
+  }));
+  const [daysText, setDaysText] = useState(spa2MindfulnessChallenge.days.join('\n'));
+  const updateChallenge = (key: keyof Spa2MindfulnessChallenge, value: string | number) => {
+    setChallenge((prev) => ({ ...prev, [key]: value }));
     markDirty();
   };
-  const addChannelItem = (channelIdx: number) => {
-    setChannels((prev) =>
-      prev.map((c, ci) => (ci === channelIdx ? { ...c, items: [...c.items, ''] } : c))
-    );
-    markDirty();
-  };
-  const removeChannelItem = (channelIdx: number, itemIdx: number) => {
-    setChannels((prev) =>
-      prev.map((c, ci) =>
-        ci === channelIdx ? { ...c, items: c.items.filter((_, ii) => ii !== itemIdx) } : c
-      )
-    );
-    markDirty();
-  };
-  const updateChannelLabel = (channelIdx: number, value: string) => {
-    setChannels((prev) => prev.map((c, ci) => (ci === channelIdx ? { ...c, label: value } : c)));
+  const updateChallengeDays = (text: string) => {
+    setDaysText(text);
+    setChallenge((prev) => ({
+      ...prev,
+      days: text
+        .split('\n')
+        .map((s) => s.trim())
+        .filter(Boolean),
+    }));
     markDirty();
   };
 
@@ -403,19 +421,20 @@ export function Spa2CorporateManageView() {
   };
 
   const handleReset = () => {
-    setBanner({ ...spa2CorporateBanner, image: { ...spa2CorporateBanner.image } });
-    setBenefits(spa2CorporateBenefits.map((b) => ({ ...b })));
-    setPlans(spa2CorporatePlans.map((p) => ({ ...p, perks: [...p.perks] })));
-    setChannels(spa2CorporateServiceChannels.map((c) => ({ ...c, items: [...c.items] })));
+    setBanner({ ...spa2MindfulnessBanner, image: { ...spa2MindfulnessBanner.image } });
+    setBenefits(spa2MindfulnessBenefits.map((b) => ({ ...b })));
+    setPrograms(spa2MindfulnessPrograms.map((p) => ({ ...p })));
+    setChallenge({ ...spa2MindfulnessChallenge, days: [...spa2MindfulnessChallenge.days] });
+    setDaysText(spa2MindfulnessChallenge.days.join('\n'));
     setDirty(false);
   };
 
   return (
     <Spa2ManageShell
-      title={t('corporate.page_title')}
+      title={t('mindfulness.page_title')}
       description={banner.subtitle}
-      breadcrumbLabel={t('nav.corporate')}
-      publicPath={paths.spa2.corporate}
+      breadcrumbLabel={t('nav.mindfulness')}
+      publicPath={paths.spa2.mindfulness}
       actions={
         <>
           <Button
@@ -485,26 +504,26 @@ export function Spa2CorporateManageView() {
       >
         <Tab
           value="banner"
-          label={t('corporate.banner_section')}
+          label={t('mindfulness.banner_section')}
           icon={<Iconify icon="solar:gallery-wide-bold-duotone" width={20} />}
           iconPosition="start"
         />
         <Tab
           value="benefits"
-          label={t('corporate.benefits_section')}
-          icon={<Iconify icon="solar:medal-star-bold-duotone" width={20} />}
+          label={t('mindfulness.benefits_section')}
+          icon={<Iconify icon="solar:leaf-bold-duotone" width={20} />}
           iconPosition="start"
         />
         <Tab
-          value="plans"
-          label={t('corporate.plans_section')}
-          icon={<Iconify icon="solar:bill-list-bold-duotone" width={20} />}
+          value="programs"
+          label={t('mindfulness.programs_section')}
+          icon={<Iconify icon="solar:calendar-bold-duotone" width={20} />}
           iconPosition="start"
         />
         <Tab
-          value="services"
-          label={t('corporate.channels_section')}
-          icon={<Iconify icon="solar:widget-5-bold-duotone" width={20} />}
+          value="challenge"
+          label={t('mindfulness.challenge_section')}
+          icon={<Iconify icon="solar:medal-ribbons-star-bold-duotone" width={20} />}
           iconPosition="start"
         />
         <Tab
@@ -520,26 +539,26 @@ export function Spa2CorporateManageView() {
         <Grid container spacing={3}>
           <Grid xs={12} md={6}>
             <SectionCard
-              title={t('corporate.banner_section')}
+              title={t('mindfulness.banner_section')}
               icon="solar:gallery-wide-bold-duotone"
             >
               <Stack spacing={2}>
                 <Spa2ImageField
-                  label={t('corporate.banner_image')}
+                  label={t('mindfulness.banner_image')}
                   value={banner.image}
                   onChange={updateBannerImage}
                   height={200}
-                  helperText={t('corporate.banner_image_help')}
+                  helperText={t('mindfulness.banner_image_help')}
                 />
                 <TextField
-                  label={t('corporate.banner_eyebrow')}
+                  label={t('mindfulness.banner_eyebrow')}
                   value={banner.eyebrow}
                   onChange={(e) => updateBanner('eyebrow', e.target.value)}
                   fullWidth
                   size="small"
                 />
                 <TextField
-                  label={t('corporate.banner_title')}
+                  label={t('mindfulness.banner_title')}
                   value={banner.title}
                   onChange={(e) => updateBanner('title', e.target.value)}
                   fullWidth
@@ -547,7 +566,7 @@ export function Spa2CorporateManageView() {
                   minRows={2}
                 />
                 <TextField
-                  label={t('corporate.banner_subtitle')}
+                  label={t('mindfulness.banner_subtitle')}
                   value={banner.subtitle}
                   onChange={(e) => updateBanner('subtitle', e.target.value)}
                   fullWidth
@@ -560,7 +579,7 @@ export function Spa2CorporateManageView() {
           <Grid xs={12} md={6}>
             <SectionCard title={t('common.preview_btn')} icon="solar:eye-bold-duotone">
               <PreviewFrame>
-                <Spa2ContentPageHero
+                <Spa2ContentPageHero3
                   img={banner.image.url}
                   imageStyle={banner.image}
                   eyebrow={banner.eyebrow}
@@ -578,7 +597,7 @@ export function Spa2CorporateManageView() {
         <Card sx={{ p: 3, borderRadius: 3 }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-              {t('corporate.benefits_section')}
+              {t('mindfulness.benefits_section')}
             </Typography>
             <Button
               variant="contained"
@@ -591,7 +610,7 @@ export function Spa2CorporateManageView() {
                 px: 3,
               }}
             >
-              {t('corporate.add_benefit_btn')}
+              {t('mindfulness.add_benefit_btn')}
             </Button>
           </Stack>
           <Grid container spacing={2}>
@@ -627,17 +646,17 @@ export function Spa2CorporateManageView() {
         </Card>
       )}
 
-      {/* Plans */}
-      {tab === 'plans' && (
+      {/* Programs */}
+      {tab === 'programs' && (
         <Card sx={{ p: 3, borderRadius: 3 }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-              {t('corporate.plans_section')}
+              {t('mindfulness.programs_section')}
             </Typography>
             <Button
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
-              onClick={openCreatePlan}
+              onClick={openCreateProgram}
               sx={{
                 bgcolor: SPA2_TEAL,
                 '&:hover': { bgcolor: SPA2_TEAL_DARK },
@@ -645,14 +664,14 @@ export function Spa2CorporateManageView() {
                 px: 3,
               }}
             >
-              {t('corporate.add_plan_btn')}
+              {t('mindfulness.add_program_btn')}
             </Button>
           </Stack>
           <Grid container spacing={2}>
-            {plans.map((item) => (
-              <Grid key={item.id} xs={12} md={4}>
+            {programs.map((item) => (
+              <Grid key={item.id} xs={12} sm={6} md={3}>
                 <Box sx={{ position: 'relative' }}>
-                  <PlanPreviewCard {...item} />
+                  <ProgramPreviewCard {...item} />
                   <Stack
                     direction="row"
                     spacing={0.5}
@@ -660,7 +679,7 @@ export function Spa2CorporateManageView() {
                   >
                     <IconButton
                       size="small"
-                      onClick={() => openEditPlan(item)}
+                      onClick={() => openEditProgram(item)}
                       sx={{ bgcolor: 'common.white', boxShadow: 1 }}
                     >
                       <Iconify icon="solar:pen-bold" width={14} />
@@ -668,7 +687,7 @@ export function Spa2CorporateManageView() {
                     <IconButton
                       size="small"
                       color="error"
-                      onClick={() => setPlanDeleteId(item.id)}
+                      onClick={() => setProgramDeleteId(item.id)}
                       sx={{ bgcolor: 'common.white', boxShadow: 1 }}
                     >
                       <Iconify icon="solar:trash-bin-trash-bold" width={14} />
@@ -681,102 +700,108 @@ export function Spa2CorporateManageView() {
         </Card>
       )}
 
-      {/* Service channels */}
-      {tab === 'services' && (
-        <Card sx={{ p: 3, borderRadius: 3 }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 2 }}>
-            {t('corporate.channels_section')}
-          </Typography>
-          <Tabs
-            value={channelTab}
-            onChange={(_, v) => setChannelTab(v)}
-            sx={{ mb: 2, '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL } }}
-          >
-            {channels.map((c) => (
-              <Tab key={c.id} label={c.label} sx={{ textTransform: 'none' }} />
-            ))}
-          </Tabs>
-          {channels[channelTab] && (
-            <Stack spacing={2}>
-              <TextField
-                label={t('corporate.form_channel_label')}
-                size="small"
-                value={channels[channelTab].label}
-                onChange={(e) => updateChannelLabel(channelTab, e.target.value)}
-                sx={{ maxWidth: 320 }}
-              />
-              <Stack spacing={1.5}>
-                {channels[channelTab].items.map((item, itemIdx) => (
-                  // eslint-disable-next-line react/no-array-index-key
-                  <Stack key={itemIdx} direction="row" spacing={1} alignItems="center">
-                    <Iconify icon="solar:check-circle-bold" sx={{ color: SPA2_TEAL }} />
-                    <TextField
-                      size="small"
-                      fullWidth
-                      value={item}
-                      onChange={(e) => updateChannelItem(channelTab, itemIdx, e.target.value)}
-                    />
-                    <IconButton
-                      size="small"
-                      color="error"
-                      onClick={() => removeChannelItem(channelTab, itemIdx)}
-                    >
-                      <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                    </IconButton>
-                  </Stack>
-                ))}
+      {/* Challenge */}
+      {tab === 'challenge' && (
+        <Grid container spacing={3}>
+          <Grid xs={12} md={7}>
+            <SectionCard
+              title={t('mindfulness.challenge_section')}
+              icon="solar:medal-ribbons-star-bold-duotone"
+            >
+              <Stack spacing={2}>
+                <TextField
+                  label={t('mindfulness.form_challenge_title')}
+                  value={challenge.title}
+                  onChange={(e) => updateChallenge('title', e.target.value)}
+                  fullWidth
+                  size="small"
+                />
+                <TextField
+                  label={t('mindfulness.form_challenge_subtitle')}
+                  value={challenge.subtitle}
+                  onChange={(e) => updateChallenge('subtitle', e.target.value)}
+                  fullWidth
+                  size="small"
+                />
+                <TextField
+                  label={t('mindfulness.form_challenge_button')}
+                  value={challenge.buttonLabel}
+                  onChange={(e) => updateChallenge('buttonLabel', e.target.value)}
+                  fullWidth
+                  size="small"
+                />
+                <TextField
+                  label={t('mindfulness.form_challenge_days')}
+                  value={daysText}
+                  onChange={(e) => updateChallengeDays(e.target.value)}
+                  fullWidth
+                  multiline
+                  minRows={7}
+                  helperText={t('mindfulness.form_challenge_days_help')}
+                />
+                <Box>
+                  <Typography sx={{ fontSize: 13, fontWeight: 500, mb: 1 }}>
+                    {t('mindfulness.form_challenge_completed', { count: challenge.completedDays })}
+                  </Typography>
+                  <Slider
+                    value={challenge.completedDays}
+                    min={0}
+                    max={challenge.days.length}
+                    step={1}
+                    marks
+                    onChange={(_, v) => updateChallenge('completedDays', v as number)}
+                    sx={{ color: SPA2_TEAL }}
+                  />
+                </Box>
               </Stack>
-              <Button
-                size="small"
-                startIcon={<Iconify icon="mingcute:add-line" />}
-                onClick={() => addChannelItem(channelTab)}
-                sx={{ alignSelf: 'flex-start' }}
-              >
-                {t('corporate.add_channel_item_btn')}
-              </Button>
-            </Stack>
-          )}
-        </Card>
+            </SectionCard>
+          </Grid>
+          <Grid xs={12} md={5}>
+            <SectionCard title={t('common.preview_btn')} icon="solar:eye-bold-duotone">
+              <ChallengePreviewCard {...challenge} />
+            </SectionCard>
+          </Grid>
+        </Grid>
       )}
 
       {/* Full page preview */}
       {tab === 'preview' && (
         <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
-          <Spa2CorporatePageView
+          <Spa2MindfulnessPageView
             banner={banner}
             benefits={benefits}
-            plans={plans}
-            serviceChannels={channels}
+            programs={programs}
+            challenge={challenge}
           />
         </Box>
       )}
 
-      {/* Benefit add/edit dialog */}
-      <Dialog open={benefitDialog} onClose={() => setBenefitDialog(false)} maxWidth="md" fullWidth>
+      {/* Benefit dialog */}
+      <Dialog open={benefitDialog} onClose={() => setBenefitDialog(false)} maxWidth="sm" fullWidth>
         <DialogTitle>
-          {benefitEditId ? t('common.edit') : t('corporate.add_benefit_btn')}
+          {benefitEditId ? t('common.edit') : t('mindfulness.add_benefit_btn')}
         </DialogTitle>
         <DialogContent>
           <Grid container spacing={3} sx={{ mt: 0.5 }}>
             <Grid xs={12} sm={7}>
               <Stack spacing={2}>
                 <TextField
-                  label={t('corporate.form_icon')}
+                  label={t('mindfulness.form_icon')}
                   fullWidth
                   size="small"
                   value={benefitForm.icon}
                   onChange={(e) => setBenefitForm((p) => ({ ...p, icon: e.target.value }))}
-                  helperText="solar:health-bold-duotone"
+                  helperText="solar:brain-bold-duotone"
                 />
                 <TextField
-                  label={t('corporate.form_benefit_title')}
+                  label={t('mindfulness.form_benefit_title')}
                   fullWidth
                   size="small"
                   value={benefitForm.title}
                   onChange={(e) => setBenefitForm((p) => ({ ...p, title: e.target.value }))}
                 />
                 <TextField
-                  label={t('corporate.form_benefit_desc')}
+                  label={t('mindfulness.form_benefit_desc')}
                   fullWidth
                   multiline
                   minRows={3}
@@ -789,7 +814,7 @@ export function Spa2CorporateManageView() {
               <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
                 {t('common.preview_btn')}
               </Typography>
-              <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
+              <Box sx={{ bgcolor: 'background.neutral', borderRadius: 3, p: 2 }}>
                 <BenefitPreviewCard
                   icon={benefitForm.icon}
                   title={benefitForm.title}
@@ -810,7 +835,6 @@ export function Spa2CorporateManageView() {
           </Button>
         </DialogActions>
       </Dialog>
-
       <ConfirmDialog
         open={!!benefitDeleteId}
         onClose={() => setBenefitDeleteId(null)}
@@ -823,61 +847,68 @@ export function Spa2CorporateManageView() {
         }
       />
 
-      {/* Plan add/edit dialog */}
-      <Dialog open={planDialog} onClose={() => setPlanDialog(false)} maxWidth="lg" fullWidth>
-        <DialogTitle>{planEditId ? t('common.edit') : t('corporate.add_plan_btn')}</DialogTitle>
+      {/* Program dialog */}
+      <Dialog open={programDialog} onClose={() => setProgramDialog(false)} maxWidth="md" fullWidth>
+        <DialogTitle>
+          {programEditId ? t('common.edit') : t('mindfulness.add_program_btn')}
+        </DialogTitle>
         <DialogContent>
           <Grid container spacing={3} sx={{ mt: 0.5 }}>
             <Grid xs={12} sm={7}>
               <Stack spacing={2}>
-                <TextField
-                  label={t('corporate.form_plan_name')}
-                  fullWidth
-                  size="small"
-                  value={planForm.name}
-                  onChange={(e) => setPlanForm((p) => ({ ...p, name: e.target.value }))}
+                <Spa2SimpleImageField
+                  label={t('mindfulness.form_program_image')}
+                  value={programForm.image}
+                  onChange={(v) => setProgramForm((p) => ({ ...p, image: v }))}
+                  height={140}
                 />
                 <TextField
-                  label={t('corporate.form_plan_members')}
+                  label={t('mindfulness.form_program_name')}
                   fullWidth
                   size="small"
-                  value={planForm.members}
-                  onChange={(e) => setPlanForm((p) => ({ ...p, members: e.target.value }))}
+                  value={programForm.name}
+                  onChange={(e) => setProgramForm((p) => ({ ...p, name: e.target.value }))}
                 />
                 <Stack direction="row" spacing={2}>
                   <TextField
-                    label={t('corporate.form_plan_price')}
-                    type="number"
+                    label={t('mindfulness.form_program_duration')}
+                    fullWidth
                     size="small"
-                    value={planForm.price}
-                    onChange={(e) => setPlanForm((p) => ({ ...p, price: Number(e.target.value) }))}
-                    sx={{ flex: 1 }}
+                    value={programForm.duration}
+                    onChange={(e) => setProgramForm((p) => ({ ...p, duration: e.target.value }))}
                   />
                   <TextField
-                    label={t('corporate.form_plan_period')}
+                    label={t('mindfulness.form_program_schedule')}
+                    fullWidth
                     size="small"
-                    value={planForm.period}
-                    onChange={(e) => setPlanForm((p) => ({ ...p, period: e.target.value }))}
-                    sx={{ flex: 1 }}
+                    value={programForm.schedule}
+                    onChange={(e) => setProgramForm((p) => ({ ...p, schedule: e.target.value }))}
                   />
                 </Stack>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={planForm.hot}
-                      onChange={(e) => setPlanForm((p) => ({ ...p, hot: e.target.checked }))}
-                    />
-                  }
-                  label={t('corporate.form_plan_hot')}
-                />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    label={t('mindfulness.form_program_instructor')}
+                    fullWidth
+                    size="small"
+                    value={programForm.instructor}
+                    onChange={(e) => setProgramForm((p) => ({ ...p, instructor: e.target.value }))}
+                  />
+                  <TextField
+                    label={t('mindfulness.form_program_level')}
+                    fullWidth
+                    size="small"
+                    value={programForm.level}
+                    onChange={(e) => setProgramForm((p) => ({ ...p, level: e.target.value }))}
+                  />
+                </Stack>
                 <TextField
-                  label={t('corporate.form_plan_perks')}
+                  label={t('mindfulness.form_program_price')}
+                  type="number"
                   fullWidth
-                  multiline
-                  minRows={4}
-                  value={planForm.perks}
-                  onChange={(e) => setPlanForm((p) => ({ ...p, perks: e.target.value }))}
-                  helperText={t('corporate.form_plan_perks_help')}
+                  size="small"
+                  value={programForm.price}
+                  onChange={(e) => setProgramForm((p) => ({ ...p, price: Number(e.target.value) }))}
+                  helperText={t('mindfulness.form_program_price_help')}
                 />
               </Stack>
             </Grid>
@@ -886,37 +917,38 @@ export function Spa2CorporateManageView() {
                 {t('common.preview_btn')}
               </Typography>
               <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
-                <PlanPreviewCard
-                  name={planForm.name}
-                  members={planForm.members}
-                  price={planForm.price}
-                  period={planForm.period}
-                  hot={planForm.hot}
-                  perks={planPerksPreview}
+                <ProgramPreviewCard
+                  id={programEditId ?? 'preview'}
+                  name={programForm.name}
+                  duration={programForm.duration}
+                  schedule={programForm.schedule}
+                  instructor={programForm.instructor}
+                  level={programForm.level}
+                  price={programForm.price}
+                  image={programForm.image}
                 />
               </Box>
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setPlanDialog(false)}>{t('common.cancel')}</Button>
+          <Button onClick={() => setProgramDialog(false)}>{t('common.cancel')}</Button>
           <Button
             variant="contained"
-            onClick={submitPlan}
+            onClick={submitProgram}
             sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
           >
-            {planEditId ? t('common.update') : t('common.create')}
+            {programEditId ? t('common.update') : t('common.create')}
           </Button>
         </DialogActions>
       </Dialog>
-
       <ConfirmDialog
-        open={!!planDeleteId}
-        onClose={() => setPlanDeleteId(null)}
+        open={!!programDeleteId}
+        onClose={() => setProgramDeleteId(null)}
         title={t('common.delete')}
         content={t('common.confirm_delete')}
         action={
-          <Button variant="contained" color="error" onClick={confirmDeletePlan}>
+          <Button variant="contained" color="error" onClick={confirmDeleteProgram}>
             {t('common.yes_delete')}
           </Button>
         }

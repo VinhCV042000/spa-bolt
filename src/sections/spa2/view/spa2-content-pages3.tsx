@@ -33,6 +33,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { Iconify } from 'src/components/iconify';
 
+import { spa2ImageBackgroundStyle } from '../spa2-image-utils';
 import {
   SPA2_INK,
   SPA2_TEAL,
@@ -42,7 +43,65 @@ import {
   SPA2_TEAL_DARK,
   SPA2_TEAL_LIGHT,
   SPA2_CREAM_DARK,
-  SPA2_PAGE_IMAGES,
+  spa2ReviewStats,
+  spa2HomeServices,
+  spa2EtiquetteDos,
+  spa2ReviewBanner,
+  spa2ReviewAspects,
+  spa2EtiquetteDonts,
+  spa2EtiquetteOffer,
+  spa2LoyaltyRewards,
+  spa2HomeServiceFaqs,
+  spa2SkinDiaryBanner,
+  spa2EtiquetteGuides,
+  spa2HomeServiceAreas,
+  type Spa2HomeService,
+  spa2OccasionPackages,
+  spa2SkinDiaryEntries,
+  spa2MedicalSpaBanner,
+  spa2LoyaltyEarnRules,
+  type Spa2ReviewStats,
+  spa2HomeServiceBanner,
+  spa2MindfulnessBanner,
+  spa2MedicalTreatments,
+  type Spa2ReviewAspect,
+  type Spa2ReviewBanner,
+  spa2HomeServiceProcess,
+  type Spa2EtiquetteRule,
+  spa2SpaEtiquetteBanner,
+  type Spa2LoyaltyReward,
+  type Spa2HomeServiceFaq,
+  type Spa2SkinDiaryEntry,
+  spa2MindfulnessBenefits,
+  spa2MindfulnessPrograms,
+  type Spa2EtiquetteOffer,
+  type Spa2EtiquetteGuide,
+  type Spa2AdjustableImage,
+  type Spa2HomeServiceArea,
+  type Spa2OccasionPackage,
+  type Spa2SkinDiaryBanner,
+  spa2MindfulnessChallenge,
+  spa2MedicalSpaCategories,
+  spa2LoyaltyRewardsBanner,
+  spa2LoyaltyPointsBalance,
+  type Spa2LoyaltyEarnRule,
+  spa2MedicalSpaCredentials,
+  type Spa2MedicalSpaBanner,
+  type Spa2MedicalTreatment,
+  type Spa2HomeServiceBanner,
+  spa2SpecialOccasionsBanner,
+  type Spa2MindfulnessBanner,
+  type Spa2MindfulnessBenefit,
+  type Spa2MindfulnessProgram,
+  type Spa2MedicalSpaCategory,
+  type Spa2SpaEtiquetteBanner,
+  spa2LoyaltyRewardCategories,
+  type Spa2MindfulnessChallenge,
+  type Spa2MedicalSpaCredential,
+  type Spa2LoyaltyRewardsBanner,
+  type Spa2LoyaltyRewardCategory,
+  type Spa2HomeServiceProcessStep,
+  type Spa2SpecialOccasionsBanner,
 } from '../spa2-pages-data';
 
 const formatVND = (n: number) => `${new Intl.NumberFormat('vi-VN').format(n)}đ`;
@@ -100,8 +159,14 @@ function SectionTitle({
   );
 }
 
-function PageHero({
+// Exported so the sustainability/special-occasions/home-service manage
+// views (spa2-special-occasions-manage-view.tsx, spa2-home-service-manage-
+// view.tsx) can reuse the exact same hero markup for their "banner" tab live
+// preview, fed with in-progress edited state - same convention as
+// Spa2ContentPageHero in spa2-content-pages2.tsx.
+export function Spa2ContentPageHero3({
   img,
+  imageStyle,
   eyebrow,
   title,
   subtitle,
@@ -109,6 +174,7 @@ function PageHero({
   dark,
 }: {
   img: string;
+  imageStyle?: Spa2AdjustableImage;
   eyebrow: string;
   title: string;
   subtitle: string;
@@ -130,10 +196,14 @@ function PageHero({
         sx={{
           position: 'absolute',
           inset: 0,
-          backgroundImage: `url(${img})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
           opacity: 0.08,
+          ...(imageStyle
+            ? spa2ImageBackgroundStyle(imageStyle)
+            : {
+                backgroundImage: `url(${img})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }),
         }}
       />
       <Box
@@ -280,145 +350,29 @@ function CheckItem({ children }: { children: React.ReactNode }) {
 // 1. SPECIAL OCCASIONS
 // ══════════════════════════════════════════════════════════
 
-const OCCASION_PACKAGES = [
-  {
-    id: 'bridal',
-    icon: 'solar:crown-bold-duotone',
-    label: 'Gói Cô Dâu',
-    title: 'Bridal Glow Package',
-    color: '#F48FB1',
-    accent: '#FFF0F5',
-    price: 8900000,
-    duration: '2 ngày',
-    tag: 'Phổ biến nhất',
-    image: 'https://images.unsplash.com/photo-1559599101-f09722fb4948?w=800&q=80',
-    desc: 'Trọn gói chăm sóc nhan sắc cho ngày trọng đại — từ 2 tuần trước đám cưới.',
-    includes: [
-      'Facial chuyên sâu 2 buổi',
-      'Body Scrub & Wrap toàn thân',
-      'Massage thư giãn 90 phút',
-      'Chăm sóc tay chân',
-      'Bồn tắm hoa hồng',
-      'Tư vấn skincare cá nhân',
-      'Quà tặng cô dâu',
-    ],
-  },
-  {
-    id: 'birthday',
-    icon: 'solar:gift-bold-duotone',
-    label: 'Sinh Nhật',
-    title: 'Birthday Luxe Spa',
-    color: '#EF9F27',
-    accent: '#FFF8EE',
-    price: 2490000,
-    duration: '4 giờ',
-    tag: 'Best gift',
-    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&q=80',
-    desc: 'Sinh nhật đáng nhớ nhất — tự thưởng cho bản thân hoặc tặng người thân.',
-    includes: [
-      'Massage thảo dược 60 phút',
-      'Facial Organic 60 phút',
-      'Xông hơi đá muối',
-      'Bánh sinh nhật mini',
-      'Thiệp & hoa tươi',
-      'Trà & snack cao cấp',
-    ],
-  },
-  {
-    id: 'bachelorette',
-    icon: 'solar:users-group-rounded-bold-duotone',
-    label: 'Tiệc Độc Thân',
-    title: 'Bachelorette Spa Party',
-    color: '#7F77DD',
-    accent: '#F3F2FF',
-    price: 1890000,
-    duration: '3 giờ / người',
-    tag: 'Nhóm 4–10 người',
-    image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80',
-    desc: 'Tiệc chia tay độc thân kiểu mới — thư giãn, đẹp và đáng nhớ cùng hội bạn.',
-    includes: [
-      'Facial nhóm đồng giờ',
-      'Massage tay chân',
-      'Prosecco không cồn & snack',
-      'Chụp ảnh kỷ niệm',
-      'Phòng VIP riêng cho nhóm',
-      'DIY mặt nạ thảo mộc',
-    ],
-  },
-  {
-    id: 'anniversary',
-    icon: 'solar:heart-bold-duotone',
-    label: 'Kỷ Niệm',
-    title: 'Anniversary Couple Retreat',
-    color: SPA2_TEAL,
-    accent: SPA2_CREAM,
-    price: 3990000,
-    duration: '5 giờ (2 người)',
-    tag: 'Dành cho cặp đôi',
-    image: 'https://plus.unsplash.com/premium_photo-1661574718355-82659c0c74cc?w=800&q=80',
-    desc: 'Kỷ niệm tình yêu bằng trải nghiệm spa dành riêng cho hai người.',
-    includes: [
-      'Massage cặp đôi 90 phút',
-      'Bồn tắm hoa hồng chung',
-      'Facial đồng giờ',
-      'Champagne & chocolate',
-      'Trang trí phòng VIP',
-      'Chụp ảnh kỷ niệm',
-    ],
-  },
-  {
-    id: 'corporate-gift',
-    icon: 'solar:buildings-2-bold-duotone',
-    label: 'Quà Doanh Nghiệp',
-    title: 'Corporate Gift Package',
-    color: '#455A64',
-    accent: '#F5F5F5',
-    price: 5000000,
-    duration: 'Voucher linh hoạt',
-    tag: 'Số lượng lớn',
-    image: 'https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=800&q=80',
-    desc: 'Quà tặng sếp, đối tác, nhân viên xuất sắc — sang trọng và ý nghĩa.',
-    includes: [
-      'Voucher linh hoạt theo mệnh giá',
-      'Hộp quà cao cấp có logo',
-      'Thiệp chúc mừng cá nhân hóa',
-      'Giao tận nơi miễn phí (HCM, HN)',
-      'Chiết khấu 10–25% khi mua 10+ voucher',
-    ],
-  },
-  {
-    id: 'postpartum',
-    icon: 'solar:baby-bold-duotone',
-    label: 'Sau Sinh',
-    title: 'Postpartum Recovery Spa',
-    color: '#81C784',
-    accent: '#F1F8E9',
-    price: 3290000,
-    duration: '3 buổi',
-    tag: 'An toàn sau sinh',
-    image: 'https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=800&q=80',
-    desc: 'Phục hồi sức khỏe toàn diện cho mẹ sau sinh — nhẹ nhàng và an toàn.',
-    includes: [
-      'Massage phục hồi đặc biệt',
-      'Chăm sóc vùng bụng',
-      'Aromatherapy thư giãn',
-      'Tư vấn dinh dưỡng sau sinh',
-      'Sản phẩm lành tính cho mẹ cho con bú',
-    ],
-  },
-];
+// NOTE: the special-occasions banner and package catalog are shared with the
+// dashboard "manage" view - the single source of truth lives in
+// src/_mock/_spa2 (imported above as spa2SpecialOccasionsBanner/
+// spa2OccasionPackages).
 
-export function Spa2SpecialOccasionsPageView() {
-  const [active, setActive] = useState<(typeof OCCASION_PACKAGES)[0] | null>(null);
+export function Spa2SpecialOccasionsPageView({
+  banner = spa2SpecialOccasionsBanner,
+  packages = spa2OccasionPackages,
+}: {
+  banner?: Spa2SpecialOccasionsBanner;
+  packages?: Spa2OccasionPackage[];
+} = {}) {
+  const [active, setActive] = useState<Spa2OccasionPackage | null>(null);
   const [tab, setTab] = useState(0);
 
   return (
     <Box sx={{ bgcolor: 'background.default' }}>
-      <PageHero
-        img={SPA2_PAGE_IMAGES.promotions}
-        eyebrow="DỊP ĐẶC BIỆT"
-        title="Gói spa cho mọi dịp đặc biệt"
-        subtitle="Từ ngày cưới đến sinh nhật, từ cặp đôi đến hội bạn — Nature Spa có gói riêng cho bạn."
+      <Spa2ContentPageHero3
+        img={banner.image.url}
+        imageStyle={banner.image}
+        eyebrow={banner.eyebrow}
+        title={banner.title}
+        subtitle={banner.subtitle}
       />
 
       <Box sx={{ py: { xs: 8, md: 12 } }}>
@@ -434,7 +388,7 @@ export function Spa2SpecialOccasionsPageView() {
               '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
             }}
           >
-            {OCCASION_PACKAGES.map((p) => (
+            {packages.map((p) => (
               <Tab
                 key={p.id}
                 label={p.label}
@@ -445,7 +399,7 @@ export function Spa2SpecialOccasionsPageView() {
             ))}
           </Tabs>
 
-          {OCCASION_PACKAGES.map(
+          {packages.map(
             (pkg, idx) =>
               idx === tab && (
                 <Grid key={pkg.id} container spacing={5} alignItems="center">
@@ -571,12 +525,9 @@ export function Spa2SpecialOccasionsPageView() {
           <Box sx={{ mt: 8 }}>
             <SectionTitle eyebrow="Tổng quan" title="Tất cả gói dịp đặc biệt" />
             <Grid container spacing={3}>
-              {OCCASION_PACKAGES.map((pkg) => (
+              {packages.map((pkg) => (
                 <Grid key={pkg.id} xs={12} sm={6} md={4}>
-                  <Box
-                    onClick={() => setTab(OCCASION_PACKAGES.indexOf(pkg))}
-                    sx={{ cursor: 'pointer' }}
-                  >
+                  <Box onClick={() => setTab(packages.indexOf(pkg))} sx={{ cursor: 'pointer' }}>
                     <SoftCard sx={{ borderTop: `3px solid ${pkg.color}` }}>
                       <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 1.5 }}>
                         <Box
@@ -685,93 +636,36 @@ export function Spa2SpecialOccasionsPageView() {
 // 2. HOME SERVICE (SPA TẠI NHÀ)
 // ══════════════════════════════════════════════════════════
 
-const HOME_SERVICES = [
-  {
-    name: 'Massage Tại Nhà',
-    icon: 'solar:hand-stars-bold-duotone',
-    price: 890000,
-    duration: '90 phút',
-    desc: 'KTV đến tận nơi, mang theo đầy đủ dụng cụ và tinh dầu hữu cơ.',
-    tag: 'Phổ biến',
-  },
-  {
-    name: 'Facial Tại Nhà',
-    icon: 'solar:face-scan-circle-bold-duotone',
-    price: 1090000,
-    duration: '75 phút',
-    desc: 'Liệu trình chăm sóc da hoàn chỉnh ngay tại phòng ngủ của bạn.',
-    tag: '',
-  },
-  {
-    name: 'Nail & Chăm Sóc Tay Chân',
-    icon: 'solar:hand-heart-bold-duotone',
-    price: 490000,
-    duration: '60 phút',
-    desc: 'Làm đẹp móng, dưỡng da tay chân chuyên nghiệp.',
-    tag: '',
-  },
-  {
-    name: 'Gội Đầu & Massage Da Đầu',
-    icon: 'solar:magic-stick-3-bold-duotone',
-    price: 390000,
-    duration: '45 phút',
-    desc: 'Thư giãn đầu óc với liệu pháp massage da đầu và gội đầu thảo mộc.',
-    tag: '',
-  },
-  {
-    name: 'Gói Spa Tại Nhà Đầy Đủ',
-    icon: 'solar:stars-bold-duotone',
-    price: 2490000,
-    duration: '3.5 giờ',
-    desc: 'Combo massage + facial + nail: trải nghiệm spa 5 sao ngay tại nhà.',
-    tag: 'Hot',
-  },
-  {
-    name: 'Spa Sau Sinh Tại Nhà',
-    icon: 'solar:heart-bold-duotone',
-    price: 1290000,
-    duration: '2 giờ',
-    desc: 'Liệu trình nhẹ nhàng, an toàn cho mẹ sau sinh — không cần ra khỏi nhà.',
-    tag: 'Mới',
-  },
-];
+// NOTE: the home-service banner, coverage areas, services, process steps and
+// FAQ are shared with the dashboard "manage" view - the single source of
+// truth lives in src/_mock/_spa2 (imported above as spa2HomeServiceBanner/
+// spa2HomeServiceAreas/spa2HomeServices/spa2HomeServiceProcess/
+// spa2HomeServiceFaqs).
 
-const HOME_PROCESS = [
-  {
-    title: 'Đặt lịch online',
-    desc: 'Chọn dịch vụ, địa chỉ và khung giờ phù hợp. Xác nhận trong 15 phút.',
-  },
-  {
-    title: 'KTV chuẩn bị',
-    desc: 'Kỹ thuật viên được cấp phép chuẩn bị đầy đủ thiết bị và sản phẩm hữu cơ.',
-  },
-  {
-    title: 'KTV đến đúng giờ',
-    desc: 'Đến đúng giờ hẹn ±15 phút. Cài đặt không gian thư giãn tại nhà bạn.',
-  },
-  {
-    title: 'Trải nghiệm & đánh giá',
-    desc: 'Sau dịch vụ, để lại đánh giá và đặt lịch lần sau với ưu đãi 10%.',
-  },
-];
-
-export function Spa2HomeServicePageView() {
-  const [area, setArea] = useState('hcm');
+export function Spa2HomeServicePageView({
+  banner = spa2HomeServiceBanner,
+  areas = spa2HomeServiceAreas,
+  services = spa2HomeServices,
+  process = spa2HomeServiceProcess,
+  faqs = spa2HomeServiceFaqs,
+}: {
+  banner?: Spa2HomeServiceBanner;
+  areas?: Spa2HomeServiceArea[];
+  services?: Spa2HomeService[];
+  process?: Spa2HomeServiceProcessStep[];
+  faqs?: Spa2HomeServiceFaq[];
+} = {}) {
+  const [area, setArea] = useState(areas[0]?.value ?? 'hcm');
   const [toast, setToast] = useState('');
-
-  const AREAS = [
-    { v: 'hcm', l: 'TP.HCM', note: 'Quận 1–12, Bình Thạnh, Gò Vấp, Tân Bình' },
-    { v: 'hn', l: 'Hà Nội', note: 'Hoàn Kiếm, Ba Đình, Đống Đa, Cầu Giấy, Tây Hồ' },
-    { v: 'dn', l: 'Đà Nẵng', note: 'Hải Châu, Ngũ Hành Sơn, Sơn Trà' },
-  ];
 
   return (
     <Box sx={{ bgcolor: 'background.default' }}>
-      <PageHero
-        img={SPA2_PAGE_IMAGES.booking}
-        eyebrow="SPA TẠI NHÀ"
-        title="Nature Spa đến tận nơi của bạn"
-        subtitle="Kỹ thuật viên được chứng nhận mang toàn bộ dụng cụ và sản phẩm đến nhà bạn trong vòng 60 phút."
+      <Spa2ContentPageHero3
+        img={banner.image.url}
+        imageStyle={banner.image}
+        eyebrow={banner.eyebrow}
+        title={banner.title}
+        subtitle={banner.subtitle}
       />
 
       {/* Coverage badge */}
@@ -785,22 +679,22 @@ export function Spa2HomeServicePageView() {
           >
             <Typography sx={{ color: 'white', fontSize: 14 }}>Khu vực phục vụ:</Typography>
             <Stack direction="row" spacing={1}>
-              {AREAS.map((a) => (
+              {areas.map((a) => (
                 <Chip
-                  key={a.v}
-                  label={a.l}
-                  onClick={() => setArea(a.v)}
+                  key={a.value}
+                  label={a.label}
+                  onClick={() => setArea(a.value)}
                   sx={{
                     cursor: 'pointer',
-                    bgcolor: area === a.v ? 'white' : 'rgba(255,255,255,0.2)',
-                    color: area === a.v ? SPA2_TEAL_DARK : 'white',
-                    fontWeight: area === a.v ? 700 : 400,
+                    bgcolor: area === a.value ? 'white' : 'rgba(255,255,255,0.2)',
+                    color: area === a.value ? SPA2_TEAL_DARK : 'white',
+                    fontWeight: area === a.value ? 700 : 400,
                   }}
                 />
               ))}
             </Stack>
             <Typography sx={{ color: 'rgba(255,255,255,0.8)', fontSize: 13 }}>
-              {AREAS.find((a) => a.v === area)?.note}
+              {areas.find((a) => a.value === area)?.note}
             </Typography>
           </Stack>
         </Container>
@@ -811,8 +705,8 @@ export function Spa2HomeServicePageView() {
         <Container>
           <SectionTitle eyebrow="Dịch vụ" title="Chọn dịch vụ spa tại nhà" />
           <Grid container spacing={3}>
-            {HOME_SERVICES.map((s) => (
-              <Grid key={s.name} xs={12} sm={6} md={4}>
+            {services.map((s) => (
+              <Grid key={s.id} xs={12} sm={6} md={4}>
                 <SoftCard>
                   <Stack direction="row" alignItems="flex-start" spacing={2} sx={{ mb: 2 }}>
                     <Box
@@ -886,8 +780,8 @@ export function Spa2HomeServicePageView() {
         <Container maxWidth="md">
           <SectionTitle eyebrow="Quy trình" title="4 bước đơn giản" />
           <Grid container spacing={3}>
-            {HOME_PROCESS.map((p, i) => (
-              <Grid key={p.title} xs={12} sm={6} md={3}>
+            {process.map((p, i) => (
+              <Grid key={p.id} xs={12} sm={6} md={3}>
                 <SoftCard sx={{ textAlign: 'center', bgcolor: 'common.white' }}>
                   <Box
                     sx={{
@@ -924,26 +818,9 @@ export function Spa2HomeServicePageView() {
       <Box sx={{ py: { xs: 6, md: 10 } }}>
         <Container maxWidth="md">
           <SectionTitle eyebrow="FAQ" title="Câu hỏi về dịch vụ tại nhà" />
-          {[
-            {
-              q: 'Cần chuẩn bị gì trước khi KTV đến?',
-              a: 'Bạn chỉ cần chuẩn bị một không gian sạch sẽ, thoải mái (phòng ngủ hoặc phòng khách). KTV sẽ mang theo đầy đủ giường massage, dụng cụ và sản phẩm.',
-            },
-            {
-              q: 'KTV có được kiểm tra lý lịch không?',
-              a: 'Tất cả KTV tại nhà đều trải qua quy trình kiểm tra lý lịch nghiêm ngặt, có chứng chỉ hành nghề và đeo thẻ nhân viên Nature Spa khi đến nhà khách.',
-            },
-            {
-              q: 'Phí di chuyển có tính thêm không?',
-              a: 'Miễn phí di chuyển trong bán kính 10km từ chi nhánh gần nhất. Từ 10–20km phụ phí 50.000đ. Trên 20km vui lòng liên hệ tư vấn.',
-            },
-            {
-              q: 'Có thể đặt theo nhóm (nhiều người cùng lúc) không?',
-              a: 'Có. Nhóm 2–4 người sẽ được 2 KTV phục vụ song song. Nhóm trên 4 người vui lòng liên hệ trước ít nhất 2 ngày.',
-            },
-          ].map((faq, i) => (
+          {faqs.map((faq, i) => (
             <Accordion
-              key={faq.q}
+              key={faq.id}
               defaultExpanded={i === 0}
               sx={{
                 mb: 1.5,
@@ -993,49 +870,9 @@ export function Spa2HomeServicePageView() {
 // 3. SKIN DIARY (NHẬT KÝ DA)
 // ══════════════════════════════════════════════════════════
 
-type DiaryEntry = {
-  date: string;
-  moisture: number;
-  oiliness: number;
-  sensitivity: number;
-  note: string;
-  service: string;
-};
-
-const SAMPLE_ENTRIES: DiaryEntry[] = [
-  {
-    date: '01/06/2026',
-    moisture: 55,
-    oiliness: 70,
-    sensitivity: 40,
-    note: 'Da còn khá nhờn sau đợt nắng nóng.',
-    service: 'Facial Organic',
-  },
-  {
-    date: '15/06/2026',
-    moisture: 65,
-    oiliness: 55,
-    sensitivity: 35,
-    note: 'Cải thiện rõ sau 1 buổi facial.',
-    service: 'Body Scrub',
-  },
-  {
-    date: '01/07/2026',
-    moisture: 75,
-    oiliness: 45,
-    sensitivity: 25,
-    note: 'Da căng mượt hơn hẳn, giảm mụn vùng T.',
-    service: 'Aromatherapy',
-  },
-  {
-    date: '15/07/2026',
-    moisture: 80,
-    oiliness: 40,
-    sensitivity: 20,
-    note: 'Kết quả tốt nhất từ trước đến nay!',
-    service: 'Facial Organic',
-  },
-];
+// NOTE: the skin-diary banner and tracked entries are shared with the
+// dashboard "manage" view - the single source of truth lives in
+// src/_mock/_spa2 (imported above as spa2SkinDiaryBanner/spa2SkinDiaryEntries).
 
 const SKIN_METRICS = [
   {
@@ -1061,8 +898,14 @@ const SKIN_METRICS = [
   },
 ];
 
-export function Spa2SkinDiaryPageView() {
-  const [entries] = useState<DiaryEntry[]>(SAMPLE_ENTRIES);
+export function Spa2SkinDiaryPageView({
+  banner = spa2SkinDiaryBanner,
+  entries: entriesProp = spa2SkinDiaryEntries,
+}: {
+  banner?: Spa2SkinDiaryBanner;
+  entries?: Spa2SkinDiaryEntry[];
+} = {}) {
+  const [entries] = useState<Spa2SkinDiaryEntry[]>(entriesProp);
   const [showForm, setShowForm] = useState(false);
   const [newEntry, setNewEntry] = useState({
     moisture: 70,
@@ -1072,23 +915,34 @@ export function Spa2SkinDiaryPageView() {
     service: '',
   });
 
-  const latest = entries[entries.length - 1];
+  const latest = entries[entries.length - 1] ?? {
+    id: '',
+    date: '—',
+    moisture: 0,
+    oiliness: 0,
+    sensitivity: 0,
+    note: 'Chưa có nhật ký nào.',
+    service: '',
+  };
   const prev = entries[entries.length - 2];
 
   const diff = (key: keyof typeof newEntry) => {
-    if (typeof latest[key as keyof DiaryEntry] !== 'number') return null;
+    if (!latest || !prev || typeof latest[key as keyof Spa2SkinDiaryEntry] !== 'number')
+      return null;
     const d =
-      (latest[key as keyof DiaryEntry] as number) - (prev[key as keyof DiaryEntry] as number);
+      (latest[key as keyof Spa2SkinDiaryEntry] as number) -
+      (prev[key as keyof Spa2SkinDiaryEntry] as number);
     return d;
   };
 
   return (
     <Box sx={{ bgcolor: 'background.default' }}>
-      <PageHero
-        img={SPA2_PAGE_IMAGES.faq}
-        eyebrow="NHẬT KÝ DA"
-        title="Theo dõi hành trình làn da của bạn"
-        subtitle="Ghi lại sự thay đổi của da sau mỗi liệu trình — nhìn thấy kết quả rõ ràng theo thời gian."
+      <Spa2ContentPageHero3
+        img={banner.image.url}
+        imageStyle={banner.image}
+        eyebrow={banner.eyebrow}
+        title={banner.title}
+        subtitle={banner.subtitle}
       />
 
       <Box sx={{ py: { xs: 8, md: 12 } }}>
@@ -1190,7 +1044,7 @@ export function Spa2SkinDiaryPageView() {
                 <Stack spacing={2}>
                   {[...entries].reverse().map((e, i) => (
                     <Card
-                      key={e.date}
+                      key={e.id}
                       sx={{
                         p: 2,
                         borderRadius: 3,
@@ -1335,76 +1189,31 @@ export function Spa2SkinDiaryPageView() {
 // 4. MINDFULNESS & YOGA
 // ══════════════════════════════════════════════════════════
 
-const MINDFULNESS_PROGRAMS = [
-  {
-    name: 'Morning Flow Yoga',
-    duration: '60 phút',
-    schedule: 'Thứ 2, 4, 6 lúc 7:00',
-    instructor: 'Nguyễn Bích Ngọc',
-    level: 'Mọi cấp độ',
-    price: 150000,
-    image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&q=80',
-  },
-  {
-    name: 'Thiền Chánh Niệm',
-    duration: '45 phút',
-    schedule: 'Hàng ngày lúc 6:30 sáng',
-    instructor: 'Trần Minh Khôi',
-    level: 'Mọi cấp độ',
-    price: 120000,
-    image: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=800&q=80',
-  },
-  {
-    name: 'Yin Yoga Phục Hồi',
-    duration: '75 phút',
-    schedule: 'Thứ 3, 5, 7 lúc 18:30',
-    instructor: 'Phạm Hồng Nhi',
-    level: 'Trung cấp',
-    price: 180000,
-    image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80',
-  },
-  {
-    name: 'Hơi Thở & Cân Bằng',
-    duration: '30 phút',
-    schedule: 'Online – mọi lúc',
-    instructor: 'Lê Gia Huy',
-    level: 'Cơ bản',
-    price: 0,
-    image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=800&q=80',
-  },
-];
+// NOTE: the mindfulness banner, benefits, weekly programs and 7-day
+// challenge are shared with the dashboard "manage" view - the single source
+// of truth lives in src/_mock/_spa2 (imported above as
+// spa2MindfulnessBanner/spa2MindfulnessBenefits/spa2MindfulnessPrograms/
+// spa2MindfulnessChallenge).
 
-const MINDFULNESS_BENEFITS = [
-  {
-    icon: 'solar:brain-bold-duotone',
-    title: 'Giảm stress & lo âu',
-    desc: 'Thực hành chánh niệm đều đặn giảm cortisol – hormone stress – xuống tới 30%.',
-  },
-  {
-    icon: 'solar:heart-pulse-bold-duotone',
-    title: 'Cải thiện giấc ngủ',
-    desc: 'Thiền trước khi ngủ giúp não bộ thư giãn, đi vào giấc ngủ sâu nhanh hơn 50%.',
-  },
-  {
-    icon: 'solar:leaf-bold-duotone',
-    title: 'Tăng cường miễn dịch',
-    desc: 'Yoga và thiền kết hợp giúp hệ miễn dịch hoạt động hiệu quả hơn.',
-  },
-  {
-    icon: 'solar:sun-fog-bold-duotone',
-    title: 'Sáng suốt & tập trung',
-    desc: 'Chỉ 10 phút thiền mỗi ngày cải thiện khả năng tập trung lên đến 40%.',
-  },
-];
-
-export function Spa2MindfulnessPageView() {
+export function Spa2MindfulnessPageView({
+  banner = spa2MindfulnessBanner,
+  benefits = spa2MindfulnessBenefits,
+  programs = spa2MindfulnessPrograms,
+  challenge = spa2MindfulnessChallenge,
+}: {
+  banner?: Spa2MindfulnessBanner;
+  benefits?: Spa2MindfulnessBenefit[];
+  programs?: Spa2MindfulnessProgram[];
+  challenge?: Spa2MindfulnessChallenge;
+} = {}) {
   return (
     <Box sx={{ bgcolor: 'background.default' }}>
-      <PageHero
-        img={SPA2_PAGE_IMAGES.about}
-        eyebrow="MINDFULNESS"
-        title="Yoga, thiền & sức khỏe tinh thần"
-        subtitle="Kết hợp liệu trình spa với thực hành chánh niệm — chăm sóc cơ thể lẫn tâm trí."
+      <Spa2ContentPageHero3
+        img={banner.image.url}
+        imageStyle={banner.image}
+        eyebrow={banner.eyebrow}
+        title={banner.title}
+        subtitle={banner.subtitle}
       />
 
       {/* Benefits */}
@@ -1412,8 +1221,8 @@ export function Spa2MindfulnessPageView() {
         <Container>
           <SectionTitle eyebrow="Lợi ích" title="Khoa học về chánh niệm" />
           <Grid container spacing={3}>
-            {MINDFULNESS_BENEFITS.map((b) => (
-              <Grid key={b.title} xs={12} sm={6} md={3}>
+            {benefits.map((b) => (
+              <Grid key={b.id} xs={12} sm={6} md={3}>
                 <SoftCard sx={{ textAlign: 'center' }}>
                   <Iconify icon={b.icon} width={44} sx={{ color: SPA2_TEAL, mb: 1.5 }} />
                   <Typography sx={{ fontWeight: 600, color: SPA2_INK, mb: 0.75 }}>
@@ -1438,8 +1247,8 @@ export function Spa2MindfulnessPageView() {
             subtitle="Tham gia lớp học trực tiếp tại spa hoặc online — linh hoạt theo lịch của bạn."
           />
           <Grid container spacing={3}>
-            {MINDFULNESS_PROGRAMS.map((p) => (
-              <Grid key={p.name} xs={12} sm={6} md={3}>
+            {programs.map((p) => (
+              <Grid key={p.id} xs={12} sm={6} md={3}>
                 <SoftCard sx={{ p: 0, overflow: 'hidden', bgcolor: 'common.white' }}>
                   <Box
                     sx={{
@@ -1524,65 +1333,60 @@ export function Spa2MindfulnessPageView() {
           >
             <Box sx={{ bgcolor: SPA2_TEAL, p: 3, color: 'white', textAlign: 'center' }}>
               <Typography variant="h5" sx={{ mb: 0.5 }}>
-                🌿 Thử thách 7 ngày chánh niệm
+                {challenge.title}
               </Typography>
-              <Typography sx={{ opacity: 0.85, fontSize: 14 }}>
-                Miễn phí — 10 phút mỗi ngày — thay đổi thói quen trong 1 tuần
-              </Typography>
+              <Typography sx={{ opacity: 0.85, fontSize: 14 }}>{challenge.subtitle}</Typography>
             </Box>
             <Box sx={{ p: 3 }}>
               <Grid container spacing={1.5}>
-                {[
-                  'Ngày 1: Hơi thở cơ bản',
-                  'Ngày 2: Body scan',
-                  'Ngày 3: Thiền walking',
-                  'Ngày 4: Chánh niệm ăn uống',
-                  'Ngày 5: Yoga nhẹ buổi sáng',
-                  'Ngày 6: Viết nhật ký cảm xúc',
-                  'Ngày 7: Thiền metta từ bi',
-                ].map((d, i) => (
-                  <Grid key={d} xs={12} sm={6}>
-                    <Stack
-                      direction="row"
-                      spacing={1.5}
-                      alignItems="center"
-                      sx={{
-                        p: 1.5,
-                        borderRadius: 2,
-                        bgcolor: i < 3 ? SPA2_CREAM : 'transparent',
-                        border: `1px solid ${i < 3 ? SPA2_TEAL_LIGHT : SPA2_CREAM_DARK}`,
-                      }}
-                    >
-                      <Box
+                {challenge.days.map((d, i) => {
+                  const done = i < challenge.completedDays;
+                  return (
+                    <Grid key={d} xs={12} sm={6}>
+                      <Stack
+                        direction="row"
+                        spacing={1.5}
+                        alignItems="center"
                         sx={{
-                          width: 28,
-                          height: 28,
-                          borderRadius: '50%',
-                          bgcolor: i < 3 ? SPA2_TEAL : SPA2_CREAM_DARK,
-                          color: i < 3 ? 'white' : 'text.secondary',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: 12,
-                          fontWeight: 700,
-                          flexShrink: 0,
+                          p: 1.5,
+                          borderRadius: 2,
+                          bgcolor: done ? SPA2_CREAM : 'transparent',
+                          border: `1px solid ${done ? SPA2_TEAL_LIGHT : SPA2_CREAM_DARK}`,
                         }}
                       >
-                        {i + 1}
-                      </Box>
-                      <Typography sx={{ fontSize: 13, color: i < 3 ? SPA2_INK : 'text.secondary' }}>
-                        {d.split(': ')[1]}
-                      </Typography>
-                      {i < 3 && (
-                        <Iconify
-                          icon="solar:check-circle-bold"
-                          width={16}
-                          sx={{ color: SPA2_TEAL, ml: 'auto' }}
-                        />
-                      )}
-                    </Stack>
-                  </Grid>
-                ))}
+                        <Box
+                          sx={{
+                            width: 28,
+                            height: 28,
+                            borderRadius: '50%',
+                            bgcolor: done ? SPA2_TEAL : SPA2_CREAM_DARK,
+                            color: done ? 'white' : 'text.secondary',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: 12,
+                            fontWeight: 700,
+                            flexShrink: 0,
+                          }}
+                        >
+                          {i + 1}
+                        </Box>
+                        <Typography
+                          sx={{ fontSize: 13, color: done ? SPA2_INK : 'text.secondary' }}
+                        >
+                          {d}
+                        </Typography>
+                        {done && (
+                          <Iconify
+                            icon="solar:check-circle-bold"
+                            width={16}
+                            sx={{ color: SPA2_TEAL, ml: 'auto' }}
+                          />
+                        )}
+                      </Stack>
+                    </Grid>
+                  );
+                })}
               </Grid>
               <Button
                 fullWidth
@@ -1595,7 +1399,7 @@ export function Spa2MindfulnessPageView() {
                   '&:hover': { bgcolor: SPA2_TEAL_DARK },
                 }}
               >
-                Tham gia thử thách miễn phí
+                {challenge.buttonLabel}
               </Button>
             </Box>
           </Card>
@@ -1616,105 +1420,37 @@ export function Spa2MindfulnessPageView() {
 // 5. MEDICAL SPA (THẨM MỸ Y KHOA)
 // ══════════════════════════════════════════════════════════
 
-const MEDICAL_TREATMENTS = [
-  {
-    name: 'HIFU Nâng Cơ Mặt',
-    category: 'anti-aging',
-    icon: 'solar:bolt-bold-duotone',
-    price: 5900000,
-    sessions: '1–3 buổi',
-    downtime: 'Không',
-    desc: 'Nâng cơ, săn chắc da bằng sóng siêu âm hội tụ mà không cần phẫu thuật.',
-    certifications: ['FDA Cleared', 'CE Mark'],
-    before: 'Nghe tư vấn bác sĩ',
-    after: 'Tái khám sau 1 tháng',
-  },
-  {
-    name: 'RF Trẻ Hóa Da Toàn Mặt',
-    category: 'anti-aging',
-    icon: 'solar:sun-bold-duotone',
-    price: 3500000,
-    sessions: '4–6 buổi',
-    downtime: 'Không',
-    desc: 'Sóng radio tần số cao kích thích collagen, cải thiện nếp nhăn và độ đàn hồi.',
-    certifications: ['FDA Cleared'],
-    before: 'Vệ sinh da kỹ',
-    after: 'Tránh nắng 48 giờ',
-  },
-  {
-    name: 'Laser Trị Nám & Tàn Nhang',
-    category: 'pigmentation',
-    icon: 'solar:lightbulb-bolt-bold-duotone',
-    price: 2900000,
-    sessions: '3–6 buổi',
-    downtime: '3–5 ngày',
-    desc: 'Công nghệ laser thế hệ mới phân rã hắc sắc tố, làm đều màu da hiệu quả.',
-    certifications: ['CE Mark', 'ISO 13485'],
-    before: 'Không tiếp xúc nắng 2 tuần',
-    after: 'Dưỡng ẩm & chống nắng',
-  },
-  {
-    name: 'Tiêm Filler Môi & Rãnh Mũi',
-    category: 'filler',
-    icon: 'solar:drop-bold-duotone',
-    price: 4500000,
-    sessions: '1 buổi',
-    downtime: '1–3 ngày',
-    desc: 'Filler hyaluronic acid cao cấp — tạo hình môi tự nhiên, xóa rãnh nông nhanh chóng.',
-    certifications: ['FDA Approved', 'Bộ Y Tế VN'],
-    before: 'Không uống aspirin 1 tuần',
-    after: 'Không massage vùng tiêm 1 tuần',
-  },
-  {
-    name: 'Trị Mụn Ánh Sáng Sinh Học',
-    category: 'acne',
-    icon: 'solar:cpu-bolt-bold-duotone',
-    price: 1800000,
-    sessions: '6–10 buổi',
-    downtime: 'Không',
-    desc: 'Kết hợp LED xanh & đỏ kháng viêm, diệt vi khuẩn gây mụn, tái tạo da không xâm lấn.',
-    certifications: ['CE Mark', 'FDA Cleared'],
-    before: 'Da sạch, không trang điểm',
-    after: 'Không ra nắng 24 giờ',
-  },
-  {
-    name: 'Tế Bào Gốc Tái Sinh Da',
-    category: 'regeneration',
-    icon: 'solar:dna-bold-duotone',
-    price: 8900000,
-    sessions: '3 buổi',
-    downtime: '1–2 ngày',
-    desc: 'Công nghệ tiên tiến nhất — kích thích tái sinh tế bào, trẻ hóa toàn diện ở mức tế bào.',
-    certifications: ['CE Mark', 'ISO 13485', 'Bộ Y Tế VN'],
-    before: 'Tư vấn bác sĩ 1-1 bắt buộc',
-    after: 'Theo dõi 30 ngày',
-  },
-];
+// NOTE: the medical-spa banner, credentials bar, treatment categories and
+// treatment catalog are shared with the dashboard "manage" view - the
+// single source of truth lives in src/_mock/_spa2 (imported above as
+// spa2MedicalSpaBanner/spa2MedicalSpaCredentials/spa2MedicalSpaCategories/
+// spa2MedicalTreatments).
 
-export function Spa2MedicalSpaPageView() {
+export function Spa2MedicalSpaPageView({
+  banner = spa2MedicalSpaBanner,
+  credentials = spa2MedicalSpaCredentials,
+  categories = spa2MedicalSpaCategories,
+  treatments = spa2MedicalTreatments,
+}: {
+  banner?: Spa2MedicalSpaBanner;
+  credentials?: Spa2MedicalSpaCredential[];
+  categories?: Spa2MedicalSpaCategory[];
+  treatments?: Spa2MedicalTreatment[];
+} = {}) {
   const [catFilter, setCatFilter] = useState('all');
-  const [selected, setSelected] = useState<(typeof MEDICAL_TREATMENTS)[0] | null>(null);
+  const [selected, setSelected] = useState<Spa2MedicalTreatment | null>(null);
 
-  const CATS = [
-    { v: 'all', l: 'Tất cả' },
-    { v: 'anti-aging', l: 'Chống lão hóa' },
-    { v: 'pigmentation', l: 'Sắc tố' },
-    { v: 'acne', l: 'Trị mụn' },
-    { v: 'filler', l: 'Filler' },
-    { v: 'regeneration', l: 'Tái sinh' },
-  ];
   const filtered =
-    catFilter === 'all'
-      ? MEDICAL_TREATMENTS
-      : MEDICAL_TREATMENTS.filter((t) => t.category === catFilter);
+    catFilter === 'all' ? treatments : treatments.filter((t) => t.category === catFilter);
 
   return (
     <Box sx={{ bgcolor: 'background.default' }}>
-      <PageHero
-        img={SPA2_PAGE_IMAGES.treatments}
-        eyebrow="THẨM MỸ Y KHOA"
-        title="Liệu pháp thẩm mỹ công nghệ cao"
-        subtitle="Kết hợp giữa y học và làm đẹp — kết quả rõ rệt, an toàn, được bác sĩ giám sát."
+      <Spa2ContentPageHero3
+        img={banner.image.url}
+        imageStyle={banner.image}
+        eyebrow={banner.eyebrow}
+        title={banner.title}
+        subtitle={banner.subtitle}
       />
 
       {/* Credentials bar */}
@@ -1727,13 +1463,8 @@ export function Spa2MedicalSpaPageView() {
             spacing={{ xs: 1.5, sm: 4 }}
             flexWrap="wrap"
           >
-            {[
-              { icon: 'solar:diploma-bold', text: 'Bác sĩ da liễu giám sát' },
-              { icon: 'solar:shield-check-bold', text: 'Thiết bị FDA & CE chứng nhận' },
-              { icon: 'solar:medal-star-bold', text: 'Giấy phép Bộ Y tế Việt Nam' },
-              { icon: 'solar:user-heart-bold', text: 'Tư vấn 1-1 trước mỗi liệu trình' },
-            ].map((i) => (
-              <Stack key={i.text} direction="row" spacing={1} alignItems="center">
+            {credentials.map((i) => (
+              <Stack key={i.id} direction="row" spacing={1} alignItems="center">
                 <Iconify icon={i.icon} width={16} sx={{ color: SPA2_TEAL_LIGHT }} />
                 <Typography sx={{ fontSize: 13, color: 'rgba(255,255,255,0.85)' }}>
                   {i.text}
@@ -1747,17 +1478,17 @@ export function Spa2MedicalSpaPageView() {
       <Box sx={{ py: { xs: 8, md: 12 } }}>
         <Container>
           <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mb: 4, gap: 1 }}>
-            {CATS.map((c) => (
+            {categories.map((c) => (
               <Chip
-                key={c.v}
-                label={c.l}
-                onClick={() => setCatFilter(c.v)}
+                key={c.value}
+                label={c.label}
+                onClick={() => setCatFilter(c.value)}
                 sx={{
                   cursor: 'pointer',
                   height: 34,
-                  bgcolor: catFilter === c.v ? SPA2_TEAL : 'transparent',
-                  color: catFilter === c.v ? 'white' : 'text.secondary',
-                  border: `1.5px solid ${catFilter === c.v ? SPA2_TEAL : SPA2_CREAM_DARK}`,
+                  bgcolor: catFilter === c.value ? SPA2_TEAL : 'transparent',
+                  color: catFilter === c.value ? 'white' : 'text.secondary',
+                  border: `1.5px solid ${catFilter === c.value ? SPA2_TEAL : SPA2_CREAM_DARK}`,
                 }}
               />
             ))}
@@ -1765,7 +1496,7 @@ export function Spa2MedicalSpaPageView() {
 
           <Grid container spacing={3}>
             {filtered.map((t) => (
-              <Grid key={t.name} xs={12} sm={6} md={4}>
+              <Grid key={t.id} xs={12} sm={6} md={4}>
                 <Box sx={{ cursor: 'pointer' }} onClick={() => setSelected(t)}>
                   <SoftCard>
                     <Box
@@ -1978,76 +1709,27 @@ export function Spa2MedicalSpaPageView() {
 // 6. SPA ETIQUETTE (HƯỚNG DẪN LẦN ĐẦU)
 // ══════════════════════════════════════════════════════════
 
-export function Spa2SpaEtiquettePageView() {
-  const GUIDES = [
-    {
-      icon: 'solar:clock-circle-bold-duotone',
-      title: 'Đến trước 10–15 phút',
-      desc: 'Thời gian để hoàn tất lễ tân, thay đồ và thư giãn trước khi bắt đầu liệu trình. Đến trễ có thể cắt ngắn thời gian của bạn.',
-    },
-    {
-      icon: 'solar:phone-cross-bold-duotone',
-      title: 'Để điện thoại ở chế độ im lặng',
-      desc: 'Không gian spa là nơi để tách khỏi thế giới số. Chúng tôi có tủ khóa an toàn cho thiết bị cá nhân.',
-    },
-    {
-      icon: 'solar:t-shirt-bold-duotone',
-      title: 'Trang phục phù hợp',
-      desc: 'Không cần chuẩn bị gì đặc biệt. Spa cung cấp đồ choàng, khăn và dép dùng một lần thoải mái.',
-    },
-    {
-      icon: 'solar:cup-bold-duotone',
-      title: 'Không ăn no trước 1–2 giờ',
-      desc: 'Tránh ăn no ngay trước massage toàn thân để cảm giác thoải mái nhất. Uống đủ nước để tối ưu hiệu quả detox.',
-    },
-    {
-      icon: 'solar:chat-round-dots-bold-duotone',
-      title: 'Nói với KTV nhu cầu của bạn',
-      desc: 'Hãy thông báo nếu bạn muốn nhẹ hơn/mạnh hơn, có vùng đau hay dị ứng nào. KTV ở đây để phục vụ bạn tốt nhất.',
-    },
-    {
-      icon: 'solar:leaf-bold-duotone',
-      title: 'Thư giãn hoàn toàn',
-      desc: 'Không cần lo lắng về nói chuyện hay im lặng — theo bản năng của bạn. Đây là thời gian của bạn.',
-    },
-    {
-      icon: 'solar:shower-bold-duotone',
-      title: 'Sau liệu trình',
-      desc: 'Uống nhiều nước để hỗ trợ detox. Tránh tắm nước nóng ít nhất 4 giờ sau liệu trình thảo dược.',
-    },
-    {
-      icon: 'solar:card-bold-duotone',
-      title: 'Tiền thưởng & thanh toán',
-      desc: 'Tiền thưởng (tip) không bắt buộc nhưng được đánh giá cao. Thanh toán tại lễ tân sau khi kết thúc dịch vụ.',
-    },
-  ];
-
-  const DO_DONTS = {
-    dos: [
-      'Đến đúng giờ hoặc sớm hơn',
-      'Thông báo tình trạng sức khỏe đặc biệt',
-      'Tắt hoặc im lặng điện thoại',
-      'Uống nhiều nước trước và sau',
-      'Phản hồi thành thật với KTV',
-      'Nghỉ ngơi sau liệu trình nếu có thể',
-    ],
-    donts: [
-      'Không đến nếu đang bệnh sốt/cúm',
-      'Không dùng rượu bia trước khi đến',
-      'Không để đồ quý giá bên ngoài tủ khóa',
-      'Không nói chuyện điện thoại trong phòng trị liệu',
-      'Không cố ý trễ hơn 15 phút',
-      'Không so sánh với cơ sở khác trong phòng',
-    ],
-  };
-
+export function Spa2SpaEtiquettePageView({
+  banner = spa2SpaEtiquetteBanner,
+  guides = spa2EtiquetteGuides,
+  dos = spa2EtiquetteDos,
+  donts = spa2EtiquetteDonts,
+  offer = spa2EtiquetteOffer,
+}: {
+  banner?: Spa2SpaEtiquetteBanner;
+  guides?: Spa2EtiquetteGuide[];
+  dos?: Spa2EtiquetteRule[];
+  donts?: Spa2EtiquetteRule[];
+  offer?: Spa2EtiquetteOffer;
+} = {}) {
   return (
     <Box sx={{ bgcolor: 'background.default' }}>
-      <PageHero
-        img={SPA2_PAGE_IMAGES.about}
-        eyebrow="HƯỚNG DẪN"
-        title="Lần đầu đến spa? Đừng lo!"
-        subtitle="Mọi điều bạn cần biết để có trải nghiệm spa hoàn hảo nhất — từ chuẩn bị đến sau khi về."
+      <Spa2ContentPageHero3
+        img={banner.image.url}
+        imageStyle={banner.image}
+        eyebrow={banner.eyebrow}
+        title={banner.title}
+        subtitle={banner.subtitle}
       />
 
       {/* Step guide */}
@@ -2055,8 +1737,8 @@ export function Spa2SpaEtiquettePageView() {
         <Container>
           <SectionTitle eyebrow="Hướng dẫn" title="8 điều nên biết khi đến spa" />
           <Grid container spacing={3}>
-            {GUIDES.map((g, i) => (
-              <Grid key={g.title} xs={12} sm={6} md={3}>
+            {guides.map((g, i) => (
+              <Grid key={g.id} xs={12} sm={6} md={3}>
                 <SoftCard>
                   <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
                     <Box
@@ -2112,9 +1794,9 @@ export function Spa2SpaEtiquettePageView() {
                   </Stack>
                 </Box>
                 <Stack spacing={0}>
-                  {DO_DONTS.dos.map((d, i) => (
+                  {dos.map((d, i) => (
                     <Stack
-                      key={d}
+                      key={d.id}
                       direction="row"
                       spacing={1.5}
                       alignItems="center"
@@ -2122,7 +1804,7 @@ export function Spa2SpaEtiquettePageView() {
                         px: 2.5,
                         py: 1.5,
                         bgcolor: i % 2 ? '#F1F8E9' : 'white',
-                        borderBottom: i < DO_DONTS.dos.length - 1 ? `1px solid #E8F5E9` : 'none',
+                        borderBottom: i < dos.length - 1 ? `1px solid #E8F5E9` : 'none',
                       }}
                     >
                       <Iconify
@@ -2130,7 +1812,7 @@ export function Spa2SpaEtiquettePageView() {
                         width={15}
                         sx={{ color: '#2E7D32', flexShrink: 0 }}
                       />
-                      <Typography sx={{ fontSize: 13.5, color: SPA2_INK }}>{d}</Typography>
+                      <Typography sx={{ fontSize: 13.5, color: SPA2_INK }}>{d.text}</Typography>
                     </Stack>
                   ))}
                 </Stack>
@@ -2152,9 +1834,9 @@ export function Spa2SpaEtiquettePageView() {
                   </Stack>
                 </Box>
                 <Stack spacing={0}>
-                  {DO_DONTS.donts.map((d, i) => (
+                  {donts.map((d, i) => (
                     <Stack
-                      key={d}
+                      key={d.id}
                       direction="row"
                       spacing={1.5}
                       alignItems="center"
@@ -2162,7 +1844,7 @@ export function Spa2SpaEtiquettePageView() {
                         px: 2.5,
                         py: 1.5,
                         bgcolor: i % 2 ? '#FFF5F5' : 'white',
-                        borderBottom: i < DO_DONTS.donts.length - 1 ? `1px solid #FFEBEE` : 'none',
+                        borderBottom: i < donts.length - 1 ? `1px solid #FFEBEE` : 'none',
                       }}
                     >
                       <Iconify
@@ -2170,7 +1852,7 @@ export function Spa2SpaEtiquettePageView() {
                         width={15}
                         sx={{ color: '#C62828', flexShrink: 0 }}
                       />
-                      <Typography sx={{ fontSize: 13.5, color: SPA2_INK }}>{d}</Typography>
+                      <Typography sx={{ fontSize: 13.5, color: SPA2_INK }}>{d.text}</Typography>
                     </Stack>
                   ))}
                 </Stack>
@@ -2193,12 +1875,11 @@ export function Spa2SpaEtiquettePageView() {
           >
             <Box sx={{ bgcolor: SPA2_TEAL, p: 3, color: 'white', textAlign: 'center' }}>
               <Iconify icon="solar:gift-bold" width={36} sx={{ mb: 1 }} />
-              <Typography variant="h5">Ưu đãi khách lần đầu</Typography>
+              <Typography variant="h5">{offer.title}</Typography>
             </Box>
             <Box sx={{ p: 3, textAlign: 'center' }}>
               <Typography sx={{ color: 'text.secondary', mb: 2, lineHeight: 1.7 }}>
-                Giảm <strong style={{ color: SPA2_TEAL }}>30%</strong> cho liệu trình đầu tiên tại
-                Nature Spa. Áp dụng cho tất cả dịch vụ, tất cả chi nhánh.
+                {offer.description}
               </Typography>
               <Box
                 sx={{
@@ -2212,7 +1893,7 @@ export function Spa2SpaEtiquettePageView() {
                 <Typography
                   sx={{ fontWeight: 700, fontSize: 22, color: SPA2_TEAL, letterSpacing: 3 }}
                 >
-                  NEW30
+                  {offer.code}
                 </Typography>
               </Box>
               <Button
@@ -2227,7 +1908,7 @@ export function Spa2SpaEtiquettePageView() {
                   '&:hover': { bgcolor: SPA2_TEAL_DARK },
                 }}
               >
-                Đặt lịch & dùng mã ngay
+                {offer.buttonLabel}
               </Button>
             </Box>
           </Card>
@@ -2241,96 +1922,34 @@ export function Spa2SpaEtiquettePageView() {
 // 7. LOYALTY REWARDS (ĐỔI ĐIỂM THƯỞNG)
 // ══════════════════════════════════════════════════════════
 
-const REWARDS_CATALOG = [
-  {
-    name: 'Aromatherapy 30 phút',
-    points: 500,
-    category: 'service',
-    icon: 'solar:leaf-bold',
-    image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400&q=80',
-    stock: 20,
-  },
-  {
-    name: 'Tinh dầu hương thiên nhiên',
-    points: 300,
-    category: 'product',
-    icon: 'solar:drop-bold',
-    image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&q=80',
-    stock: 50,
-  },
-  {
-    name: 'Voucher 200K dịch vụ',
-    points: 200,
-    category: 'voucher',
-    icon: 'solar:card-bold',
-    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400&q=80',
-    stock: 100,
-  },
-  {
-    name: 'Body Scrub 45 phút',
-    points: 800,
-    category: 'service',
-    icon: 'solar:body-bold',
-    image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400&q=80',
-    stock: 15,
-  },
-  {
-    name: 'Bộ quà thảo mộc Nature',
-    points: 600,
-    category: 'product',
-    icon: 'solar:gift-bold',
-    image: 'https://images.unsplash.com/photo-1596178060671-7a80dc8059ea?w=400&q=80',
-    stock: 30,
-  },
-  {
-    name: 'Voucher 500K dịch vụ',
-    points: 500,
-    category: 'voucher',
-    icon: 'solar:ticket-bold',
-    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400&q=80',
-    stock: 50,
-  },
-  {
-    name: 'Massage 90 phút miễn phí',
-    points: 1200,
-    category: 'service',
-    icon: 'solar:hand-stars-bold',
-    image: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=400&q=80',
-    stock: 10,
-  },
-  {
-    name: 'Thẻ thành viên Gold 1 tháng',
-    points: 1500,
-    category: 'membership',
-    icon: 'solar:crown-bold',
-    image: 'https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=400&q=80',
-    stock: 5,
-  },
-];
-
-export function Spa2LoyaltyRewardsPageView() {
+export function Spa2LoyaltyRewardsPageView({
+  banner = spa2LoyaltyRewardsBanner,
+  pointsBalance = spa2LoyaltyPointsBalance,
+  earnRules = spa2LoyaltyEarnRules,
+  categories = spa2LoyaltyRewardCategories,
+  rewards = spa2LoyaltyRewards,
+}: {
+  banner?: Spa2LoyaltyRewardsBanner;
+  pointsBalance?: number;
+  earnRules?: Spa2LoyaltyEarnRule[];
+  categories?: Spa2LoyaltyRewardCategory[];
+  rewards?: Spa2LoyaltyReward[];
+} = {}) {
   const [cat, setCat] = useState('all');
-  const [redeeming, setRedeeming] = useState<(typeof REWARDS_CATALOG)[0] | null>(null);
+  const [redeeming, setRedeeming] = useState<Spa2LoyaltyReward | null>(null);
   const [redeemed, setRedeemed] = useState(false);
-  const POINTS_BALANCE = 3250;
+  const POINTS_BALANCE = pointsBalance;
 
-  const CATS = [
-    { v: 'all', l: 'Tất cả' },
-    { v: 'service', l: 'Dịch vụ' },
-    { v: 'product', l: 'Sản phẩm' },
-    { v: 'voucher', l: 'Voucher' },
-    { v: 'membership', l: 'Thành viên' },
-  ];
-  const filtered =
-    cat === 'all' ? REWARDS_CATALOG : REWARDS_CATALOG.filter((r) => r.category === cat);
+  const filtered = cat === 'all' ? rewards : rewards.filter((r) => r.category === cat);
 
   return (
     <Box sx={{ bgcolor: 'background.default' }}>
-      <PageHero
-        img={SPA2_PAGE_IMAGES.account}
-        eyebrow="ĐỔI THƯỞNG"
-        title="Đổi điểm lấy phần thưởng"
-        subtitle="Tích điểm qua mỗi lần sử dụng dịch vụ và đổi lấy những phần thưởng giá trị."
+      <Spa2ContentPageHero3
+        img={banner.image.url}
+        imageStyle={banner.image}
+        eyebrow={banner.eyebrow}
+        title={banner.title}
+        subtitle={banner.subtitle}
       />
 
       {/* Points balance */}
@@ -2371,13 +1990,8 @@ export function Spa2LoyaltyRewardsPageView() {
                     Cách kiếm thêm điểm
                   </Typography>
                   <Grid container spacing={1.5}>
-                    {[
-                      { label: 'Dịch vụ', ratio: '1đ / 10K' },
-                      { label: 'Thẻ Gold (cuối tuần)', ratio: '2đ / 10K' },
-                      { label: 'Giới thiệu bạn', ratio: '200đ / người' },
-                      { label: 'Review dịch vụ', ratio: '50đ / lần' },
-                    ].map((i) => (
-                      <Grid key={i.label} xs={6} sm={3}>
+                    {earnRules.map((i) => (
+                      <Grid key={i.id} xs={6} sm={3}>
                         <Box
                           sx={{
                             bgcolor: 'rgba(255,255,255,0.12)',
@@ -2405,17 +2019,17 @@ export function Spa2LoyaltyRewardsPageView() {
       <Box sx={{ py: { xs: 4, md: 8 } }}>
         <Container>
           <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mb: 4, gap: 1 }}>
-            {CATS.map((c) => (
+            {categories.map((c) => (
               <Chip
-                key={c.v}
-                label={c.l}
-                onClick={() => setCat(c.v)}
+                key={c.value}
+                label={c.label}
+                onClick={() => setCat(c.value)}
                 sx={{
                   cursor: 'pointer',
                   height: 34,
-                  bgcolor: cat === c.v ? SPA2_TEAL : 'transparent',
-                  color: cat === c.v ? 'white' : 'text.secondary',
-                  border: `1.5px solid ${cat === c.v ? SPA2_TEAL : SPA2_CREAM_DARK}`,
+                  bgcolor: cat === c.value ? SPA2_TEAL : 'transparent',
+                  color: cat === c.value ? 'white' : 'text.secondary',
+                  border: `1.5px solid ${cat === c.value ? SPA2_TEAL : SPA2_CREAM_DARK}`,
                 }}
               />
             ))}
@@ -2425,7 +2039,7 @@ export function Spa2LoyaltyRewardsPageView() {
             {filtered.map((r) => {
               const canRedeem = POINTS_BALANCE >= r.points;
               return (
-                <Grid key={r.name} xs={12} sm={6} md={3}>
+                <Grid key={r.id} xs={12} sm={6} md={3}>
                   <SoftCard sx={{ p: 0, overflow: 'hidden', opacity: canRedeem ? 1 : 0.65 }}>
                     <Box sx={{ position: 'relative' }}>
                       <Box
@@ -2583,7 +2197,15 @@ export function Spa2LoyaltyRewardsPageView() {
 // 8. REVIEW PAGE (GỬI ĐÁNH GIÁ)
 // ══════════════════════════════════════════════════════════
 
-export function Spa2ReviewPageView() {
+export function Spa2ReviewPageView({
+  banner = spa2ReviewBanner,
+  ratingAspects = spa2ReviewAspects,
+  stats = spa2ReviewStats,
+}: {
+  banner?: Spa2ReviewBanner;
+  ratingAspects?: Spa2ReviewAspect[];
+  stats?: Spa2ReviewStats;
+} = {}) {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(-1);
   const [form, setForm] = useState({
@@ -2603,21 +2225,16 @@ export function Spa2ReviewPageView() {
     4: 'Tốt',
     5: 'Tuyệt vời!',
   };
-  const RATING_ASPECTS = [
-    { label: 'Chất lượng dịch vụ', value: 0 },
-    { label: 'Thái độ KTV', value: 0 },
-    { label: 'Không gian & vệ sinh', value: 0 },
-    { label: 'Giá cả xứng đáng', value: 0 },
-  ];
-  const [aspects, setAspects] = useState(RATING_ASPECTS);
+  const [aspects, setAspects] = useState(ratingAspects.map((a) => ({ ...a, value: 0 })));
 
   return (
     <Box sx={{ bgcolor: 'background.default' }}>
-      <PageHero
-        img={SPA2_PAGE_IMAGES.feedback}
-        eyebrow="ĐÁNH GIÁ"
-        title="Chia sẻ trải nghiệm của bạn"
-        subtitle="Mỗi đánh giá giúp Nature Spa cải thiện và là nguồn động lực lớn cho đội ngũ chúng tôi."
+      <Spa2ContentPageHero3
+        img={banner.image.url}
+        imageStyle={banner.image}
+        eyebrow={banner.eyebrow}
+        title={banner.title}
+        subtitle={banner.subtitle}
       />
 
       <Box sx={{ py: { xs: 8, md: 12 } }}>
@@ -2655,7 +2272,7 @@ export function Spa2ReviewPageView() {
                     </Typography>
                     <Stack spacing={2.5}>
                       {aspects.map((a, i) => (
-                        <Stack key={a.label} direction="row" alignItems="center" spacing={2}>
+                        <Stack key={a.id} direction="row" alignItems="center" spacing={2}>
                           <Typography sx={{ fontSize: 13.5, color: SPA2_INK, minWidth: 160 }}>
                             {a.label}
                           </Typography>
@@ -2833,34 +2450,28 @@ export function Spa2ReviewPageView() {
                     </Typography>
                     <Stack alignItems="center" spacing={0.5} sx={{ mb: 2.5 }}>
                       <Typography variant="h2" sx={{ color: SPA2_TEAL, fontWeight: 700 }}>
-                        4.9
+                        {stats.average}
                       </Typography>
                       <Rating
-                        value={4.9}
+                        value={stats.average}
                         readOnly
                         precision={0.1}
                         sx={{ '& .MuiRating-icon': { color: '#EF9F27' } }}
                       />
                       <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
-                        Từ 3.840 đánh giá
+                        Từ {stats.total.toLocaleString('vi-VN')} đánh giá
                       </Typography>
                     </Stack>
                     <Stack spacing={1}>
-                      {[
-                        [5, 82],
-                        [4, 14],
-                        [3, 3],
-                        [2, 0],
-                        [1, 1],
-                      ].map(([star, pct]) => (
-                        <Stack key={star} direction="row" spacing={1.5} alignItems="center">
+                      {stats.distribution.map((row) => (
+                        <Stack key={row.star} direction="row" spacing={1.5} alignItems="center">
                           <Typography sx={{ fontSize: 12, color: 'text.secondary', minWidth: 12 }}>
-                            {star}
+                            {row.star}
                           </Typography>
                           <Iconify icon="solar:star-bold" width={12} sx={{ color: '#EF9F27' }} />
                           <LinearProgress
                             variant="determinate"
-                            value={pct}
+                            value={row.percent}
                             sx={{
                               flex: 1,
                               height: 7,
@@ -2870,7 +2481,7 @@ export function Spa2ReviewPageView() {
                             }}
                           />
                           <Typography sx={{ fontSize: 12, color: 'text.secondary', minWidth: 30 }}>
-                            {pct}%
+                            {row.percent}%
                           </Typography>
                         </Stack>
                       ))}

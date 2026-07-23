@@ -22,8 +22,8 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
-import TableRow from '@mui/material/TableRow';
 import Tooltip from '@mui/material/Tooltip';
+import TableRow from '@mui/material/TableRow';
 import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Unstable_Grid2';
 import Container from '@mui/material/Container';
@@ -463,7 +463,12 @@ function InstructorPreviewCard({
       />
       <Stack direction="row" spacing={1} justifyContent="center" flexWrap="wrap">
         {certs.map((c) => (
-          <Chip key={c} size="small" label={c} sx={{ bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }} />
+          <Chip
+            key={c}
+            size="small"
+            label={c}
+            sx={{ bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
+          />
         ))}
       </Stack>
     </Spa2SoftCard>
@@ -995,7 +1000,9 @@ export function Spa2TrainingManageView() {
                   value={missionImage}
                   onChange={updateMissionImage}
                   height={200}
-                  helperText={'Hiển thị dạng thẻ có nút play ở mục "Vì sao chọn Nature Spa Academy".'}
+                  helperText={
+                    'Hiển thị dạng thẻ có nút play ở mục "Vì sao chọn Nature Spa Academy".'
+                  }
                 />
                 {mission.map((paragraph, idx) => (
                   <Box key={idx}>
@@ -1278,7 +1285,10 @@ export function Spa2TrainingManageView() {
                         alignItems="center"
                         sx={{ p: 2, borderRadius: 2, textAlign: 'center', bgcolor: SPA2_CREAM }}
                       >
-                        <Spa2DragHandle sortable={sortable} sx={{ alignSelf: 'flex-end', mb: -1 }} />
+                        <Spa2DragHandle
+                          sortable={sortable}
+                          sx={{ alignSelf: 'flex-end', mb: -1 }}
+                        />
                         <InstructorAvatar size={64} border instructor={ins} />
                         <Typography variant="subtitle2" sx={{ color: SPA2_INK }}>
                           {ins.name || '(Chưa đặt tên)'}
@@ -1287,9 +1297,19 @@ export function Spa2TrainingManageView() {
                           sx={{ fontSize: 12, color: 'text.secondary', '& p': { m: 0 } }}
                           dangerouslySetInnerHTML={{ __html: ins.experience }}
                         />
-                        <Stack direction="row" spacing={0.5} flexWrap="wrap" justifyContent="center">
+                        <Stack
+                          direction="row"
+                          spacing={0.5}
+                          flexWrap="wrap"
+                          justifyContent="center"
+                        >
                           {ins.certs.map((c) => (
-                            <Chip key={c} size="small" label={c} sx={{ bgcolor: SPA2_CREAM_DARK }} />
+                            <Chip
+                              key={c}
+                              size="small"
+                              label={c}
+                              sx={{ bgcolor: SPA2_CREAM_DARK }}
+                            />
                           ))}
                         </Stack>
                         <Stack direction="row" spacing={0.5}>
@@ -1407,7 +1427,11 @@ export function Spa2TrainingManageView() {
         <Card>
           <Box sx={{ p: 2.5, borderBottom: `1px solid ${SPA2_TEAL_LIGHT}22` }}>
             <Stack direction="row" alignItems="center" spacing={1}>
-              <Iconify icon="solar:clipboard-list-bold-duotone" width={22} sx={{ color: SPA2_TEAL }} />
+              <Iconify
+                icon="solar:clipboard-list-bold-duotone"
+                width={22}
+                sx={{ color: SPA2_TEAL }}
+              />
               <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
                 Đăng ký đào tạo
               </Typography>
@@ -1525,7 +1549,10 @@ export function Spa2TrainingManageView() {
               }}
             >
               <Tab value="all" label={`Tất cả (${registrationCounts.all})`} />
-              <Tab value="new" label={`${REGISTRATION_STATUS_LABEL.new} (${registrationCounts.new})`} />
+              <Tab
+                value="new"
+                label={`${REGISTRATION_STATUS_LABEL.new} (${registrationCounts.new})`}
+              />
               <Tab
                 value="contacted"
                 label={`${REGISTRATION_STATUS_LABEL.contacted} (${registrationCounts.contacted})`}
@@ -1818,7 +1845,10 @@ export function Spa2TrainingManageView() {
               </Stack>
             </Grid>
             <Grid xs={12} md={6}>
-              <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1, display: 'block' }}>
+              <Typography
+                variant="caption"
+                sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
+              >
                 Xem trước
               </Typography>
               <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
@@ -1878,7 +1908,10 @@ export function Spa2TrainingManageView() {
               </Stack>
             </Grid>
             <Grid xs={12} md={6}>
-              <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1, display: 'block' }}>
+              <Typography
+                variant="caption"
+                sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
+              >
                 Xem trước
               </Typography>
               <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
@@ -1951,7 +1984,10 @@ export function Spa2TrainingManageView() {
               </Stack>
             </Grid>
             <Grid xs={12} md={6}>
-              <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1, display: 'block' }}>
+              <Typography
+                variant="caption"
+                sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
+              >
                 Xem trước
               </Typography>
               <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
@@ -1974,7 +2010,12 @@ export function Spa2TrainingManageView() {
       </Dialog>
 
       {/* Graduate dialog */}
-      <Dialog open={graduateDialog} onClose={() => setGraduateDialog(false)} maxWidth="md" fullWidth>
+      <Dialog
+        open={graduateDialog}
+        onClose={() => setGraduateDialog(false)}
+        maxWidth="md"
+        fullWidth
+      >
         <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>
           {graduateEditId ? 'Sửa câu chuyện' : 'Thêm câu chuyện'}
         </DialogTitle>
@@ -2018,7 +2059,10 @@ export function Spa2TrainingManageView() {
               </Stack>
             </Grid>
             <Grid xs={12} md={6}>
-              <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1, display: 'block' }}>
+              <Typography
+                variant="caption"
+                sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
+              >
                 Xem trước
               </Typography>
               <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
@@ -2095,9 +2139,7 @@ export function Spa2TrainingManageView() {
         maxWidth="xs"
         fullWidth
       >
-        <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>
-          Đăng ký #{viewRegistration?.id}
-        </DialogTitle>
+        <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>Đăng ký #{viewRegistration?.id}</DialogTitle>
         <DialogContent dividers>
           {viewRegistration && (
             <Stack spacing={1.5}>

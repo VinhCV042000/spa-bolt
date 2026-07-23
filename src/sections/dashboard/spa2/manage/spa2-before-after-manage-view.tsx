@@ -1486,7 +1486,7 @@ export function Spa2BeforeAfterManageView() {
       </Dialog>
 
       {/* Create / Edit dialog - left: form, right: live preview */}
-      <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="md" fullWidth>
+      <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="lg" fullWidth>
         <DialogTitle>
           {editId !== null ? t('before_after.form_edit') : t('before_after.form_create')}
         </DialogTitle>
@@ -1812,11 +1812,11 @@ export function Spa2BeforeAfterManageView() {
       </Dialog>
 
       {/* FAQ create/edit dialog - left: form, right: live preview */}
-      <Dialog open={faqOpenForm} onClose={() => setFaqOpenForm(false)} maxWidth="md" fullWidth>
+      <Dialog open={faqOpenForm} onClose={() => setFaqOpenForm(false)} maxWidth="lg" fullWidth>
         <DialogTitle>{faqEditId !== null ? t('faq.form_edit') : t('faq.add_btn')}</DialogTitle>
         <DialogContent dividers>
           <Grid container spacing={3} sx={{ pt: 1 }}>
-            <Grid xs={12} sm={7}>
+            <Grid xs={12} sm={5}>
               <Stack spacing={2}>
                 <TextField
                   label={t('faq.col_question')}
@@ -1847,7 +1847,7 @@ export function Spa2BeforeAfterManageView() {
                 />
               </Stack>
             </Grid>
-            <Grid xs={12} sm={5}>
+            <Grid xs={12} sm={7}>
               <Typography
                 variant="caption"
                 sx={{ color: 'text.secondary', mb: 1, display: 'block' }}

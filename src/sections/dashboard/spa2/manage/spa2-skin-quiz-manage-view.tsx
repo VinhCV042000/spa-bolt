@@ -18,8 +18,8 @@ import TextField from '@mui/material/TextField';
 import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import DialogTitle from '@mui/material/DialogTitle';
 import InputLabel from '@mui/material/InputLabel';
+import DialogTitle from '@mui/material/DialogTitle';
 import FormControl from '@mui/material/FormControl';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -35,8 +35,8 @@ import {
   spa2SkinQuizBanner,
   spa2SkinQuizResults,
   spa2SkinQuizQuestions,
-  type Spa2AdjustableImage,
   type Spa2SkinQuizResult,
+  type Spa2AdjustableImage,
   type Spa2SkinQuizQuestion,
 } from 'src/_mock/_spa2';
 
@@ -130,7 +130,17 @@ function PreviewFrame({ children }: { children: ReactNode }) {
   );
 }
 
-function ResultPreviewCard({ type, desc, icon }: { type: string; desc: string; icon: string }) {
+function ResultPreviewCard({
+  type,
+  desc,
+  icon,
+  services = [],
+}: {
+  type: string;
+  desc: string;
+  icon: string;
+  services?: string[];
+}) {
   return (
     <Box
       sx={{
@@ -144,10 +154,91 @@ function ResultPreviewCard({ type, desc, icon }: { type: string; desc: string; i
         <Typography variant="subtitle1">Bạn có {type || 'kết quả'}</Typography>
       </Box>
       <Box sx={{ p: 2 }}>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary" sx={{ mb: services.length ? 1.5 : 0 }}>
           {desc || 'Mô tả kết quả...'}
         </Typography>
+        {services.length > 0 && (
+          <Stack direction="row" spacing={0.5} sx={{ flexWrap: 'wrap', gap: 0.5 }}>
+            {services.map((s) => (
+              <Chip
+                key={s}
+                size="small"
+                icon={<Iconify icon="solar:hashtag-bold" width={14} />}
+                label={s}
+                sx={{ bgcolor: SPA2_CREAM }}
+              />
+            ))}
+          </Stack>
+        )}
       </Box>
+    </Box>
+  );
+}
+
+// Mirrors the lettered-option look of the public quiz card
+// (Spa2SkinQuizPageView), plus the matching skin-type caption per option, so
+// admins can see exactly how a question will render and keep option order in
+// sync with `results`.
+function QuestionPreviewCard({
+  question,
+  options,
+  resultTypes,
+}: {
+  question: string;
+  options: string[];
+  resultTypes: string[];
+}) {
+  return (
+    <Box
+      sx={{
+        borderRadius: 3,
+        border: `1px solid ${SPA2_CREAM_DARK}`,
+        bgcolor: 'common.white',
+        p: 2.5,
+      }}
+    >
+      <Typography variant="subtitle1" sx={{ mb: 2 }}>
+        {question || 'Nội dung câu hỏi...'}
+      </Typography>
+      <Stack spacing={1}>
+        {options.map((opt, i) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <Stack
+            key={i}
+            direction="row"
+            spacing={1.5}
+            alignItems="center"
+            sx={{ p: 1.25, borderRadius: 2, border: `1px solid ${SPA2_CREAM_DARK}` }}
+          >
+            <Box
+              sx={{
+                width: 24,
+                height: 24,
+                borderRadius: '50%',
+                bgcolor: SPA2_CREAM_DARK,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 12,
+                fontWeight: 700,
+                flexShrink: 0,
+              }}
+            >
+              {String.fromCharCode(65 + i)}
+            </Box>
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <Typography variant="body2" noWrap>
+                {opt || `Lựa chọn ${i + 1}`}
+              </Typography>
+              {resultTypes[i] && (
+                <Typography variant="caption" color="text.disabled">
+                  {resultTypes[i]}
+                </Typography>
+              )}
+            </Box>
+          </Stack>
+        ))}
+      </Stack>
     </Box>
   );
 }
@@ -471,7 +562,12 @@ export function Spa2SkinQuizManageView() {
                 alignItems="flex-start"
                 sx={{ p: 2, borderRadius: 2.5, bgcolor: SPA2_CREAM }}
               >
-                <Stack spacing={0.25}>
+                <Stack spacing={0.25} alignItems="center">
+                  <Chip
+                    size="small"
+                    label={`#${idx + 1}`}
+                    sx={{ bgcolor: 'common.white', fontWeight: 700, mb: 0.5 }}
+                  />
                   <IconButton
                     size="small"
                     disabled={idx === 0}
@@ -488,20 +584,11 @@ export function Spa2SkinQuizManageView() {
                   </IconButton>
                 </Stack>
                 <Box sx={{ flex: 1 }}>
-                  <Typography sx={{ fontWeight: 600, mb: 1 }}>
-                    Câu {idx + 1}: {item.question}
-                  </Typography>
-                  <Grid container spacing={1}>
-                    {item.options.map((opt, i) => (
-                      // eslint-disable-next-line react/no-array-index-key
-                      <Grid key={i} xs={12} sm={6}>
-                        <Typography variant="caption" color="text.disabled" display="block">
-                          {results[i]?.type ?? `Lựa chọn ${i + 1}`}
-                        </Typography>
-                        <Typography variant="body2">{opt}</Typography>
-                      </Grid>
-                    ))}
-                  </Grid>
+                  <QuestionPreviewCard
+                    question={item.question}
+                    options={item.options}
+                    resultTypes={results.map((r) => r.type)}
+                  />
                 </Box>
                 <Stack direction="row" spacing={0.5}>
                   <IconButton size="small" onClick={() => openEditQuestion(item)}>
@@ -551,7 +638,12 @@ export function Spa2SkinQuizManageView() {
             {results.map((item) => (
               <Grid key={item.id} xs={12} sm={6} md={3}>
                 <Box sx={{ position: 'relative' }}>
-                  <ResultPreviewCard type={item.type} desc={item.desc} icon={item.icon} />
+                  <ResultPreviewCard
+                    type={item.type}
+                    desc={item.desc}
+                    icon={item.icon}
+                    services={item.services}
+                  />
                   <Stack
                     direction="row"
                     spacing={0.5}
@@ -574,11 +666,6 @@ export function Spa2SkinQuizManageView() {
                     </IconButton>
                   </Stack>
                 </Box>
-                <Stack direction="row" spacing={0.5} sx={{ mt: 1, flexWrap: 'wrap', gap: 0.5 }}>
-                  {item.services.map((s) => (
-                    <Chip key={s} size="small" label={s} sx={{ bgcolor: SPA2_CREAM }} />
-                  ))}
-                </Stack>
               </Grid>
             ))}
           </Grid>
@@ -596,37 +683,53 @@ export function Spa2SkinQuizManageView() {
       <Dialog
         open={questionDialog}
         onClose={() => setQuestionDialog(false)}
-        maxWidth="sm"
+        maxWidth="lg"
         fullWidth
       >
         <DialogTitle>
           {questionEditId ? t('common.edit') : t('skin_quiz.add_question_btn')}
         </DialogTitle>
         <DialogContent>
-          <Stack spacing={2} sx={{ mt: 0.5 }}>
-            <TextField
-              label={t('skin_quiz.form_question')}
-              fullWidth
-              multiline
-              minRows={2}
-              value={questionForm.question}
-              onChange={(e) => setQuestionForm((p) => ({ ...p, question: e.target.value }))}
-            />
-            {results.map((r, i) => (
-              <TextField
-                key={r.id}
-                label={`${t('skin_quiz.form_option')} (${r.type})`}
-                fullWidth
-                size="small"
-                value={questionForm.options[i] ?? ''}
-                onChange={(e) => {
-                  const next = [...questionForm.options];
-                  next[i] = e.target.value;
-                  setQuestionForm((p) => ({ ...p, options: next }));
-                }}
-              />
-            ))}
-          </Stack>
+          <Grid container spacing={3} sx={{ mt: 0.5 }}>
+            <Grid xs={12} sm={7}>
+              <Stack spacing={2}>
+                <TextField
+                  label={t('skin_quiz.form_question')}
+                  fullWidth
+                  multiline
+                  minRows={2}
+                  value={questionForm.question}
+                  onChange={(e) => setQuestionForm((p) => ({ ...p, question: e.target.value }))}
+                />
+                {results.map((r, i) => (
+                  <TextField
+                    key={r.id}
+                    label={`${t('skin_quiz.form_option')} (${r.type})`}
+                    fullWidth
+                    size="small"
+                    value={questionForm.options[i] ?? ''}
+                    onChange={(e) => {
+                      const next = [...questionForm.options];
+                      next[i] = e.target.value;
+                      setQuestionForm((p) => ({ ...p, options: next }));
+                    }}
+                  />
+                ))}
+              </Stack>
+            </Grid>
+            <Grid xs={12} sm={5}>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+                {t('common.preview_btn')}
+              </Typography>
+              <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
+                <QuestionPreviewCard
+                  question={questionForm.question}
+                  options={questionForm.options}
+                  resultTypes={results.map((r) => r.type)}
+                />
+              </Box>
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setQuestionDialog(false)}>{t('common.cancel')}</Button>
@@ -653,7 +756,7 @@ export function Spa2SkinQuizManageView() {
       />
 
       {/* Result add/edit dialog */}
-      <Dialog open={resultDialog} onClose={() => setResultDialog(false)} maxWidth="sm" fullWidth>
+      <Dialog open={resultDialog} onClose={() => setResultDialog(false)} maxWidth="md" fullWidth>
         <DialogTitle>{resultEditId ? t('common.edit') : t('skin_quiz.add_result_btn')}</DialogTitle>
         <DialogContent>
           <Grid container spacing={3} sx={{ mt: 0.5 }}>
@@ -689,13 +792,25 @@ export function Spa2SkinQuizManageView() {
                     value={resultForm.services}
                     label={t('skin_quiz.form_result_services')}
                     onChange={(e) => {
-                      const value = e.target.value;
+                      const { value } = e.target;
                       setResultForm((p) => ({
                         ...p,
                         services: typeof value === 'string' ? value.split(',') : value,
                       }));
                     }}
-                    renderValue={(selected) => (selected as string[]).join(', ')}
+                    renderValue={(selected) => (
+                      <Stack direction="row" spacing={0.5} sx={{ flexWrap: 'wrap', gap: 0.5 }}>
+                        {(selected as string[]).map((s) => (
+                          <Chip
+                            key={s}
+                            size="small"
+                            label={s}
+                            icon={<Iconify icon="solar:hashtag-bold" width={12} />}
+                            sx={{ bgcolor: SPA2_CREAM }}
+                          />
+                        ))}
+                      </Stack>
+                    )}
                   >
                     {spa2Services.map((s) => (
                       <MenuItem key={s.name} value={s.name}>
@@ -715,6 +830,7 @@ export function Spa2SkinQuizManageView() {
                   type={resultForm.type}
                   desc={resultForm.desc}
                   icon={resultForm.icon}
+                  services={resultForm.services}
                 />
               </Box>
             </Grid>

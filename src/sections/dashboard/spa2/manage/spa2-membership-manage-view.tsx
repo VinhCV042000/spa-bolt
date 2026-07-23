@@ -7,9 +7,9 @@ import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Tabs from '@mui/material/Tabs';
-import Switch from '@mui/material/Switch';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
+import Switch from '@mui/material/Switch';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -27,8 +27,8 @@ import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import TableContainer from '@mui/material/TableContainer';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { paths } from 'src/routes/paths';
 
@@ -41,12 +41,12 @@ import {
   spa2MembershipTiers,
   spa2MembershipBanner,
   SPA2_MEMBERSHIP_SIGNUPS,
-  spa2MembershipCompareRows,
-  type Spa2AdjustableImage,
   type Spa2MembershipTier,
+  type Spa2AdjustableImage,
+  spa2MembershipCompareRows,
   type Spa2MembershipSignup,
-  type Spa2MembershipSignupStatus,
   type Spa2MembershipCompareRow,
+  type Spa2MembershipSignupStatus,
 } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
@@ -1123,7 +1123,7 @@ export function Spa2MembershipManageView() {
       )}
 
       {/* Tier add/edit dialog */}
-      <Dialog open={tierDialog} onClose={() => setTierDialog(false)} maxWidth="md" fullWidth>
+      <Dialog open={tierDialog} onClose={() => setTierDialog(false)} maxWidth="lg" fullWidth>
         <DialogTitle>{tierEditId ? t('common.edit') : t('membership.add_tier_btn')}</DialogTitle>
         <DialogContent>
           <Grid container spacing={3} sx={{ mt: 0.5 }}>

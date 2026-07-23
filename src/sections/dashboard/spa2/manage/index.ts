@@ -27,3 +27,15 @@ export { Spa2WellnessPackageManageView } from 'src/sections/dashboard/spa2/manag
 export { Spa2SkinQuizManageView } from 'src/sections/dashboard/spa2/manage/spa2-skin-quiz-manage-view';
 export { Spa2CorporateManageView } from 'src/sections/dashboard/spa2/manage/spa2-corporate-manage-view';
 export { Spa2ShopManageView } from 'src/sections/dashboard/spa2/manage/spa2-shop-manage-view';
+export { Spa2EventsManageView } from 'src/sections/dashboard/spa2/manage/spa2-events-manage-view';
+export { Spa2ReferralManageView } from 'src/sections/dashboard/spa2/manage/spa2-referral-manage-view';
+export { Spa2SustainabilityManageView } from 'src/sections/dashboard/spa2/manage/spa2-sustainability-manage-view';
+export { Spa2AppDownloadManageView } from 'src/sections/dashboard/spa2/manage/spa2-app-download-manage-view';
+export { Spa2SpecialOccasionsManageView } from 'src/sections/dashboard/spa2/manage/spa2-special-occasions-manage-view';
+export { Spa2HomeServiceManageView } from 'src/sections/dashboard/spa2/manage/spa2-home-service-manage-view';
+export { Spa2SkinDiaryManageView } from 'src/sections/dashboard/spa2/manage/spa2-skin-diary-manage-view';
+export { Spa2MindfulnessManageView } from 'src/sections/dashboard/spa2/manage/spa2-mindfulness-manage-view';
+export { Spa2MedicalSpaManageView } from 'src/sections/dashboard/spa2/manage/spa2-medical-spa-manage-view';
+export { Spa2SpaEtiquetteManageView } from 'src/sections/dashboard/spa2/manage/spa2-spa-etiquette-manage-view';
+export { Spa2LoyaltyRewardsManageView } from 'src/sections/dashboard/spa2/manage/spa2-loyalty-rewards-manage-view';
+export { Spa2ReviewManageView } from 'src/sections/dashboard/spa2/manage/spa2-review-manage-view';

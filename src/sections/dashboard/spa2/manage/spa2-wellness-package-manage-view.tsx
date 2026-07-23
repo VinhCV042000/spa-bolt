@@ -7,8 +7,8 @@ import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Tabs from '@mui/material/Tabs';
-import Switch from '@mui/material/Switch';
 import Stack from '@mui/material/Stack';
+import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
@@ -32,8 +32,8 @@ import { bgBlur, varAlpha } from 'src/theme/styles';
 import {
   spa2WellnessAddons,
   spa2WellnessPackages,
-  type Spa2AdjustableImage,
   type Spa2WellnessAddon,
+  type Spa2AdjustableImage,
   spa2WellnessPackageBanner,
   type Spa2WellnessPackageItem,
 } from 'src/_mock/_spa2';
@@ -817,7 +817,7 @@ export function Spa2WellnessPackageManageView() {
       </Dialog>
 
       {/* Addon add/edit dialog */}
-      <Dialog open={addonDialog} onClose={() => setAddonDialog(false)} maxWidth="sm" fullWidth>
+      <Dialog open={addonDialog} onClose={() => setAddonDialog(false)} maxWidth="md" fullWidth>
         <DialogTitle>
           {addonEditId ? t('common.edit') : t('wellness_package.add_addon_btn')}
         </DialogTitle>

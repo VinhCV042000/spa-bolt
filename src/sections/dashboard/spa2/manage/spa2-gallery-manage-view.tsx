@@ -35,8 +35,8 @@ import { Spa2SoftCard, Spa2PageHero } from 'src/sections/spa2/view/spa2-content-
 import {
   SPA2_INK,
   SPA2_TEAL,
-  spa2Gallery,
   SPA2_CREAM,
+  spa2Gallery,
   SPA2_TEAL_DARK,
 } from 'src/sections/spa2/spa2-pages-data';
 
@@ -550,7 +550,7 @@ export function Spa2GalleryManageView() {
       )}
 
       {/* Add / Edit dialog - left: form, right: live preview */}
-      <Dialog open={openAdd} onClose={() => setOpenAdd(false)} maxWidth="md" fullWidth>
+      <Dialog open={openAdd} onClose={() => setOpenAdd(false)} maxWidth="lg" fullWidth>
         <DialogTitle>{editId !== null ? t('common.edit') : t('gallery.form_create')}</DialogTitle>
         <DialogContent dividers>
           <Grid container spacing={3} sx={{ pt: 1 }}>

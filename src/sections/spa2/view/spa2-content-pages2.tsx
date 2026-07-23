@@ -41,45 +41,81 @@ import {
   SPA2_INK,
   SPA2_TEAL,
   SPA2_CREAM,
+  spa2Events,
   spa2Services,
-  spa2Feedbacks,
   SPA2_TEAL_DARK,
+  spa2ShopBanner,
+  type Spa2Event,
   SPA2_TEAL_LIGHT,
   SPA2_CREAM_DARK,
-  SPA2_PAGE_IMAGES,
+  spa2ShopProducts,
+  spa2EventsBanner,
+  spa2ReferralSteps,
+  spa2AppDownloadQr,
   spa2GiftCardBanner,
+  spa2WellnessAddons,
+  spa2ShopCategories,
+  spa2CorporatePlans,
+  spa2SkinQuizBanner,
+  spa2ReferralBanner,
   spa2GiftCardReasons,
   spa2GiftCardDesigns,
-  spa2MembershipBanner,
   spa2MembershipTiers,
-  spa2WellnessAddons,
+  spa2CorporateBanner,
+  spa2SkinQuizResults,
+  spa2ReferralProgram,
+  spa2EventCategories,
+  spa2AppDownloadHero,
+  spa2MembershipBanner,
   spa2WellnessPackages,
+  type Spa2ShopProduct,
+  spa2CorporateBenefits,
+  spa2SkinQuizQuestions,
+  type Spa2ShopCategory,
+  type Spa2EventsBanner,
+  type Spa2ReferralStep,
+  spa2AppDownloadStores,
+  type Spa2WellnessAddon,
+  type Spa2CorporatePlan,
+  type Spa2EventCategory,
+  spa2AppDownloadCompats,
+  spa2AppDownloadScreens,
+  type Spa2AppDownloadQr,
+  spa2AppDownloadReviews,
   type Spa2GiftCardDesign,
-  type Spa2AdjustableImage,
   type Spa2GiftCardReason,
-  spa2MembershipCompareRows,
   type Spa2MembershipTier,
+  type Spa2SkinQuizResult,
+  spa2ReferralLeaderboard,
+  spa2SustainabilityStats,
+  type Spa2ReferralBanner,
+  spa2AppDownloadFeatures,
+  type Spa2AdjustableImage,
+  spa2SustainabilityBanner,
+  type Spa2ReferralProgram,
+  type Spa2AppDownloadHero,
+  spa2MembershipCompareRows,
   spa2WellnessPackageBanner,
   spa2GiftCardDenominations,
-  type Spa2WellnessAddon,
-  type Spa2MembershipCompareRow,
-  type Spa2WellnessPackageItem,
-  spa2ShopBanner,
-  spa2ShopProducts,
-  spa2ShopCategories,
-  spa2CorporateBanner,
-  spa2CorporatePlans,
-  spa2CorporateBenefits,
-  spa2SkinQuizBanner,
-  spa2SkinQuizResults,
-  spa2SkinQuizQuestions,
-  type Spa2ShopProduct,
-  spa2CorporateServiceChannels,
-  type Spa2CorporatePlan,
   type Spa2CorporateBenefit,
-  type Spa2SkinQuizResult,
   type Spa2SkinQuizQuestion,
+  type Spa2AppDownloadStore,
+  spa2AppDownloadRatingStats,
+  type Spa2AppDownloadCompat,
+  type Spa2AppDownloadReview,
+  type Spa2SustainabilityStat,
+  type Spa2AppDownloadFeature,
+  type Spa2WellnessPackageItem,
+  spa2CorporateServiceChannels,
+  spa2SustainabilityMilestones,
+  type Spa2MembershipCompareRow,
+  spa2SustainabilityCommitments,
+  type Spa2SustainabilityBanner,
+  type Spa2AppDownloadRatingStat,
   type Spa2CorporateServiceChannel,
+  type Spa2SustainabilityMilestone,
+  type Spa2ReferralLeaderboardEntry,
+  type Spa2SustainabilityCommitment,
 } from '../spa2-pages-data';
 
 const formatVND = (n: number) => `${new Intl.NumberFormat('vi-VN').format(n)}đ`;
@@ -321,194 +357,16 @@ function CheckItem({ children }: { children: React.ReactNode }) {
 // spa2WellnessPackages/spa2WellnessAddons/spa2SkinQuizQuestions/
 // spa2SkinQuizResults/spa2CorporatePlans/spa2ShopProducts/etc.).
 
-const ECO_COMMITMENTS = [
-  {
-    icon: 'solar:leaf-bold-duotone',
-    title: 'Nguyên liệu hữu cơ 100%',
-    desc: 'Toàn bộ sản phẩm không chứa hóa chất độc hại, không thử nghiệm trên động vật, nguồn gốc minh bạch.',
-    value: '100%',
-    label: 'Organic',
-  },
-  {
-    icon: 'solar:recycle-bold-duotone',
-    title: 'Bao bì tái chế',
-    desc: 'Tất cả bao bì từ vật liệu tái chế hoặc phân hủy sinh học. Giảm 80% nhựa dùng một lần so với 2020.',
-    value: '80%',
-    label: 'Giảm nhựa',
-  },
-  {
-    icon: 'solar:sun-bold-duotone',
-    title: 'Năng lượng mặt trời',
-    desc: 'Chi nhánh Đà Nẵng và Nha Trang chạy 100% điện mặt trời từ năm 2023.',
-    value: '2/4',
-    label: 'Chi nhánh solar',
-  },
-  {
-    icon: 'solar:drop-bold-duotone',
-    title: 'Tiết kiệm nước',
-    desc: 'Hệ thống tái sử dụng nước và vòi tiết kiệm giúp giảm 45% lượng nước tiêu thụ mỗi năm.',
-    value: '45%',
-    label: 'Tiết kiệm nước',
-  },
-  {
-    icon: 'solar:trees-bold-duotone',
-    title: 'Trồng cây gây rừng',
-    desc: 'Mỗi gói liệu trình bán ra, Nature Spa trồng 1 cây xanh. Đã trồng hơn 12.000 cây từ 2022.',
-    value: '12K+',
-    label: 'Cây đã trồng',
-  },
-  {
-    icon: 'solar:buildings-2-bold-duotone',
-    title: 'Cộng đồng địa phương',
-    desc: 'Thu mua 60% nguyên liệu từ nông dân hữu cơ địa phương, hỗ trợ sinh kế hơn 80 hộ gia đình.',
-    value: '80+',
-    label: 'Hộ gia đình',
-  },
-];
-
-const EVENTS = [
-  {
-    title: 'Workshop: Tự làm mặt nạ thảo mộc',
-    date: '20/07/2026',
-    time: '9:00 – 12:00',
-    location: 'Nature Spa Quận 1, TP.HCM',
-    seats: 15,
-    booked: 11,
-    price: 490000,
-    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&q=80',
-    cat: 'workshop',
-  },
-  {
-    title: 'Yoga & Aromatherapy Buổi Sáng',
-    date: '27/07/2026',
-    time: '7:00 – 9:00',
-    location: 'Nature Spa Hồ Tây, Hà Nội',
-    seats: 20,
-    booked: 8,
-    price: 250000,
-    image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&q=80',
-    cat: 'yoga',
-  },
-  {
-    title: 'Hội thảo: Dinh dưỡng & làn da',
-    date: '03/08/2026',
-    time: '14:00 – 17:00',
-    location: 'Online qua Zoom',
-    seats: 100,
-    booked: 67,
-    price: 0,
-    image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&q=80',
-    cat: 'seminar',
-  },
-  {
-    title: 'Detox Weekend Retreat',
-    date: '16–17/08/2026',
-    time: 'Cả ngày',
-    location: 'Nature Spa Nha Trang',
-    seats: 10,
-    booked: 7,
-    price: 4990000,
-    image: 'https://images.unsplash.com/photo-1596178060671-7a80dc8059ea?w=800&q=80',
-    cat: 'retreat',
-  },
-  {
-    title: 'Ngày Hội Sức Khỏe Cộng Đồng',
-    date: '24/08/2026',
-    time: '8:00 – 17:00',
-    location: 'Nature Spa Biển Mỹ Khê, Đà Nẵng',
-    seats: 200,
-    booked: 143,
-    price: 0,
-    image: 'https://images.unsplash.com/photo-1531112068337-3cd6d0d2b56b?w=800&q=80',
-    cat: 'community',
-  },
-  {
-    title: 'Masterclass: Chăm sóc da chuyên nghiệp',
-    date: '31/08/2026',
-    time: '13:00 – 17:00',
-    location: 'Nature Spa Academy, TP.HCM',
-    seats: 25,
-    booked: 25,
-    price: 990000,
-    image: 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=800&q=80',
-    cat: 'masterclass',
-  },
-];
-
-const LEADERBOARD = [
-  { name: 'Minh Anh', refs: 18, earned: 3600000, avatar: 'https://i.pravatar.cc/60?img=11' },
-  { name: 'Thu Hà', refs: 14, earned: 2800000, avatar: 'https://i.pravatar.cc/60?img=16' },
-  { name: 'Hoàng Nam', refs: 12, earned: 2400000, avatar: 'https://i.pravatar.cc/60?img=23' },
-  { name: 'Bích Ngọc', refs: 9, earned: 1800000, avatar: 'https://i.pravatar.cc/60?img=32' },
-  { name: 'Bạn', refs: 5, earned: 1000000, avatar: '', highlight: true },
-];
-
-const ECO_MILESTONES = [
-  {
-    year: '2020',
-    title: 'Loại bỏ nhựa dùng một lần',
-    desc: 'Chuyển toàn bộ bao bì sang vật liệu tái chế và thân thiện môi trường.',
-  },
-  {
-    year: '2021',
-    title: 'Chứng nhận Eco-Spa',
-    desc: 'Nature Spa là một trong 5 spa đầu tiên tại Việt Nam đạt chứng nhận Eco-Spa quốc tế.',
-  },
-  {
-    year: '2022',
-    title: 'Khởi động dự án trồng cây',
-    desc: 'Mỗi liệu trình bán ra = 1 cây xanh. Đã trồng hơn 12.000 cây tại rừng phòng hộ.',
-  },
-  {
-    year: '2023',
-    title: 'Điện mặt trời 100%',
-    desc: 'Chi nhánh Đà Nẵng và Nha Trang hoàn toàn dùng năng lượng mặt trời.',
-  },
-  {
-    year: '2024',
-    title: 'Zero Waste 80%',
-    desc: 'Đạt tỷ lệ tái chế và tái sử dụng 80% tổng chất thải phát sinh.',
-  },
-  {
-    year: '2026',
-    title: 'Mục tiêu Carbon Neutral',
-    desc: 'Hướng đến trung hòa carbon toàn hệ thống vào cuối năm 2026.',
-    pending: true,
-  },
-];
-
-const APP_FEATURES = [
-  {
-    icon: 'solar:calendar-bold-duotone',
-    title: 'Đặt lịch trong 30 giây',
-    desc: 'Chọn dịch vụ, chi nhánh và giờ trống — xác nhận ngay tức thì.',
-  },
-  {
-    icon: 'solar:bell-bold-duotone',
-    title: 'Nhắc nhở thông minh',
-    desc: 'Nhận thông báo trước 2 giờ. Không bao giờ bỏ lỡ lịch hẹn.',
-  },
-  {
-    icon: 'solar:crown-bold-duotone',
-    title: 'Quản lý thẻ thành viên',
-    desc: 'Xem điểm, hạng thẻ và lịch sử dịch vụ mọi lúc mọi nơi.',
-  },
-  {
-    icon: 'solar:gift-bold-duotone',
-    title: 'Ưu đãi độc quyền app',
-    desc: 'Flash sale và mã giảm giá chỉ dành riêng cho người dùng app.',
-  },
-  {
-    icon: 'solar:scan-bold-duotone',
-    title: 'AI soi da tích hợp',
-    desc: 'Chụp ảnh – nhận gợi ý liệu trình được cá nhân hóa bởi AI.',
-  },
-  {
-    icon: 'solar:map-point-bold-duotone',
-    title: 'Tìm chi nhánh gần nhất',
-    desc: 'Bản đồ real-time, xem tình trạng chỗ trống từng giờ.',
-  },
-];
+// NOTE: sustainability green stats/commitments/milestones, events, the
+// referral program/steps/leaderboard, and the app-download hero/store
+// badges/rating stats/screens/features/QR section are all shared with the
+// dashboard "manage" views - the single source of truth for them lives in
+// src/_mock/_spa2 (imported above as spa2SustainabilityStats/
+// spa2SustainabilityCommitments/spa2SustainabilityMilestones/spa2Events/
+// spa2ReferralProgram/spa2ReferralSteps/spa2ReferralLeaderboard/
+// spa2AppDownloadHero/spa2AppDownloadStores/spa2AppDownloadRatingStats/
+// spa2AppDownloadScreens/spa2AppDownloadFeatures/spa2AppDownloadQr/
+// spa2AppDownloadCompats).
 
 // ══════════════════════════════════════════════════════════════
 // 1. MEMBERSHIP
@@ -1981,33 +1839,37 @@ export function Spa2ShopPageView({
 // 7. SUSTAINABILITY
 // ══════════════════════════════════════════════════════════════
 
-export function Spa2SustainabilityPageView() {
+export function Spa2SustainabilityPageView({
+  banner = spa2SustainabilityBanner,
+  stats = spa2SustainabilityStats,
+  commitments = spa2SustainabilityCommitments,
+  milestones = spa2SustainabilityMilestones,
+}: {
+  banner?: Spa2SustainabilityBanner;
+  stats?: Spa2SustainabilityStat[];
+  commitments?: Spa2SustainabilityCommitment[];
+  milestones?: Spa2SustainabilityMilestone[];
+} = {}) {
   return (
     <Box sx={{ bgcolor: 'background.default' }}>
       <Spa2ContentPageHero
-        img={SPA2_PAGE_IMAGES.about}
-        eyebrow="BỀN VỮNG"
-        title="Cam kết xanh của Nature Spa"
-        subtitle="Vẻ đẹp đích thực không thể tách rời trách nhiệm với thiên nhiên và cộng đồng."
+        img={banner.image.url}
+        imageStyle={banner.image}
+        eyebrow={banner.eyebrow}
+        title={banner.title}
+        subtitle={banner.subtitle}
       />
 
       <Box sx={{ py: { xs: 5, md: 7 }, bgcolor: SPA2_TEAL }}>
         <Container>
           <Grid container spacing={3} justifyContent="center">
-            {[
-              { n: '100%', l: 'Nguyên liệu hữu cơ' },
-              { n: '80%', l: 'Giảm nhựa dùng 1 lần' },
-              { n: '12K+', l: 'Cây đã trồng' },
-              { n: '45%', l: 'Tiết kiệm nước' },
-              { n: '2/4', l: 'Chi nhánh solar' },
-              { n: '80+', l: 'Hộ nông dân đối tác' },
-            ].map((s) => (
-              <Grid key={s.l} xs={6} sm={4} md={2}>
+            {stats.map((s) => (
+              <Grid key={s.id} xs={6} sm={4} md={2}>
                 <Stack alignItems="center" sx={{ color: 'white', textAlign: 'center' }}>
                   <Typography variant="h3" sx={{ fontWeight: 700, mb: 0.5 }}>
-                    {s.n}
+                    {s.value}
                   </Typography>
-                  <Typography sx={{ fontSize: 12, opacity: 0.8 }}>{s.l}</Typography>
+                  <Typography sx={{ fontSize: 12, opacity: 0.8 }}>{s.label}</Typography>
                 </Stack>
               </Grid>
             ))}
@@ -2019,8 +1881,8 @@ export function Spa2SustainabilityPageView() {
         <Container>
           <SectionTitle eyebrow="Hành động" title="6 cam kết xanh của chúng tôi" />
           <Grid container spacing={3}>
-            {ECO_COMMITMENTS.map((c) => (
-              <Grid key={c.title} xs={12} sm={6} md={4}>
+            {commitments.map((c) => (
+              <Grid key={c.id} xs={12} sm={6} md={4}>
                 <SoftCard>
                   <Stack direction="row" spacing={2} alignItems="flex-start" sx={{ mb: 2 }}>
                     <Box
@@ -2063,8 +1925,8 @@ export function Spa2SustainabilityPageView() {
         <Container maxWidth="md">
           <SectionTitle eyebrow="Hành trình" title="Các cột mốc xanh" />
           <Stack spacing={0}>
-            {ECO_MILESTONES.map((m, i) => (
-              <Stack key={m.year} direction="row" spacing={2.5}>
+            {milestones.map((m, i) => (
+              <Stack key={m.id} direction="row" spacing={2.5}>
                 <Stack alignItems="center" sx={{ width: 72, flexShrink: 0 }}>
                   <Box
                     sx={{
@@ -2084,7 +1946,7 @@ export function Spa2SustainabilityPageView() {
                       {m.year}
                     </Typography>
                   </Box>
-                  {i < ECO_MILESTONES.length - 1 && (
+                  {i < milestones.length - 1 && (
                     <Box sx={{ width: 2, flex: 1, bgcolor: SPA2_CREAM_DARK, my: 0.5 }} />
                   )}
                 </Stack>
@@ -2123,46 +1985,45 @@ export function Spa2SustainabilityPageView() {
 // 8. EVENTS
 // ══════════════════════════════════════════════════════════════
 
-export function Spa2EventsPageView() {
+export function Spa2EventsPageView({
+  banner = spa2EventsBanner,
+  categories = spa2EventCategories,
+  events = spa2Events,
+}: {
+  banner?: Spa2EventsBanner;
+  categories?: Spa2EventCategory[];
+  events?: Spa2Event[];
+} = {}) {
   const [filter, setFilter] = useState('all');
-  const [selected, setSelected] = useState<(typeof EVENTS)[0] | null>(null);
+  const [selected, setSelected] = useState<Spa2Event | null>(null);
   const [registered, setRegistered] = useState(false);
 
-  const EVENT_CATS = [
-    { v: 'all', l: 'Tất cả' },
-    { v: 'workshop', l: 'Workshop' },
-    { v: 'yoga', l: 'Yoga' },
-    { v: 'seminar', l: 'Hội thảo' },
-    { v: 'retreat', l: 'Retreat' },
-    { v: 'community', l: 'Cộng đồng' },
-    { v: 'masterclass', l: 'Masterclass' },
-  ];
-
-  const filtered = filter === 'all' ? EVENTS : EVENTS.filter((e) => e.cat === filter);
+  const filtered = filter === 'all' ? events : events.filter((e) => e.category === filter);
 
   return (
     <Box sx={{ bgcolor: 'background.default' }}>
       <Spa2ContentPageHero
-        img={SPA2_PAGE_IMAGES.blog}
-        eyebrow="SỰ KIỆN"
-        title="Workshop & sự kiện sức khỏe"
-        subtitle="Học hỏi, kết nối và trải nghiệm cùng cộng đồng yêu sức khỏe Nature Spa."
+        img={banner.image.url}
+        imageStyle={banner.image}
+        eyebrow={banner.eyebrow}
+        title={banner.title}
+        subtitle={banner.subtitle}
       />
 
       <Box sx={{ py: { xs: 8, md: 12 } }}>
         <Container>
           <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mb: 4, gap: 1 }}>
-            {EVENT_CATS.map((c) => (
+            {categories.map((c) => (
               <Chip
-                key={c.v}
-                label={c.l}
-                onClick={() => setFilter(c.v)}
+                key={c.value}
+                label={c.label}
+                onClick={() => setFilter(c.value)}
                 sx={{
                   cursor: 'pointer',
                   height: 34,
-                  bgcolor: filter === c.v ? SPA2_TEAL : 'transparent',
-                  color: filter === c.v ? 'white' : 'text.secondary',
-                  border: `1.5px solid ${filter === c.v ? SPA2_TEAL : SPA2_CREAM_DARK}`,
+                  bgcolor: filter === c.value ? SPA2_TEAL : 'transparent',
+                  color: filter === c.value ? 'white' : 'text.secondary',
+                  border: `1.5px solid ${filter === c.value ? SPA2_TEAL : SPA2_CREAM_DARK}`,
                 }}
               />
             ))}
@@ -2173,7 +2034,7 @@ export function Spa2EventsPageView() {
               const pct = Math.round((ev.booked / ev.seats) * 100);
               const full = ev.booked >= ev.seats;
               return (
-                <Grid key={ev.title} xs={12} sm={6} md={4}>
+                <Grid key={ev.id} xs={12} sm={6} md={4}>
                   <SoftCard sx={{ p: 0, overflow: 'hidden' }}>
                     <Box sx={{ position: 'relative' }}>
                       <Box
@@ -2383,43 +2244,35 @@ export function Spa2EventsPageView() {
 // 9. REFERRAL
 // ══════════════════════════════════════════════════════════════
 
-export function Spa2ReferralPageView() {
+export function Spa2ReferralPageView({
+  banner = spa2ReferralBanner,
+  program = spa2ReferralProgram,
+  steps = spa2ReferralSteps,
+  leaderboard = spa2ReferralLeaderboard,
+}: {
+  banner?: Spa2ReferralBanner;
+  program?: Spa2ReferralProgram;
+  steps?: Spa2ReferralStep[];
+  leaderboard?: Spa2ReferralLeaderboardEntry[];
+} = {}) {
   const [copied, setCopied] = useState(false);
-  const REF_CODE = 'NSP-A7K92';
 
   const copy = () => {
-    navigator.clipboard?.writeText(REF_CODE).catch(() => {});
+    navigator.clipboard?.writeText(program.code).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
-
-  const REF_STEPS = [
-    {
-      icon: 'solar:share-bold-duotone',
-      title: 'Chia sẻ mã của bạn',
-      desc: 'Gửi mã giới thiệu hoặc link cho bạn bè qua Zalo, Facebook hay bất kỳ kênh nào.',
-    },
-    {
-      icon: 'solar:user-plus-bold-duotone',
-      title: 'Bạn bè đặt lịch',
-      desc: 'Bạn bè nhập mã khi đặt lịch lần đầu và nhận ngay ưu đãi 20%.',
-    },
-    {
-      icon: 'solar:gift-bold-duotone',
-      title: 'Cả hai nhận thưởng',
-      desc: 'Bạn nhận 200.000đ vào tài khoản. Người được giới thiệu nhận 20% off lần đầu.',
-    },
-  ];
 
   const RANK_ICONS = ['🥇', '🥈', '🥉'];
 
   return (
     <Box sx={{ bgcolor: 'background.default' }}>
       <Spa2ContentPageHero
-        img={SPA2_PAGE_IMAGES.feedback}
-        eyebrow="GIỚI THIỆU"
-        title="Giới thiệu bạn bè – Cùng nhau nhận quà"
-        subtitle="Bạn được thưởng. Bạn bè được giảm giá. Đôi bên cùng có lợi — không giới hạn số lượt!"
+        img={banner.image.url}
+        imageStyle={banner.image}
+        eyebrow={banner.eyebrow}
+        title={banner.title}
+        subtitle={banner.subtitle}
       />
 
       <Box sx={{ py: { xs: 8, md: 12 } }}>
@@ -2439,7 +2292,7 @@ export function Spa2ReferralPageView() {
                 Mã giới thiệu của bạn
               </Typography>
               <Typography sx={{ opacity: 0.85, fontSize: 14 }}>
-                Chia sẻ để nhận 200.000đ / người
+                Chia sẻ để nhận {formatVND(program.rewardPerReferral)} / người
               </Typography>
             </Box>
             <Box sx={{ p: 3 }}>
@@ -2465,7 +2318,7 @@ export function Spa2ReferralPageView() {
                     textAlign: 'center',
                   }}
                 >
-                  {REF_CODE}
+                  {program.code}
                 </Typography>
                 <IconButton
                   onClick={copy}
@@ -2516,8 +2369,16 @@ export function Spa2ReferralPageView() {
 
           <Grid container spacing={2} sx={{ mb: 5 }}>
             {[
-              { n: '5', l: 'Người đã giới thiệu', icon: 'solar:users-group-bold' },
-              { n: '1.000.000đ', l: 'Tổng thưởng nhận được', icon: 'solar:wallet-money-bold' },
+              {
+                n: String(program.totalReferred),
+                l: 'Người đã giới thiệu',
+                icon: 'solar:users-group-bold',
+              },
+              {
+                n: formatVND(program.totalEarned),
+                l: 'Tổng thưởng nhận được',
+                icon: 'solar:wallet-money-bold',
+              },
             ].map((s) => (
               <Grid key={s.l} xs={6}>
                 <SoftCard sx={{ textAlign: 'center', py: 2 }}>
@@ -2535,8 +2396,8 @@ export function Spa2ReferralPageView() {
         <Container>
           <SectionTitle eyebrow="Cách thức" title="3 bước đơn giản" />
           <Grid container spacing={3} sx={{ mb: 6 }}>
-            {REF_STEPS.map((s, i) => (
-              <Grid key={s.title} xs={12} md={4}>
+            {steps.map((s, i) => (
+              <Grid key={s.id} xs={12} md={4}>
                 <SoftCard sx={{ textAlign: 'center' }}>
                   <Box
                     sx={{
@@ -2580,9 +2441,9 @@ export function Spa2ReferralPageView() {
               mx: 'auto',
             }}
           >
-            {LEADERBOARD.map((u, i) => (
+            {leaderboard.map((u, i) => (
               <Stack
-                key={u.name}
+                key={u.id}
                 direction="row"
                 alignItems="center"
                 spacing={2}
@@ -2591,7 +2452,7 @@ export function Spa2ReferralPageView() {
                   py: 2,
                   bgcolor: u.highlight ? SPA2_CREAM : 'common.white',
                   borderBottom:
-                    i < LEADERBOARD.length - 1 ? `1px solid ${SPA2_CREAM_DARK}` : 'none',
+                    i < leaderboard.length - 1 ? `1px solid ${SPA2_CREAM_DARK}` : 'none',
                 }}
               >
                 <Typography
@@ -2648,14 +2509,31 @@ export function Spa2ReferralPageView() {
 // 10. APP DOWNLOAD
 // ══════════════════════════════════════════════════════════════
 
-export function Spa2AppDownloadPageView() {
-  const SCREENS = [SPA2_PAGE_IMAGES.booking, SPA2_PAGE_IMAGES.services, SPA2_PAGE_IMAGES.account];
+export function Spa2AppDownloadPageView({
+  hero = spa2AppDownloadHero,
+  stores = spa2AppDownloadStores,
+  ratingStats = spa2AppDownloadRatingStats,
+  screens = spa2AppDownloadScreens,
+  features = spa2AppDownloadFeatures,
+  reviews = spa2AppDownloadReviews,
+  qr = spa2AppDownloadQr,
+  compats = spa2AppDownloadCompats,
+}: {
+  hero?: Spa2AppDownloadHero;
+  stores?: Spa2AppDownloadStore[];
+  ratingStats?: Spa2AppDownloadRatingStat[];
+  screens?: string[];
+  features?: Spa2AppDownloadFeature[];
+  reviews?: Spa2AppDownloadReview[];
+  qr?: Spa2AppDownloadQr;
+  compats?: Spa2AppDownloadCompat[];
+} = {}) {
   const [activeScreen, setActiveScreen] = useState(0);
 
   useEffect(() => {
-    const t = setInterval(() => setActiveScreen((p) => (p + 1) % SCREENS.length), 2500);
+    const t = setInterval(() => setActiveScreen((p) => (p + 1) % screens.length), 2500);
     return () => clearInterval(t);
-  }, [SCREENS.length]);
+  }, [screens.length]);
 
   return (
     <Box sx={{ bgcolor: 'background.default' }}>
@@ -2698,24 +2576,18 @@ export function Spa2AppDownloadPageView() {
             <Grid xs={12} md={6}>
               <Stack spacing={2.5}>
                 <Typography variant="overline" sx={{ color: SPA2_TEAL, letterSpacing: 3 }}>
-                  ỨNG DỤNG
+                  {hero.eyebrow}
                 </Typography>
                 <Typography variant="h1" sx={{ color: 'white', fontWeight: 600, lineHeight: 1.1 }}>
-                  Nature Spa
-                  <br />
-                  trong lòng bàn tay
+                  {hero.title}
                 </Typography>
                 <Typography sx={{ color: 'rgba(255,255,255,0.7)', fontSize: 16, lineHeight: 1.7 }}>
-                  Đặt lịch, quản lý thành viên, AI soi da và hơn 20 tính năng — tất cả trong một ứng
-                  dụng.
+                  {hero.subtitle}
                 </Typography>
                 <Stack direction="row" spacing={2} flexWrap="wrap" sx={{ pt: 1, gap: 1.5 }}>
-                  {[
-                    { icon: 'ic:baseline-apple', store: 'App Store', sub: 'Tải về trên' },
-                    { icon: 'ic:baseline-android', store: 'Google Play', sub: 'Tải về trên' },
-                  ].map((s) => (
+                  {stores.map((s) => (
                     <Button
-                      key={s.store}
+                      key={s.id}
                       startIcon={<Iconify icon={s.icon} width={24} />}
                       sx={{
                         borderRadius: 3,
@@ -2737,12 +2609,8 @@ export function Spa2AppDownloadPageView() {
                   ))}
                 </Stack>
                 <Stack direction="row" spacing={3} sx={{ pt: 1 }}>
-                  {[
-                    { n: '4.9★', l: 'App Store' },
-                    { n: '50K+', l: 'Lượt tải' },
-                    { n: '4.8★', l: 'Google Play' },
-                  ].map((s) => (
-                    <Box key={s.l}>
+                  {ratingStats.map((s) => (
+                    <Box key={s.id}>
                       <Typography sx={{ fontWeight: 700, color: SPA2_TEAL_LIGHT, fontSize: 18 }}>
                         {s.n}
                       </Typography>
@@ -2764,13 +2632,14 @@ export function Spa2AppDownloadPageView() {
                     border: '8px solid rgba(255,255,255,0.12)',
                     overflow: 'hidden',
                     boxShadow: '0 40px 80px rgba(0,0,0,0.5)',
-                    background: `url(${SCREENS[activeScreen]}) center/cover`,
+                    background: `url(${screens[activeScreen]}) center/cover`,
                     transition: 'background .5s ease',
                   }}
                 />
                 <Stack direction="row" spacing={0.75} justifyContent="center" sx={{ mt: 2 }}>
-                  {SCREENS.map((_, i) => (
+                  {screens.map((_, i) => (
                     <Box
+                      // eslint-disable-next-line react/no-array-index-key
                       key={i}
                       onClick={() => setActiveScreen(i)}
                       sx={{
@@ -2799,8 +2668,8 @@ export function Spa2AppDownloadPageView() {
             subtitle="Được thiết kế để đặt lịch nhanh hơn, chăm sóc sức khỏe thông minh hơn."
           />
           <Grid container spacing={3}>
-            {APP_FEATURES.map((f) => (
-              <Grid key={f.title} xs={12} sm={6} md={4}>
+            {features.map((f) => (
+              <Grid key={f.id} xs={12} sm={6} md={4}>
                 <SoftCard>
                   <Box
                     sx={{
@@ -2834,8 +2703,8 @@ export function Spa2AppDownloadPageView() {
         <Container>
           <SectionTitle eyebrow="Đánh giá" title="Người dùng nói gì về app?" />
           <Grid container spacing={3}>
-            {spa2Feedbacks.slice(0, 3).map((f) => (
-              <Grid key={f.name} xs={12} sm={6} md={4}>
+            {reviews.map((f) => (
+              <Grid key={f.id} xs={12} sm={6} md={4}>
                 <SoftCard sx={{ bgcolor: 'common.white' }}>
                   <Rating value={f.rating} readOnly size="small" sx={{ mb: 1.5 }} />
                   <Typography
@@ -2880,10 +2749,10 @@ export function Spa2AppDownloadPageView() {
             }}
           >
             <Typography variant="h5" sx={{ color: SPA2_INK, mb: 1 }}>
-              Quét mã để tải ngay
+              {qr.title}
             </Typography>
             <Typography sx={{ color: 'text.secondary', mb: 3, fontSize: 14 }}>
-              Dùng camera điện thoại để quét QR — hoàn toàn miễn phí.
+              {qr.subtitle}
             </Typography>
             <Box
               sx={{
@@ -2897,17 +2766,23 @@ export function Spa2AppDownloadPageView() {
                 justifyContent: 'center',
                 mb: 3,
                 border: `3px solid ${SPA2_TEAL}`,
+                ...(qr.image
+                  ? {
+                      backgroundImage: `url(${qr.image})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }
+                  : {}),
               }}
             >
-              <Iconify icon="solar:qr-code-bold" width={80} sx={{ color: SPA2_TEAL }} />
+              {!qr.image && (
+                <Iconify icon="solar:qr-code-bold" width={80} sx={{ color: SPA2_TEAL }} />
+              )}
             </Box>
             <Stack direction="row" spacing={2} justifyContent="center">
-              {[
-                { icon: 'ic:baseline-apple', label: 'iOS 14+' },
-                { icon: 'ic:baseline-android', label: 'Android 8+' },
-              ].map((s) => (
+              {compats.map((s) => (
                 <Chip
-                  key={s.label}
+                  key={s.id}
                   icon={<Iconify icon={s.icon} width={16} />}
                   label={s.label}
                   sx={{ bgcolor: SPA2_CREAM, color: SPA2_INK }}

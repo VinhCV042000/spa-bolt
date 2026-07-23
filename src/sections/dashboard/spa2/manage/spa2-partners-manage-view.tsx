@@ -48,8 +48,8 @@ import {
   SPA2_TEAL,
   SPA2_CREAM,
   SPA2_TEAL_DARK,
-  spa2ExtraPartners,
   spa2QualityCerts,
+  spa2ExtraPartners,
   spa2Collaborations,
   spa2PartnerProfiles,
   spa2PartnerCategories,
@@ -441,7 +441,14 @@ export function Spa2PartnersManageView() {
       ...c,
       count: items.filter((p) => p.category === c.key).length,
     }));
-    return { total: items.length, byCategory, collabs: collabs.length, certs: certs.length };
+    const countries = new Set(items.map((p) => p.country).filter(Boolean)).size;
+    return {
+      total: items.length,
+      byCategory,
+      collabs: collabs.length,
+      certs: certs.length,
+      countries,
+    };
   }, [items, categories, collabs, certs]);
 
   return (
@@ -617,59 +624,30 @@ export function Spa2PartnersManageView() {
       {/* Danh sách đối tác chiến lược */}
       {tab === 'list' && (
         <Stack spacing={2.5}>
+          {/* 1. KPI tổng quan - quét nhanh 4 chỉ số chính */}
           <Grid container spacing={2}>
-            <Grid xs={12} md={8}>
-              <Card sx={{ bgcolor: SPA2_CREAM, height: '100%' }}>
-                <Typography
-                  variant="overline"
-                  sx={{ display: 'block', fontWeight: 700, px: 2, pt: 2 }}
-                >
-                  {t('partners.stat_by_category')}
-                </Typography>
-                <Scrollbar sx={{ minHeight: 108 }}>
-                  <Stack
-                    spacing={1}
-                    direction="row"
-                    divider={
-                      <Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />
-                    }
-                    sx={{ py: 2, px: 1 }}
-                  >
-                    <Spa2ListAnalytic
-                      title={t('common.all')}
-                      total={stats.total}
-                      percent={100}
-                      icon="solar:hand-shake-bold-duotone"
-                      color={SPA2_TEAL}
-                      unitLabel={t('partners.unit_label')}
-                      active={categoryFilter === 'all'}
-                      onClick={() => setCategoryFilter('all')}
-                    />
-                    {stats.byCategory.map((c) => (
-                      <Spa2ListAnalytic
-                        key={c.key}
-                        title={c.label}
-                        total={c.count}
-                        percent={stats.total ? (c.count / stats.total) * 100 : 0}
-                        icon={c.icon}
-                        color={SPA2_TEAL_DARK}
-                        unitLabel={t('partners.unit_label')}
-                        active={categoryFilter === c.key}
-                        onClick={() => setCategoryFilter(c.key)}
-                      />
-                    ))}
-                  </Stack>
-                </Scrollbar>
-              </Card>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:hand-shake-bold-duotone"
+                label={t('partners.stat_total')}
+                value={stats.total}
+              />
             </Grid>
-            <Grid xs={6} md={2}>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:global-bold-duotone"
+                label={t('partners.stat_countries')}
+                value={stats.countries}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
               <StatCard
                 icon="solar:medal-ribbons-star-bold"
                 label={t('partners.stat_collabs')}
                 value={stats.collabs}
               />
             </Grid>
-            <Grid xs={6} md={2}>
+            <Grid xs={6} md={3}>
               <StatCard
                 icon="solar:diploma-bold"
                 label={t('partners.stat_certs')}
@@ -678,6 +656,46 @@ export function Spa2PartnersManageView() {
             </Grid>
           </Grid>
 
+          {/* 2. Phân bổ theo nhóm - bộ lọc chi tiết, đặt riêng để dễ thao tác */}
+          <Card sx={{ bgcolor: SPA2_CREAM }}>
+            <Typography variant="overline" sx={{ display: 'block', fontWeight: 700, px: 2, pt: 2 }}>
+              {t('partners.stat_by_category')}
+            </Typography>
+            <Scrollbar sx={{ minHeight: 108 }}>
+              <Stack
+                spacing={1}
+                direction="row"
+                divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+                sx={{ py: 2, px: 1 }}
+              >
+                <Spa2ListAnalytic
+                  title={t('common.all')}
+                  total={stats.total}
+                  percent={100}
+                  icon="solar:hand-shake-bold-duotone"
+                  color={SPA2_TEAL}
+                  unitLabel={t('partners.unit_label')}
+                  active={categoryFilter === 'all'}
+                  onClick={() => setCategoryFilter('all')}
+                />
+                {stats.byCategory.map((c) => (
+                  <Spa2ListAnalytic
+                    key={c.key}
+                    title={c.label}
+                    total={c.count}
+                    percent={stats.total ? (c.count / stats.total) * 100 : 0}
+                    icon={c.icon}
+                    color={SPA2_TEAL_DARK}
+                    unitLabel={t('partners.unit_label')}
+                    active={categoryFilter === c.key}
+                    onClick={() => setCategoryFilter(c.key)}
+                  />
+                ))}
+              </Stack>
+            </Scrollbar>
+          </Card>
+
+          {/* 3. Danh sách + tìm kiếm + thêm mới */}
           <Card>
             <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 2 }}>
               <TextField
@@ -1195,7 +1213,7 @@ export function Spa2PartnersManageView() {
           setCatOpenCreate(false);
           setCatEditKey(null);
         }}
-        maxWidth="xs"
+        maxWidth="md"
         fullWidth
       >
         <DialogTitle>
@@ -1272,7 +1290,7 @@ export function Spa2PartnersManageView() {
       <Dialog
         open={collabOpenForm}
         onClose={() => setCollabOpenForm(false)}
-        maxWidth="sm"
+        maxWidth="lg"
         fullWidth
       >
         <DialogTitle>
@@ -1341,7 +1359,7 @@ export function Spa2PartnersManageView() {
       </Dialog>
 
       {/* Certification create/edit dialog */}
-      <Dialog open={certOpenForm} onClose={() => setCertOpenForm(false)} maxWidth="xs" fullWidth>
+      <Dialog open={certOpenForm} onClose={() => setCertOpenForm(false)} maxWidth="md" fullWidth>
         <DialogTitle>
           {certEditId !== null ? t('partners.certs_edit') : t('partners.certs_add_btn')}
         </DialogTitle>
