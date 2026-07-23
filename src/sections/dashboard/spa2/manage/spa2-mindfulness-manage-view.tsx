@@ -777,7 +777,7 @@ export function Spa2MindfulnessManageView() {
       )}
 
       {/* Benefit dialog */}
-      <Dialog open={benefitDialog} onClose={() => setBenefitDialog(false)} maxWidth="sm" fullWidth>
+      <Dialog open={benefitDialog} onClose={() => setBenefitDialog(false)} maxWidth="md" fullWidth>
         <DialogTitle>
           {benefitEditId ? t('common.edit') : t('mindfulness.add_benefit_btn')}
         </DialogTitle>

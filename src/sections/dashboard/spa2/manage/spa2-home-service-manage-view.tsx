@@ -968,13 +968,13 @@ export function Spa2HomeServiceManageView() {
       )}
 
       {/* Area dialog */}
-      <Dialog open={areaDialog} onClose={() => setAreaDialog(false)} maxWidth="sm" fullWidth>
+      <Dialog open={areaDialog} onClose={() => setAreaDialog(false)} maxWidth="lg" fullWidth>
         <DialogTitle>
           {areaEditValue ? t('common.edit') : t('home_service.add_area_btn')}
         </DialogTitle>
         <DialogContent>
           <Grid container spacing={3} sx={{ mt: 0.5 }}>
-            <Grid xs={12} sm={7}>
+            <Grid xs={12} sm={6}>
               <Stack spacing={2}>
                 <TextField
                   label={t('home_service.form_area_value')}
@@ -1003,7 +1003,7 @@ export function Spa2HomeServiceManageView() {
                 />
               </Stack>
             </Grid>
-            <Grid xs={12} sm={5}>
+            <Grid xs={12} sm={6}>
               <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
                 {t('common.preview_btn')}
               </Typography>
@@ -1139,7 +1139,7 @@ export function Spa2HomeServiceManageView() {
       />
 
       {/* Process dialog */}
-      <Dialog open={processDialog} onClose={() => setProcessDialog(false)} maxWidth="sm" fullWidth>
+      <Dialog open={processDialog} onClose={() => setProcessDialog(false)} maxWidth="md" fullWidth>
         <DialogTitle>
           {processEditId ? t('common.edit') : t('home_service.add_process_btn')}
         </DialogTitle>
@@ -1210,7 +1210,7 @@ export function Spa2HomeServiceManageView() {
         <DialogTitle>{faqEditId ? t('common.edit') : t('home_service.add_faq_btn')}</DialogTitle>
         <DialogContent>
           <Grid container spacing={3} sx={{ mt: 0.5 }}>
-            <Grid xs={12} sm={7}>
+            <Grid xs={12} sm={6}>
               <Stack spacing={2}>
                 <TextField
                   label={t('home_service.form_faq_question')}
@@ -1229,7 +1229,7 @@ export function Spa2HomeServiceManageView() {
                 />
               </Stack>
             </Grid>
-            <Grid xs={12} sm={5}>
+            <Grid xs={12} sm={6}>
               <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
                 {t('common.preview_btn')}
               </Typography>

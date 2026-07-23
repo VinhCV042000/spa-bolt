@@ -747,7 +747,7 @@ export function Spa2SpaEtiquetteManageView() {
       )}
 
       {/* Guide add/edit dialog */}
-      <Dialog open={guideDialog} onClose={() => setGuideDialog(false)} maxWidth="sm" fullWidth>
+      <Dialog open={guideDialog} onClose={() => setGuideDialog(false)} maxWidth="md" fullWidth>
         <DialogTitle>
           {guideEditId ? t('common.edit') : t('spa_etiquette.add_guide_btn')}
         </DialogTitle>

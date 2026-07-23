@@ -30,12 +30,12 @@ import { bgBlur, varAlpha } from 'src/theme/styles';
 import {
   spa2LoyaltyRewards,
   spa2LoyaltyEarnRules,
+  type Spa2LoyaltyReward,
   type Spa2AdjustableImage,
   spa2LoyaltyRewardsBanner,
   spa2LoyaltyPointsBalance,
-  type Spa2LoyaltyReward,
-  spa2LoyaltyRewardCategories,
   type Spa2LoyaltyEarnRule,
+  spa2LoyaltyRewardCategories,
   type Spa2LoyaltyRewardsBanner,
   type Spa2LoyaltyRewardCategory,
 } from 'src/_mock/_spa2';
@@ -55,9 +55,9 @@ import {
   SPA2_CREAM_DARK,
 } from 'src/sections/spa2/spa2-pages-data';
 
-import { Spa2SimpleImageField } from './spa2-simple-image-field';
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2SimpleImageField } from './spa2-simple-image-field';
 
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages3.tsx's
@@ -720,7 +720,7 @@ export function Spa2LoyaltyRewardsManageView() {
       )}
 
       {/* Reward add/edit dialog */}
-      <Dialog open={rewardDialog} onClose={() => setRewardDialog(false)} maxWidth="md" fullWidth>
+      <Dialog open={rewardDialog} onClose={() => setRewardDialog(false)} maxWidth="lg" fullWidth>
         <DialogTitle>
           {rewardEditId ? t('common.edit') : t('loyalty_rewards.add_reward_btn')}
         </DialogTitle>

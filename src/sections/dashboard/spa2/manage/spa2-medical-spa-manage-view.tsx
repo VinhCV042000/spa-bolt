@@ -6,8 +6,8 @@ import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
-import Alert from '@mui/material/Alert';
 import Tabs from '@mui/material/Tabs';
+import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -405,14 +405,14 @@ export function Spa2MedicalSpaManageView() {
 
   // ---- Treatments ----
   const [treatments, setTreatments] = useState<Spa2MedicalTreatment[]>(() =>
-    spa2MedicalTreatments.map((t) => ({ ...t, certifications: [...t.certifications] }))
+    spa2MedicalTreatments.map((d) => ({ ...d, certifications: [...d.certifications] }))
   );
   const [treatmentFilter, setTreatmentFilter] = useState('all');
   const filteredTreatments = useMemo(
     () =>
       treatmentFilter === 'all'
         ? treatments
-        : treatments.filter((t) => t.category === treatmentFilter),
+        : treatments.filter((d) => d.category === treatmentFilter),
     [treatments, treatmentFilter]
   );
   const [treatmentForm, setTreatmentForm] = useState(EMPTY_TREATMENT_FORM);
@@ -463,7 +463,7 @@ export function Spa2MedicalSpaManageView() {
       after: treatmentForm.after,
     };
     if (treatmentEditId) {
-      setTreatments((prev) => prev.map((t) => (t.id === treatmentEditId ? { ...t, ...next } : t)));
+      setTreatments((prev) => prev.map((d) => (d.id === treatmentEditId ? { ...d, ...next } : d)));
     } else {
       setTreatments((prev) => [...prev, withId(next)]);
     }
@@ -471,7 +471,7 @@ export function Spa2MedicalSpaManageView() {
     markDirty();
   };
   const confirmDeleteTreatment = () => {
-    setTreatments((prev) => prev.filter((t) => t.id !== treatmentDeleteId));
+    setTreatments((prev) => prev.filter((d) => d.id !== treatmentDeleteId));
     setTreatmentDeleteId(null);
     markDirty();
   };
@@ -486,7 +486,7 @@ export function Spa2MedicalSpaManageView() {
     setCredentials(spa2MedicalSpaCredentials.map((c) => ({ ...c })));
     setCategories(spa2MedicalSpaCategories.map((c) => ({ ...c })));
     setTreatments(
-      spa2MedicalTreatments.map((t) => ({ ...t, certifications: [...t.certifications] }))
+      spa2MedicalTreatments.map((d) => ({ ...d, certifications: [...d.certifications] }))
     );
     setDirty(false);
   };
@@ -855,7 +855,7 @@ export function Spa2MedicalSpaManageView() {
       <Dialog
         open={credentialDialog}
         onClose={() => setCredentialDialog(false)}
-        maxWidth="sm"
+        maxWidth="md"
         fullWidth
       >
         <DialogTitle>
