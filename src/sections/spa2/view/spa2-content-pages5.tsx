@@ -34,10 +34,14 @@ import {
   SPA2_TEAL,
   SPA2_CREAM,
   spa2Feedbacks,
+  spa2Ingredients,
   SPA2_TEAL_DARK,
   SPA2_TEAL_LIGHT,
   SPA2_CREAM_DARK,
   SPA2_PAGE_IMAGES,
+  type Spa2Ingredient,
+  spa2IngredientGuideBanner,
+  type Spa2IngredientGuideBanner,
 } from '../spa2-pages-data';
 
 const formatVND = (n: number) => `${new Intl.NumberFormat('vi-VN').format(n)}đ`;
@@ -171,141 +175,6 @@ function GradientCta({
 // 1. INGREDIENT ENCYCLOPEDIA
 // ═══════════════════════════════════════════════════════════
 
-const INGREDIENTS = [
-  {
-    name: 'Hyaluronic Acid',
-    origin: 'Tổng hợp sinh học',
-    category: 'moisturizing',
-    icon: '💧',
-    description:
-      'Phân tử giữ nước mạnh nhất tự nhiên — giữ lại gấp 1000 lần trọng lượng nước, lấp đầy nếp nhăn tức thì.',
-    benefits: ['Cấp ẩm tức thì', 'Làm đầy nếp nhăn', 'Phù hợp mọi loại da'],
-    safety: 'safe',
-    usedIn: ['Facial Organic', 'Anti-Aging Facial'],
-  },
-  {
-    name: 'Nghệ Tươi (Curcumin)',
-    origin: 'Việt Nam',
-    category: 'brightening',
-    icon: '🌿',
-    description:
-      'Hoạt chất chống viêm, kháng khuẩn mạnh mẽ từ củ nghệ Hưng Yên. Làm sáng da, mờ thâm tự nhiên.',
-    benefits: ['Chống viêm', 'Sáng da', 'Kháng khuẩn'],
-    safety: 'safe',
-    usedIn: ['Herbal Massage', 'Body Scrub'],
-  },
-  {
-    name: 'Retinol (Vitamin A)',
-    origin: 'Tổng hợp',
-    category: 'anti-aging',
-    icon: '⭐',
-    description:
-      'Vua của các hoạt chất chống lão hóa — kích thích collagen, tăng tốc tái tạo tế bào, mờ nếp nhăn.',
-    benefits: ['Chống lão hóa', 'Tái tạo da', 'Trị mụn'],
-    safety: 'caution',
-    usedIn: ['Anti-Aging Facial'],
-  },
-  {
-    name: 'Niacinamide (B3)',
-    origin: 'Tổng hợp sinh học',
-    category: 'brightening',
-    icon: '✨',
-    description:
-      'Vitamin B3 đa năng: thu nhỏ lỗ chân lông, kiểm soát dầu, mờ thâm và cải thiện đều màu da.',
-    benefits: ['Thu nhỏ lỗ chân lông', 'Kiểm soát dầu', 'Mờ thâm'],
-    safety: 'safe',
-    usedIn: ['Deep Clean Facial', 'Facial Organic'],
-  },
-  {
-    name: 'Collagen Biển',
-    origin: 'Nhật Bản',
-    category: 'anti-aging',
-    icon: '🐟',
-    description:
-      'Collagen type I từ da cá biển sâu — kích thước phân tử nhỏ, hấp thu qua da hiệu quả nhất.',
-    benefits: ['Tăng đàn hồi', 'Giảm nhăn', 'Tái tạo mô'],
-    safety: 'safe',
-    usedIn: ['Collagen Infusion', 'Anti-Aging'],
-  },
-  {
-    name: 'Dầu Argan',
-    origin: 'Morocco',
-    category: 'moisturizing',
-    icon: '🌰',
-    description:
-      '"Vàng lỏng" Morocco — giàu vitamin E và axit béo omega, nuôi dưỡng tóc và da không gây nhờn.',
-    benefits: ['Dưỡng ẩm sâu', 'Phục hồi tóc', 'Chống oxy hóa'],
-    safety: 'safe',
-    usedIn: ['Body Wrap', 'Hair Treatment'],
-  },
-  {
-    name: 'Tinh Dầu Tràm Trà',
-    origin: 'Úc',
-    category: 'acne',
-    icon: '🌿',
-    description:
-      'Kháng khuẩn, kháng nấm tự nhiên từ cây Melaleuca alternifolia — trị mụn hiệu quả, không gây kháng kháng sinh.',
-    benefits: ['Kháng khuẩn', 'Trị mụn', 'Giảm viêm'],
-    safety: 'caution',
-    usedIn: ['Acne Control Facial'],
-  },
-  {
-    name: 'Squalane',
-    origin: 'Ô liu / Mía đường',
-    category: 'moisturizing',
-    icon: '🫒',
-    description:
-      'Emollient cực kỳ nhẹ, giống với dầu tự nhiên của da người — thấm nhanh, không cảm giác bóng nhờn.',
-    benefits: ['Siêu nhẹ', 'Không cắn pore', 'Cân bằng dầu'],
-    safety: 'safe',
-    usedIn: ['Facial Organic', 'Body Treatment'],
-  },
-  {
-    name: 'AHA (Alpha Hydroxy Acid)',
-    origin: 'Trái cây tự nhiên',
-    category: 'exfoliating',
-    icon: '🍊',
-    description:
-      'Axit từ trái cây (lactic, glycolic, malic) tẩy tế bào chết nhẹ nhàng, thúc đẩy turnover da.',
-    benefits: ['Tẩy tế bào chết', 'Sáng đều màu', 'Tăng hấp thu'],
-    safety: 'caution',
-    usedIn: ['Body Scrub', 'Brightening Facial'],
-  },
-  {
-    name: 'Aloe Vera (Lô hội)',
-    origin: 'Việt Nam',
-    category: 'soothing',
-    icon: '🌵',
-    description:
-      '200+ hợp chất sinh học: làm dịu tức thì, dưỡng ẩm, kháng viêm — an toàn tuyệt đối cho da nhạy cảm nhất.',
-    benefits: ['Làm dịu da', 'Dưỡng ẩm nhẹ', 'Kháng viêm'],
-    safety: 'safe',
-    usedIn: ['Sensitive Facial', 'After Sun Care'],
-  },
-  {
-    name: 'Vitamin C (L-Ascorbic Acid)',
-    origin: 'Tổng hợp',
-    category: 'brightening',
-    icon: '🍋',
-    description:
-      'Chất chống oxy hóa mạnh nhất cho da — ức chế melanin, kích thích collagen và bảo vệ khỏi tia UV.',
-    benefits: ['Sáng da', 'Chống lão hóa', 'Bảo vệ UV'],
-    safety: 'safe',
-    usedIn: ['Brightening Facial', 'Vitamin C Infusion'],
-  },
-  {
-    name: 'Peptides',
-    origin: 'Tổng hợp sinh học',
-    category: 'anti-aging',
-    icon: '🔬',
-    description:
-      'Chuỗi axit amin ngắn ra tín hiệu cho da tự sản sinh collagen — chống lão hóa thế hệ mới không gây kích ứng.',
-    benefits: ['Kích thích collagen', 'Không kích ứng', 'Phù hợp mọi loại da'],
-    safety: 'safe',
-    usedIn: ['Anti-Aging Facial', 'Eye Zone'],
-  },
-];
-
 const SAFETY_CONFIG = {
   safe: { label: 'An toàn', color: '#2E7D32', bg: '#E8F5E9' },
   caution: { label: 'Dùng đúng cách', color: '#854F0B', bg: '#FEF3E2' },
@@ -319,14 +188,20 @@ const CATEGORY_CONFIG: Record<string, { label: string; color: string }> = {
   soothing: { label: 'Làm dịu', color: SPA2_TEAL },
 };
 
-export function Spa2IngredientGuidePageView() {
+export function Spa2IngredientGuidePageView({
+  banner = spa2IngredientGuideBanner,
+  ingredients = spa2Ingredients,
+}: {
+  banner?: Spa2IngredientGuideBanner;
+  ingredients?: Spa2Ingredient[];
+} = {}) {
   const [search, setSearch] = useState('');
   const [cat, setCat] = useState('all');
-  const [selected, setSelected] = useState<(typeof INGREDIENTS)[0] | null>(null);
+  const [selected, setSelected] = useState<Spa2Ingredient | null>(null);
 
   const categories = ['all', ...Object.keys(CATEGORY_CONFIG)];
   const filtered = useMemo(() => {
-    let list = INGREDIENTS;
+    let list = ingredients;
     if (cat !== 'all') list = list.filter((i) => i.category === cat);
     if (search.trim())
       list = list.filter(
@@ -335,7 +210,7 @@ export function Spa2IngredientGuidePageView() {
           i.description.toLowerCase().includes(search.toLowerCase())
       );
     return list;
-  }, [cat, search]);
+  }, [ingredients, cat, search]);
 
   return (
     <Box sx={{ bgcolor: 'background.default' }}>
@@ -364,16 +239,16 @@ export function Spa2IngredientGuidePageView() {
         <Container sx={{ position: 'relative', textAlign: 'center' }}>
           <Stack spacing={2.5} alignItems="center">
             <Typography variant="overline" sx={{ color: SPA2_TEAL, letterSpacing: 3 }}>
-              THÀNH PHẦN
+              {banner.eyebrow}
             </Typography>
             <Typography
               variant="h1"
               sx={{ color: SPA2_INK, fontWeight: 600, lineHeight: 1.1, maxWidth: 700 }}
             >
-              Bách khoa toàn thư thành phần mỹ phẩm
+              {banner.title}
             </Typography>
             <Typography sx={{ color: 'text.secondary', fontSize: 17, maxWidth: 540 }}>
-              Hiểu rõ từng hoạt chất trong sản phẩm bạn đang dùng — để chọn liệu trình phù hợp nhất.
+              {banner.subtitle}
             </Typography>
             <TextField
               placeholder="Tìm thành phần..."
@@ -417,7 +292,7 @@ export function Spa2IngredientGuidePageView() {
           </Stack>
 
           <Typography sx={{ fontSize: 13, color: 'text.secondary', mb: 3 }}>
-            Hiển thị {filtered.length} / {INGREDIENTS.length} thành phần
+            Hiển thị {filtered.length} / {ingredients.length} thành phần
           </Typography>
 
           <Grid container spacing={2}>
@@ -425,7 +300,7 @@ export function Spa2IngredientGuidePageView() {
               const catInfo = CATEGORY_CONFIG[ing.category];
               const safety = SAFETY_CONFIG[ing.safety as keyof typeof SAFETY_CONFIG];
               return (
-                <Grid key={ing.name} xs={12} sm={6} md={4}>
+                <Grid key={ing.id} xs={12} sm={6} md={4}>
                   <Card
                     onClick={() => setSelected(ing)}
                     sx={{

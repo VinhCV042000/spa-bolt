@@ -56,6 +56,7 @@ import {
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages3.tsx's
@@ -266,6 +267,14 @@ export function Spa2SpaEtiquetteManageView() {
   const removeRule = (list: 'dos' | 'donts', idx: number) => {
     const setter = list === 'dos' ? setDos : setDonts;
     setter((prev) => prev.filter((_, i) => i !== idx));
+    markDirty();
+  };
+  const reorderDos = (next: Spa2EtiquetteRule[]) => {
+    setDos(next);
+    markDirty();
+  };
+  const reorderDonts = (next: Spa2EtiquetteRule[]) => {
+    setDonts(next);
     markDirty();
   };
 
@@ -524,21 +533,32 @@ export function Spa2SpaEtiquetteManageView() {
                 </Button>
               }
             >
-              <Stack spacing={1.5}>
-                {dos.map((d, idx) => (
-                  <Stack key={d.id} direction="row" spacing={1} alignItems="center">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      value={d.text}
-                      onChange={(e) => updateRule('dos', idx, e.target.value)}
-                    />
-                    <IconButton size="small" color="error" onClick={() => removeRule('dos', idx)}>
-                      <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                    </IconButton>
-                  </Stack>
-                ))}
-              </Stack>
+              <Spa2SortableGrid items={dos} onReorder={reorderDos}>
+                <Stack spacing={1.5}>
+                  {dos.map((d, idx) => (
+                    <Spa2SortableItem key={d.id} id={d.id}>
+                      {(sortable) => (
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          <Spa2DragHandle sortable={sortable} />
+                          <TextField
+                            size="small"
+                            fullWidth
+                            value={d.text}
+                            onChange={(e) => updateRule('dos', idx, e.target.value)}
+                          />
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => removeRule('dos', idx)}
+                          >
+                            <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                          </IconButton>
+                        </Stack>
+                      )}
+                    </Spa2SortableItem>
+                  ))}
+                </Stack>
+              </Spa2SortableGrid>
             </SectionCard>
           </Grid>
           <Grid xs={12} md={6}>
@@ -555,21 +575,32 @@ export function Spa2SpaEtiquetteManageView() {
                 </Button>
               }
             >
-              <Stack spacing={1.5}>
-                {donts.map((d, idx) => (
-                  <Stack key={d.id} direction="row" spacing={1} alignItems="center">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      value={d.text}
-                      onChange={(e) => updateRule('donts', idx, e.target.value)}
-                    />
-                    <IconButton size="small" color="error" onClick={() => removeRule('donts', idx)}>
-                      <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                    </IconButton>
-                  </Stack>
-                ))}
-              </Stack>
+              <Spa2SortableGrid items={donts} onReorder={reorderDonts}>
+                <Stack spacing={1.5}>
+                  {donts.map((d, idx) => (
+                    <Spa2SortableItem key={d.id} id={d.id}>
+                      {(sortable) => (
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          <Spa2DragHandle sortable={sortable} />
+                          <TextField
+                            size="small"
+                            fullWidth
+                            value={d.text}
+                            onChange={(e) => updateRule('donts', idx, e.target.value)}
+                          />
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => removeRule('donts', idx)}
+                          >
+                            <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                          </IconButton>
+                        </Stack>
+                      )}
+                    </Spa2SortableItem>
+                  ))}
+                </Stack>
+              </Spa2SortableGrid>
             </SectionCard>
           </Grid>
           <Grid xs={12}>

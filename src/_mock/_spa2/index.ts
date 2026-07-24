@@ -4969,13 +4969,13 @@ export const spa2ReviewBanner: Spa2ReviewBanner = {
     'Mỗi đánh giá giúp Nature Spa cải thiện và là nguồn động lực lớn cho đội ngũ chúng tôi.',
 };
 
-export type Spa2ReviewAspect = { id: string; label: string };
+export type Spa2ReviewAspect = { id: string; label: string; sampleRating: number };
 
 export const spa2ReviewAspects: Spa2ReviewAspect[] = [
-  { id: 'quality', label: 'Chất lượng dịch vụ' },
-  { id: 'attitude', label: 'Thái độ KTV' },
-  { id: 'space', label: 'Không gian & vệ sinh' },
-  { id: 'value', label: 'Giá cả xứng đáng' },
+  { id: 'quality', label: 'Chất lượng dịch vụ', sampleRating: 5 },
+  { id: 'attitude', label: 'Thái độ KTV', sampleRating: 5 },
+  { id: 'space', label: 'Không gian & vệ sinh', sampleRating: 4 },
+  { id: 'value', label: 'Giá cả xứng đáng', sampleRating: 5 },
 ];
 
 export type Spa2ReviewRatingRow = { star: number; percent: number };
@@ -4997,5 +4997,1388 @@ export const spa2ReviewStats: Spa2ReviewStats = {
     { star: 1, percent: 1 },
   ],
 };
+
+// ---------- Seasonal Package seasons + packages
+// (shared with dashboard "manage" view; no page banner - the public page's
+// hero is generated dynamically from the active season's icon/color/bg) ----------
+
+export type Spa2SeasonalSeason = {
+  id: string;
+  season: string;
+  period: string;
+  icon: string;
+  color: string;
+  accent: string;
+  bg: string;
+};
+
+export const spa2SeasonalSeasons: Spa2SeasonalSeason[] = [
+  {
+    id: 'summer-2026',
+    season: 'Hè 2026',
+    period: 'Tháng 6 – 8',
+    icon: '☀️',
+    color: '#FF8F00',
+    accent: '#FFF8E1',
+    bg: 'linear-gradient(135deg, #FFB300 0%, #E65100 100%)',
+  },
+  {
+    id: 'autumn-2026',
+    season: 'Thu 2026',
+    period: 'Tháng 9 – 11',
+    icon: '🍂',
+    color: '#795548',
+    accent: '#FBE9E7',
+    bg: 'linear-gradient(135deg, #A1887F 0%, #4E342E 100%)',
+  },
+  {
+    id: 'winter-2026',
+    season: 'Đông 2026',
+    period: 'Tháng 12',
+    icon: '❄️',
+    color: '#1565C0',
+    accent: '#E3F2FD',
+    bg: 'linear-gradient(135deg, #42A5F5 0%, #1565C0 100%)',
+  },
+  {
+    id: 'spring-2027',
+    season: 'Xuân 2027',
+    period: 'Tháng 1 – 3',
+    icon: '🌸',
+    color: '#C2185B',
+    accent: '#FCE4EC',
+    bg: 'linear-gradient(135deg, #F48FB1 0%, #C2185B 100%)',
+  },
+];
+
+export type Spa2SeasonalPackageItem = {
+  id: string;
+  seasonId: string;
+  name: string;
+  price: number;
+  desc: string;
+  image: string;
+};
+
+export const spa2SeasonalPackages: Spa2SeasonalPackageItem[] = [
+  {
+    id: 'summer-glow-facial',
+    seasonId: 'summer-2026',
+    name: 'Summer Glow Facial',
+    price: 990000,
+    desc: 'Làm sạch, dưỡng ẩm và phục hồi da sau nắng hè — đặc trị tia UV.',
+    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&q=80',
+  },
+  {
+    id: 'cool-body-wrap',
+    seasonId: 'summer-2026',
+    name: 'Cool Body Wrap',
+    price: 890000,
+    desc: 'Ủ dưỡng toàn thân với bạc hà và dưa leo — mát lạnh tức thì.',
+    image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80',
+  },
+  {
+    id: 'autumn-harvest-scrub',
+    seasonId: 'autumn-2026',
+    name: 'Autumn Harvest Scrub',
+    price: 1090000,
+    desc: 'Tẩy da chết với muối hồng Himalaya và dầu quả bí đỏ — mềm mại đón thu.',
+    image: 'https://images.unsplash.com/photo-1596178060671-7a80dc8059ea?w=800&q=80',
+  },
+  {
+    id: 'mid-autumn-gift-set',
+    seasonId: 'autumn-2026',
+    name: 'Mid-Autumn Gift Set',
+    price: 3900000,
+    desc: 'Bộ quà tặng cao cấp mùa Trung Thu — tặng người thân ý nghĩa.',
+    image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&q=80',
+  },
+  {
+    id: 'winter-warmth-ritual',
+    seasonId: 'winter-2026',
+    name: 'Winter Warmth Ritual',
+    price: 1290000,
+    desc: 'Massage nến ấm, đá lăn mặt lạnh — nghi thức cân bằng nhiệt cho mùa đông.',
+    image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=800&q=80',
+  },
+  {
+    id: 'new-year-detox',
+    seasonId: 'winter-2026',
+    name: 'New Year Detox',
+    price: 4590000,
+    desc: 'Chào năm mới với cơ thể thanh lọc hoàn toàn — gói detox 3 ngày.',
+    image: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=800&q=80',
+  },
+  {
+    id: 'spring-renewal-facial',
+    seasonId: 'spring-2027',
+    name: 'Spring Renewal Facial',
+    price: 1190000,
+    desc: 'Facial phục hồi & sáng da đón Xuân — hồng hào như hoa đào.',
+    image: 'https://images.unsplash.com/photo-1559599101-f09722fb4948?w=800&q=80',
+  },
+  {
+    id: 'tet-luxury-package',
+    seasonId: 'spring-2027',
+    name: 'Tết Luxury Package',
+    price: 5900000,
+    desc: 'Trọn gói sang trọng đón Tết — tặng kèm hamper quà độc quyền.',
+    image: 'https://images.unsplash.com/photo-1531112068337-3cd6d0d2b56b?w=800&q=80',
+  },
+];
+
+// ---------- Nutrition banner + stats + plans + superfood tips
+// (shared with dashboard "manage" view) ----------
+
+export type Spa2NutritionBanner = Spa2PageBanner;
+
+export const spa2NutritionBanner: Spa2NutritionBanner = {
+  image: { url: SPA2_PAGE_IMAGES.blog, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'DINH DƯỠNG',
+  title: 'Đẹp từ bên trong, sáng từ bên ngoài',
+  subtitle:
+    'Chương trình dinh dưỡng lành mạnh kết hợp liệu trình spa — chăm sóc toàn diện cơ thể và tâm trí.',
+};
+
+export type Spa2NutritionStat = { id: string; n: string; l: string };
+
+export const spa2NutritionStats: Spa2NutritionStat[] = [
+  { id: 'feel-better', n: '94%', l: 'Khách hàng cảm thấy khỏe hơn' },
+  { id: 'weight-loss', n: '–3kg', l: 'Trung bình sau 7 ngày detox' },
+  { id: 'experts', n: '30+', l: 'Chuyên gia dinh dưỡng' },
+  { id: 'menus', n: '500+', l: 'Thực đơn healthy' },
+];
+
+export type Spa2NutritionPlan = {
+  id: string;
+  name: string;
+  price: number;
+  cal: string;
+  icon: string;
+  color: string;
+  desc: string;
+  includes: string[];
+};
+
+export const spa2NutritionPlans: Spa2NutritionPlan[] = [
+  {
+    id: 'juice-cleanse-3',
+    name: 'Juice Cleanse 3 ngày',
+    price: 1890000,
+    cal: '800–1200 kcal/ngày',
+    icon: 'solar:cup-bold-duotone',
+    color: '#4CAF50',
+    desc: 'Ép lạnh rau củ quả hữu cơ, không đường, giải độc nhẹ nhàng và hiệu quả.',
+    includes: [
+      '6 loại nước ép/ngày',
+      'Tư vấn dinh dưỡng',
+      'Hướng dẫn sau cleanse',
+      'Bộ kit tại nhà',
+    ],
+  },
+  {
+    id: 'detox-7',
+    name: 'Detox & Thải Độc 7 ngày',
+    price: 3990000,
+    cal: '1200–1500 kcal/ngày',
+    icon: 'solar:leaf-bold-duotone',
+    color: '#2E8B7A',
+    desc: 'Kế hoạch ăn sạch 7 ngày, kết hợp liệu trình massage detox và thiền định.',
+    includes: [
+      'Thực đơn cá nhân hóa',
+      '2 buổi massage detox',
+      'App theo dõi tiến trình',
+      'Coaching online hàng ngày',
+      'Sách thực phẩm lành mạnh',
+    ],
+  },
+  {
+    id: 'nutrition-30',
+    name: 'Gói Dinh Dưỡng Toàn Diện 30 ngày',
+    price: 8900000,
+    cal: 'Tùy thể trạng',
+    icon: 'solar:chart-2-bold-duotone',
+    color: '#7F77DD',
+    desc: 'Hành trình 30 ngày thay đổi thói quen ăn uống với chuyên gia dinh dưỡng.',
+    includes: [
+      'Phân tích thể trạng',
+      'Thực đơn tuần hóa mỗi tuần',
+      'Check-in 1-1 hàng tuần',
+      'Công thức nấu ăn healthy',
+      '4 buổi spa phục hồi',
+      'Xét nghiệm đầu & cuối',
+    ],
+  },
+];
+
+export type Spa2SuperfoodTip = { id: string; food: string; icon: string; benefit: string };
+
+export const spa2SuperfoodTips: Spa2SuperfoodTip[] = [
+  {
+    id: 'turmeric',
+    food: 'Nghệ & tiêu đen',
+    icon: '🌿',
+    benefit: 'Chống viêm, kháng khuẩn, sáng da từ bên trong',
+  },
+  {
+    id: 'collagen',
+    food: 'Collagen từ cá biển',
+    icon: '🐟',
+    benefit: 'Tái tạo da, tăng đàn hồi, chống nhăn tự nhiên',
+  },
+  {
+    id: 'matcha',
+    food: 'Trà xanh Matcha',
+    icon: '🍵',
+    benefit: 'Detox gan, giàu chất chống oxy hóa, giảm stress',
+  },
+  {
+    id: 'avocado',
+    food: 'Quả bơ',
+    icon: '🥑',
+    benefit: 'Dưỡng ẩm da từ trong ra ngoài, giàu vitamin E',
+  },
+  {
+    id: 'ginger-lemon',
+    food: 'Gừng & chanh',
+    icon: '🍋',
+    benefit: 'Tăng miễn dịch, giải độc, cải thiện tiêu hóa',
+  },
+  {
+    id: 'chia-flax',
+    food: 'Hạt chia & lanh',
+    icon: '🌱',
+    benefit: 'Omega-3 nuôi dưỡng da, điều hòa hormone',
+  },
+];
+
+// ---------- Consultation banner + consultants
+// (shared with dashboard "manage" view) ----------
+
+export type Spa2ConsultationBanner = Spa2PageBanner;
+
+export const spa2ConsultationBanner: Spa2ConsultationBanner = {
+  image: { url: SPA2_PAGE_IMAGES.contact, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'TƯ VẤN CHUYÊN GIA',
+  title: 'Kết nối với chuyên gia của bạn',
+  subtitle: 'Tư vấn 1-1 với bác sĩ da liễu và chuyên gia wellness — trực tiếp hoặc qua video call.',
+};
+
+export type Spa2Consultant = {
+  id: string;
+  name: string;
+  role: string;
+  exp: string;
+  certs: string[];
+  avatar: string;
+  rating: number;
+  reviews: number;
+  slots: string[];
+  specialty: string[];
+};
+
+export const spa2Consultants: Spa2Consultant[] = [
+  {
+    id: 'bs-hoang-anh-tuan',
+    name: 'BS. Hoàng Anh Tuấn',
+    role: 'Bác sĩ Da liễu',
+    exp: '10 năm',
+    certs: ['Chứng chỉ Da liễu', 'CIDESCO'],
+    avatar: 'https://i.pravatar.cc/200?img=15',
+    rating: 4.9,
+    reviews: 247,
+    slots: ['9:00', '10:30', '14:00', '15:30'],
+    specialty: ['Trị mụn', 'Lão hóa', 'Sắc tố'],
+  },
+  {
+    id: 'ths-dang-thu-trang',
+    name: 'Th.S Đặng Thu Trang',
+    role: 'Chuyên gia Skincare',
+    exp: '12 năm',
+    certs: ['CIDESCO', 'CIBTAC'],
+    avatar: 'https://i.pravatar.cc/200?img=45',
+    rating: 4.8,
+    reviews: 189,
+    slots: ['8:00', '11:00', '14:30', '16:00'],
+    specialty: ['Dưỡng ẩm', 'Nhạy cảm', 'Chống lão hóa'],
+  },
+  {
+    id: 'nguyen-thao-vy',
+    name: 'Nguyễn Thảo Vy',
+    role: 'Chuyên gia Wellness',
+    exp: '15 năm',
+    certs: ['CIDESCO', 'Master Trainer'],
+    avatar: 'https://i.pravatar.cc/200?img=47',
+    rating: 5.0,
+    reviews: 312,
+    slots: ['10:00', '13:00', '15:00'],
+    specialty: ['Wellness tổng quát', 'Detox', 'Stress'],
+  },
+  {
+    id: 'le-gia-huy',
+    name: 'Lê Gia Huy',
+    role: 'Chuyên gia Dinh dưỡng',
+    exp: '8 năm',
+    certs: ['Chứng chỉ Dinh dưỡng', 'ISO Trainer'],
+    avatar: 'https://i.pravatar.cc/200?img=14',
+    rating: 4.9,
+    reviews: 156,
+    slots: ['9:30', '12:00', '14:00', '17:00'],
+    specialty: ['Dinh dưỡng', 'Giảm cân', 'Detox'],
+  },
+];
+
+export type Spa2NutritionQuizQuestion = {
+  id: string;
+  question: string;
+  options: string[];
+};
+
+export const spa2NutritionQuizQuestions: Spa2NutritionQuizQuestion[] = [
+  {
+    id: 'quiz-goal',
+    question: 'Mục tiêu chính của bạn?',
+    options: ['Giảm cân', 'Làn da đẹp hơn', 'Tăng năng lượng', 'Cải thiện tiêu hóa'],
+  },
+  {
+    id: 'quiz-diet',
+    question: 'Bạn đang ăn uống thế nào?',
+    options: [
+      'Ăn nhiều tinh bột & đường',
+      'Ăn khá lành mạnh',
+      'Ăn chay / thuần thực vật',
+      'Không kiểm soát được',
+    ],
+  },
+  {
+    id: 'quiz-time',
+    question: 'Thời gian bạn có?',
+    options: ['3 ngày cuối tuần', '1 tuần', '1 tháng trở lên', 'Linh hoạt theo lịch'],
+  },
+];
+
+export type Spa2ConsultationBookingStatus = 'Mới' | 'Đang xử lý' | 'Hoàn tất' | 'Đã huỷ';
+
+export type Spa2ConsultationBooking = {
+  id: string;
+  consultantId: string;
+  customerName: string;
+  phone: string;
+  mode: 'online' | 'offline';
+  slot: string;
+  date: string;
+  note: string;
+  status: Spa2ConsultationBookingStatus;
+};
+
+export const spa2ConsultationBookings: Spa2ConsultationBooking[] = [
+  {
+    id: 'booking-1',
+    consultantId: 'bs-hoang-anh-tuan',
+    customerName: 'Trần Thị Mai',
+    phone: '0901 234 567',
+    mode: 'online',
+    slot: '9:00',
+    date: '2026-07-28',
+    note: 'Muốn tư vấn về tình trạng mụn ẩn.',
+    status: 'Mới',
+  },
+  {
+    id: 'booking-2',
+    consultantId: 'ths-dang-thu-trang',
+    customerName: 'Nguyễn Văn Long',
+    phone: '0912 345 678',
+    mode: 'offline',
+    slot: '14:30',
+    date: '2026-07-29',
+    note: 'Da nhạy cảm, dễ kích ứng khi đổi sản phẩm.',
+    status: 'Đang xử lý',
+  },
+  {
+    id: 'booking-3',
+    consultantId: 'nguyen-thao-vy',
+    customerName: 'Lê Thu Hà',
+    phone: '0923 456 789',
+    mode: 'online',
+    slot: '13:00',
+    date: '2026-07-24',
+    note: 'Cần lộ trình detox trước sự kiện quan trọng.',
+    status: 'Hoàn tất',
+  },
+  {
+    id: 'booking-4',
+    consultantId: 'le-gia-huy',
+    customerName: 'Phạm Quốc Bảo',
+    phone: '0934 567 890',
+    mode: 'offline',
+    slot: '17:00',
+    date: '2026-07-30',
+    note: '',
+    status: 'Mới',
+  },
+  {
+    id: 'booking-5',
+    consultantId: 'bs-hoang-anh-tuan',
+    customerName: 'Đỗ Ngọc Anh',
+    phone: '0945 678 901',
+    mode: 'online',
+    slot: '10:30',
+    date: '2026-07-22',
+    note: 'Đã huỷ do trùng lịch cá nhân.',
+    status: 'Đã huỷ',
+  },
+];
+
+export type Spa2VipRoomBanner = Spa2PageBanner & { badge: string };
+
+export const spa2VipRoomBanner: Spa2VipRoomBanner = {
+  image: { url: SPA2_PAGE_IMAGES.account, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'PHÒNG VIP & PREMIUM',
+  title: 'Trải nghiệm sang trọng không giới hạn',
+  subtitle:
+    'Phòng VIP riêng tư với dịch vụ butler cá nhân, nội thất cao cấp và mọi tiện nghi đẳng cấp nhất.',
+  badge: 'Chỉ từ 1.800.000đ / 2 giờ',
+};
+
+export type Spa2VipRoom = {
+  id: string;
+  name: string;
+  size: string;
+  capacity: string;
+  price: number;
+  duration: string;
+  image: string;
+  features: string[];
+};
+
+export const spa2VipRooms: Spa2VipRoom[] = [
+  {
+    id: 'garden-suite',
+    name: 'The Garden Suite',
+    size: '45m²',
+    capacity: '1–2 người',
+    price: 2500000,
+    duration: 'Từ 3 giờ',
+    image: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=900&q=80',
+    features: [
+      'Bồn tắm đá hoa cương',
+      'Vườn thiên nhiên thu nhỏ',
+      'Trà & bánh cao cấp',
+      'Hệ thống âm thanh vòm',
+      'Nến thơm Diptyque',
+      'Butler riêng',
+    ],
+  },
+  {
+    id: 'lotus-penthouse',
+    name: 'The Lotus Penthouse',
+    size: '65m²',
+    capacity: '2 người',
+    price: 4200000,
+    duration: 'Từ 4 giờ',
+    image: 'https://images.unsplash.com/photo-1596178060671-7a80dc8059ea?w=900&q=80',
+    features: [
+      'View toàn thành phố',
+      'Bồn tắm sục hoa',
+      'Champagne & trái cây',
+      'Massage ghế Inada',
+      'Tủ quần áo & đồ vệ sinh cao cấp',
+      'Check-in riêng tư',
+    ],
+  },
+  {
+    id: 'bamboo-haven',
+    name: 'The Bamboo Haven',
+    size: '35m²',
+    capacity: '1 người',
+    price: 1800000,
+    duration: 'Từ 2 giờ',
+    image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=900&q=80',
+    features: [
+      'Thiết kế tre nứa truyền thống',
+      'Giường massage Japanse style',
+      'Xông hơi tích hợp',
+      'Trà sưu tầm & mật ong rừng',
+      'Âm nhạc thiên nhiên',
+    ],
+  },
+];
+
+export type Spa2VipRoomPerk = {
+  id: string;
+  icon: string;
+  title: string;
+  desc: string;
+};
+
+export const spa2VipRoomPerks: Spa2VipRoomPerk[] = [
+  {
+    id: 'butler',
+    icon: 'solar:user-bold-duotone',
+    title: 'Butler cá nhân',
+    desc: 'Phục vụ riêng từ khi đến đến khi ra về — không cần tự mình chuẩn bị bất cứ điều gì.',
+  },
+  {
+    id: 'pickup',
+    icon: 'solar:car-bold-duotone',
+    title: 'Đưa đón tận nơi',
+    desc: 'Xe đưa đón tại nhà hoặc khách sạn trong bán kính 15km — miễn phí cho gói Platinum.',
+  },
+  {
+    id: 'champagne',
+    icon: 'solar:bottle-bold-duotone',
+    title: 'Champagne & ẩm thực',
+    desc: 'Menu đồ uống và bánh ngọt cao cấp được chuẩn bị theo sở thích riêng của bạn.',
+  },
+  {
+    id: 'photo',
+    icon: 'solar:camera-bold-duotone',
+    title: 'Chụp ảnh kỷ niệm',
+    desc: 'Photographer chuyên nghiệp ghi lại khoảnh khắc — ảnh được giao trong 24 giờ.',
+  },
+];
+
+export type Spa2PackageBuilderBanner = Spa2PageBanner;
+
+export const spa2PackageBuilderBanner: Spa2PackageBuilderBanner = {
+  image: { url: SPA2_PAGE_IMAGES.services, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'TỰ TẠO COMBO',
+  title: 'Thiết kế gói spa theo ý bạn',
+  subtitle:
+    'Chọn các dịch vụ yêu thích — tự ghép combo và nhận ưu đãi đặc biệt cho gói từ 2 dịch vụ trở lên.',
+};
+
+export type Spa2PackageBuilderDiscountTier = {
+  id: string;
+  minServices: number;
+  discountPercent: number;
+};
+
+export const spa2PackageBuilderDiscountTiers: Spa2PackageBuilderDiscountTier[] = [
+  { id: 'tier-2', minServices: 2, discountPercent: 10 },
+  { id: 'tier-3', minServices: 3, discountPercent: 15 },
+];
+
+export type Spa2AppointmentBanner = Spa2PageBanner;
+
+export const spa2AppointmentBanner: Spa2AppointmentBanner = {
+  image: { url: SPA2_PAGE_IMAGES.account, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'LỊCH HẸN CỦA TÔI',
+  title: 'Quản lý lịch hẹn',
+  subtitle: 'Xem, đổi và theo dõi tất cả lịch hẹn spa của bạn tại một nơi.',
+};
+
+export type Spa2AppointmentStatus = 'confirmed' | 'pending' | 'done' | 'cancelled';
+
+export type Spa2AppointmentRecord = {
+  id: string;
+  date: string;
+  time: string;
+  service: string;
+  branch: string;
+  ktv: string;
+  status: Spa2AppointmentStatus;
+  price: number;
+  rating?: number;
+};
+
+export const spa2AppointmentUpcoming: Spa2AppointmentRecord[] = [
+  {
+    id: 'A001',
+    date: '15/07/2026',
+    time: '10:00',
+    service: 'Facial Organic',
+    branch: 'Quận 1, TP.HCM',
+    ktv: 'Phạm Hồng Nhi',
+    status: 'confirmed',
+    price: 890000,
+  },
+  {
+    id: 'A002',
+    date: '22/07/2026',
+    time: '14:30',
+    service: 'Massage Thảo Dược',
+    branch: 'Quận 1, TP.HCM',
+    ktv: 'Trần Minh Khôi',
+    status: 'pending',
+    price: 690000,
+  },
+];
+
+export const spa2AppointmentHistory: Spa2AppointmentRecord[] = [
+  {
+    id: 'B001',
+    date: '01/07/2026',
+    time: '09:00',
+    service: 'Aromatherapy',
+    branch: 'Quận 1, TP.HCM',
+    ktv: 'Phạm Hồng Nhi',
+    status: 'done',
+    rating: 5,
+    price: 790000,
+  },
+  {
+    id: 'B002',
+    date: '15/06/2026',
+    time: '15:00',
+    service: 'Body Scrub & Wrap',
+    branch: 'Hồ Tây, Hà Nội',
+    ktv: 'Nguyễn Bích Ngọc',
+    status: 'done',
+    rating: 4,
+    price: 990000,
+  },
+  {
+    id: 'B003',
+    date: '01/06/2026',
+    time: '10:00',
+    service: 'Facial Organic',
+    branch: 'Quận 1, TP.HCM',
+    ktv: 'Trần Minh Khôi',
+    status: 'cancelled',
+    price: 890000,
+  },
+];
+
+export const spa2AppointmentLoyaltyPoints = 3250;
+
+// ---------- Newsletter (view + dashboard shared) --------------------------
+
+export type Spa2NewsletterBanner = Spa2PageBanner;
+
+export const spa2NewsletterBanner: Spa2NewsletterBanner = {
+  image: { url: SPA2_PAGE_IMAGES.blog, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'BẢN TIN',
+  title: 'Nhận tin tức sức khỏe hàng tuần',
+  subtitle: 'Ưu đãi độc quyền, mẹo chăm sóc da và sự kiện mới nhất — thẳng vào hộp thư của bạn.',
+};
+
+export type Spa2NewsletterBenefit = { id: string; icon: string; title: string; desc: string };
+
+export const spa2NewsletterBenefits: Spa2NewsletterBenefit[] = [
+  {
+    id: 'nb1',
+    icon: 'solar:tag-bold-duotone',
+    title: 'Ưu đãi độc quyền',
+    desc: 'Deal flash sale chỉ gửi qua email — không đăng công khai.',
+  },
+  {
+    id: 'nb2',
+    icon: 'solar:leaf-bold-duotone',
+    title: 'Mẹo chăm sóc da',
+    desc: 'Bí quyết skincare theo mùa từ chuyên gia Nature Spa.',
+  },
+  {
+    id: 'nb3',
+    icon: 'solar:calendar-bold-duotone',
+    title: 'Sự kiện sắp đến',
+    desc: 'Workshop, retreat và sự kiện cộng đồng thông báo sớm nhất.',
+  },
+  {
+    id: 'nb4',
+    icon: 'solar:star-bold-duotone',
+    title: 'Sản phẩm mới',
+    desc: 'Review và mẫu dùng thử miễn phí cho subscriber đầu tiên.',
+  },
+];
+
+export type Spa2NewsletterConfig = {
+  welcomeGiftAmount: number;
+  voucherCode: string;
+  subscriberCount: number;
+  satisfactionRating: number;
+};
+
+export const spa2NewsletterConfig: Spa2NewsletterConfig = {
+  welcomeGiftAmount: 100000,
+  voucherCode: 'WELCOME100',
+  subscriberCount: 28000,
+  satisfactionRating: 4.8,
+};
+
+// ---------- Press & Media (view + dashboard shared) -----------------------
+
+export type Spa2PressBanner = Spa2PageBanner;
+
+export const spa2PressBanner: Spa2PressBanner = {
+  image: { url: SPA2_PAGE_IMAGES.partners, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'BÁO CHÍ & TRUYỀN THÔNG',
+  title: 'Nature Spa trên mặt báo',
+  subtitle: 'Được đề cập bởi các tạp chí và kênh truyền thông uy tín hàng đầu Việt Nam và quốc tế.',
+};
+
+export type Spa2PressAward = {
+  id: string;
+  name: string;
+  org: string;
+  icon: string;
+  color: string;
+};
+
+export const spa2PressAwards: Spa2PressAward[] = [
+  {
+    id: 'pa1',
+    name: 'Eco-Friendly Brand of the Year',
+    org: 'Vietnam Beauty Awards 2026',
+    icon: 'solar:leaf-bold-duotone',
+    color: '#2E7D32',
+  },
+  {
+    id: 'pa2',
+    name: 'Best Wellness Experience',
+    org: 'Travel & Leisure Awards 2025',
+    icon: 'solar:star-bold-duotone',
+    color: '#EF9F27',
+  },
+  {
+    id: 'pa3',
+    name: 'Top 10 Trusted Spa',
+    org: 'Consumer Choice Awards 2025',
+    icon: 'solar:medal-ribbon-star-bold-duotone',
+    color: '#2E8B7A',
+  },
+  {
+    id: 'pa4',
+    name: 'Best Green Initiative',
+    org: 'Sustainable Business Awards 2024',
+    icon: 'solar:trees-bold-duotone',
+    color: '#4CAF50',
+  },
+];
+
+export type Spa2PressArticleType =
+  | 'Feature'
+  | 'Ranking'
+  | 'Business'
+  | 'Review'
+  | 'Award'
+  | 'Interview';
+
+export type Spa2PressArticle = {
+  id: string;
+  outlet: string;
+  logo: string;
+  date: string;
+  title: string;
+  type: Spa2PressArticleType;
+  url: string;
+};
+
+export const spa2PressArticles: Spa2PressArticle[] = [
+  {
+    id: 'pr1',
+    outlet: 'VnExpress',
+    logo: 'VE',
+    date: '15/06/2026',
+    title: 'Nature Spa: Thương hiệu spa xanh được lòng giới trẻ Việt',
+    type: 'Feature',
+    url: '#',
+  },
+  {
+    id: 'pr2',
+    outlet: 'Thanh Niên',
+    logo: 'TN',
+    date: '01/06/2026',
+    title: 'Top 10 Spa được yêu thích nhất 2026 tại TP.HCM',
+    type: 'Ranking',
+    url: '#',
+  },
+  {
+    id: 'pr3',
+    outlet: 'Forbes Vietnam',
+    logo: 'FV',
+    date: '15/05/2026',
+    title: 'Startup spa hữu cơ tăng trưởng 300% sau đại dịch',
+    type: 'Business',
+    url: '#',
+  },
+  {
+    id: 'pr4',
+    outlet: 'Dép Plus',
+    logo: 'DP',
+    date: '01/05/2026',
+    title: 'Review chi tiết: 8 giờ tại Nature Spa Retreat Day',
+    type: 'Review',
+    url: '#',
+  },
+  {
+    id: 'pr5',
+    outlet: 'Cosmopolitan VN',
+    logo: 'CV',
+    date: '01/04/2026',
+    title: 'Nature Spa đoạt giải "Eco-Friendly Brand of the Year"',
+    type: 'Award',
+    url: '#',
+  },
+  {
+    id: 'pr6',
+    outlet: 'VTV Online',
+    logo: 'VT',
+    date: '15/03/2026',
+    title: 'Nature Spa chia sẻ bí quyết chăm sóc da mùa hè',
+    type: 'Interview',
+    url: '#',
+  },
+];
+
+export type Spa2PressContact = { email: string; mediaKitUrl: string };
+
+export const spa2PressContact: Spa2PressContact = {
+  email: 'press@naturespa.vn',
+  mediaKitUrl: '',
+};
+
+// ---------- Affiliate Program (view + dashboard shared) -------------------
+
+export type Spa2AffiliateBanner = Spa2PageBanner;
+
+export const spa2AffiliateBanner: Spa2AffiliateBanner = {
+  image: { url: SPA2_PAGE_IMAGES.careers, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'CỘNG TÁC VIÊN',
+  title: 'Kiếm thu nhập cùng Nature Spa',
+  subtitle:
+    'Chia sẻ về lối sống lành mạnh và nhận hoa hồng lên đến 18% cho mỗi giao dịch thành công.',
+};
+
+export type Spa2AffiliateStat = { id: string; n: string; l: string };
+
+export const spa2AffiliateStats: Spa2AffiliateStat[] = [
+  { id: 'as1', n: '18%', l: 'Hoa hồng tối đa' },
+  { id: 'as2', n: '1.200+', l: 'CTV đang hoạt động' },
+  { id: 'as3', n: '24h', l: 'Duyệt đơn' },
+  { id: 'as4', n: '0đ', l: 'Chi phí tham gia' },
+];
+
+export type Spa2AffiliateStep = { id: string; icon: string; title: string; desc: string };
+
+export const spa2AffiliateSteps: Spa2AffiliateStep[] = [
+  {
+    id: 'ast1',
+    icon: 'solar:user-plus-bold-duotone',
+    title: 'Đăng ký miễn phí',
+    desc: 'Điền form, được duyệt trong 24 giờ.',
+  },
+  {
+    id: 'ast2',
+    icon: 'solar:link-bold-duotone',
+    title: 'Nhận link riêng',
+    desc: 'Link tracking cá nhân theo dõi mọi lượt click.',
+  },
+  {
+    id: 'ast3',
+    icon: 'solar:share-bold-duotone',
+    title: 'Chia sẻ nội dung',
+    desc: 'Blog, social, email — bất kỳ kênh nào bạn có.',
+  },
+  {
+    id: 'ast4',
+    icon: 'solar:wallet-money-bold-duotone',
+    title: 'Nhận hoa hồng',
+    desc: 'Thanh toán qua ngân hàng hoặc ví điện tử.',
+  },
+];
+
+export type Spa2AffiliateTier = {
+  id: string;
+  name: string;
+  commission: string;
+  threshold: string;
+  color: string;
+  hot?: boolean;
+  perks: string[];
+};
+
+export const spa2AffiliateTiers: Spa2AffiliateTier[] = [
+  {
+    id: 'starter',
+    name: 'Starter',
+    commission: '8%',
+    threshold: '0đ',
+    color: '#9E9E9E',
+    perks: ['Link cá nhân', 'Dashboard cơ bản', 'Thanh toán hàng tháng', 'Hỗ trợ email'],
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    commission: '12%',
+    threshold: '10 triệu đ/tháng',
+    color: '#2E8B7A',
+    hot: true,
+    perks: [
+      '8% + thưởng theo KPI',
+      'Dashboard nâng cao',
+      'Thanh toán 2 lần/tháng',
+      'Banner & tài liệu marketing',
+      'Hỗ trợ ưu tiên',
+    ],
+  },
+  {
+    id: 'elite',
+    name: 'Elite',
+    commission: '18%',
+    threshold: '50 triệu đ/tháng',
+    color: '#7F77DD',
+    perks: [
+      '18% + override bonus',
+      'Báo cáo real-time',
+      'Account manager riêng',
+      'Co-marketing budget',
+      'Xuất hiện trên website Nature Spa',
+    ],
+  },
+];
+
+// ---------- Spa Finder (view + dashboard shared) ---------------------------
+
+export type Spa2SpaFinderBanner = Spa2PageBanner;
+
+export const spa2SpaFinderBanner: Spa2SpaFinderBanner = {
+  image: { url: SPA2_PAGE_IMAGES.branches, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'TÌM KTV',
+  title: 'Tìm chuyên viên & chi nhánh phù hợp',
+  subtitle:
+    'Tìm kỹ thuật viên theo chuyên môn và địa điểm — đặt lịch thẳng với người bạn tin tưởng.',
+};
+
+export type Spa2SpaFinderTherapist = {
+  id: string;
+  name: string;
+  role: string;
+  avatar: string;
+  branch: string;
+  rating: number;
+  reviews: number;
+  exp: string;
+  available: boolean;
+  specialties: string[];
+  nextSlot: string;
+};
+
+export const spa2SpaFinderTherapists: Spa2SpaFinderTherapist[] = [
+  {
+    id: 'sf1',
+    name: 'Phạm Hồng Nhi',
+    role: 'Facial Specialist',
+    avatar: 'https://i.pravatar.cc/200?img=32',
+    branch: 'Quận 1, TP.HCM',
+    rating: 4.9,
+    reviews: 312,
+    exp: '8 năm',
+    available: true,
+    specialties: ['Facial', 'Lão hóa', 'Mụn'],
+    nextSlot: '09:00 hôm nay',
+  },
+  {
+    id: 'sf2',
+    name: 'Trần Minh Khôi',
+    role: 'Massage Therapist',
+    avatar: 'https://i.pravatar.cc/200?img=12',
+    branch: 'Hồ Tây, Hà Nội',
+    rating: 4.8,
+    reviews: 256,
+    exp: '10 năm',
+    available: true,
+    specialties: ['Massage', 'Detox', 'Body'],
+    nextSlot: '14:30 hôm nay',
+  },
+  {
+    id: 'sf3',
+    name: 'Nguyễn Bích Ngọc',
+    role: 'Wellness Expert',
+    avatar: 'https://i.pravatar.cc/200?img=47',
+    branch: 'Biển Mỹ Khê, Đà Nẵng',
+    rating: 5.0,
+    reviews: 189,
+    exp: '6 năm',
+    available: false,
+    specialties: ['Yoga', 'Thiền', 'Aromatherapy'],
+    nextSlot: 'Sáng mai',
+  },
+  {
+    id: 'sf4',
+    name: 'Lê Văn An',
+    role: 'Body Care Specialist',
+    avatar: 'https://i.pravatar.cc/200?img=14',
+    branch: 'Nha Trang',
+    rating: 4.7,
+    reviews: 145,
+    exp: '5 năm',
+    available: true,
+    specialties: ['Body Scrub', 'Wrap', 'Tắm thảo dược'],
+    nextSlot: '11:00 hôm nay',
+  },
+];
+
+// ---------- Spa Menu (view + dashboard shared) ------------------------------
+
+export type Spa2SpaMenuBanner = Spa2PageBanner;
+
+export const spa2SpaMenuBanner: Spa2SpaMenuBanner = {
+  image: { url: SPA2_PAGE_IMAGES.services, focalX: 50, focalY: 50, zoom: 100 },
+  eyebrow: 'MENU DỊCH VỤ',
+  title: 'Toàn bộ menu dịch vụ',
+  subtitle:
+    'Khám phá đầy đủ các liệu trình tại Nature Spa — từ cơ bản đến chuyên sâu, từ thư giãn đến trị liệu.',
+};
+
+export type Spa2SpaMenuItem = {
+  id: string;
+  name: string;
+  desc: string;
+  duration: string;
+  price: number;
+  badge: string;
+};
+
+export type Spa2SpaMenuSection = {
+  id: string;
+  category: string;
+  icon: string;
+  color: string;
+  items: Spa2SpaMenuItem[];
+};
+
+export const spa2SpaMenuSections: Spa2SpaMenuSection[] = [
+  {
+    id: 'sms-signature',
+    category: 'Signature Treatments',
+    icon: 'solar:stars-bold-duotone',
+    color: '#EF9F27',
+    items: [
+      {
+        id: 'smi1',
+        name: 'Nature Spa Signature Massage',
+        desc: 'Kết hợp kỹ thuật Thụy Điển, Thái Lan và Bali với tinh dầu sả gừng đặc chế.',
+        duration: '90 phút',
+        price: 1290000,
+        badge: 'Bestseller',
+      },
+      {
+        id: 'smi2',
+        name: 'Green Forest Facial',
+        desc: 'Facial thương hiệu với chiết xuất lá sen, trà xanh Đà Lạt và collagen cá hồi.',
+        duration: '90 phút',
+        price: 1490000,
+        badge: 'Award Winner',
+      },
+      {
+        id: 'smi3',
+        name: 'Full Body Ritual',
+        desc: 'Tẩy da chết, ủ thảo dược, massage toàn thân và đắp mặt nạ — trọn gói 3 giờ.',
+        duration: '180 phút',
+        price: 2990000,
+        badge: '',
+      },
+    ],
+  },
+  {
+    id: 'sms-facial',
+    category: 'Facial Treatments',
+    icon: 'solar:face-scan-circle-bold-duotone',
+    color: '#2E8B7A',
+    items: [
+      {
+        id: 'smi4',
+        name: 'Hydrating Facial',
+        desc: 'Cấp ẩm chuyên sâu với Hyaluronic Acid và mặt nạ ngọc trai thiên nhiên.',
+        duration: '60 phút',
+        price: 790000,
+        badge: '',
+      },
+      {
+        id: 'smi5',
+        name: 'Anti-Aging Facial',
+        desc: 'Chống lão hóa với retinol, peptide và công nghệ siêu âm vi điểm.',
+        duration: '75 phút',
+        price: 1190000,
+        badge: '',
+      },
+      {
+        id: 'smi6',
+        name: 'Acne Control Facial',
+        desc: 'Làm sạch sâu, diệt khuẩn và phục hồi da mụn bằng ánh sáng sinh học.',
+        duration: '75 phút',
+        price: 990000,
+        badge: 'New',
+      },
+    ],
+  },
+  {
+    id: 'sms-body',
+    category: 'Body Treatments',
+    icon: 'solar:body-bold-duotone',
+    color: '#7F77DD',
+    items: [
+      {
+        id: 'smi7',
+        name: 'Herbal Body Scrub',
+        desc: 'Tẩy da chết với muối biển, mật ong và tinh dầu sả — da mềm mại tức thì.',
+        duration: '60 phút',
+        price: 690000,
+        badge: '',
+      },
+      {
+        id: 'smi8',
+        name: 'Detox Body Wrap',
+        desc: 'Ủ thảo dược tươi, giải độc và kiểm soát cân nặng hiệu quả.',
+        duration: '75 phút',
+        price: 890000,
+        badge: '',
+      },
+      {
+        id: 'smi9',
+        name: 'Slimming & Firming',
+        desc: 'Massage định hình cùng tinh chất cà phê và bùn núi lửa khoáng chất.',
+        duration: '90 phút',
+        price: 1090000,
+        badge: '',
+      },
+    ],
+  },
+  {
+    id: 'sms-massage',
+    category: 'Massage Therapies',
+    icon: 'solar:hand-stars-bold-duotone',
+    color: '#E57373',
+    items: [
+      {
+        id: 'smi10',
+        name: 'Swedish Massage',
+        desc: 'Massage nhẹ nhàng thư giãn, tăng tuần hoàn máu và giảm căng cơ.',
+        duration: '60 phút',
+        price: 590000,
+        badge: '',
+      },
+      {
+        id: 'smi11',
+        name: 'Deep Tissue Massage',
+        desc: 'Tác động sâu vào cơ và mô liên kết, giảm đau mãn tính hiệu quả.',
+        duration: '60 phút',
+        price: 690000,
+        badge: '',
+      },
+      {
+        id: 'smi12',
+        name: 'Hot Stone Massage',
+        desc: 'Đá bazan núi lửa nung nóng giải phóng cơ bắp căng cứng, tăng lưu thông.',
+        duration: '75 phút',
+        price: 890000,
+        badge: '',
+      },
+      {
+        id: 'smi13',
+        name: 'Thai Herbal Compress',
+        desc: 'Túi thảo dược nóng kết hợp xoa bóp truyền thống Thái Lan.',
+        duration: '90 phút',
+        price: 990000,
+        badge: 'Hot',
+      },
+    ],
+  },
+  {
+    id: 'sms-nail',
+    category: 'Nail & Beauty',
+    icon: 'solar:hand-heart-bold-duotone',
+    color: '#F48FB1',
+    items: [
+      {
+        id: 'smi14',
+        name: 'Manicure Cơ Bản',
+        desc: 'Dũa, sơn móng và dưỡng da tay với sản phẩm Essie Salon Series.',
+        duration: '45 phút',
+        price: 290000,
+        badge: '',
+      },
+      {
+        id: 'smi15',
+        name: 'Luxury Spa Pedicure',
+        desc: 'Thư giãn chân với bồn ngâm muối hồng, tẩy da chết và massage bàn chân.',
+        duration: '60 phút',
+        price: 390000,
+        badge: '',
+      },
+      {
+        id: 'smi16',
+        name: 'Gel Nail Premium',
+        desc: 'Sơn gel cao cấp, màu sắc phong phú, bền đến 3 tuần.',
+        duration: '60 phút',
+        price: 450000,
+        badge: '',
+      },
+    ],
+  },
+];
+
+// ---------- Ingredient Guide (view + dashboard shared) ----------------------
+
+export type Spa2IngredientGuideBanner = { eyebrow: string; title: string; subtitle: string };
+
+export const spa2IngredientGuideBanner: Spa2IngredientGuideBanner = {
+  eyebrow: 'THÀNH PHẦN',
+  title: 'Bách khoa toàn thư thành phần mỹ phẩm',
+  subtitle:
+    'Hiểu rõ từng hoạt chất trong sản phẩm bạn đang dùng — để chọn liệu trình phù hợp nhất.',
+};
+
+export type Spa2IngredientSafety = 'safe' | 'caution';
+
+export type Spa2Ingredient = {
+  id: string;
+  name: string;
+  origin: string;
+  category: string;
+  icon: string;
+  description: string;
+  benefits: string[];
+  safety: Spa2IngredientSafety;
+  usedIn: string[];
+};
+
+export const spa2Ingredients: Spa2Ingredient[] = [
+  {
+    id: 'ing1',
+    name: 'Hyaluronic Acid',
+    origin: 'Tổng hợp sinh học',
+    category: 'moisturizing',
+    icon: '💧',
+    description:
+      'Phân tử giữ nước mạnh nhất tự nhiên — giữ lại gấp 1000 lần trọng lượng nước, lấp đầy nếp nhăn tức thì.',
+    benefits: ['Cấp ẩm tức thì', 'Làm đầy nếp nhăn', 'Phù hợp mọi loại da'],
+    safety: 'safe',
+    usedIn: ['Facial Organic', 'Anti-Aging Facial'],
+  },
+  {
+    id: 'ing2',
+    name: 'Nghệ Tươi (Curcumin)',
+    origin: 'Việt Nam',
+    category: 'brightening',
+    icon: '🌿',
+    description:
+      'Hoạt chất chống viêm, kháng khuẩn mạnh mẽ từ củ nghệ Hưng Yên. Làm sáng da, mờ thâm tự nhiên.',
+    benefits: ['Chống viêm', 'Sáng da', 'Kháng khuẩn'],
+    safety: 'safe',
+    usedIn: ['Herbal Massage', 'Body Scrub'],
+  },
+  {
+    id: 'ing3',
+    name: 'Retinol (Vitamin A)',
+    origin: 'Tổng hợp',
+    category: 'anti-aging',
+    icon: '⭐',
+    description:
+      'Vua của các hoạt chất chống lão hóa — kích thích collagen, tăng tốc tái tạo tế bào, mờ nếp nhăn.',
+    benefits: ['Chống lão hóa', 'Tái tạo da', 'Trị mụn'],
+    safety: 'caution',
+    usedIn: ['Anti-Aging Facial'],
+  },
+  {
+    id: 'ing4',
+    name: 'Niacinamide (B3)',
+    origin: 'Tổng hợp sinh học',
+    category: 'brightening',
+    icon: '✨',
+    description:
+      'Vitamin B3 đa năng: thu nhỏ lỗ chân lông, kiểm soát dầu, mờ thâm và cải thiện đều màu da.',
+    benefits: ['Thu nhỏ lỗ chân lông', 'Kiểm soát dầu', 'Mờ thâm'],
+    safety: 'safe',
+    usedIn: ['Deep Clean Facial', 'Facial Organic'],
+  },
+  {
+    id: 'ing5',
+    name: 'Collagen Biển',
+    origin: 'Nhật Bản',
+    category: 'anti-aging',
+    icon: '🐟',
+    description:
+      'Collagen type I từ da cá biển sâu — kích thước phân tử nhỏ, hấp thu qua da hiệu quả nhất.',
+    benefits: ['Tăng đàn hồi', 'Giảm nhăn', 'Tái tạo mô'],
+    safety: 'safe',
+    usedIn: ['Collagen Infusion', 'Anti-Aging'],
+  },
+  {
+    id: 'ing6',
+    name: 'Dầu Argan',
+    origin: 'Morocco',
+    category: 'moisturizing',
+    icon: '🌰',
+    description:
+      '"Vàng lỏng" Morocco — giàu vitamin E và axit béo omega, nuôi dưỡng tóc và da không gây nhờn.',
+    benefits: ['Dưỡng ẩm sâu', 'Phục hồi tóc', 'Chống oxy hóa'],
+    safety: 'safe',
+    usedIn: ['Body Wrap', 'Hair Treatment'],
+  },
+  {
+    id: 'ing7',
+    name: 'Tinh Dầu Tràm Trà',
+    origin: 'Úc',
+    category: 'acne',
+    icon: '🌿',
+    description:
+      'Kháng khuẩn, kháng nấm tự nhiên từ cây Melaleuca alternifolia — trị mụn hiệu quả, không gây kháng kháng sinh.',
+    benefits: ['Kháng khuẩn', 'Trị mụn', 'Giảm viêm'],
+    safety: 'caution',
+    usedIn: ['Acne Control Facial'],
+  },
+  {
+    id: 'ing8',
+    name: 'Squalane',
+    origin: 'Ô liu / Mía đường',
+    category: 'moisturizing',
+    icon: '🫒',
+    description:
+      'Emollient cực kỳ nhẹ, giống với dầu tự nhiên của da người — thấm nhanh, không cảm giác bóng nhờn.',
+    benefits: ['Siêu nhẹ', 'Không cắn pore', 'Cân bằng dầu'],
+    safety: 'safe',
+    usedIn: ['Facial Organic', 'Body Treatment'],
+  },
+  {
+    id: 'ing9',
+    name: 'AHA (Alpha Hydroxy Acid)',
+    origin: 'Trái cây tự nhiên',
+    category: 'exfoliating',
+    icon: '🍊',
+    description:
+      'Axit từ trái cây (lactic, glycolic, malic) tẩy tế bào chết nhẹ nhàng, thúc đẩy turnover da.',
+    benefits: ['Tẩy tế bào chết', 'Sáng đều màu', 'Tăng hấp thu'],
+    safety: 'caution',
+    usedIn: ['Body Scrub', 'Brightening Facial'],
+  },
+  {
+    id: 'ing10',
+    name: 'Aloe Vera (Lô hội)',
+    origin: 'Việt Nam',
+    category: 'soothing',
+    icon: '🌵',
+    description:
+      '200+ hợp chất sinh học: làm dịu tức thì, dưỡng ẩm, kháng viêm — an toàn tuyệt đối cho da nhạy cảm nhất.',
+    benefits: ['Làm dịu da', 'Dưỡng ẩm nhẹ', 'Kháng viêm'],
+    safety: 'safe',
+    usedIn: ['Sensitive Facial', 'After Sun Care'],
+  },
+  {
+    id: 'ing11',
+    name: 'Vitamin C (L-Ascorbic Acid)',
+    origin: 'Tổng hợp',
+    category: 'brightening',
+    icon: '🍋',
+    description:
+      'Chất chống oxy hóa mạnh nhất cho da — ức chế melanin, kích thích collagen và bảo vệ khỏi tia UV.',
+    benefits: ['Sáng da', 'Chống lão hóa', 'Bảo vệ UV'],
+    safety: 'safe',
+    usedIn: ['Brightening Facial', 'Vitamin C Infusion'],
+  },
+  {
+    id: 'ing12',
+    name: 'Peptides',
+    origin: 'Tổng hợp sinh học',
+    category: 'anti-aging',
+    icon: '🔬',
+    description:
+      'Chuỗi axit amin ngắn ra tín hiệu cho da tự sản sinh collagen — chống lão hóa thế hệ mới không gây kích ứng.',
+    benefits: ['Kích thích collagen', 'Không kích ứng', 'Phù hợp mọi loại da'],
+    safety: 'safe',
+    usedIn: ['Anti-Aging Facial', 'Eye Zone'],
+  },
+];
 
 // ============================== SPA2 - END ====================================

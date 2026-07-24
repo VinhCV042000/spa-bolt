@@ -8,15 +8,21 @@ import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Tabs from '@mui/material/Tabs';
 import Stack from '@mui/material/Stack';
+import Avatar from '@mui/material/Avatar';
 import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Unstable_Grid2';
 import TextField from '@mui/material/TextField';
 import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 import LinearProgress from '@mui/material/LinearProgress';
+import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
 
@@ -36,14 +42,21 @@ import {
 
 import { Iconify } from 'src/components/iconify';
 
-import { SPA2_INK, SPA2_TEAL, SPA2_CREAM_DARK } from 'src/sections/spa2/spa2-pages-data';
 import {
   Spa2ReviewPageView,
   Spa2ContentPageHero3,
 } from 'src/sections/spa2/view/spa2-content-pages3';
+import {
+  SPA2_INK,
+  SPA2_TEAL,
+  spa2Feedbacks,
+  SPA2_CREAM_DARK,
+  type Spa2FeedbackStatus,
+} from 'src/sections/spa2/spa2-pages-data';
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages3.tsx's
@@ -59,6 +72,20 @@ import { Spa2ManageShell } from './spa2-manage-shell';
 // -----------------------------------------------------------------------------
 
 const withId = <T extends object>(item: T): T & { id: string } => ({ id: uuidv4(), ...item });
+
+type ReviewItem = (typeof spa2Feedbacks)[number] & { id: number };
+
+const REVIEW_STATUS_COLOR: Record<Spa2FeedbackStatus, 'warning' | 'success' | 'error'> = {
+  pending: 'warning',
+  approved: 'success',
+  rejected: 'error',
+};
+
+const REVIEW_STATUS_LABEL: Record<Spa2FeedbackStatus, string> = {
+  pending: 'Chờ duyệt',
+  approved: 'Đã duyệt',
+  rejected: 'Từ chối',
+};
 
 function SectionCard({
   title,
@@ -115,7 +142,7 @@ export function Spa2ReviewManageView() {
   }));
   const [dirty, setDirty] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
-  const [tab, setTab] = useState<'banner' | 'aspects' | 'stats' | 'preview'>('banner');
+  const [tab, setTab] = useState<'banner' | 'aspects' | 'stats' | 'reviews' | 'preview'>('banner');
   const markDirty = () => setDirty(true);
 
   // ---- Banner ----
@@ -136,12 +163,20 @@ export function Spa2ReviewManageView() {
     setAspects((prev) => prev.map((a, i) => (i === idx ? { ...a, label } : a)));
     markDirty();
   };
+  const updateAspectRating = (idx: number, sampleRating: number) => {
+    setAspects((prev) => prev.map((a, i) => (i === idx ? { ...a, sampleRating } : a)));
+    markDirty();
+  };
   const addAspect = () => {
-    setAspects((prev) => [...prev, withId({ label: '' })]);
+    setAspects((prev) => [...prev, withId({ label: '', sampleRating: 0 })]);
     markDirty();
   };
   const removeAspect = (idx: number) => {
     setAspects((prev) => prev.filter((_, i) => i !== idx));
+    markDirty();
+  };
+  const reorderAspects = (next: Spa2ReviewAspect[]) => {
+    setAspects(next);
     markDirty();
   };
 
@@ -162,6 +197,36 @@ export function Spa2ReviewManageView() {
     markDirty();
   };
 
+  // ---- Reviews (moderation queue, reuses the shared spa2Feedbacks dataset) ----
+  const [reviews, setReviews] = useState<ReviewItem[]>(() =>
+    spa2Feedbacks.map((f, i) => ({ ...f, id: i + 1 }))
+  );
+  const [reviewSearch, setReviewSearch] = useState('');
+  const [reviewFilterStatus, setReviewFilterStatus] = useState<Spa2FeedbackStatus | 'all'>('all');
+  const [viewReview, setViewReview] = useState<ReviewItem | null>(null);
+
+  const filteredReviews = reviews.filter((r) => {
+    const matchSearch = r.name.toLowerCase().includes(reviewSearch.toLowerCase());
+    const matchStatus = reviewFilterStatus === 'all' || r.status === reviewFilterStatus;
+    return matchSearch && matchStatus;
+  });
+
+  const reviewCounts = {
+    all: reviews.length,
+    pending: reviews.filter((r) => r.status === 'pending').length,
+    approved: reviews.filter((r) => r.status === 'approved').length,
+    rejected: reviews.filter((r) => r.status === 'rejected').length,
+  };
+  const reviewAverage = reviews.length
+    ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+    : 0;
+
+  const setReviewStatus = (id: number, status: Spa2FeedbackStatus) => {
+    setReviews((prev) => prev.map((r) => (r.id === id ? { ...r, status } : r)));
+    setViewReview((v) => (v?.id === id ? { ...v, status } : v));
+    markDirty();
+  };
+
   const handleSave = () => {
     setSavedAt(new Date());
     setDirty(false);
@@ -174,6 +239,7 @@ export function Spa2ReviewManageView() {
       ...spa2ReviewStats,
       distribution: spa2ReviewStats.distribution.map((d) => ({ ...d })),
     });
+    setReviews(spa2Feedbacks.map((f, i) => ({ ...f, id: i + 1 })));
     setDirty(false);
   };
 
@@ -269,6 +335,12 @@ export function Spa2ReviewManageView() {
           iconPosition="start"
         />
         <Tab
+          value="reviews"
+          label="Quản lý đánh giá"
+          icon={<Iconify icon="solar:chat-round-dots-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
           value="preview"
           label={t('common.preview_btn')}
           icon={<Iconify icon="solar:eye-bold-duotone" width={20} />}
@@ -348,22 +420,52 @@ export function Spa2ReviewManageView() {
                 </Button>
               }
             >
-              <Stack spacing={1.5}>
-                {aspects.map((a, idx) => (
-                  <Stack key={a.id} direction="row" spacing={1} alignItems="center">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      label={t('review.form_aspect_label')}
-                      value={a.label}
-                      onChange={(e) => updateAspect(idx, e.target.value)}
-                    />
-                    <IconButton size="small" color="error" onClick={() => removeAspect(idx)}>
-                      <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                    </IconButton>
-                  </Stack>
-                ))}
-              </Stack>
+              <Typography
+                variant="caption"
+                sx={{ color: 'text.secondary', display: 'block', mb: 1.5 }}
+              >
+                {t('common.drag_hint')}
+              </Typography>
+              <Spa2SortableGrid items={aspects} onReorder={reorderAspects}>
+                <Stack spacing={1.5}>
+                  {aspects.map((a, idx) => (
+                    <Spa2SortableItem key={a.id} id={a.id}>
+                      {(sortable) => (
+                        <Stack
+                          direction="row"
+                          spacing={1}
+                          alignItems="center"
+                          sx={{
+                            p: 1,
+                            borderRadius: 2,
+                            border: `1px solid ${SPA2_CREAM_DARK}`,
+                            bgcolor: 'background.paper',
+                          }}
+                        >
+                          <Spa2DragHandle sortable={sortable} />
+                          <TextField
+                            size="small"
+                            fullWidth
+                            label={t('review.form_aspect_label')}
+                            value={a.label}
+                            onChange={(e) => updateAspect(idx, e.target.value)}
+                          />
+                          <Rating
+                            value={a.sampleRating}
+                            size="small"
+                            precision={1}
+                            onChange={(_, v) => updateAspectRating(idx, v ?? 0)}
+                            sx={{ '& .MuiRating-icon': { color: '#EF9F27' } }}
+                          />
+                          <IconButton size="small" color="error" onClick={() => removeAspect(idx)}>
+                            <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                          </IconButton>
+                        </Stack>
+                      )}
+                    </Spa2SortableItem>
+                  ))}
+                </Stack>
+              </Spa2SortableGrid>
             </SectionCard>
           </Grid>
           <Grid xs={12} md={6}>
@@ -375,7 +477,7 @@ export function Spa2ReviewManageView() {
                       {a.label || 'Tiêu chí đánh giá'}
                     </Typography>
                     <Rating
-                      value={0}
+                      value={a.sampleRating}
                       size="small"
                       readOnly
                       sx={{ '& .MuiRating-icon': { color: '#EF9F27' } }}
@@ -476,12 +578,215 @@ export function Spa2ReviewManageView() {
         </Grid>
       )}
 
+      {/* Reviews moderation — light view into the shared spa2Feedbacks dataset
+          (full management lives on the Feedbacks page). */}
+      {tab === 'reviews' && (
+        <Stack spacing={3}>
+          <Grid container spacing={2}>
+            <Grid xs={6} md={3}>
+              <Card sx={{ p: 2, borderRadius: 3, textAlign: 'center' }}>
+                <Typography variant="h4" sx={{ color: SPA2_TEAL, fontWeight: 700 }}>
+                  {reviewCounts.all}
+                </Typography>
+                <Typography sx={{ fontSize: 12.5, color: 'text.secondary' }}>
+                  Tổng số đánh giá
+                </Typography>
+              </Card>
+            </Grid>
+            <Grid xs={6} md={3}>
+              <Card sx={{ p: 2, borderRadius: 3, textAlign: 'center' }}>
+                <Stack direction="row" spacing={0.5} alignItems="center" justifyContent="center">
+                  <Typography variant="h4" sx={{ color: '#EF9F27', fontWeight: 700 }}>
+                    {reviewAverage.toFixed(1)}
+                  </Typography>
+                  <Iconify icon="solar:star-bold" width={18} sx={{ color: '#EF9F27' }} />
+                </Stack>
+                <Typography sx={{ fontSize: 12.5, color: 'text.secondary' }}>
+                  Điểm trung bình
+                </Typography>
+              </Card>
+            </Grid>
+            <Grid xs={6} md={3}>
+              <Card sx={{ p: 2, borderRadius: 3, textAlign: 'center' }}>
+                <Typography variant="h4" sx={{ color: 'warning.main', fontWeight: 700 }}>
+                  {reviewCounts.pending}
+                </Typography>
+                <Typography sx={{ fontSize: 12.5, color: 'text.secondary' }}>Chờ duyệt</Typography>
+              </Card>
+            </Grid>
+            <Grid xs={6} md={3}>
+              <Card sx={{ p: 2, borderRadius: 3, textAlign: 'center' }}>
+                <Typography variant="h4" sx={{ color: 'success.main', fontWeight: 700 }}>
+                  {reviewCounts.approved}
+                </Typography>
+                <Typography sx={{ fontSize: 12.5, color: 'text.secondary' }}>Đã duyệt</Typography>
+              </Card>
+            </Grid>
+          </Grid>
+
+          <Card>
+            <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ p: 2, pb: 0 }}>
+              {(['all', 'pending', 'approved', 'rejected'] as const).map((s) => (
+                <Chip
+                  key={s}
+                  label={`${s === 'all' ? t('common.all') : REVIEW_STATUS_LABEL[s]} (${reviewCounts[s]})`}
+                  variant={reviewFilterStatus === s ? 'filled' : 'outlined'}
+                  color={s === 'all' ? 'default' : REVIEW_STATUS_COLOR[s]}
+                  onClick={() => setReviewFilterStatus(s)}
+                  sx={{ cursor: 'pointer' }}
+                />
+              ))}
+            </Stack>
+
+            <Box sx={{ p: 2 }}>
+              <TextField
+                placeholder="Tìm theo tên khách hàng..."
+                value={reviewSearch}
+                onChange={(e) => setReviewSearch(e.target.value)}
+                size="small"
+                sx={{ width: 280 }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Box>
+
+            <Stack spacing={0} sx={{ px: 2, pb: 2 }}>
+              {filteredReviews.map((r) => (
+                <Stack
+                  key={r.id}
+                  direction="row"
+                  spacing={2}
+                  alignItems="center"
+                  onClick={() => setViewReview(r)}
+                  sx={{
+                    p: 1.5,
+                    borderRadius: 2,
+                    cursor: 'pointer',
+                    border: `1px solid ${SPA2_CREAM_DARK}`,
+                    mb: 1.5,
+                    '&:hover': { bgcolor: 'action.hover' },
+                  }}
+                >
+                  <Avatar src={r.avatar} sx={{ width: 44, height: 44 }} />
+                  <Box sx={{ flex: 1, minWidth: 0 }}>
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <Typography variant="subtitle2">{r.name}</Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {r.role}
+                      </Typography>
+                    </Stack>
+                    <Rating value={r.rating} readOnly size="small" sx={{ my: 0.25 }} />
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      noWrap
+                      sx={{ display: 'block' }}
+                    >
+                      {r.service} — {r.comment}
+                    </Typography>
+                  </Box>
+                  <Chip
+                    size="small"
+                    label={REVIEW_STATUS_LABEL[r.status]}
+                    color={REVIEW_STATUS_COLOR[r.status]}
+                    variant="soft"
+                  />
+                </Stack>
+              ))}
+              {filteredReviews.length === 0 && (
+                <Box sx={{ textAlign: 'center', py: 5, color: 'text.secondary' }}>
+                  <Iconify icon="solar:chat-round-dots-linear" width={40} sx={{ mb: 1 }} />
+                  <Typography>Không tìm thấy đánh giá nào.</Typography>
+                </Box>
+              )}
+            </Stack>
+          </Card>
+        </Stack>
+      )}
+
       {/* Full page preview */}
       {tab === 'preview' && (
         <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
           <Spa2ReviewPageView banner={banner} ratingAspects={aspects} stats={stats} />
         </Box>
       )}
+
+      {/* Review detail preview + moderation actions */}
+      <Dialog open={!!viewReview} onClose={() => setViewReview(null)} maxWidth="xs" fullWidth>
+        <DialogTitle>Chi tiết đánh giá</DialogTitle>
+        <DialogContent dividers>
+          {viewReview && (
+            <Stack spacing={2}>
+              <Box>
+                <Typography variant="caption" color="text.secondary">
+                  Trạng thái:
+                </Typography>
+                <Box sx={{ mt: 0.5 }}>
+                  <Chip
+                    size="small"
+                    label={REVIEW_STATUS_LABEL[viewReview.status]}
+                    color={REVIEW_STATUS_COLOR[viewReview.status]}
+                    variant="soft"
+                  />
+                </Box>
+              </Box>
+              <Divider />
+              <Stack direction="row" spacing={2} alignItems="center">
+                <Avatar src={viewReview.avatar} sx={{ width: 56, height: 56 }} />
+                <Box>
+                  <Typography variant="subtitle1">{viewReview.name}</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {viewReview.role}
+                  </Typography>
+                  <Rating value={viewReview.rating} readOnly size="small" />
+                </Box>
+              </Stack>
+              <Box>
+                <Typography variant="caption" color="text.secondary">
+                  Dịch vụ:
+                </Typography>
+                <Typography variant="body2">{viewReview.service}</Typography>
+              </Box>
+              <Box>
+                <Typography variant="caption" color="text.secondary">
+                  Nhận xét:
+                </Typography>
+                <Typography variant="body2">{viewReview.comment}</Typography>
+              </Box>
+            </Stack>
+          )}
+        </DialogContent>
+        <DialogActions>
+          {viewReview?.status !== 'rejected' && (
+            <Button
+              color="error"
+              onClick={() => viewReview && setReviewStatus(viewReview.id, 'rejected')}
+            >
+              {t('common.reject')}
+            </Button>
+          )}
+          {viewReview?.status !== 'pending' && (
+            <Button onClick={() => viewReview && setReviewStatus(viewReview.id, 'pending')}>
+              Đặt lại chờ duyệt
+            </Button>
+          )}
+          {viewReview?.status !== 'approved' && (
+            <Button
+              variant="contained"
+              color="success"
+              onClick={() => viewReview && setReviewStatus(viewReview.id, 'approved')}
+            >
+              {t('common.approve')}
+            </Button>
+          )}
+          <Button onClick={() => setViewReview(null)}>{t('common.close')}</Button>
+        </DialogActions>
+      </Dialog>
     </Spa2ManageShell>
   );
 }

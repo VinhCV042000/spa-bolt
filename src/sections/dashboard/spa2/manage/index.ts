@@ -39,3 +39,15 @@ export { Spa2MedicalSpaManageView } from 'src/sections/dashboard/spa2/manage/spa
 export { Spa2SpaEtiquetteManageView } from 'src/sections/dashboard/spa2/manage/spa2-spa-etiquette-manage-view';
 export { Spa2LoyaltyRewardsManageView } from 'src/sections/dashboard/spa2/manage/spa2-loyalty-rewards-manage-view';
 export { Spa2ReviewManageView } from 'src/sections/dashboard/spa2/manage/spa2-review-manage-view';
+export { Spa2NutritionManageView } from 'src/sections/dashboard/spa2/manage/spa2-nutrition-manage-view';
+export { Spa2ConsultationManageView } from 'src/sections/dashboard/spa2/manage/spa2-consultation-manage-view';
+export { Spa2SeasonalPackageManageView } from 'src/sections/dashboard/spa2/manage/spa2-seasonal-package-manage-view';
+export { Spa2VipRoomManageView } from 'src/sections/dashboard/spa2/manage/spa2-vip-room-manage-view';
+export { Spa2PackageBuilderManageView } from 'src/sections/dashboard/spa2/manage/spa2-package-builder-manage-view';
+export { Spa2AppointmentManageView } from 'src/sections/dashboard/spa2/manage/spa2-appointment-manage-view';
+export { Spa2NewsletterManageView } from 'src/sections/dashboard/spa2/manage/spa2-newsletter-manage-view';
+export { Spa2PressManageView } from 'src/sections/dashboard/spa2/manage/spa2-press-manage-view';
+export { Spa2AffiliateManageView } from 'src/sections/dashboard/spa2/manage/spa2-affiliate-manage-view';
+export { Spa2SpaFinderManageView } from 'src/sections/dashboard/spa2/manage/spa2-spa-finder-manage-view';
+export { Spa2SpaMenuManageView } from 'src/sections/dashboard/spa2/manage/spa2-spa-menu-manage-view';
+export { Spa2IngredientGuideManageView } from 'src/sections/dashboard/spa2/manage/spa2-ingredient-guide-manage-view';

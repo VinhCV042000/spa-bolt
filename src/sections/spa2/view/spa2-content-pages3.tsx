@@ -54,6 +54,7 @@ import {
   spa2HomeServiceFaqs,
   spa2SkinDiaryBanner,
   spa2EtiquetteGuides,
+  spa2SeasonalSeasons,
   spa2HomeServiceAreas,
   type Spa2HomeService,
   spa2OccasionPackages,
@@ -61,6 +62,7 @@ import {
   spa2MedicalSpaBanner,
   spa2LoyaltyEarnRules,
   type Spa2ReviewStats,
+  spa2SeasonalPackages,
   spa2HomeServiceBanner,
   spa2MindfulnessBanner,
   spa2MedicalTreatments,
@@ -76,6 +78,7 @@ import {
   spa2MindfulnessPrograms,
   type Spa2EtiquetteOffer,
   type Spa2EtiquetteGuide,
+  type Spa2SeasonalSeason,
   type Spa2AdjustableImage,
   type Spa2HomeServiceArea,
   type Spa2OccasionPackage,
@@ -96,6 +99,7 @@ import {
   type Spa2MedicalSpaCategory,
   type Spa2SpaEtiquetteBanner,
   spa2LoyaltyRewardCategories,
+  type Spa2SeasonalPackageItem,
   type Spa2MindfulnessChallenge,
   type Spa2MedicalSpaCredential,
   type Spa2LoyaltyRewardsBanner,
@@ -2602,100 +2606,16 @@ export function Spa2ReviewPageView({
 // 9. SEASONAL PACKAGES
 // ══════════════════════════════════════════════════════════
 
-const SEASONAL_PACKAGES = [
-  {
-    season: 'Hè 2026',
-    period: 'Tháng 6 – 8',
-    icon: '☀️',
-    color: '#FF8F00',
-    accent: '#FFF8E1',
-    bg: 'linear-gradient(135deg, #FFB300 0%, #E65100 100%)',
-    packages: [
-      {
-        name: 'Summer Glow Facial',
-        price: 990000,
-        desc: 'Làm sạch, dưỡng ẩm và phục hồi da sau nắng hè — đặc trị tia UV.',
-        image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&q=80',
-      },
-      {
-        name: 'Cool Body Wrap',
-        price: 890000,
-        desc: 'Ủ dưỡng toàn thân với bạc hà và dưa leo — mát lạnh tức thì.',
-        image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80',
-      },
-    ],
-  },
-  {
-    season: 'Thu 2026',
-    period: 'Tháng 9 – 11',
-    icon: '🍂',
-    color: '#795548',
-    accent: '#FBE9E7',
-    bg: 'linear-gradient(135deg, #A1887F 0%, #4E342E 100%)',
-    packages: [
-      {
-        name: 'Autumn Harvest Scrub',
-        price: 1090000,
-        desc: 'Tẩy da chết với muối hồng Himalaya và dầu quả bí đỏ — mềm mại đón thu.',
-        image: 'https://images.unsplash.com/photo-1596178060671-7a80dc8059ea?w=800&q=80',
-      },
-      {
-        name: 'Mid-Autumn Gift Set',
-        price: 3900000,
-        desc: 'Bộ quà tặng cao cấp mùa Trung Thu — tặng người thân ý nghĩa.',
-        image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&q=80',
-      },
-    ],
-  },
-  {
-    season: 'Đông 2026',
-    period: 'Tháng 12',
-    icon: '❄️',
-    color: '#1565C0',
-    accent: '#E3F2FD',
-    bg: 'linear-gradient(135deg, #42A5F5 0%, #1565C0 100%)',
-    packages: [
-      {
-        name: 'Winter Warmth Ritual',
-        price: 1290000,
-        desc: 'Massage nến ấm, đá lăn mặt lạnh — nghi thức cân bằng nhiệt cho mùa đông.',
-        image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=800&q=80',
-      },
-      {
-        name: 'New Year Detox',
-        price: 4590000,
-        desc: 'Chào năm mới với cơ thể thanh lọc hoàn toàn — gói detox 3 ngày.',
-        image: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=800&q=80',
-      },
-    ],
-  },
-  {
-    season: 'Xuân 2027',
-    period: 'Tháng 1 – 3',
-    icon: '🌸',
-    color: '#C2185B',
-    accent: '#FCE4EC',
-    bg: 'linear-gradient(135deg, #F48FB1 0%, #C2185B 100%)',
-    packages: [
-      {
-        name: 'Spring Renewal Facial',
-        price: 1190000,
-        desc: 'Facial phục hồi & sáng da đón Xuân — hồng hào như hoa đào.',
-        image: 'https://images.unsplash.com/photo-1559599101-f09722fb4948?w=800&q=80',
-      },
-      {
-        name: 'Tết Luxury Package',
-        price: 5900000,
-        desc: 'Trọn gói sang trọng đón Tết — tặng kèm hamper quà độc quyền.',
-        image: 'https://images.unsplash.com/photo-1531112068337-3cd6d0d2b56b?w=800&q=80',
-      },
-    ],
-  },
-];
-
-export function Spa2SeasonalPackagePageView() {
+export function Spa2SeasonalPackagePageView({
+  seasons = spa2SeasonalSeasons,
+  packages = spa2SeasonalPackages,
+}: {
+  seasons?: Spa2SeasonalSeason[];
+  packages?: Spa2SeasonalPackageItem[];
+} = {}) {
   const [activeSeason, setActiveSeason] = useState(0);
-  const season = SEASONAL_PACKAGES[activeSeason];
+  const season = seasons[activeSeason];
+  const seasonPackages = packages.filter((p) => p.seasonId === season.id);
 
   return (
     <Box sx={{ bgcolor: 'background.default' }}>
@@ -2733,9 +2653,9 @@ export function Spa2SeasonalPackagePageView() {
             {season.period} — Ưu đãi có hạn, đừng bỏ lỡ!
           </Typography>
           <Stack direction="row" spacing={1} justifyContent="center">
-            {SEASONAL_PACKAGES.map((s, i) => (
+            {seasons.map((s, i) => (
               <Button
-                key={s.season}
+                key={s.id}
                 onClick={() => setActiveSeason(i)}
                 sx={{
                   borderRadius: 99,
@@ -2765,8 +2685,8 @@ export function Spa2SeasonalPackagePageView() {
           />
 
           <Grid container spacing={4}>
-            {season.packages.map((pkg) => (
-              <Grid key={pkg.name} xs={12} sm={6}>
+            {seasonPackages.map((pkg) => (
+              <Grid key={pkg.id} xs={12} sm={6}>
                 <Card
                   sx={{
                     borderRadius: 5,
@@ -2834,43 +2754,46 @@ export function Spa2SeasonalPackagePageView() {
           <Box sx={{ mt: 8 }}>
             <SectionTitle eyebrow="Sắp đến" title="Gói sắp ra mắt" />
             <Grid container spacing={3}>
-              {SEASONAL_PACKAGES.filter((_, i) => i !== activeSeason).map((s) => (
-                <Grid key={s.season} xs={12} sm={4}>
-                  <Card
-                    sx={{
-                      borderRadius: 4,
-                      overflow: 'hidden',
-                      cursor: 'pointer',
-                      border: `1px solid ${SPA2_CREAM_DARK}`,
-                      boxShadow: 'none',
-                    }}
-                    onClick={() => setActiveSeason(SEASONAL_PACKAGES.indexOf(s))}
-                  >
-                    <Box
+              {seasons
+                .filter((_, i) => i !== activeSeason)
+                .map((s) => (
+                  <Grid key={s.id} xs={12} sm={4}>
+                    <Card
                       sx={{
-                        height: 120,
-                        background: s.bg,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexDirection: 'column',
-                        color: 'white',
-                        gap: 0.5,
+                        borderRadius: 4,
+                        overflow: 'hidden',
+                        cursor: 'pointer',
+                        border: `1px solid ${SPA2_CREAM_DARK}`,
+                        boxShadow: 'none',
                       }}
+                      onClick={() => setActiveSeason(seasons.indexOf(s))}
                     >
-                      <Typography sx={{ fontSize: 36 }}>{s.icon}</Typography>
-                      <Typography sx={{ fontWeight: 600 }}>{s.season}</Typography>
-                    </Box>
-                    <Box sx={{ p: 2, bgcolor: s.accent }}>
-                      <Typography
-                        sx={{ fontSize: 12, color: 'text.secondary', textAlign: 'center' }}
+                      <Box
+                        sx={{
+                          height: 120,
+                          background: s.bg,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexDirection: 'column',
+                          color: 'white',
+                          gap: 0.5,
+                        }}
                       >
-                        {s.period} · {s.packages.length} gói ưu đãi
-                      </Typography>
-                    </Box>
-                  </Card>
-                </Grid>
-              ))}
+                        <Typography sx={{ fontSize: 36 }}>{s.icon}</Typography>
+                        <Typography sx={{ fontWeight: 600 }}>{s.season}</Typography>
+                      </Box>
+                      <Box sx={{ p: 2, bgcolor: s.accent }}>
+                        <Typography
+                          sx={{ fontSize: 12, color: 'text.secondary', textAlign: 'center' }}
+                        >
+                          {s.period} · {packages.filter((p) => p.seasonId === s.id).length} gói ưu
+                          đãi
+                        </Typography>
+                      </Box>
+                    </Card>
+                  </Grid>
+                ))}
             </Grid>
           </Box>
         </Container>

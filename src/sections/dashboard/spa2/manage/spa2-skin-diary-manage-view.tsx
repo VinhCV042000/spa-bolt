@@ -53,6 +53,7 @@ import {
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages3.tsx's
@@ -277,6 +278,15 @@ export function Spa2SkinDiaryManageView() {
     setEntryDeleteId(null);
     markDirty();
   };
+  // The editable list is shown most-recent-first (same order as the public
+  // preview, which reverses the stored array). Dragging an entry to the top
+  // of this list should make it "the most recent" in the preview, so we
+  // reorder on the reversed view and re-reverse before writing back to the
+  // naturally-ordered `entries` state.
+  const reorderEntries = (nextReversed: Spa2SkinDiaryEntry[]) => {
+    setEntries([...nextReversed].reverse());
+    markDirty();
+  };
 
   const handleSave = () => {
     setSavedAt(new Date());
@@ -461,39 +471,49 @@ export function Spa2SkinDiaryManageView() {
               {t('skin_diary.add_entry_btn')}
             </Button>
           </Stack>
-          <Stack spacing={1.5}>
-            {[...entries].reverse().map((item, idx) => (
-              <Box key={item.id} sx={{ position: 'relative' }}>
-                <EntryPreviewCard {...item} highlight={idx === 0} />
-                <Stack
-                  direction="row"
-                  spacing={0.5}
-                  sx={{ position: 'absolute', top: 8, right: 8 }}
-                >
-                  <IconButton
-                    size="small"
-                    onClick={() => openEditEntry(item)}
-                    sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                  >
-                    <Iconify icon="solar:pen-bold" width={14} />
-                  </IconButton>
-                  <IconButton
-                    size="small"
-                    color="error"
-                    onClick={() => setEntryDeleteId(item.id)}
-                    sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                  >
-                    <Iconify icon="solar:trash-bin-trash-bold" width={14} />
-                  </IconButton>
-                </Stack>
-              </Box>
-            ))}
-            {entries.length === 0 && (
-              <Typography sx={{ fontSize: 13, color: 'text.secondary', textAlign: 'center' }}>
-                {t('skin_diary.no_entries')}
-              </Typography>
-            )}
-          </Stack>
+          <Spa2SortableGrid items={[...entries].reverse()} onReorder={reorderEntries}>
+            <Stack spacing={1.5}>
+              {[...entries].reverse().map((item, idx) => (
+                <Spa2SortableItem key={item.id} id={item.id}>
+                  {(sortable) => (
+                    <Box sx={{ position: 'relative' }}>
+                      <EntryPreviewCard {...item} highlight={idx === 0} />
+                      <Stack
+                        direction="row"
+                        spacing={0.5}
+                        sx={{ position: 'absolute', top: 8, right: 8 }}
+                      >
+                        <Spa2DragHandle
+                          sortable={sortable}
+                          sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                        />
+                        <IconButton
+                          size="small"
+                          onClick={() => openEditEntry(item)}
+                          sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                        >
+                          <Iconify icon="solar:pen-bold" width={14} />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => setEntryDeleteId(item.id)}
+                          sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                        >
+                          <Iconify icon="solar:trash-bin-trash-bold" width={14} />
+                        </IconButton>
+                      </Stack>
+                    </Box>
+                  )}
+                </Spa2SortableItem>
+              ))}
+              {entries.length === 0 && (
+                <Typography sx={{ fontSize: 13, color: 'text.secondary', textAlign: 'center' }}>
+                  {t('skin_diary.no_entries')}
+                </Typography>
+              )}
+            </Stack>
+          </Spa2SortableGrid>
         </Card>
       )}
 

@@ -395,6 +395,10 @@ export function Spa2HomeServiceManageView() {
     setAreaDeleteValue(null);
     markDirty();
   };
+  const reorderAreas = (next: Array<Spa2HomeServiceArea & { id: string }>) => {
+    setAreas(next.map(({ id, ...rest }) => rest));
+    markDirty();
+  };
 
   // ---- Services ----
   const [services, setServices] = useState<Spa2HomeService[]>(() =>
@@ -471,6 +475,10 @@ export function Spa2HomeServiceManageView() {
   const confirmDeleteProcess = () => {
     setProcess((prev) => prev.filter((p) => p.id !== processDeleteId));
     setProcessDeleteId(null);
+    markDirty();
+  };
+  const reorderProcess = (next: Spa2HomeServiceProcessStep[]) => {
+    setProcess(next);
     markDirty();
   };
 
@@ -713,40 +721,49 @@ export function Spa2HomeServiceManageView() {
                 </Button>
               }
             >
-              <Stack spacing={1.5}>
-                {areas.map((item) => (
-                  <Stack
-                    key={item.value}
-                    direction="row"
-                    alignItems="center"
-                    spacing={2}
-                    sx={{ p: 2, borderRadius: 2, border: `1px solid ${SPA2_CREAM_DARK}` }}
-                  >
-                    <Chip
-                      label={item.label || 'Khu vực'}
-                      sx={{ bgcolor: SPA2_TEAL, color: 'white', fontWeight: 600 }}
-                    />
-                    <Typography sx={{ flex: 1, fontSize: 13, color: 'text.secondary' }}>
-                      {item.note}
+              <Spa2SortableGrid
+                items={areas.map((a) => ({ ...a, id: a.value }))}
+                onReorder={reorderAreas}
+              >
+                <Stack spacing={1.5}>
+                  {areas.map((item) => (
+                    <Spa2SortableItem key={item.value} id={item.value}>
+                      {(sortable) => (
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          spacing={2}
+                          sx={{ p: 2, borderRadius: 2, border: `1px solid ${SPA2_CREAM_DARK}` }}
+                        >
+                          <Spa2DragHandle sortable={sortable} />
+                          <Chip
+                            label={item.label || 'Khu vực'}
+                            sx={{ bgcolor: SPA2_TEAL, color: 'white', fontWeight: 600 }}
+                          />
+                          <Typography sx={{ flex: 1, fontSize: 13, color: 'text.secondary' }}>
+                            {item.note}
+                          </Typography>
+                          <IconButton size="small" onClick={() => openEditArea(item)}>
+                            <Iconify icon="solar:pen-bold" width={16} />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => setAreaDeleteValue(item.value)}
+                          >
+                            <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                          </IconButton>
+                        </Stack>
+                      )}
+                    </Spa2SortableItem>
+                  ))}
+                  {areas.length === 0 && (
+                    <Typography sx={{ fontSize: 13, color: 'text.secondary', textAlign: 'center' }}>
+                      {t('home_service.no_areas')}
                     </Typography>
-                    <IconButton size="small" onClick={() => openEditArea(item)}>
-                      <Iconify icon="solar:pen-bold" width={16} />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      color="error"
-                      onClick={() => setAreaDeleteValue(item.value)}
-                    >
-                      <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                    </IconButton>
-                  </Stack>
-                ))}
-                {areas.length === 0 && (
-                  <Typography sx={{ fontSize: 13, color: 'text.secondary', textAlign: 'center' }}>
-                    {t('home_service.no_areas')}
-                  </Typography>
-                )}
-              </Stack>
+                  )}
+                </Stack>
+              </Spa2SortableGrid>
             </SectionCard>
           </Grid>
           <Grid xs={12} md={5}>
@@ -832,36 +849,50 @@ export function Spa2HomeServiceManageView() {
               {t('home_service.add_process_btn')}
             </Button>
           </Stack>
-          <Grid container spacing={2}>
-            {process.map((item, idx) => (
-              <Grid key={item.id} xs={12} sm={6} md={3}>
-                <Box sx={{ position: 'relative' }}>
-                  <ProcessStepPreviewCard index={idx + 1} title={item.title} desc={item.desc} />
-                  <Stack
-                    direction="row"
-                    spacing={0.5}
-                    sx={{ position: 'absolute', top: 8, right: 8 }}
-                  >
-                    <IconButton
-                      size="small"
-                      onClick={() => openEditProcess(item)}
-                      sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                    >
-                      <Iconify icon="solar:pen-bold" width={14} />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      color="error"
-                      onClick={() => setProcessDeleteId(item.id)}
-                      sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                    >
-                      <Iconify icon="solar:trash-bin-trash-bold" width={14} />
-                    </IconButton>
-                  </Stack>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
+          <Spa2SortableGrid items={process} onReorder={reorderProcess}>
+            <Grid container spacing={2}>
+              {process.map((item, idx) => (
+                <Grid key={item.id} xs={12} sm={6} md={3}>
+                  <Spa2SortableItem id={item.id}>
+                    {(sortable) => (
+                      <Box sx={{ position: 'relative' }}>
+                        <ProcessStepPreviewCard
+                          index={idx + 1}
+                          title={item.title}
+                          desc={item.desc}
+                        />
+                        <Stack
+                          direction="row"
+                          spacing={0.5}
+                          sx={{ position: 'absolute', top: 8, right: 8 }}
+                        >
+                          <Spa2DragHandle
+                            sortable={sortable}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          />
+                          <IconButton
+                            size="small"
+                            onClick={() => openEditProcess(item)}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          >
+                            <Iconify icon="solar:pen-bold" width={14} />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => setProcessDeleteId(item.id)}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          >
+                            <Iconify icon="solar:trash-bin-trash-bold" width={14} />
+                          </IconButton>
+                        </Stack>
+                      </Box>
+                    )}
+                  </Spa2SortableItem>
+                </Grid>
+              ))}
+            </Grid>
+          </Spa2SortableGrid>
         </Card>
       )}
 

@@ -58,6 +58,7 @@ import {
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
 import { Spa2SimpleImageField } from './spa2-simple-image-field';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages3.tsx's
@@ -219,6 +220,10 @@ export function Spa2LoyaltyRewardsManageView() {
     setEarnRules((prev) => prev.filter((_, i) => i !== idx));
     markDirty();
   };
+  const reorderEarnRules = (next: Spa2LoyaltyEarnRule[]) => {
+    setEarnRules(next);
+    markDirty();
+  };
 
   // ---- Categories ----
   const [categories, setCategories] = useState<Spa2LoyaltyRewardCategory[]>(() =>
@@ -235,6 +240,14 @@ export function Spa2LoyaltyRewardsManageView() {
   };
   const removeCategory = (idx: number) => {
     setCategories((prev) => prev.filter((_, i) => i !== idx));
+    markDirty();
+  };
+  const reorderCategories = (next: (Spa2LoyaltyRewardCategory & { id: string })[]) => {
+    const cleaned = next.map(({ id, ...rest }) => rest);
+    setCategories((prev) => {
+      const allEntry = prev.find((c) => c.value === 'all');
+      return allEntry ? [allEntry, ...cleaned] : cleaned;
+    });
     markDirty();
   };
 
@@ -506,29 +519,40 @@ export function Spa2LoyaltyRewardsManageView() {
                   {t('loyalty_rewards.add_earn_rule_btn')}
                 </Button>
               </Stack>
-              <Stack spacing={1.5}>
-                {earnRules.map((rule, idx) => (
-                  <Stack key={rule.id} direction="row" spacing={1} alignItems="center">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      label={t('loyalty_rewards.form_earn_label')}
-                      value={rule.label}
-                      onChange={(e) => updateEarnRule(idx, { label: e.target.value })}
-                    />
-                    <TextField
-                      size="small"
-                      fullWidth
-                      label={t('loyalty_rewards.form_earn_ratio')}
-                      value={rule.ratio}
-                      onChange={(e) => updateEarnRule(idx, { ratio: e.target.value })}
-                    />
-                    <IconButton size="small" color="error" onClick={() => removeEarnRule(idx)}>
-                      <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                    </IconButton>
-                  </Stack>
-                ))}
-              </Stack>
+              <Spa2SortableGrid items={earnRules} onReorder={reorderEarnRules}>
+                <Stack spacing={1.5}>
+                  {earnRules.map((rule, idx) => (
+                    <Spa2SortableItem key={rule.id} id={rule.id}>
+                      {(sortable) => (
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          <Spa2DragHandle sortable={sortable} />
+                          <TextField
+                            size="small"
+                            fullWidth
+                            label={t('loyalty_rewards.form_earn_label')}
+                            value={rule.label}
+                            onChange={(e) => updateEarnRule(idx, { label: e.target.value })}
+                          />
+                          <TextField
+                            size="small"
+                            fullWidth
+                            label={t('loyalty_rewards.form_earn_ratio')}
+                            value={rule.ratio}
+                            onChange={(e) => updateEarnRule(idx, { ratio: e.target.value })}
+                          />
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => removeEarnRule(idx)}
+                          >
+                            <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                          </IconButton>
+                        </Stack>
+                      )}
+                    </Spa2SortableItem>
+                  ))}
+                </Stack>
+              </Spa2SortableGrid>
             </SectionCard>
           </Grid>
           <Grid xs={12} md={7}>
@@ -604,27 +628,71 @@ export function Spa2LoyaltyRewardsManageView() {
             </Button>
           </Stack>
           <Stack spacing={1.5}>
-            {categories.map((c, idx) => (
-              <Stack key={c.value} direction="row" spacing={1.5} alignItems="center">
-                <Chip
-                  size="small"
-                  label={c.value === 'all' ? t('loyalty_rewards.category_all_locked') : c.value}
-                  sx={{ bgcolor: SPA2_CREAM, minWidth: 100 }}
-                />
-                <TextField
-                  size="small"
-                  fullWidth
-                  label={t('loyalty_rewards.form_category_label')}
-                  value={c.label}
-                  onChange={(e) => updateCategory(idx, { label: e.target.value })}
-                />
-                {c.value !== 'all' && (
-                  <IconButton size="small" color="error" onClick={() => removeCategory(idx)}>
-                    <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                  </IconButton>
-                )}
+            {categories
+              .filter((c) => c.value === 'all')
+              .map((c) => (
+                <Stack key={c.value} direction="row" spacing={1.5} alignItems="center">
+                  <Chip
+                    size="small"
+                    label={t('loyalty_rewards.category_all_locked')}
+                    sx={{ bgcolor: SPA2_CREAM, minWidth: 100 }}
+                  />
+                  <TextField
+                    size="small"
+                    fullWidth
+                    label={t('loyalty_rewards.form_category_label')}
+                    value={c.label}
+                    onChange={(e) =>
+                      updateCategory(
+                        categories.findIndex((cat) => cat.value === c.value),
+                        { label: e.target.value }
+                      )
+                    }
+                  />
+                </Stack>
+              ))}
+            <Spa2SortableGrid
+              items={realCategories.map((c) => ({ ...c, id: c.value }))}
+              onReorder={reorderCategories}
+            >
+              <Stack spacing={1.5}>
+                {realCategories.map((c) => (
+                  <Spa2SortableItem key={c.value} id={c.value}>
+                    {(sortable) => (
+                      <Stack direction="row" spacing={1.5} alignItems="center">
+                        <Spa2DragHandle sortable={sortable} />
+                        <Chip
+                          size="small"
+                          label={c.value}
+                          sx={{ bgcolor: SPA2_CREAM, minWidth: 100 }}
+                        />
+                        <TextField
+                          size="small"
+                          fullWidth
+                          label={t('loyalty_rewards.form_category_label')}
+                          value={c.label}
+                          onChange={(e) =>
+                            updateCategory(
+                              categories.findIndex((cat) => cat.value === c.value),
+                              { label: e.target.value }
+                            )
+                          }
+                        />
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() =>
+                            removeCategory(categories.findIndex((cat) => cat.value === c.value))
+                          }
+                        >
+                          <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                        </IconButton>
+                      </Stack>
+                    )}
+                  </Spa2SortableItem>
+                ))}
               </Stack>
-            ))}
+            </Spa2SortableGrid>
           </Stack>
         </Card>
       )}

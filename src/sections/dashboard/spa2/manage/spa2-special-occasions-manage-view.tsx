@@ -55,6 +55,7 @@ import {
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
 import { Spa2SimpleImageField } from './spa2-simple-image-field';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages3.tsx's
@@ -355,6 +356,14 @@ export function Spa2SpecialOccasionsManageView() {
     setCategories((prev) => prev.filter((_, i) => i !== idx));
     markDirty();
   };
+  const reorderCategories = (next: (Spa2OccasionCategory & { id: string })[]) => {
+    const cleaned = next.map(({ id, ...rest }) => rest);
+    setCategories((prev) => {
+      const allEntry = prev.find((c) => c.value === 'all');
+      return allEntry ? [allEntry, ...cleaned] : cleaned;
+    });
+    markDirty();
+  };
 
   // ---- Packages ----
   const [packages, setPackages] = useState<Spa2OccasionPackage[]>(() =>
@@ -613,27 +622,71 @@ export function Spa2SpecialOccasionsManageView() {
             </Button>
           </Stack>
           <Stack spacing={1.5}>
-            {categories.map((c, idx) => (
-              <Stack key={c.value} direction="row" spacing={1.5} alignItems="center">
-                <Chip
-                  size="small"
-                  label={c.value === 'all' ? t('special_occasions.category_all_locked') : c.value}
-                  sx={{ bgcolor: SPA2_CREAM_DARK, minWidth: 100 }}
-                />
-                <TextField
-                  size="small"
-                  fullWidth
-                  label={t('special_occasions.form_category_label')}
-                  value={c.label}
-                  onChange={(e) => updateCategory(idx, { label: e.target.value })}
-                />
-                {c.value !== 'all' && (
-                  <IconButton size="small" color="error" onClick={() => removeCategory(idx)}>
-                    <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                  </IconButton>
-                )}
+            {categories
+              .filter((c) => c.value === 'all')
+              .map((c) => (
+                <Stack key={c.value} direction="row" spacing={1.5} alignItems="center">
+                  <Chip
+                    size="small"
+                    label={t('special_occasions.category_all_locked')}
+                    sx={{ bgcolor: SPA2_CREAM_DARK, minWidth: 100 }}
+                  />
+                  <TextField
+                    size="small"
+                    fullWidth
+                    label={t('special_occasions.form_category_label')}
+                    value={c.label}
+                    onChange={(e) =>
+                      updateCategory(
+                        categories.findIndex((cat) => cat.value === c.value),
+                        { label: e.target.value }
+                      )
+                    }
+                  />
+                </Stack>
+              ))}
+            <Spa2SortableGrid
+              items={realCategories.map((c) => ({ ...c, id: c.value }))}
+              onReorder={reorderCategories}
+            >
+              <Stack spacing={1.5}>
+                {realCategories.map((c) => (
+                  <Spa2SortableItem key={c.value} id={c.value}>
+                    {(sortable) => (
+                      <Stack direction="row" spacing={1.5} alignItems="center">
+                        <Spa2DragHandle sortable={sortable} />
+                        <Chip
+                          size="small"
+                          label={c.value}
+                          sx={{ bgcolor: SPA2_CREAM_DARK, minWidth: 100 }}
+                        />
+                        <TextField
+                          size="small"
+                          fullWidth
+                          label={t('special_occasions.form_category_label')}
+                          value={c.label}
+                          onChange={(e) =>
+                            updateCategory(
+                              categories.findIndex((cat) => cat.value === c.value),
+                              { label: e.target.value }
+                            )
+                          }
+                        />
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() =>
+                            removeCategory(categories.findIndex((cat) => cat.value === c.value))
+                          }
+                        >
+                          <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                        </IconButton>
+                      </Stack>
+                    )}
+                  </Spa2SortableItem>
+                ))}
               </Stack>
-            ))}
+            </Spa2SortableGrid>
           </Stack>
         </Card>
       )}

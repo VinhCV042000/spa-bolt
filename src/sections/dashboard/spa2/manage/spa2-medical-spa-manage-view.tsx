@@ -58,6 +58,7 @@ import {
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages3.tsx's
@@ -83,7 +84,7 @@ const EMPTY_TREATMENT_FORM = {
   sessions: '',
   downtime: '',
   desc: '',
-  certifications: '',
+  certifications: [] as string[],
   before: '',
   after: '',
 };
@@ -390,16 +391,29 @@ export function Spa2MedicalSpaManageView() {
     spa2MedicalSpaCategories.map((c) => ({ ...c }))
   );
   const realCategories = useMemo(() => categories.filter((c) => c.value !== 'all'), [categories]);
-  const updateCategory = (idx: number, patch: Partial<Spa2MedicalSpaCategory>) => {
-    setCategories((prev) => prev.map((c, i) => (i === idx ? { ...c, ...patch } : c)));
+  const allCategory = useMemo(() => categories.find((c) => c.value === 'all'), [categories]);
+  const sortableCategories = useMemo(
+    () => realCategories.map((c) => ({ ...c, id: c.value })),
+    [realCategories]
+  );
+  const updateCategory = (value: string, patch: Partial<Spa2MedicalSpaCategory>) => {
+    setCategories((prev) => prev.map((c) => (c.value === value ? { ...c, ...patch } : c)));
     markDirty();
   };
   const addCategory = () => {
     setCategories((prev) => [...prev, { value: `cat-${prev.length}`, label: '' }]);
     markDirty();
   };
-  const removeCategory = (idx: number) => {
-    setCategories((prev) => prev.filter((_, i) => i !== idx));
+  const removeCategory = (value: string) => {
+    setCategories((prev) => prev.filter((c) => c.value !== value));
+    markDirty();
+  };
+  const reorderCategories = (next: Array<Spa2MedicalSpaCategory & { id: string }>) => {
+    setCategories((prev) => {
+      const allEntry = prev.find((c) => c.value === 'all');
+      const reordered = next.map((c) => ({ value: c.value, label: c.label }));
+      return allEntry ? [allEntry, ...reordered] : reordered;
+    });
     markDirty();
   };
 
@@ -438,17 +452,29 @@ export function Spa2MedicalSpaManageView() {
       sessions: item.sessions,
       downtime: item.downtime,
       desc: item.desc,
-      certifications: item.certifications.join('\n'),
+      certifications: [...item.certifications],
       before: item.before,
       after: item.after,
     });
     setTreatmentEditId(item.id);
     setTreatmentDialog(true);
   };
-  const treatmentCertsPreview = treatmentForm.certifications
-    .split('\n')
-    .map((s) => s.trim())
-    .filter(Boolean);
+  const treatmentCertsPreview = treatmentForm.certifications.map((s) => s.trim()).filter(Boolean);
+  const addTreatmentCertification = () => {
+    setTreatmentForm((p) => ({ ...p, certifications: [...p.certifications, ''] }));
+  };
+  const updateTreatmentCertification = (idx: number, value: string) => {
+    setTreatmentForm((p) => ({
+      ...p,
+      certifications: p.certifications.map((c, i) => (i === idx ? value : c)),
+    }));
+  };
+  const removeTreatmentCertification = (idx: number) => {
+    setTreatmentForm((p) => ({
+      ...p,
+      certifications: p.certifications.filter((_, i) => i !== idx),
+    }));
+  };
   const submitTreatment = () => {
     const next = {
       category: treatmentForm.category,
@@ -473,6 +499,10 @@ export function Spa2MedicalSpaManageView() {
   const confirmDeleteTreatment = () => {
     setTreatments((prev) => prev.filter((d) => d.id !== treatmentDeleteId));
     setTreatmentDeleteId(null);
+    markDirty();
+  };
+  const reorderTreatments = (next: Spa2MedicalTreatment[]) => {
+    setTreatments(next);
     markDirty();
   };
 
@@ -728,27 +758,54 @@ export function Spa2MedicalSpaManageView() {
             </Button>
           </Stack>
           <Stack spacing={1.5}>
-            {categories.map((c, idx) => (
-              <Stack key={c.value} direction="row" spacing={1.5} alignItems="center">
+            {allCategory && (
+              <Stack direction="row" spacing={1.5} alignItems="center">
                 <Chip
                   size="small"
-                  label={c.value === 'all' ? t('medical_spa.category_all_locked') : c.value}
+                  label={t('medical_spa.category_all_locked')}
                   sx={{ bgcolor: SPA2_CREAM, minWidth: 100 }}
                 />
                 <TextField
                   size="small"
                   fullWidth
                   label={t('medical_spa.form_category_label')}
-                  value={c.label}
-                  onChange={(e) => updateCategory(idx, { label: e.target.value })}
+                  value={allCategory.label}
+                  onChange={(e) => updateCategory('all', { label: e.target.value })}
                 />
-                {c.value !== 'all' && (
-                  <IconButton size="small" color="error" onClick={() => removeCategory(idx)}>
-                    <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                  </IconButton>
-                )}
               </Stack>
-            ))}
+            )}
+            <Spa2SortableGrid items={sortableCategories} onReorder={reorderCategories}>
+              <Stack spacing={1.5}>
+                {sortableCategories.map((c) => (
+                  <Spa2SortableItem key={c.id} id={c.id}>
+                    {(sortable) => (
+                      <Stack direction="row" spacing={1.5} alignItems="center">
+                        <Spa2DragHandle sortable={sortable} />
+                        <Chip
+                          size="small"
+                          label={c.value}
+                          sx={{ bgcolor: SPA2_CREAM, minWidth: 100 }}
+                        />
+                        <TextField
+                          size="small"
+                          fullWidth
+                          label={t('medical_spa.form_category_label')}
+                          value={c.label}
+                          onChange={(e) => updateCategory(c.value, { label: e.target.value })}
+                        />
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => removeCategory(c.value)}
+                        >
+                          <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                        </IconButton>
+                      </Stack>
+                    )}
+                  </Spa2SortableItem>
+                ))}
+              </Stack>
+            </Spa2SortableGrid>
           </Stack>
         </Card>
       )}
@@ -797,45 +854,108 @@ export function Spa2MedicalSpaManageView() {
               </Button>
             </Stack>
           </Stack>
-          <Grid container spacing={2}>
-            {filteredTreatments.map((item) => (
-              <Grid key={item.id} xs={12} sm={6} md={4}>
-                <Box
-                  onClick={() => setTreatmentViewItem(item)}
-                  sx={{ position: 'relative', cursor: 'pointer' }}
-                >
-                  <TreatmentPreviewCard {...item} />
-                  <Stack
-                    direction="row"
-                    spacing={0.5}
-                    sx={{ position: 'absolute', top: 8, right: 8 }}
-                  >
-                    <IconButton
-                      size="small"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openEditTreatment(item);
-                      }}
-                      sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                    >
-                      <Iconify icon="solar:pen-bold" width={14} />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      color="error"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setTreatmentDeleteId(item.id);
-                      }}
-                      sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                    >
-                      <Iconify icon="solar:trash-bin-trash-bold" width={14} />
-                    </IconButton>
-                  </Stack>
-                </Box>
+          {treatmentFilter !== 'all' && (
+            <Typography sx={{ fontSize: 12, color: 'text.secondary', mb: 1.5 }}>
+              {t('medical_spa.reorder_hint')}
+            </Typography>
+          )}
+          {treatmentFilter === 'all' ? (
+            <Spa2SortableGrid items={filteredTreatments} onReorder={reorderTreatments}>
+              <Grid container spacing={2}>
+                {filteredTreatments.map((item) => (
+                  <Grid key={item.id} xs={12} sm={6} md={4}>
+                    <Spa2SortableItem id={item.id}>
+                      {(sortable) => (
+                        <Box
+                          onClick={() => setTreatmentViewItem(item)}
+                          sx={{ position: 'relative', cursor: 'pointer' }}
+                        >
+                          <TreatmentPreviewCard {...item} />
+                          <Stack
+                            direction="row"
+                            spacing={0.5}
+                            sx={{ position: 'absolute', top: 8, left: 8 }}
+                          >
+                            <Spa2DragHandle
+                              sortable={sortable}
+                              sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                            />
+                          </Stack>
+                          <Stack
+                            direction="row"
+                            spacing={0.5}
+                            sx={{ position: 'absolute', top: 8, right: 8 }}
+                          >
+                            <IconButton
+                              size="small"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openEditTreatment(item);
+                              }}
+                              sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                            >
+                              <Iconify icon="solar:pen-bold" width={14} />
+                            </IconButton>
+                            <IconButton
+                              size="small"
+                              color="error"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setTreatmentDeleteId(item.id);
+                              }}
+                              sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                            >
+                              <Iconify icon="solar:trash-bin-trash-bold" width={14} />
+                            </IconButton>
+                          </Stack>
+                        </Box>
+                      )}
+                    </Spa2SortableItem>
+                  </Grid>
+                ))}
               </Grid>
-            ))}
-          </Grid>
+            </Spa2SortableGrid>
+          ) : (
+            <Grid container spacing={2}>
+              {filteredTreatments.map((item) => (
+                <Grid key={item.id} xs={12} sm={6} md={4}>
+                  <Box
+                    onClick={() => setTreatmentViewItem(item)}
+                    sx={{ position: 'relative', cursor: 'pointer' }}
+                  >
+                    <TreatmentPreviewCard {...item} />
+                    <Stack
+                      direction="row"
+                      spacing={0.5}
+                      sx={{ position: 'absolute', top: 8, right: 8 }}
+                    >
+                      <IconButton
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openEditTreatment(item);
+                        }}
+                        sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                      >
+                        <Iconify icon="solar:pen-bold" width={14} />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        color="error"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setTreatmentDeleteId(item.id);
+                        }}
+                        sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                      >
+                        <Iconify icon="solar:trash-bin-trash-bold" width={14} />
+                      </IconButton>
+                    </Stack>
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+          )}
         </Card>
       )}
 
@@ -994,17 +1114,41 @@ export function Spa2MedicalSpaManageView() {
                   value={treatmentForm.desc}
                   onChange={(e) => setTreatmentForm((p) => ({ ...p, desc: e.target.value }))}
                 />
-                <TextField
-                  label={t('medical_spa.form_treatment_certifications')}
-                  fullWidth
-                  multiline
-                  minRows={3}
-                  value={treatmentForm.certifications}
-                  onChange={(e) =>
-                    setTreatmentForm((p) => ({ ...p, certifications: e.target.value }))
-                  }
-                  helperText={t('medical_spa.form_treatment_certifications_help')}
-                />
+                <Stack spacing={1}>
+                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                    {t('medical_spa.form_treatment_certifications')}
+                  </Typography>
+                  <Stack spacing={1}>
+                    {treatmentForm.certifications.map((cert, idx) => (
+                      <Stack key={idx} direction="row" spacing={1} alignItems="center">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          value={cert}
+                          onChange={(e) => updateTreatmentCertification(idx, e.target.value)}
+                        />
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => removeTreatmentCertification(idx)}
+                        >
+                          <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                        </IconButton>
+                      </Stack>
+                    ))}
+                  </Stack>
+                  <Button
+                    size="small"
+                    startIcon={<Iconify icon="mingcute:add-line" />}
+                    onClick={addTreatmentCertification}
+                    sx={{ alignSelf: 'flex-start' }}
+                  >
+                    {t('medical_spa.add_certification_btn')}
+                  </Button>
+                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                    {t('medical_spa.form_treatment_certifications_help')}
+                  </Typography>
+                </Stack>
                 <Stack direction="row" spacing={2}>
                   <TextField
                     label={t('medical_spa.form_treatment_before')}

@@ -58,6 +58,7 @@ import {
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
 import { Spa2SimpleImageField } from './spa2-simple-image-field';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages3.tsx's
@@ -394,24 +395,49 @@ export function Spa2MindfulnessManageView() {
   };
 
   // ---- Challenge ----
-  const [challenge, setChallenge] = useState<Spa2MindfulnessChallenge>(() => ({
-    ...spa2MindfulnessChallenge,
-    days: [...spa2MindfulnessChallenge.days],
-  }));
-  const [daysText, setDaysText] = useState(spa2MindfulnessChallenge.days.join('\n'));
-  const updateChallenge = (key: keyof Spa2MindfulnessChallenge, value: string | number) => {
+  // `days` is edited as a list of stable-id rows for CRUD/drag-reorder and is
+  // flattened back to the plain string[] the public view expects (via
+  // `challengeWithDays` below) whenever the actual Spa2MindfulnessChallenge
+  // shape is needed (previews, save/reset).
+  const initChallengeDays = (days: string[]) => days.map((text) => ({ id: uuidv4(), text }));
+  const initChallengeFields = (): Omit<Spa2MindfulnessChallenge, 'days'> => ({
+    title: spa2MindfulnessChallenge.title,
+    subtitle: spa2MindfulnessChallenge.subtitle,
+    buttonLabel: spa2MindfulnessChallenge.buttonLabel,
+    completedDays: spa2MindfulnessChallenge.completedDays,
+  });
+
+  const [challenge, setChallenge] =
+    useState<Omit<Spa2MindfulnessChallenge, 'days'>>(initChallengeFields);
+  const [challengeDays, setChallengeDays] = useState<{ id: string; text: string }[]>(() =>
+    initChallengeDays(spa2MindfulnessChallenge.days)
+  );
+  const challengeWithDays: Spa2MindfulnessChallenge = {
+    ...challenge,
+    days: challengeDays.map((d) => d.text),
+  };
+
+  const updateChallenge = (
+    key: keyof Omit<Spa2MindfulnessChallenge, 'days'>,
+    value: string | number
+  ) => {
     setChallenge((prev) => ({ ...prev, [key]: value }));
     markDirty();
   };
-  const updateChallengeDays = (text: string) => {
-    setDaysText(text);
-    setChallenge((prev) => ({
-      ...prev,
-      days: text
-        .split('\n')
-        .map((s) => s.trim())
-        .filter(Boolean),
-    }));
+  const updateChallengeDay = (id: string, text: string) => {
+    setChallengeDays((prev) => prev.map((d) => (d.id === id ? { ...d, text } : d)));
+    markDirty();
+  };
+  const addChallengeDay = () => {
+    setChallengeDays((prev) => (prev.length >= 7 ? prev : [...prev, { id: uuidv4(), text: '' }]));
+    markDirty();
+  };
+  const removeChallengeDay = (id: string) => {
+    setChallengeDays((prev) => prev.filter((d) => d.id !== id));
+    markDirty();
+  };
+  const reorderChallengeDays = (next: { id: string; text: string }[]) => {
+    setChallengeDays(next);
     markDirty();
   };
 
@@ -424,8 +450,8 @@ export function Spa2MindfulnessManageView() {
     setBanner({ ...spa2MindfulnessBanner, image: { ...spa2MindfulnessBanner.image } });
     setBenefits(spa2MindfulnessBenefits.map((b) => ({ ...b })));
     setPrograms(spa2MindfulnessPrograms.map((p) => ({ ...p })));
-    setChallenge({ ...spa2MindfulnessChallenge, days: [...spa2MindfulnessChallenge.days] });
-    setDaysText(spa2MindfulnessChallenge.days.join('\n'));
+    setChallenge(initChallengeFields());
+    setChallengeDays(initChallengeDays(spa2MindfulnessChallenge.days));
     setDirty(false);
   };
 
@@ -704,61 +730,124 @@ export function Spa2MindfulnessManageView() {
       {tab === 'challenge' && (
         <Grid container spacing={3}>
           <Grid xs={12} md={7}>
-            <SectionCard
-              title={t('mindfulness.challenge_section')}
-              icon="solar:medal-ribbons-star-bold-duotone"
-            >
-              <Stack spacing={2}>
-                <TextField
-                  label={t('mindfulness.form_challenge_title')}
-                  value={challenge.title}
-                  onChange={(e) => updateChallenge('title', e.target.value)}
-                  fullWidth
-                  size="small"
-                />
-                <TextField
-                  label={t('mindfulness.form_challenge_subtitle')}
-                  value={challenge.subtitle}
-                  onChange={(e) => updateChallenge('subtitle', e.target.value)}
-                  fullWidth
-                  size="small"
-                />
-                <TextField
-                  label={t('mindfulness.form_challenge_button')}
-                  value={challenge.buttonLabel}
-                  onChange={(e) => updateChallenge('buttonLabel', e.target.value)}
-                  fullWidth
-                  size="small"
-                />
-                <TextField
-                  label={t('mindfulness.form_challenge_days')}
-                  value={daysText}
-                  onChange={(e) => updateChallengeDays(e.target.value)}
-                  fullWidth
-                  multiline
-                  minRows={7}
-                  helperText={t('mindfulness.form_challenge_days_help')}
-                />
-                <Box>
-                  <Typography sx={{ fontSize: 13, fontWeight: 500, mb: 1 }}>
-                    {t('mindfulness.form_challenge_completed', { count: challenge.completedDays })}
-                  </Typography>
-                  <Slider
-                    value={challenge.completedDays}
-                    min={0}
-                    max={challenge.days.length}
-                    step={1}
-                    marks
-                    onChange={(_, v) => updateChallenge('completedDays', v as number)}
-                    sx={{ color: SPA2_TEAL }}
+            <Stack spacing={3}>
+              <SectionCard
+                title={t('mindfulness.challenge_section')}
+                icon="solar:medal-ribbons-star-bold-duotone"
+              >
+                <Stack spacing={2}>
+                  <TextField
+                    label={t('mindfulness.form_challenge_title')}
+                    value={challenge.title}
+                    onChange={(e) => updateChallenge('title', e.target.value)}
+                    fullWidth
+                    size="small"
                   />
-                </Box>
-              </Stack>
-            </SectionCard>
+                  <TextField
+                    label={t('mindfulness.form_challenge_subtitle')}
+                    value={challenge.subtitle}
+                    onChange={(e) => updateChallenge('subtitle', e.target.value)}
+                    fullWidth
+                    size="small"
+                  />
+                  <TextField
+                    label={t('mindfulness.form_challenge_button')}
+                    value={challenge.buttonLabel}
+                    onChange={(e) => updateChallenge('buttonLabel', e.target.value)}
+                    fullWidth
+                    size="small"
+                  />
+                  <Box>
+                    <Typography sx={{ fontSize: 13, fontWeight: 500, mb: 1 }}>
+                      {t('mindfulness.form_challenge_completed', {
+                        count: challenge.completedDays,
+                      })}
+                    </Typography>
+                    <Slider
+                      value={challenge.completedDays}
+                      min={0}
+                      max={challengeDays.length}
+                      step={1}
+                      marks
+                      onChange={(_, v) => updateChallenge('completedDays', v as number)}
+                      sx={{ color: SPA2_TEAL }}
+                    />
+                  </Box>
+                </Stack>
+              </SectionCard>
+              <SectionCard
+                title={t('mindfulness.days_list_label')}
+                icon="solar:checklist-minimalistic-bold-duotone"
+                action={
+                  <Button
+                    size="small"
+                    startIcon={<Iconify icon="mingcute:add-line" />}
+                    onClick={addChallengeDay}
+                    disabled={challengeDays.length >= 7}
+                    sx={{ color: SPA2_TEAL }}
+                  >
+                    {t('mindfulness.add_day_btn')}
+                  </Button>
+                }
+              >
+                <Spa2SortableGrid items={challengeDays} onReorder={reorderChallengeDays}>
+                  <Stack spacing={1.5}>
+                    {challengeDays.map((d, idx) => (
+                      <Spa2SortableItem key={d.id} id={d.id}>
+                        {(sortable) => (
+                          <Stack
+                            direction="row"
+                            alignItems="center"
+                            spacing={1}
+                            sx={{
+                              p: 1.5,
+                              borderRadius: 2,
+                              border: `1px solid ${SPA2_CREAM_DARK}`,
+                              bgcolor: 'background.paper',
+                            }}
+                          >
+                            <Spa2DragHandle sortable={sortable} />
+                            <Chip
+                              label={idx + 1}
+                              size="small"
+                              sx={{ bgcolor: SPA2_TEAL, color: 'white', fontWeight: 700 }}
+                            />
+                            <TextField
+                              value={d.text}
+                              onChange={(e) => updateChallengeDay(d.id, e.target.value)}
+                              placeholder={t('mindfulness.day_placeholder')}
+                              fullWidth
+                              size="small"
+                            />
+                            <IconButton
+                              size="small"
+                              color="error"
+                              onClick={() => removeChallengeDay(d.id)}
+                            >
+                              <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                            </IconButton>
+                          </Stack>
+                        )}
+                      </Spa2SortableItem>
+                    ))}
+                    {challengeDays.length === 0 && (
+                      <Typography
+                        sx={{ fontSize: 13, color: 'text.secondary', textAlign: 'center' }}
+                      >
+                        {t('mindfulness.no_days')}
+                      </Typography>
+                    )}
+                  </Stack>
+                </Spa2SortableGrid>
+                <Typography sx={{ fontSize: 12, color: 'text.secondary', mt: 1.5 }}>
+                  {t('mindfulness.days_list_help')}
+                </Typography>
+              </SectionCard>
+            </Stack>
           </Grid>
           <Grid xs={12} md={5}>
             <SectionCard title={t('common.preview_btn')} icon="solar:eye-bold-duotone">
-              <ChallengePreviewCard {...challenge} />
+              <ChallengePreviewCard {...challengeWithDays} />
             </SectionCard>
           </Grid>
         </Grid>
@@ -771,7 +860,7 @@ export function Spa2MindfulnessManageView() {
             banner={banner}
             benefits={benefits}
             programs={programs}
-            challenge={challenge}
+            challenge={challengeWithDays}
           />
         </Box>
       )}

@@ -61,6 +61,7 @@ import {
 
 import { Spa2ManageShell } from './spa2-manage-shell';
 import { Spa2SimpleImageField } from './spa2-simple-image-field';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages2.tsx's
@@ -400,6 +401,10 @@ export function Spa2AppDownloadManageView() {
     setStoreDeleteId(null);
     markDirty();
   };
+  const reorderStores = (next: Spa2AppDownloadStore[]) => {
+    setStores(next);
+    markDirty();
+  };
 
   // ---- Rating stats ----
   const [ratingStats, setRatingStats] = useState<Spa2AppDownloadRatingStat[]>(() =>
@@ -432,6 +437,10 @@ export function Spa2AppDownloadManageView() {
   const confirmDeleteStat = () => {
     setRatingStats((prev) => prev.filter((s) => s.id !== statDeleteId));
     setStatDeleteId(null);
+    markDirty();
+  };
+  const reorderRatingStats = (next: Spa2AppDownloadRatingStat[]) => {
+    setRatingStats(next);
     markDirty();
   };
 
@@ -789,40 +798,54 @@ export function Spa2AppDownloadManageView() {
                 {t('app_download.add_store_btn')}
               </Button>
             </Stack>
-            <Grid container spacing={2}>
-              {stores.map((item) => (
-                <Grid key={item.id} xs={12} sm={6}>
-                  <Box sx={{ position: 'relative' }}>
-                    <DarkSwatch>
-                      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                        <StoreBadgePreview icon={item.icon} store={item.store} sub={item.sub} />
-                      </Box>
-                    </DarkSwatch>
-                    <Stack
-                      direction="row"
-                      spacing={0.5}
-                      sx={{ position: 'absolute', top: 8, right: 8 }}
-                    >
-                      <IconButton
-                        size="small"
-                        onClick={() => openEditStore(item)}
-                        sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                      >
-                        <Iconify icon="solar:pen-bold" width={14} />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        color="error"
-                        onClick={() => setStoreDeleteId(item.id)}
-                        sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                      >
-                        <Iconify icon="solar:trash-bin-trash-bold" width={14} />
-                      </IconButton>
-                    </Stack>
-                  </Box>
-                </Grid>
-              ))}
-            </Grid>
+            <Spa2SortableGrid items={stores} onReorder={reorderStores}>
+              <Grid container spacing={2}>
+                {stores.map((item) => (
+                  <Grid key={item.id} xs={12} sm={6}>
+                    <Spa2SortableItem id={item.id}>
+                      {(sortable) => (
+                        <Box sx={{ position: 'relative' }}>
+                          <DarkSwatch>
+                            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                              <StoreBadgePreview
+                                icon={item.icon}
+                                store={item.store}
+                                sub={item.sub}
+                              />
+                            </Box>
+                          </DarkSwatch>
+                          <Stack
+                            direction="row"
+                            spacing={0.5}
+                            sx={{ position: 'absolute', top: 8, right: 8 }}
+                          >
+                            <Spa2DragHandle
+                              sortable={sortable}
+                              sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                            />
+                            <IconButton
+                              size="small"
+                              onClick={() => openEditStore(item)}
+                              sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                            >
+                              <Iconify icon="solar:pen-bold" width={14} />
+                            </IconButton>
+                            <IconButton
+                              size="small"
+                              color="error"
+                              onClick={() => setStoreDeleteId(item.id)}
+                              sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                            >
+                              <Iconify icon="solar:trash-bin-trash-bold" width={14} />
+                            </IconButton>
+                          </Stack>
+                        </Box>
+                      )}
+                    </Spa2SortableItem>
+                  </Grid>
+                ))}
+              </Grid>
+            </Spa2SortableGrid>
           </Card>
 
           <Card sx={{ p: 3, borderRadius: 3 }}>
@@ -849,40 +872,50 @@ export function Spa2AppDownloadManageView() {
                 {t('app_download.add_stat_btn')}
               </Button>
             </Stack>
-            <Grid container spacing={2}>
-              {ratingStats.map((item) => (
-                <Grid key={item.id} xs={12} sm={4}>
-                  <Box sx={{ position: 'relative' }}>
-                    <DarkSwatch>
-                      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                        <RatingStatPreview n={item.n} l={item.l} />
-                      </Box>
-                    </DarkSwatch>
-                    <Stack
-                      direction="row"
-                      spacing={0.5}
-                      sx={{ position: 'absolute', top: 4, right: 4 }}
-                    >
-                      <IconButton
-                        size="small"
-                        onClick={() => openEditStat(item)}
-                        sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                      >
-                        <Iconify icon="solar:pen-bold" width={14} />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        color="error"
-                        onClick={() => setStatDeleteId(item.id)}
-                        sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                      >
-                        <Iconify icon="solar:trash-bin-trash-bold" width={14} />
-                      </IconButton>
-                    </Stack>
-                  </Box>
-                </Grid>
-              ))}
-            </Grid>
+            <Spa2SortableGrid items={ratingStats} onReorder={reorderRatingStats}>
+              <Grid container spacing={2}>
+                {ratingStats.map((item) => (
+                  <Grid key={item.id} xs={12} sm={4}>
+                    <Spa2SortableItem id={item.id}>
+                      {(sortable) => (
+                        <Box sx={{ position: 'relative' }}>
+                          <DarkSwatch>
+                            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                              <RatingStatPreview n={item.n} l={item.l} />
+                            </Box>
+                          </DarkSwatch>
+                          <Stack
+                            direction="row"
+                            spacing={0.5}
+                            sx={{ position: 'absolute', top: 4, right: 4 }}
+                          >
+                            <Spa2DragHandle
+                              sortable={sortable}
+                              sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                            />
+                            <IconButton
+                              size="small"
+                              onClick={() => openEditStat(item)}
+                              sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                            >
+                              <Iconify icon="solar:pen-bold" width={14} />
+                            </IconButton>
+                            <IconButton
+                              size="small"
+                              color="error"
+                              onClick={() => setStatDeleteId(item.id)}
+                              sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                            >
+                              <Iconify icon="solar:trash-bin-trash-bold" width={14} />
+                            </IconButton>
+                          </Stack>
+                        </Box>
+                      )}
+                    </Spa2SortableItem>
+                  </Grid>
+                ))}
+              </Grid>
+            </Spa2SortableGrid>
           </Card>
         </Stack>
       )}
