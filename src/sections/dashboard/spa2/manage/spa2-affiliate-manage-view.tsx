@@ -1,4 +1,9 @@
-import type { Spa2AdjustableImage } from 'src/_mock/_spa2';
+import type {
+  Spa2AffiliateTier,
+  Spa2AffiliateStat,
+  Spa2AffiliateStep,
+  Spa2AdjustableImage,
+  Spa2AffiliateBanner} from 'src/_mock/_spa2';
 
 import { useState, useCallback } from 'react';
 
@@ -7,8 +12,8 @@ import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Tabs from '@mui/material/Tabs';
-import Switch from '@mui/material/Switch';
 import Stack from '@mui/material/Stack';
+import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Tooltip from '@mui/material/Tooltip';
@@ -28,13 +33,9 @@ import { uuidv4 } from 'src/utils/uuidv4';
 import { useTranslate } from 'src/locales';
 import {
   spa2AffiliateTiers,
-  spa2AffiliateBanner,
   spa2AffiliateStats,
   spa2AffiliateSteps,
-  type Spa2AffiliateTier,
-  type Spa2AffiliateStat,
-  type Spa2AffiliateStep,
-  type Spa2AffiliateBanner,
+  spa2AffiliateBanner
 } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';

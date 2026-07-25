@@ -899,7 +899,7 @@ export function Spa2HomeServiceManageView() {
       {/* FAQ */}
       {tab === 'faq' && (
         <Grid container spacing={3}>
-          <Grid xs={12} md={7}>
+          <Grid xs={12} md={6}>
             <SectionCard
               title={t('home_service.faq_section')}
               icon="solar:question-circle-bold-duotone"
@@ -966,7 +966,7 @@ export function Spa2HomeServiceManageView() {
               </Spa2SortableGrid>
             </SectionCard>
           </Grid>
-          <Grid xs={12} md={5}>
+          <Grid xs={12} md={6}>
             <SectionCard title={t('common.preview_btn')} icon="solar:eye-bold-duotone">
               <PreviewFrame>
                 <Stack spacing={1.5} sx={{ p: 2, bgcolor: 'background.default' }}>
@@ -1237,7 +1237,7 @@ export function Spa2HomeServiceManageView() {
       />
 
       {/* FAQ dialog */}
-      <Dialog open={faqDialog} onClose={() => setFaqDialog(false)} maxWidth="md" fullWidth>
+      <Dialog open={faqDialog} onClose={() => setFaqDialog(false)} maxWidth="lg" fullWidth>
         <DialogTitle>{faqEditId ? t('common.edit') : t('home_service.add_faq_btn')}</DialogTitle>
         <DialogContent>
           <Grid container spacing={3} sx={{ mt: 0.5 }}>

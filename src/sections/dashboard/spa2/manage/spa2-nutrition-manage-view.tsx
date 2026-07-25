@@ -1067,11 +1067,11 @@ export function Spa2NutritionManageView() {
       </Dialog>
 
       {/* Tip add/edit dialog */}
-      <Dialog open={tipDialog} onClose={() => setTipDialog(false)} maxWidth="md" fullWidth>
+      <Dialog open={tipDialog} onClose={() => setTipDialog(false)} maxWidth="lg" fullWidth>
         <DialogTitle>{tipEditId ? t('common.edit') : t('nutrition.add_tip_btn')}</DialogTitle>
         <DialogContent>
           <Grid container spacing={3} sx={{ mt: 0.5 }}>
-            <Grid xs={12} sm={7}>
+            <Grid xs={12} sm={6}>
               <Stack spacing={2}>
                 <Stack direction="row" spacing={2}>
                   <TextField
@@ -1099,7 +1099,7 @@ export function Spa2NutritionManageView() {
                 />
               </Stack>
             </Grid>
-            <Grid xs={12} sm={5}>
+            <Grid xs={12} sm={6}>
               <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
                 {t('common.preview_btn')}
               </Typography>
