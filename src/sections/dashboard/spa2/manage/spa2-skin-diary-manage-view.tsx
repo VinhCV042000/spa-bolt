@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -37,6 +37,7 @@ import {
 } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
 import {
@@ -52,6 +53,7 @@ import {
 } from 'src/sections/spa2/spa2-pages-data';
 
 import { Spa2ImageField } from './spa2-image-field';
+import { Spa2ListAnalytic } from './spa2-list-analytic';
 import { Spa2ManageShell } from './spa2-manage-shell';
 import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
@@ -70,6 +72,15 @@ const SKIN_METRICS = [
   { key: 'oiliness' as const, label: 'Dầu nhờn', icon: 'solar:sun-bold', color: '#EF9F27' },
   { key: 'sensitivity' as const, label: 'Độ nhạy', icon: 'solar:shield-bold', color: '#E57373' },
 ];
+
+// Direction that counts as "improvement" for each tracked metric, used to
+// color-code the trend deltas in the stats tab (moisture rising is good;
+// oiliness/sensitivity falling is good).
+const METRIC_DIRECTION: Record<'moisture' | 'oiliness' | 'sensitivity', 1 | -1> = {
+  moisture: 1,
+  oiliness: -1,
+  sensitivity: -1,
+};
 
 const withId = <T extends object>(item: T): T & { id: string } => ({ id: uuidv4(), ...item });
 
@@ -225,7 +236,7 @@ export function Spa2SkinDiaryManageView() {
   }));
   const [dirty, setDirty] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
-  const [tab, setTab] = useState<'banner' | 'entries' | 'preview'>('banner');
+  const [tab, setTab] = useState<'banner' | 'entries' | 'stats' | 'preview'>('banner');
   const markDirty = () => setDirty(true);
 
   // ---- Banner ----
@@ -287,6 +298,54 @@ export function Spa2SkinDiaryManageView() {
     setEntries([...nextReversed].reverse());
     markDirty();
   };
+
+  // ---- Diary statistics (aggregate over the shared `entries` array) ----
+  // `entries` is naturally ordered oldest-first (see reorderEntries above),
+  // so entries[0] / entries[length - 1] are the oldest / most recent record.
+  const diaryStats = useMemo(() => {
+    const total = entries.length;
+    if (total === 0) {
+      return {
+        total: 0,
+        averages: { moisture: 0, oiliness: 0, sensitivity: 0 },
+        deltas: { moisture: 0, oiliness: 0, sensitivity: 0 },
+        serviceRanking: [] as { service: string; count: number; percent: number }[],
+        dateRange: null as { from: string; to: string } | null,
+      };
+    }
+
+    const averages = {
+      moisture: Math.round(entries.reduce((sum, e) => sum + e.moisture, 0) / total),
+      oiliness: Math.round(entries.reduce((sum, e) => sum + e.oiliness, 0) / total),
+      sensitivity: Math.round(entries.reduce((sum, e) => sum + e.sensitivity, 0) / total),
+    };
+
+    const first = entries[0];
+    const latest = entries[total - 1];
+    const deltas = {
+      moisture: latest.moisture - first.moisture,
+      oiliness: latest.oiliness - first.oiliness,
+      sensitivity: latest.sensitivity - first.sensitivity,
+    };
+
+    const serviceCounts = new Map<string, number>();
+    entries.forEach((e) => {
+      const key = e.service.trim() || 'Chưa ghi nhận';
+      serviceCounts.set(key, (serviceCounts.get(key) ?? 0) + 1);
+    });
+    const maxCount = Math.max(...Array.from(serviceCounts.values()));
+    const serviceRanking = Array.from(serviceCounts.entries())
+      .map(([service, count]) => ({ service, count, percent: (count / maxCount) * 100 }))
+      .sort((a, b) => b.count - a.count);
+
+    return {
+      total,
+      averages,
+      deltas,
+      serviceRanking,
+      dateRange: { from: first.date || '—', to: latest.date || '—' },
+    };
+  }, [entries]);
 
   const handleSave = () => {
     setSavedAt(new Date());
@@ -382,6 +441,12 @@ export function Spa2SkinDiaryManageView() {
           value="entries"
           label={t('skin_diary.entries_section')}
           icon={<Iconify icon="solar:notebook-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
+          value="stats"
+          label="Thống kê nhật ký"
+          icon={<Iconify icon="solar:chart-2-bold-duotone" width={20} />}
           iconPosition="start"
         />
         <Tab
@@ -515,6 +580,166 @@ export function Spa2SkinDiaryManageView() {
             </Stack>
           </Spa2SortableGrid>
         </Card>
+      )}
+
+      {/* Diary statistics (aggregate analytics over the shared entries array) */}
+      {tab === 'stats' && (
+        <Stack spacing={3}>
+          <Card sx={{ borderRadius: 3 }}>
+            <Typography
+              variant="caption"
+              sx={{
+                px: 3,
+                pt: 2.5,
+                display: 'block',
+                color: 'text.secondary',
+                textTransform: 'uppercase',
+              }}
+            >
+              Tổng quan
+            </Typography>
+            <Scrollbar sx={{ minHeight: 108 }}>
+              <Stack
+                direction="row"
+                divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+                sx={{ py: 2, px: 1 }}
+              >
+                <Spa2ListAnalytic
+                  title="Tổng số nhật ký"
+                  total={diaryStats.total}
+                  percent={100}
+                  icon="solar:notebook-bold-duotone"
+                  color={SPA2_TEAL}
+                  unitLabel="bản ghi"
+                />
+                <Spa2ListAnalytic
+                  title="Độ ẩm TB"
+                  total={diaryStats.averages.moisture}
+                  percent={diaryStats.averages.moisture}
+                  icon="solar:drop-bold"
+                  color="#4FC3F7"
+                  unitLabel="%"
+                />
+                <Spa2ListAnalytic
+                  title="Dầu nhờn TB"
+                  total={diaryStats.averages.oiliness}
+                  percent={diaryStats.averages.oiliness}
+                  icon="solar:sun-bold"
+                  color="#EF9F27"
+                  unitLabel="%"
+                />
+                <Spa2ListAnalytic
+                  title="Độ nhạy TB"
+                  total={diaryStats.averages.sensitivity}
+                  percent={diaryStats.averages.sensitivity}
+                  icon="solar:shield-bold"
+                  color="#E57373"
+                  unitLabel="%"
+                />
+              </Stack>
+            </Scrollbar>
+          </Card>
+
+          <Grid container spacing={3}>
+            <Grid xs={12} md={6}>
+              <SectionCard title="Xu hướng theo dõi" icon="solar:chart-2-bold-duotone">
+                {diaryStats.total < 2 ? (
+                  <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
+                    Cần ít nhất 2 nhật ký để so sánh xu hướng.
+                  </Typography>
+                ) : (
+                  <Stack spacing={2.5}>
+                    {SKIN_METRICS.map((m) => {
+                      const delta = diaryStats.deltas[m.key];
+                      const direction = METRIC_DIRECTION[m.key];
+                      const improved = delta * direction > 0;
+                      const worsened = delta * direction < 0;
+                      const deltaColor = improved
+                        ? 'success.main'
+                        : worsened
+                          ? 'error.main'
+                          : 'text.disabled';
+                      return (
+                        <Stack
+                          key={m.key}
+                          direction="row"
+                          alignItems="center"
+                          justifyContent="space-between"
+                        >
+                          <Stack direction="row" spacing={1} alignItems="center">
+                            <Iconify icon={m.icon} width={16} sx={{ color: m.color }} />
+                            <Typography sx={{ fontSize: 13.5, fontWeight: 500 }}>
+                              {m.label}
+                            </Typography>
+                          </Stack>
+                          <Stack direction="row" spacing={0.5} alignItems="center">
+                            <Iconify
+                              icon={
+                                delta === 0
+                                  ? 'eva:minus-fill'
+                                  : improved
+                                    ? 'eva:trending-up-fill'
+                                    : 'eva:trending-down-fill'
+                              }
+                              width={16}
+                              sx={{ color: deltaColor }}
+                            />
+                            <Typography sx={{ fontSize: 13.5, fontWeight: 700, color: deltaColor }}>
+                              {delta > 0 ? '+' : ''}
+                              {delta}%
+                            </Typography>
+                          </Stack>
+                        </Stack>
+                      );
+                    })}
+                    {diaryStats.dateRange && (
+                      <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>
+                        So sánh nhật ký {diaryStats.dateRange.from} → {diaryStats.dateRange.to}
+                      </Typography>
+                    )}
+                  </Stack>
+                )}
+              </SectionCard>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <SectionCard
+                title="Liệu trình được ghi nhận nhiều nhất"
+                icon="solar:medal-ribbon-star-bold-duotone"
+              >
+                {diaryStats.serviceRanking.length === 0 ? (
+                  <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
+                    Chưa có dữ liệu để thống kê.
+                  </Typography>
+                ) : (
+                  <Stack spacing={2}>
+                    {diaryStats.serviceRanking.map((s) => (
+                      <Box key={s.service}>
+                        <Stack direction="row" justifyContent="space-between" sx={{ mb: 0.75 }}>
+                          <Typography sx={{ fontSize: 13, fontWeight: 500 }}>
+                            {s.service}
+                          </Typography>
+                          <Typography sx={{ fontSize: 13, fontWeight: 700, color: SPA2_TEAL }}>
+                            {s.count} lần
+                          </Typography>
+                        </Stack>
+                        <LinearProgress
+                          variant="determinate"
+                          value={s.percent}
+                          sx={{
+                            height: 8,
+                            borderRadius: 99,
+                            bgcolor: SPA2_CREAM_DARK,
+                            '& .MuiLinearProgress-bar': { bgcolor: SPA2_TEAL, borderRadius: 99 },
+                          }}
+                        />
+                      </Box>
+                    ))}
+                  </Stack>
+                )}
+              </SectionCard>
+            </Grid>
+          </Grid>
+        </Stack>
       )}
 
       {/* Full page preview */}

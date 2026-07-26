@@ -2,7 +2,8 @@ import type {
   Spa2SpaMenuItem,
   Spa2SpaMenuBanner,
   Spa2SpaMenuSection,
-  Spa2AdjustableImage} from 'src/_mock/_spa2';
+  Spa2AdjustableImage,
+} from 'src/_mock/_spa2';
 
 import { useState, useCallback } from 'react';
 
@@ -29,18 +30,23 @@ import { paths } from 'src/routes/paths';
 import { uuidv4 } from 'src/utils/uuidv4';
 
 import { useTranslate } from 'src/locales';
-import { spa2SpaMenuBanner ,
-  spa2SpaMenuSections
-} from 'src/_mock/_spa2';
+import { spa2SpaMenuBanner, spa2SpaMenuSections } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
 import { Spa2SpaMenuPageView } from 'src/sections/spa2/view/spa2-content-pages4';
-import { SPA2_TEAL, SPA2_TEAL_DARK, SPA2_CREAM_DARK } from 'src/sections/spa2/spa2-pages-data';
+import {
+  SPA2_INK,
+  SPA2_TEAL,
+  SPA2_CREAM,
+  SPA2_TEAL_DARK,
+  SPA2_CREAM_DARK,
+} from 'src/sections/spa2/spa2-pages-data';
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages4.tsx's
@@ -72,6 +78,130 @@ function PreviewFrame({ children }: { children: React.ReactNode }) {
     >
       {children}
     </Box>
+  );
+}
+
+// Mirrors the "Danh mục" nav pill from Spa2SpaMenuPageView's category-list /
+// filter section (src/sections/spa2/view/spa2-content-pages4.tsx, ~lines
+// 3063-3089): a full-width Button with a leading icon, shown both in its
+// "active" (dark ink background, white icon) and default (transparent
+// background, category-color icon) states so the icon/color combo can be
+// checked before saving.
+function SpaMenuCategoryPreviewCard({
+  category,
+  icon,
+  color,
+}: {
+  category: string;
+  icon: string;
+  color: string;
+}) {
+  const label = category || '(Chưa đặt tên)';
+  return (
+    <Stack spacing={1} sx={{ p: 2, borderRadius: 3, bgcolor: SPA2_CREAM }}>
+      <Button
+        fullWidth
+        disabled
+        startIcon={<Iconify icon={icon} width={18} sx={{ color: 'common.white' }} />}
+        sx={{
+          justifyContent: 'flex-start',
+          py: 1.2,
+          px: 2,
+          borderRadius: 2.5,
+          bgcolor: SPA2_INK,
+          color: 'common.white',
+          fontWeight: 600,
+        }}
+      >
+        {label}
+      </Button>
+      <Button
+        fullWidth
+        disabled
+        startIcon={<Iconify icon={icon} width={18} sx={{ color }} />}
+        sx={{
+          justifyContent: 'flex-start',
+          py: 1.2,
+          px: 2,
+          borderRadius: 2.5,
+          bgcolor: 'transparent',
+          color: SPA2_INK,
+          fontWeight: 400,
+        }}
+      >
+        {label}
+      </Button>
+    </Stack>
+  );
+}
+
+// Mirrors the public service-card markup from Spa2SpaMenuPageView's items
+// list (src/sections/spa2/view/spa2-content-pages4.tsx, ~lines 3125-3218):
+// bordered Card, name + optional teal badge chip, description, clock-icon +
+// duration row, and a right-aligned price + disabled CTA button.
+function SpaMenuItemPreviewCard({
+  form,
+  color,
+}: {
+  form: { name: string; desc: string; duration: string; price: number; badge: string };
+  color: string;
+}) {
+  return (
+    <Card
+      sx={{
+        p: 2.5,
+        borderRadius: 3,
+        border: `1px solid ${SPA2_CREAM_DARK}`,
+        boxShadow: 'none',
+      }}
+    >
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems={{ sm: 'center' }}>
+        <Box sx={{ flex: 1 }}>
+          <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 0.5 }}>
+            <Typography sx={{ fontWeight: 600, color: SPA2_INK, fontSize: 15 }}>
+              {form.name || '(Chưa đặt tên)'}
+            </Typography>
+            {form.badge && (
+              <Chip
+                label={form.badge}
+                size="small"
+                sx={{ bgcolor: color, color: 'common.white', fontSize: 11, height: 20 }}
+              />
+            )}
+          </Stack>
+          <Typography sx={{ fontSize: 13.5, color: 'text.secondary', lineHeight: 1.65 }}>
+            {form.desc}
+          </Typography>
+          <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 1 }}>
+            <Iconify icon="solar:clock-circle-bold" width={14} sx={{ color }} />
+            <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>{form.duration}</Typography>
+          </Stack>
+        </Box>
+        <Stack
+          alignItems={{ xs: 'flex-start', sm: 'flex-end' }}
+          spacing={1}
+          sx={{ flexShrink: 0 }}
+        >
+          <Typography sx={{ fontWeight: 700, color, fontSize: 17 }}>
+            {new Intl.NumberFormat('vi-VN').format(form.price)}đ
+          </Typography>
+          <Button
+            disabled
+            size="small"
+            sx={{
+              borderRadius: 99,
+              bgcolor: SPA2_TEAL,
+              color: 'common.white',
+              fontSize: 12,
+              px: 2,
+              opacity: 0.7,
+            }}
+          >
+            Đặt ngay
+          </Button>
+        </Stack>
+      </Stack>
+    </Card>
   );
 }
 
@@ -137,6 +267,10 @@ export function Spa2SpaMenuManageView() {
     setDeleteSectionId(null);
     setDirty(true);
   }, [deleteSectionId, activeSectionId]);
+  const reorderSections = useCallback((next: Spa2SpaMenuSection[]) => {
+    setSections(next);
+    setDirty(true);
+  }, []);
 
   // ---- Items ----
   const activeSection = sections.find((s) => s.id === activeSectionId) ?? sections[0];
@@ -190,6 +324,16 @@ export function Spa2SpaMenuManageView() {
     setDeleteItemId(null);
     setDirty(true);
   }, [deleteItemId, activeSection]);
+  const reorderItems = useCallback(
+    (next: Spa2SpaMenuItem[]) => {
+      if (!activeSection) return;
+      setSections((prev) =>
+        prev.map((s) => (s.id === activeSection.id ? { ...s, items: next } : s))
+      );
+      setDirty(true);
+    },
+    [activeSection]
+  );
 
   return (
     <Spa2ManageShell
@@ -345,64 +489,74 @@ export function Spa2SpaMenuManageView() {
 
       {/* Categories */}
       {tab === 'categories' && (
-        <Grid container spacing={2}>
-          <Grid xs={12}>
-            <Stack direction="row" justifyContent="flex-end" sx={{ mb: 1 }}>
-              <Button
-                variant="contained"
-                startIcon={<Iconify icon="mingcute:add-line" />}
-                onClick={openCreateSection}
-                sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
-              >
-                {t('spaMenu.category_add_btn')}
-              </Button>
-            </Stack>
-          </Grid>
-          {sections.map((section) => (
-            <Grid key={section.id} xs={12} sm={6} md={4}>
-              <Card sx={{ p: 2.5, borderRadius: 3, height: '100%' }}>
-                <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1 }}>
-                  <Box
-                    sx={{
-                      width: 38,
-                      height: 38,
-                      borderRadius: 2,
-                      bgcolor: `${section.color}15`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0,
-                    }}
-                  >
-                    <Iconify icon={section.icon} width={20} sx={{ color: section.color }} />
-                  </Box>
-                  <Typography sx={{ fontWeight: 600, fontSize: 14.5 }}>
-                    {section.category}
-                  </Typography>
-                </Stack>
-                <Typography sx={{ fontSize: 12.5, color: 'text.secondary', mb: 1.5 }}>
-                  {section.items.length} {t('spaMenu.items_count_suffix')}
-                </Typography>
-                <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
-                  <Tooltip title={t('common.edit')}>
-                    <IconButton size="small" onClick={() => openEditSection(section)}>
-                      <Iconify icon="solar:pen-bold" />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title={t('common.delete')}>
-                    <IconButton
-                      size="small"
-                      color="error"
-                      onClick={() => setDeleteSectionId(section.id)}
-                    >
-                      <Iconify icon="solar:trash-bin-trash-bold" />
-                    </IconButton>
-                  </Tooltip>
-                </Stack>
-              </Card>
+        <Stack spacing={1.5}>
+          <Stack direction="row" justifyContent="flex-end">
+            <Button
+              variant="contained"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+              onClick={openCreateSection}
+              sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
+            >
+              {t('spaMenu.category_add_btn')}
+            </Button>
+          </Stack>
+          <Typography variant="caption" color="text.secondary">
+            {t('common.drag_hint')}
+          </Typography>
+          <Spa2SortableGrid items={sections} onReorder={reorderSections}>
+            <Grid container spacing={2}>
+              {sections.map((section) => (
+                <Grid key={section.id} xs={12} sm={6} md={4}>
+                  <Spa2SortableItem id={section.id}>
+                    {(sortable) => (
+                      <Card sx={{ p: 2.5, borderRadius: 3, height: '100%' }}>
+                        <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1 }}>
+                          <Spa2DragHandle sortable={sortable} />
+                          <Box
+                            sx={{
+                              width: 38,
+                              height: 38,
+                              borderRadius: 2,
+                              bgcolor: `${section.color}15`,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              flexShrink: 0,
+                            }}
+                          >
+                            <Iconify icon={section.icon} width={20} sx={{ color: section.color }} />
+                          </Box>
+                          <Typography sx={{ fontWeight: 600, fontSize: 14.5, flex: 1 }}>
+                            {section.category}
+                          </Typography>
+                        </Stack>
+                        <Typography sx={{ fontSize: 12.5, color: 'text.secondary', mb: 1.5 }}>
+                          {section.items.length} {t('spaMenu.items_count_suffix')}
+                        </Typography>
+                        <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
+                          <Tooltip title={t('common.edit')}>
+                            <IconButton size="small" onClick={() => openEditSection(section)}>
+                              <Iconify icon="solar:pen-bold" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title={t('common.delete')}>
+                            <IconButton
+                              size="small"
+                              color="error"
+                              onClick={() => setDeleteSectionId(section.id)}
+                            >
+                              <Iconify icon="solar:trash-bin-trash-bold" />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </Card>
+                    )}
+                  </Spa2SortableItem>
+                </Grid>
+              ))}
             </Grid>
-          ))}
-        </Grid>
+          </Spa2SortableGrid>
+        </Stack>
       )}
 
       {/* Items */}
@@ -435,53 +589,65 @@ export function Spa2SpaMenuManageView() {
             </Button>
           </Stack>
 
-          <Grid container spacing={2}>
-            {(activeSection?.items ?? []).map((item) => (
-              <Grid key={item.id} xs={12} sm={6}>
-                <Card sx={{ p: 2.5, borderRadius: 3, height: '100%' }}>
-                  <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 0.5 }}>
-                    <Typography sx={{ fontWeight: 600, fontSize: 14.5, flex: 1 }}>
-                      {item.name}
-                    </Typography>
-                    {item.badge && (
-                      <Chip
-                        label={item.badge}
-                        size="small"
-                        sx={{ bgcolor: SPA2_TEAL, color: 'white', fontSize: 11 }}
-                      />
+          {!!activeSection && (
+            <Typography variant="caption" color="text.secondary">
+              {t('common.drag_hint')}
+            </Typography>
+          )}
+          <Spa2SortableGrid items={activeSection?.items ?? []} onReorder={reorderItems}>
+            <Grid container spacing={2}>
+              {(activeSection?.items ?? []).map((item) => (
+                <Grid key={item.id} xs={12} sm={6}>
+                  <Spa2SortableItem id={item.id}>
+                    {(sortable) => (
+                      <Card sx={{ p: 2.5, borderRadius: 3, height: '100%' }}>
+                        <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 0.5 }}>
+                          <Spa2DragHandle sortable={sortable} />
+                          <Typography sx={{ fontWeight: 600, fontSize: 14.5, flex: 1 }}>
+                            {item.name}
+                          </Typography>
+                          {item.badge && (
+                            <Chip
+                              label={item.badge}
+                              size="small"
+                              sx={{ bgcolor: SPA2_TEAL, color: 'white', fontSize: 11 }}
+                            />
+                          )}
+                        </Stack>
+                        <Typography sx={{ fontSize: 12.5, color: 'text.secondary', mb: 1 }}>
+                          {item.desc}
+                        </Typography>
+                        <Stack direction="row" justifyContent="space-between" alignItems="center">
+                          <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>
+                            {item.duration}
+                          </Typography>
+                          <Typography sx={{ fontWeight: 700, color: SPA2_TEAL, fontSize: 14.5 }}>
+                            {new Intl.NumberFormat('vi-VN').format(item.price)}đ
+                          </Typography>
+                        </Stack>
+                        <Stack direction="row" justifyContent="flex-end" spacing={0.5} sx={{ mt: 1 }}>
+                          <Tooltip title={t('common.edit')}>
+                            <IconButton size="small" onClick={() => openEditItem(item)}>
+                              <Iconify icon="solar:pen-bold" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title={t('common.delete')}>
+                            <IconButton
+                              size="small"
+                              color="error"
+                              onClick={() => setDeleteItemId(item.id)}
+                            >
+                              <Iconify icon="solar:trash-bin-trash-bold" />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </Card>
                     )}
-                  </Stack>
-                  <Typography sx={{ fontSize: 12.5, color: 'text.secondary', mb: 1 }}>
-                    {item.desc}
-                  </Typography>
-                  <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>
-                      {item.duration}
-                    </Typography>
-                    <Typography sx={{ fontWeight: 700, color: SPA2_TEAL, fontSize: 14.5 }}>
-                      {new Intl.NumberFormat('vi-VN').format(item.price)}đ
-                    </Typography>
-                  </Stack>
-                  <Stack direction="row" justifyContent="flex-end" spacing={0.5} sx={{ mt: 1 }}>
-                    <Tooltip title={t('common.edit')}>
-                      <IconButton size="small" onClick={() => openEditItem(item)}>
-                        <Iconify icon="solar:pen-bold" />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title={t('common.delete')}>
-                      <IconButton
-                        size="small"
-                        color="error"
-                        onClick={() => setDeleteItemId(item.id)}
-                      >
-                        <Iconify icon="solar:trash-bin-trash-bold" />
-                      </IconButton>
-                    </Tooltip>
-                  </Stack>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
+                  </Spa2SortableItem>
+                </Grid>
+              ))}
+            </Grid>
+          </Spa2SortableGrid>
         </Stack>
       )}
 
@@ -496,7 +662,7 @@ export function Spa2SpaMenuManageView() {
       <Dialog
         open={openSectionForm}
         onClose={() => setOpenSectionForm(false)}
-        maxWidth="xs"
+        maxWidth="sm"
         fullWidth
       >
         <DialogTitle>
@@ -505,26 +671,43 @@ export function Spa2SpaMenuManageView() {
             : t('spaMenu.category_form_create')}
         </DialogTitle>
         <DialogContent dividers>
-          <Stack spacing={2} sx={{ pt: 1 }}>
-            <TextField
-              label={t('spaMenu.category_form_name')}
-              value={sectionForm.category}
-              onChange={(e) => setSectionForm((p) => ({ ...p, category: e.target.value }))}
-              fullWidth
-            />
-            <TextField
-              label={t('spaMenu.category_form_icon')}
-              value={sectionForm.icon}
-              onChange={(e) => setSectionForm((p) => ({ ...p, icon: e.target.value }))}
-              fullWidth
-            />
-            <TextField
-              label={t('spaMenu.category_form_color')}
-              value={sectionForm.color}
-              onChange={(e) => setSectionForm((p) => ({ ...p, color: e.target.value }))}
-              fullWidth
-            />
-          </Stack>
+          <Grid container spacing={3} sx={{ pt: 1 }}>
+            <Grid xs={12} sm={6}>
+              <Stack spacing={2}>
+                <TextField
+                  label={t('spaMenu.category_form_name')}
+                  value={sectionForm.category}
+                  onChange={(e) => setSectionForm((p) => ({ ...p, category: e.target.value }))}
+                  fullWidth
+                />
+                <TextField
+                  label={t('spaMenu.category_form_icon')}
+                  value={sectionForm.icon}
+                  onChange={(e) => setSectionForm((p) => ({ ...p, icon: e.target.value }))}
+                  fullWidth
+                />
+                <TextField
+                  label={t('spaMenu.category_form_color')}
+                  value={sectionForm.color}
+                  onChange={(e) => setSectionForm((p) => ({ ...p, color: e.target.value }))}
+                  fullWidth
+                />
+              </Stack>
+            </Grid>
+            <Grid xs={12} sm={6}>
+              <Typography
+                variant="caption"
+                sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
+              >
+                {t('common.preview_btn')}
+              </Typography>
+              <SpaMenuCategoryPreviewCard
+                category={sectionForm.category}
+                icon={sectionForm.icon}
+                color={sectionForm.color}
+              />
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenSectionForm(false)}>{t('common.cancel')}</Button>
@@ -542,49 +725,64 @@ export function Spa2SpaMenuManageView() {
       </Dialog>
 
       {/* Item create / edit dialog */}
-      <Dialog open={openItemForm} onClose={() => setOpenItemForm(false)} maxWidth="sm" fullWidth>
+      <Dialog open={openItemForm} onClose={() => setOpenItemForm(false)} maxWidth="md" fullWidth>
         <DialogTitle>
           {editItemId !== null ? t('spaMenu.item_form_edit') : t('spaMenu.item_form_create')}
         </DialogTitle>
         <DialogContent dividers>
-          <Stack spacing={2} sx={{ pt: 1 }}>
-            <TextField
-              label={t('spaMenu.item_form_name')}
-              value={itemForm.name}
-              onChange={(e) => setItemForm((p) => ({ ...p, name: e.target.value }))}
-              fullWidth
-            />
-            <TextField
-              label={t('spaMenu.item_form_desc')}
-              value={itemForm.desc}
-              onChange={(e) => setItemForm((p) => ({ ...p, desc: e.target.value }))}
-              fullWidth
-              multiline
-              rows={3}
-            />
-            <Stack direction="row" spacing={2}>
-              <TextField
-                label={t('spaMenu.item_form_duration')}
-                value={itemForm.duration}
-                onChange={(e) => setItemForm((p) => ({ ...p, duration: e.target.value }))}
-                fullWidth
-              />
-              <TextField
-                label={t('spaMenu.item_form_price')}
-                type="number"
-                value={itemForm.price}
-                onChange={(e) => setItemForm((p) => ({ ...p, price: Number(e.target.value) }))}
-                fullWidth
-              />
-            </Stack>
-            <TextField
-              label={t('spaMenu.item_form_badge')}
-              value={itemForm.badge}
-              onChange={(e) => setItemForm((p) => ({ ...p, badge: e.target.value }))}
-              fullWidth
-              helperText={t('spaMenu.item_form_badge_help')}
-            />
-          </Stack>
+          <Grid container spacing={3} sx={{ pt: 1 }}>
+            <Grid xs={12} md={6}>
+              <Stack spacing={2}>
+                <TextField
+                  label={t('spaMenu.item_form_name')}
+                  value={itemForm.name}
+                  onChange={(e) => setItemForm((p) => ({ ...p, name: e.target.value }))}
+                  fullWidth
+                />
+                <TextField
+                  label={t('spaMenu.item_form_desc')}
+                  value={itemForm.desc}
+                  onChange={(e) => setItemForm((p) => ({ ...p, desc: e.target.value }))}
+                  fullWidth
+                  multiline
+                  rows={3}
+                />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    label={t('spaMenu.item_form_duration')}
+                    value={itemForm.duration}
+                    onChange={(e) => setItemForm((p) => ({ ...p, duration: e.target.value }))}
+                    fullWidth
+                  />
+                  <TextField
+                    label={t('spaMenu.item_form_price')}
+                    type="number"
+                    value={itemForm.price}
+                    onChange={(e) =>
+                      setItemForm((p) => ({ ...p, price: Number(e.target.value) }))
+                    }
+                    fullWidth
+                  />
+                </Stack>
+                <TextField
+                  label={t('spaMenu.item_form_badge')}
+                  value={itemForm.badge}
+                  onChange={(e) => setItemForm((p) => ({ ...p, badge: e.target.value }))}
+                  fullWidth
+                  helperText={t('spaMenu.item_form_badge_help')}
+                />
+              </Stack>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <Typography
+                variant="caption"
+                sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
+              >
+                {t('common.preview_btn')}
+              </Typography>
+              <SpaMenuItemPreviewCard form={itemForm} color={activeSection?.color ?? SPA2_TEAL} />
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenItemForm(false)}>{t('common.cancel')}</Button>

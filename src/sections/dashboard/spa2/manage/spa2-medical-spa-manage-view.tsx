@@ -9,18 +9,26 @@ import Chip from '@mui/material/Chip';
 import Tabs from '@mui/material/Tabs';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
+import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import TableRow from '@mui/material/TableRow';
 import Grid from '@mui/material/Unstable_Grid2';
 import TextField from '@mui/material/TextField';
 import { useTheme } from '@mui/material/styles';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import InputAdornment from '@mui/material/InputAdornment';
+import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 
@@ -39,10 +47,16 @@ import {
   type Spa2MedicalTreatment,
   type Spa2MedicalSpaCategory,
   type Spa2MedicalSpaCredential,
+  SPA2_MEDICAL_CONSULTATION_BOOKINGS,
+  type Spa2MedicalConsultationStatus,
+  type Spa2MedicalConsultationBooking,
 } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { useTable } from 'src/components/table/use-table';
 import { ConfirmDialog } from 'src/components/custom-dialog';
+import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
 
 import {
   Spa2ContentPageHero3,
@@ -58,6 +72,7 @@ import {
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2ListAnalytic } from './spa2-list-analytic';
 import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
@@ -88,6 +103,32 @@ const EMPTY_TREATMENT_FORM = {
   before: '',
   after: '',
 };
+
+const MEDICAL_BOOKING_STATUS_LABEL: Record<Spa2MedicalConsultationStatus, string> = {
+  new: 'Mới',
+  confirmed: 'Đã xác nhận',
+  completed: 'Đã hoàn tất',
+  cancelled: 'Đã huỷ',
+};
+
+const MEDICAL_BOOKING_STATUS_COLOR: Record<
+  Spa2MedicalConsultationStatus,
+  'info' | 'warning' | 'success' | 'error'
+> = {
+  new: 'info',
+  confirmed: 'warning',
+  completed: 'success',
+  cancelled: 'error',
+};
+
+const MEDICAL_BOOKING_STATUS_OPTIONS: Spa2MedicalConsultationStatus[] = [
+  'new',
+  'confirmed',
+  'completed',
+  'cancelled',
+];
+
+type MedicalBookingStatusFilter = Spa2MedicalConsultationStatus | 'all';
 
 function SectionCard({
   title,
@@ -336,7 +377,7 @@ export function Spa2MedicalSpaManageView() {
   const [dirty, setDirty] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
   const [tab, setTab] = useState<
-    'banner' | 'credentials' | 'categories' | 'treatments' | 'preview'
+    'banner' | 'credentials' | 'categories' | 'treatments' | 'bookings' | 'preview'
   >('banner');
   const markDirty = () => setDirty(true);
 
@@ -506,6 +547,43 @@ export function Spa2MedicalSpaManageView() {
     markDirty();
   };
 
+  // ---- Đặt lịch tư vấn (bookings) ----
+  const [bookings, setBookings] = useState<Spa2MedicalConsultationBooking[]>(
+    SPA2_MEDICAL_CONSULTATION_BOOKINGS
+  );
+  const [bookingSearch, setBookingSearch] = useState('');
+  const [bookingStatusFilter, setBookingStatusFilter] = useState<MedicalBookingStatusFilter>('all');
+  const [bookingTreatmentFilter, setBookingTreatmentFilter] = useState('all');
+  const [viewBooking, setViewBooking] = useState<Spa2MedicalConsultationBooking | null>(null);
+  const bookingTable = useTable({ defaultRowsPerPage: 5 });
+
+  const filteredBookings = bookings.filter((b) => {
+    const q = bookingSearch.toLowerCase();
+    const matchSearch =
+      !q ||
+      b.customer.toLowerCase().includes(q) ||
+      b.email.toLowerCase().includes(q) ||
+      b.treatmentName.toLowerCase().includes(q) ||
+      b.phone.includes(bookingSearch);
+    const matchStatus = bookingStatusFilter === 'all' || b.status === bookingStatusFilter;
+    const matchTreatment =
+      bookingTreatmentFilter === 'all' || b.treatmentId === bookingTreatmentFilter;
+    return matchSearch && matchStatus && matchTreatment;
+  });
+
+  const handleSetBookingStatus = (id: number, status: Spa2MedicalConsultationStatus) => {
+    setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, status } : b)));
+    setViewBooking((prev) => (prev?.id === id ? { ...prev, status } : prev));
+  };
+
+  const bookingCounts = {
+    all: bookings.length,
+    new: bookings.filter((b) => b.status === 'new').length,
+    confirmed: bookings.filter((b) => b.status === 'confirmed').length,
+    completed: bookings.filter((b) => b.status === 'completed').length,
+    cancelled: bookings.filter((b) => b.status === 'cancelled').length,
+  };
+
   const handleSave = () => {
     setSavedAt(new Date());
     setDirty(false);
@@ -518,6 +596,7 @@ export function Spa2MedicalSpaManageView() {
     setTreatments(
       spa2MedicalTreatments.map((d) => ({ ...d, certifications: [...d.certifications] }))
     );
+    setBookings(SPA2_MEDICAL_CONSULTATION_BOOKINGS);
     setDirty(false);
   };
 
@@ -616,6 +695,12 @@ export function Spa2MedicalSpaManageView() {
           value="treatments"
           label={t('medical_spa.treatments_section')}
           icon={<Iconify icon="solar:cpu-bolt-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
+          value="bookings"
+          label="Đặt lịch tư vấn"
+          icon={<Iconify icon="solar:calendar-mark-bold-duotone" width={20} />}
           iconPosition="start"
         />
         <Tab
@@ -959,6 +1044,300 @@ export function Spa2MedicalSpaManageView() {
         </Card>
       )}
 
+      {/* Đặt lịch tư vấn (bookings) */}
+      {tab === 'bookings' && (
+        <Card sx={{ p: 3, borderRadius: 3 }}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ mb: 2 }}
+            flexWrap="wrap"
+            useFlexGap
+            gap={1}
+          >
+            <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+              Đặt lịch tư vấn
+            </Typography>
+            <TextField
+              select
+              size="small"
+              value={bookingTreatmentFilter}
+              onChange={(e) => {
+                setBookingTreatmentFilter(e.target.value);
+                bookingTable.onResetPage();
+              }}
+              sx={{ minWidth: 220 }}
+            >
+              <MenuItem value="all">Tất cả liệu trình</MenuItem>
+              {treatments.map((item) => (
+                <MenuItem key={item.id} value={item.id}>
+                  {item.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Stack>
+
+          <Card sx={{ bgcolor: SPA2_CREAM, mb: 2.5 }}>
+            <Scrollbar sx={{ minHeight: 108 }}>
+              <Stack
+                spacing={1}
+                direction="row"
+                divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+                sx={{ py: 2, px: 1 }}
+              >
+                <Spa2ListAnalytic
+                  title="Tất cả"
+                  total={bookingCounts.all}
+                  percent={100}
+                  icon="solar:calendar-mark-bold-duotone"
+                  color={SPA2_TEAL}
+                  unitLabel="lượt đặt"
+                  active={bookingStatusFilter === 'all'}
+                  onClick={() => {
+                    setBookingStatusFilter('all');
+                    bookingTable.onResetPage();
+                  }}
+                />
+                <Spa2ListAnalytic
+                  title={MEDICAL_BOOKING_STATUS_LABEL.new}
+                  total={bookingCounts.new}
+                  percent={bookingCounts.all ? (bookingCounts.new / bookingCounts.all) * 100 : 0}
+                  icon="solar:bell-bold-duotone"
+                  color="#0C447C"
+                  unitLabel="lượt đặt"
+                  active={bookingStatusFilter === 'new'}
+                  onClick={() => {
+                    setBookingStatusFilter('new');
+                    bookingTable.onResetPage();
+                  }}
+                />
+                <Spa2ListAnalytic
+                  title={MEDICAL_BOOKING_STATUS_LABEL.confirmed}
+                  total={bookingCounts.confirmed}
+                  percent={
+                    bookingCounts.all ? (bookingCounts.confirmed / bookingCounts.all) * 100 : 0
+                  }
+                  icon="solar:phone-calling-bold-duotone"
+                  color="#FFAB00"
+                  unitLabel="lượt đặt"
+                  active={bookingStatusFilter === 'confirmed'}
+                  onClick={() => {
+                    setBookingStatusFilter('confirmed');
+                    bookingTable.onResetPage();
+                  }}
+                />
+                <Spa2ListAnalytic
+                  title={MEDICAL_BOOKING_STATUS_LABEL.completed}
+                  total={bookingCounts.completed}
+                  percent={
+                    bookingCounts.all ? (bookingCounts.completed / bookingCounts.all) * 100 : 0
+                  }
+                  icon="solar:check-circle-bold-duotone"
+                  color="#22C55E"
+                  unitLabel="lượt đặt"
+                  active={bookingStatusFilter === 'completed'}
+                  onClick={() => {
+                    setBookingStatusFilter('completed');
+                    bookingTable.onResetPage();
+                  }}
+                />
+                <Spa2ListAnalytic
+                  title={MEDICAL_BOOKING_STATUS_LABEL.cancelled}
+                  total={bookingCounts.cancelled}
+                  percent={
+                    bookingCounts.all ? (bookingCounts.cancelled / bookingCounts.all) * 100 : 0
+                  }
+                  icon="solar:close-circle-bold-duotone"
+                  color="#637381"
+                  unitLabel="lượt đặt"
+                  active={bookingStatusFilter === 'cancelled'}
+                  onClick={() => {
+                    setBookingStatusFilter('cancelled');
+                    bookingTable.onResetPage();
+                  }}
+                />
+              </Stack>
+            </Scrollbar>
+          </Card>
+
+          <TextField
+            placeholder="Tìm theo khách hàng, SĐT, email hoặc liệu trình..."
+            value={bookingSearch}
+            onChange={(e) => {
+              setBookingSearch(e.target.value);
+              bookingTable.onResetPage();
+            }}
+            size="small"
+            fullWidth
+            sx={{ mb: 2 }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <Tabs
+            value={bookingStatusFilter}
+            onChange={(_, v: MedicalBookingStatusFilter) => {
+              setBookingStatusFilter(v);
+              bookingTable.onResetPage();
+            }}
+            variant="scrollable"
+            sx={{
+              mb: 2,
+              '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+              '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
+            }}
+          >
+            <Tab value="all" label={`Tất cả (${bookingCounts.all})`} />
+            <Tab value="new" label={`${MEDICAL_BOOKING_STATUS_LABEL.new} (${bookingCounts.new})`} />
+            <Tab
+              value="confirmed"
+              label={`${MEDICAL_BOOKING_STATUS_LABEL.confirmed} (${bookingCounts.confirmed})`}
+            />
+            <Tab
+              value="completed"
+              label={`${MEDICAL_BOOKING_STATUS_LABEL.completed} (${bookingCounts.completed})`}
+            />
+            <Tab
+              value="cancelled"
+              label={`${MEDICAL_BOOKING_STATUS_LABEL.cancelled} (${bookingCounts.cancelled})`}
+            />
+          </Tabs>
+
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Khách hàng</TableCell>
+                  <TableCell>Liệu trình quan tâm</TableCell>
+                  <TableCell>Ngày mong muốn</TableCell>
+                  <TableCell>Ngày đặt</TableCell>
+                  <TableCell>Trạng thái</TableCell>
+                  <TableCell align="right">Thao tác</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredBookings
+                  .slice(
+                    bookingTable.page * bookingTable.rowsPerPage,
+                    bookingTable.page * bookingTable.rowsPerPage + bookingTable.rowsPerPage
+                  )
+                  .map((item) => (
+                    <TableRow key={item.id} hover>
+                      <TableCell>
+                        <Stack>
+                          <Typography variant="subtitle2" sx={{ color: SPA2_TEAL_DARK }}>
+                            {item.customer}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {item.phone} · {item.email}
+                          </Typography>
+                        </Stack>
+                      </TableCell>
+                      <TableCell>
+                        <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
+                          <Typography variant="body2">{item.treatmentName}</Typography>
+                          <Chip
+                            size="small"
+                            label={item.treatmentId}
+                            sx={{ bgcolor: SPA2_CREAM, fontSize: 11 }}
+                          />
+                        </Stack>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">{item.preferredDate}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">{item.createdAt}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          size="small"
+                          label={MEDICAL_BOOKING_STATUS_LABEL[item.status]}
+                          color={MEDICAL_BOOKING_STATUS_COLOR[item.status]}
+                          variant="soft"
+                        />
+                      </TableCell>
+                      <TableCell align="right">
+                        <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
+                          {item.status === 'new' && (
+                            <>
+                              <Tooltip title="Xác nhận lịch hẹn">
+                                <IconButton
+                                  size="small"
+                                  sx={{ color: SPA2_TEAL_DARK }}
+                                  onClick={() => handleSetBookingStatus(item.id, 'confirmed')}
+                                >
+                                  <Iconify icon="solar:check-circle-bold" />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Huỷ lịch hẹn">
+                                <IconButton
+                                  size="small"
+                                  color="error"
+                                  onClick={() => handleSetBookingStatus(item.id, 'cancelled')}
+                                >
+                                  <Iconify icon="solar:close-circle-bold" />
+                                </IconButton>
+                              </Tooltip>
+                            </>
+                          )}
+                          {item.status === 'confirmed' && (
+                            <>
+                              <Tooltip title="Đánh dấu đã hoàn tất">
+                                <IconButton
+                                  size="small"
+                                  color="success"
+                                  onClick={() => handleSetBookingStatus(item.id, 'completed')}
+                                >
+                                  <Iconify icon="solar:diploma-bold" />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Huỷ lịch hẹn">
+                                <IconButton
+                                  size="small"
+                                  color="error"
+                                  onClick={() => handleSetBookingStatus(item.id, 'cancelled')}
+                                >
+                                  <Iconify icon="solar:close-circle-bold" />
+                                </IconButton>
+                              </Tooltip>
+                            </>
+                          )}
+                          <Tooltip title="Xem chi tiết">
+                            <IconButton size="small" onClick={() => setViewBooking(item)}>
+                              <Iconify icon="solar:eye-bold" />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                {filteredBookings.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={6} align="center" sx={{ py: 6, color: 'text.disabled' }}>
+                      Không có dữ liệu
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePaginationCustom
+            count={filteredBookings.length}
+            page={bookingTable.page}
+            rowsPerPage={bookingTable.rowsPerPage}
+            onPageChange={bookingTable.onChangePage}
+            onRowsPerPageChange={bookingTable.onChangeRowsPerPage}
+          />
+        </Card>
+      )}
+
       {/* Full page preview */}
       {tab === 'preview' && (
         <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
@@ -1232,6 +1611,96 @@ export function Spa2MedicalSpaManageView() {
           </Button>
         }
       />
+
+      {/* Booking detail dialog */}
+      <Dialog open={!!viewBooking} onClose={() => setViewBooking(null)} maxWidth="sm" fullWidth>
+        {viewBooking && (
+          <>
+            <DialogTitle>Chi tiết đặt lịch tư vấn</DialogTitle>
+            <DialogContent dividers>
+              <Stack spacing={2} sx={{ pt: 0.5 }}>
+                <TextField
+                  label="Khách hàng"
+                  value={viewBooking.customer}
+                  fullWidth
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    label="Số điện thoại"
+                    value={viewBooking.phone}
+                    fullWidth
+                    size="small"
+                    InputProps={{ readOnly: true }}
+                  />
+                  <TextField
+                    label="Email"
+                    value={viewBooking.email}
+                    fullWidth
+                    size="small"
+                    InputProps={{ readOnly: true }}
+                  />
+                </Stack>
+                <TextField
+                  label="Liệu trình quan tâm"
+                  value={`${viewBooking.treatmentName} (${viewBooking.treatmentId})`}
+                  fullWidth
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    label="Ngày mong muốn"
+                    value={viewBooking.preferredDate}
+                    fullWidth
+                    size="small"
+                    InputProps={{ readOnly: true }}
+                  />
+                  <TextField
+                    label="Ngày đặt"
+                    value={viewBooking.createdAt}
+                    fullWidth
+                    size="small"
+                    InputProps={{ readOnly: true }}
+                  />
+                </Stack>
+                <TextField
+                  label="Ghi chú"
+                  value={viewBooking.note || '—'}
+                  fullWidth
+                  multiline
+                  minRows={2}
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+                <TextField
+                  select
+                  label="Trạng thái"
+                  value={viewBooking.status}
+                  size="small"
+                  fullWidth
+                  onChange={(e) =>
+                    handleSetBookingStatus(
+                      viewBooking.id,
+                      e.target.value as Spa2MedicalConsultationStatus
+                    )
+                  }
+                >
+                  {MEDICAL_BOOKING_STATUS_OPTIONS.map((s) => (
+                    <MenuItem key={s} value={s}>
+                      {MEDICAL_BOOKING_STATUS_LABEL[s]}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Stack>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setViewBooking(null)}>Đóng</Button>
+            </DialogActions>
+          </>
+        )}
+      </Dialog>
     </Spa2ManageShell>
   );
 }

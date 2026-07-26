@@ -7,12 +7,17 @@ import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Tabs from '@mui/material/Tabs';
+import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
+import TableRow from '@mui/material/TableRow';
 import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Unstable_Grid2';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
 import TextField from '@mui/material/TextField';
 import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
@@ -20,6 +25,8 @@ import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import InputAdornment from '@mui/material/InputAdornment';
+import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 
@@ -35,11 +42,17 @@ import {
   type Spa2AdjustableImage,
   type Spa2OccasionCategory,
   spa2SpecialOccasionsBanner,
+  SPA2_OCCASION_BOOKINGS,
+  type Spa2OccasionBooking,
   type Spa2SpecialOccasionsBanner,
+  type Spa2OccasionBookingStatus,
 } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { useTable } from 'src/components/table/use-table';
 import { ConfirmDialog } from 'src/components/custom-dialog';
+import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
 
 import {
   SPA2_INK,
@@ -54,6 +67,7 @@ import {
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2ListAnalytic } from './spa2-list-analytic';
 import { Spa2SimpleImageField } from './spa2-simple-image-field';
 import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
@@ -84,8 +98,35 @@ const EMPTY_PACKAGE_FORM = {
   tag: '',
   image: '',
   desc: '',
-  includes: '',
 };
+
+type IncludeRow = { id: string; value: string };
+
+const BOOKING_STATUS_LABEL: Record<Spa2OccasionBookingStatus, string> = {
+  new: 'Mới',
+  confirmed: 'Đã xác nhận',
+  completed: 'Đã hoàn tất',
+  cancelled: 'Đã huỷ',
+};
+
+const BOOKING_STATUS_COLOR: Record<
+  Spa2OccasionBookingStatus,
+  'info' | 'warning' | 'success' | 'error'
+> = {
+  new: 'info',
+  confirmed: 'warning',
+  completed: 'success',
+  cancelled: 'error',
+};
+
+const BOOKING_STATUS_OPTIONS: Spa2OccasionBookingStatus[] = [
+  'new',
+  'confirmed',
+  'completed',
+  'cancelled',
+];
+
+type BookingStatusFilter = Spa2OccasionBookingStatus | 'all';
 
 function SectionCard({
   title,
@@ -188,6 +229,60 @@ function PackagePreviewCard({
           sx={{ mt: 1.5, bgcolor: color, color: 'white', fontWeight: 600 }}
         />
       )}
+    </Card>
+  );
+}
+
+// Mirrors a single package's card exactly as rendered in the "Tất cả gói dịp
+// đặc biệt" grid/list on the public page (see Spa2SpecialOccasionsPageView in
+// src/sections/spa2/view/spa2-content-pages3.tsx): a soft card with a top
+// color accent, icon + label + duration, a truncated description, then the
+// price — no tag chip, no full "Bao gồm" breakdown (that's the detail view).
+function PackageCardPreview({
+  icon,
+  label,
+  color,
+  accent,
+  duration,
+  desc,
+  price,
+}: Spa2OccasionPackage) {
+  return (
+    <Card
+      sx={{
+        p: 3,
+        borderRadius: 4,
+        border: `1px solid ${SPA2_CREAM_DARK}`,
+        boxShadow: '0 8px 24px rgba(31,42,40,0.05)',
+        borderTop: `3px solid ${color}`,
+      }}
+    >
+      <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 1.5 }}>
+        <Box
+          sx={{
+            width: 40,
+            height: 40,
+            borderRadius: '50%',
+            bgcolor: accent,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+          }}
+        >
+          <Iconify icon={icon || 'solar:gift-bold-duotone'} width={20} sx={{ color }} />
+        </Box>
+        <Box>
+          <Typography sx={{ fontWeight: 600, color: SPA2_INK, fontSize: 14 }}>
+            {label || 'Nhãn gói'}
+          </Typography>
+          <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>{duration}</Typography>
+        </Box>
+      </Stack>
+      <Typography sx={{ fontSize: 13, color: 'text.secondary', mb: 1.5, lineHeight: 1.6 }}>
+        {(desc || 'Mô tả gói…').slice(0, 80)}...
+      </Typography>
+      <Typography sx={{ fontWeight: 700, color }}>{formatVND(price)}</Typography>
     </Card>
   );
 }
@@ -326,7 +421,9 @@ export function Spa2SpecialOccasionsManageView() {
   }));
   const [dirty, setDirty] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
-  const [tab, setTab] = useState<'banner' | 'categories' | 'packages' | 'preview'>('banner');
+  const [tab, setTab] = useState<
+    'banner' | 'categories' | 'packages' | 'bookings' | 'preview'
+  >('banner');
   const markDirty = () => setDirty(true);
 
   // ---- Banner ----
@@ -376,6 +473,7 @@ export function Spa2SpecialOccasionsManageView() {
     [packages, packageFilter]
   );
   const [packageForm, setPackageForm] = useState(EMPTY_PACKAGE_FORM);
+  const [packageIncludes, setPackageIncludes] = useState<IncludeRow[]>([]);
   const [packageDialog, setPackageDialog] = useState(false);
   const [packageEditId, setPackageEditId] = useState<string | null>(null);
   const [packageDeleteId, setPackageDeleteId] = useState<string | null>(null);
@@ -383,6 +481,7 @@ export function Spa2SpecialOccasionsManageView() {
 
   const openCreatePackage = () => {
     setPackageForm({ ...EMPTY_PACKAGE_FORM, category: realCategories[0]?.value ?? 'wedding' });
+    setPackageIncludes([]);
     setPackageEditId(null);
     setPackageDialog(true);
   };
@@ -399,15 +498,39 @@ export function Spa2SpecialOccasionsManageView() {
       tag: item.tag,
       image: item.image,
       desc: item.desc,
-      includes: item.includes.join('\n'),
     });
+    setPackageIncludes(item.includes.map((inc) => ({ id: uuidv4(), value: inc })));
     setPackageEditId(item.id);
     setPackageDialog(true);
   };
-  const packageIncludesPreview = packageForm.includes
-    .split('\n')
-    .map((s) => s.trim())
-    .filter(Boolean);
+  const addPackageInclude = () => {
+    setPackageIncludes((prev) => [...prev, { id: uuidv4(), value: '' }]);
+  };
+  const updatePackageInclude = (id: string, value: string) => {
+    setPackageIncludes((prev) => prev.map((row) => (row.id === id ? { ...row, value } : row)));
+  };
+  const removePackageInclude = (id: string) => {
+    setPackageIncludes((prev) => prev.filter((row) => row.id !== id));
+  };
+  const reorderPackageIncludes = (next: IncludeRow[]) => {
+    setPackageIncludes(next);
+  };
+  const packageIncludesPreview = packageIncludes.map((row) => row.value.trim()).filter(Boolean);
+  const previewPackage: Spa2OccasionPackage = {
+    id: packageEditId ?? 'preview',
+    category: packageForm.category,
+    icon: packageForm.icon,
+    label: packageForm.label,
+    title: packageForm.title,
+    color: packageForm.color,
+    accent: packageForm.accent,
+    price: Number(packageForm.price),
+    duration: packageForm.duration,
+    tag: packageForm.tag,
+    image: packageForm.image,
+    desc: packageForm.desc,
+    includes: packageIncludesPreview,
+  };
   const submitPackage = () => {
     const next = {
       category: packageForm.category,
@@ -437,6 +560,38 @@ export function Spa2SpecialOccasionsManageView() {
     markDirty();
   };
 
+  // ---- Đặt gói dịp đặc biệt (bookings) ----
+  const [bookings, setBookings] = useState<Spa2OccasionBooking[]>(SPA2_OCCASION_BOOKINGS);
+  const [bookingSearch, setBookingSearch] = useState('');
+  const [bookingStatusFilter, setBookingStatusFilter] = useState<BookingStatusFilter>('all');
+  const [viewBooking, setViewBooking] = useState<Spa2OccasionBooking | null>(null);
+  const bookingTable = useTable({ defaultRowsPerPage: 5 });
+
+  const filteredBookings = bookings.filter((b) => {
+    const q = bookingSearch.toLowerCase();
+    const matchSearch =
+      !q ||
+      b.customer.toLowerCase().includes(q) ||
+      b.email.toLowerCase().includes(q) ||
+      b.packageTitle.toLowerCase().includes(q) ||
+      b.phone.includes(bookingSearch);
+    const matchStatus = bookingStatusFilter === 'all' || b.status === bookingStatusFilter;
+    return matchSearch && matchStatus;
+  });
+
+  const bookingCounts = {
+    all: bookings.length,
+    new: bookings.filter((b) => b.status === 'new').length,
+    confirmed: bookings.filter((b) => b.status === 'confirmed').length,
+    completed: bookings.filter((b) => b.status === 'completed').length,
+    cancelled: bookings.filter((b) => b.status === 'cancelled').length,
+  };
+
+  const handleSetBookingStatus = (id: number, status: Spa2OccasionBookingStatus) => {
+    setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, status } : b)));
+    setViewBooking((prev) => (prev?.id === id ? { ...prev, status } : prev));
+  };
+
   const handleSave = () => {
     setSavedAt(new Date());
     setDirty(false);
@@ -446,6 +601,7 @@ export function Spa2SpecialOccasionsManageView() {
     setBanner({ ...spa2SpecialOccasionsBanner, image: { ...spa2SpecialOccasionsBanner.image } });
     setCategories(spa2OccasionCategories.map((c) => ({ ...c })));
     setPackages(spa2OccasionPackages.map((p) => ({ ...p, includes: [...p.includes] })));
+    setBookings(SPA2_OCCASION_BOOKINGS);
     setDirty(false);
   };
 
@@ -538,6 +694,12 @@ export function Spa2SpecialOccasionsManageView() {
           value="packages"
           label={t('special_occasions.packages_section')}
           icon={<Iconify icon="solar:gift-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
+          value="bookings"
+          label="Đặt gói dịp đặc biệt"
+          icon={<Iconify icon="solar:calendar-mark-bold-duotone" width={20} />}
           iconPosition="start"
         />
         <Tab
@@ -777,6 +939,230 @@ export function Spa2SpecialOccasionsManageView() {
         </Card>
       )}
 
+      {/* Đặt gói dịp đặc biệt (bookings) */}
+      {tab === 'bookings' && (
+        <Card>
+          <Box sx={{ p: 2.5, borderBottom: `1px solid ${SPA2_CREAM_DARK}` }}>
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <Iconify
+                icon="solar:calendar-mark-bold-duotone"
+                width={22}
+                sx={{ color: SPA2_TEAL }}
+              />
+              <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                Đặt gói dịp đặc biệt
+              </Typography>
+            </Stack>
+          </Box>
+
+          {/* Thống kê */}
+          <Scrollbar sx={{ minHeight: 108 }}>
+            <Stack spacing={2} direction="row" sx={{ py: 2, px: 1 }}>
+              <Spa2ListAnalytic
+                title="Tất cả"
+                total={bookingCounts.all}
+                percent={100}
+                icon="solar:calendar-mark-bold-duotone"
+                color={SPA2_TEAL}
+                unitLabel="lượt đặt"
+                active={bookingStatusFilter === 'all'}
+                onClick={() => {
+                  setBookingStatusFilter('all');
+                  bookingTable.onResetPage();
+                }}
+              />
+              <Spa2ListAnalytic
+                title={BOOKING_STATUS_LABEL.new}
+                total={bookingCounts.new}
+                percent={bookingCounts.all ? (bookingCounts.new / bookingCounts.all) * 100 : 0}
+                icon="solar:bell-bold-duotone"
+                color="#2E90FA"
+                unitLabel="lượt đặt"
+                active={bookingStatusFilter === 'new'}
+                onClick={() => {
+                  setBookingStatusFilter('new');
+                  bookingTable.onResetPage();
+                }}
+              />
+              <Spa2ListAnalytic
+                title={BOOKING_STATUS_LABEL.confirmed}
+                total={bookingCounts.confirmed}
+                percent={
+                  bookingCounts.all ? (bookingCounts.confirmed / bookingCounts.all) * 100 : 0
+                }
+                icon="solar:check-circle-bold-duotone"
+                color="#F79009"
+                unitLabel="lượt đặt"
+                active={bookingStatusFilter === 'confirmed'}
+                onClick={() => {
+                  setBookingStatusFilter('confirmed');
+                  bookingTable.onResetPage();
+                }}
+              />
+              <Spa2ListAnalytic
+                title={BOOKING_STATUS_LABEL.completed}
+                total={bookingCounts.completed}
+                percent={
+                  bookingCounts.all ? (bookingCounts.completed / bookingCounts.all) * 100 : 0
+                }
+                icon="solar:diploma-bold-duotone"
+                color="#12B76A"
+                unitLabel="lượt đặt"
+                active={bookingStatusFilter === 'completed'}
+                onClick={() => {
+                  setBookingStatusFilter('completed');
+                  bookingTable.onResetPage();
+                }}
+              />
+              <Spa2ListAnalytic
+                title={BOOKING_STATUS_LABEL.cancelled}
+                total={bookingCounts.cancelled}
+                percent={
+                  bookingCounts.all ? (bookingCounts.cancelled / bookingCounts.all) * 100 : 0
+                }
+                icon="solar:close-circle-bold-duotone"
+                color="#F04438"
+                unitLabel="lượt đặt"
+                active={bookingStatusFilter === 'cancelled'}
+                onClick={() => {
+                  setBookingStatusFilter('cancelled');
+                  bookingTable.onResetPage();
+                }}
+              />
+            </Stack>
+          </Scrollbar>
+
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ px: 2.5, pb: 2 }}>
+            <TextField
+              placeholder="Tìm theo tên, SĐT, email hoặc tên gói..."
+              value={bookingSearch}
+              onChange={(e) => {
+                setBookingSearch(e.target.value);
+                bookingTable.onResetPage();
+              }}
+              size="small"
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Stack>
+
+          <Box sx={{ px: 2.5 }}>
+            <Tabs
+              value={bookingStatusFilter}
+              onChange={(_, v: BookingStatusFilter) => {
+                setBookingStatusFilter(v);
+                bookingTable.onResetPage();
+              }}
+              variant="scrollable"
+              sx={{
+                '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+                '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
+              }}
+            >
+              <Tab value="all" label={`Tất cả (${bookingCounts.all})`} />
+              <Tab value="new" label={`${BOOKING_STATUS_LABEL.new} (${bookingCounts.new})`} />
+              <Tab
+                value="confirmed"
+                label={`${BOOKING_STATUS_LABEL.confirmed} (${bookingCounts.confirmed})`}
+              />
+              <Tab
+                value="completed"
+                label={`${BOOKING_STATUS_LABEL.completed} (${bookingCounts.completed})`}
+              />
+              <Tab
+                value="cancelled"
+                label={`${BOOKING_STATUS_LABEL.cancelled} (${bookingCounts.cancelled})`}
+              />
+            </Tabs>
+          </Box>
+
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Khách hàng</TableCell>
+                  <TableCell>Gói dịp đặc biệt</TableCell>
+                  <TableCell>Ngày sự kiện</TableCell>
+                  <TableCell>Ngày đặt</TableCell>
+                  <TableCell>Trạng thái</TableCell>
+                  <TableCell align="right">Thao tác</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredBookings
+                  .slice(
+                    bookingTable.page * bookingTable.rowsPerPage,
+                    bookingTable.page * bookingTable.rowsPerPage + bookingTable.rowsPerPage
+                  )
+                  .map((item) => (
+                    <TableRow key={item.id} hover>
+                      <TableCell>
+                        <Stack>
+                          <Typography variant="subtitle2" sx={{ color: SPA2_TEAL_DARK }}>
+                            {item.customer}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {item.phone} · {item.email}
+                          </Typography>
+                        </Stack>
+                      </TableCell>
+                      <TableCell>
+                        <Stack direction="row" spacing={0.75} alignItems="center">
+                          <Typography variant="body2">{item.packageTitle}</Typography>
+                          <Chip
+                            size="small"
+                            label={item.packageId}
+                            sx={{ bgcolor: SPA2_CREAM_DARK }}
+                          />
+                        </Stack>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">{item.eventDate}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">{item.createdAt}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          size="small"
+                          label={BOOKING_STATUS_LABEL[item.status]}
+                          color={BOOKING_STATUS_COLOR[item.status]}
+                          variant="soft"
+                        />
+                      </TableCell>
+                      <TableCell align="right">
+                        <IconButton size="small" onClick={() => setViewBooking(item)}>
+                          <Iconify icon="solar:eye-bold" />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                {filteredBookings.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={6} align="center" sx={{ py: 6, color: 'text.disabled' }}>
+                      Không có dữ liệu
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePaginationCustom
+            count={filteredBookings.length}
+            page={bookingTable.page}
+            rowsPerPage={bookingTable.rowsPerPage}
+            onPageChange={bookingTable.onChangePage}
+            onRowsPerPageChange={bookingTable.onChangeRowsPerPage}
+          />
+        </Card>
+      )}
+
       {/* Full page preview */}
       {tab === 'preview' && (
         <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
@@ -891,38 +1277,86 @@ export function Spa2SpecialOccasionsManageView() {
                   value={packageForm.desc}
                   onChange={(e) => setPackageForm((p) => ({ ...p, desc: e.target.value }))}
                 />
-                <TextField
-                  label={t('special_occasions.form_package_includes')}
-                  fullWidth
-                  multiline
-                  minRows={5}
-                  value={packageForm.includes}
-                  onChange={(e) => setPackageForm((p) => ({ ...p, includes: e.target.value }))}
-                  helperText={t('special_occasions.form_package_includes_help')}
-                />
+                <Box>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    sx={{ mb: 1 }}
+                  >
+                    <Typography variant="caption" color="text.secondary">
+                      Nội dung gói (&quot;Bao gồm&quot;)
+                    </Typography>
+                    <Button
+                      size="small"
+                      startIcon={<Iconify icon="mingcute:add-line" width={16} />}
+                      onClick={addPackageInclude}
+                    >
+                      Thêm mục
+                    </Button>
+                  </Stack>
+                  {packageIncludes.length === 0 && (
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                      Chưa có mục nào — nhấn &quot;Thêm mục&quot; để bắt đầu.
+                    </Typography>
+                  )}
+                  <Spa2SortableGrid items={packageIncludes} onReorder={reorderPackageIncludes}>
+                    <Stack spacing={1}>
+                      {packageIncludes.map((row) => (
+                        <Spa2SortableItem key={row.id} id={row.id}>
+                          {(sortable) => (
+                            <Stack direction="row" spacing={1} alignItems="center">
+                              <Spa2DragHandle sortable={sortable} />
+                              <TextField
+                                fullWidth
+                                size="small"
+                                value={row.value}
+                                onChange={(e) => updatePackageInclude(row.id, e.target.value)}
+                                placeholder="VD: Massage thư giãn 60 phút"
+                              />
+                              <IconButton
+                                size="small"
+                                color="error"
+                                onClick={() => removePackageInclude(row.id)}
+                              >
+                                <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                              </IconButton>
+                            </Stack>
+                          )}
+                        </Spa2SortableItem>
+                      ))}
+                    </Stack>
+                  </Spa2SortableGrid>
+                </Box>
               </Stack>
             </Grid>
             <Grid xs={12} sm={5}>
-              <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
-                {t('common.preview_btn')}
-              </Typography>
-              <Box sx={{ bgcolor: 'background.neutral', borderRadius: 3, p: 2 }}>
-                <PackageDetailPreview
-                  id={packageEditId ?? 'preview'}
-                  category={packageForm.category}
-                  icon={packageForm.icon}
-                  label={packageForm.label}
-                  title={packageForm.title}
-                  color={packageForm.color}
-                  accent={packageForm.accent}
-                  price={packageForm.price}
-                  duration={packageForm.duration}
-                  tag={packageForm.tag}
-                  image={packageForm.image}
-                  desc={packageForm.desc}
-                  includes={packageIncludesPreview}
-                />
-              </Box>
+              <Stack spacing={3}>
+                <Box>
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{ mb: 1, display: 'block' }}
+                  >
+                    Xem trước dạng thẻ (trong danh sách gói)
+                  </Typography>
+                  <Box sx={{ bgcolor: 'background.neutral', borderRadius: 3, p: 2 }}>
+                    <PackageCardPreview {...previewPackage} />
+                  </Box>
+                </Box>
+                <Box>
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{ mb: 1, display: 'block' }}
+                  >
+                    Xem trước chi tiết (khi bấm vào gói)
+                  </Typography>
+                  <Box sx={{ bgcolor: 'background.neutral', borderRadius: 3, p: 2 }}>
+                    <PackageDetailPreview {...previewPackage} />
+                  </Box>
+                </Box>
+              </Stack>
             </Grid>
           </Grid>
         </DialogContent>
@@ -969,6 +1403,91 @@ export function Spa2SpecialOccasionsManageView() {
           </Button>
         }
       />
+
+      {/* Booking view-detail dialog */}
+      <Dialog open={!!viewBooking} onClose={() => setViewBooking(null)} maxWidth="xs" fullWidth>
+        {viewBooking && (
+          <>
+            <DialogTitle>Chi tiết đặt gói</DialogTitle>
+            <DialogContent dividers>
+              <Stack spacing={2}>
+                <Box>
+                  <Typography variant="caption" color="text.secondary">
+                    Khách hàng
+                  </Typography>
+                  <Typography variant="subtitle2">{viewBooking.customer}</Typography>
+                </Box>
+                <Stack direction="row" spacing={2}>
+                  <Box sx={{ flex: 1 }}>
+                    <Typography variant="caption" color="text.secondary">
+                      Số điện thoại
+                    </Typography>
+                    <Typography variant="body2">{viewBooking.phone}</Typography>
+                  </Box>
+                  <Box sx={{ flex: 1 }}>
+                    <Typography variant="caption" color="text.secondary">
+                      Email
+                    </Typography>
+                    <Typography variant="body2">{viewBooking.email}</Typography>
+                  </Box>
+                </Stack>
+                <Box>
+                  <Typography variant="caption" color="text.secondary">
+                    Gói dịp đặc biệt
+                  </Typography>
+                  <Typography variant="body2">
+                    {viewBooking.packageTitle} ({viewBooking.packageId})
+                  </Typography>
+                </Box>
+                <Stack direction="row" spacing={2}>
+                  <Box sx={{ flex: 1 }}>
+                    <Typography variant="caption" color="text.secondary">
+                      Ngày sự kiện
+                    </Typography>
+                    <Typography variant="body2">{viewBooking.eventDate}</Typography>
+                  </Box>
+                  <Box sx={{ flex: 1 }}>
+                    <Typography variant="caption" color="text.secondary">
+                      Ngày đặt
+                    </Typography>
+                    <Typography variant="body2">{viewBooking.createdAt}</Typography>
+                  </Box>
+                </Stack>
+                {viewBooking.note && (
+                  <Box>
+                    <Typography variant="caption" color="text.secondary">
+                      Ghi chú
+                    </Typography>
+                    <Typography variant="body2">{viewBooking.note}</Typography>
+                  </Box>
+                )}
+                <TextField
+                  select
+                  label="Trạng thái"
+                  size="small"
+                  fullWidth
+                  value={viewBooking.status}
+                  onChange={(e) =>
+                    handleSetBookingStatus(
+                      viewBooking.id,
+                      e.target.value as Spa2OccasionBookingStatus
+                    )
+                  }
+                >
+                  {BOOKING_STATUS_OPTIONS.map((s) => (
+                    <MenuItem key={s} value={s}>
+                      {BOOKING_STATUS_LABEL[s]}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Stack>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setViewBooking(null)}>{t('common.cancel')}</Button>
+            </DialogActions>
+          </>
+        )}
+      </Dialog>
     </Spa2ManageShell>
   );
 }

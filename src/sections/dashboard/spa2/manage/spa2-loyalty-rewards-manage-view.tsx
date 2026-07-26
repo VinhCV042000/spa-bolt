@@ -5,14 +5,20 @@ import { useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
-import Chip from '@mui/material/Chip';
 import Tabs from '@mui/material/Tabs';
+import Chip from '@mui/material/Chip';
+import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
+import TableRow from '@mui/material/TableRow';
 import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Unstable_Grid2';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
 import TextField from '@mui/material/TextField';
 import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
@@ -20,6 +26,8 @@ import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import InputAdornment from '@mui/material/InputAdornment';
+import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 
@@ -35,13 +43,19 @@ import {
   spa2LoyaltyRewardsBanner,
   spa2LoyaltyPointsBalance,
   type Spa2LoyaltyEarnRule,
+  SPA2_LOYALTY_REDEMPTIONS,
+  type Spa2LoyaltyRedemption,
   spa2LoyaltyRewardCategories,
   type Spa2LoyaltyRewardsBanner,
   type Spa2LoyaltyRewardCategory,
+  type Spa2LoyaltyRedemptionStatus,
 } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { useTable } from 'src/components/table/use-table';
 import { ConfirmDialog } from 'src/components/custom-dialog';
+import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
 
 import {
   Spa2ContentPageHero3,
@@ -57,6 +71,7 @@ import {
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2ListAnalytic } from './spa2-list-analytic';
 import { Spa2SimpleImageField } from './spa2-simple-image-field';
 import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
@@ -81,6 +96,32 @@ const EMPTY_REWARD_FORM = {
   image: '',
   stock: 0,
 };
+
+const REDEMPTION_STATUS_LABEL: Record<Spa2LoyaltyRedemptionStatus, string> = {
+  new: 'Mới',
+  approved: 'Đã duyệt',
+  delivered: 'Đã giao',
+  cancelled: 'Đã huỷ',
+};
+
+const REDEMPTION_STATUS_COLOR: Record<
+  Spa2LoyaltyRedemptionStatus,
+  'info' | 'warning' | 'success' | 'error'
+> = {
+  new: 'info',
+  approved: 'warning',
+  delivered: 'success',
+  cancelled: 'error',
+};
+
+const REDEMPTION_STATUS_OPTIONS: Spa2LoyaltyRedemptionStatus[] = [
+  'new',
+  'approved',
+  'delivered',
+  'cancelled',
+];
+
+type RedemptionStatusFilter = Spa2LoyaltyRedemptionStatus | 'all';
 
 function SectionCard({
   title,
@@ -188,9 +229,9 @@ export function Spa2LoyaltyRewardsManageView() {
   }));
   const [dirty, setDirty] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
-  const [tab, setTab] = useState<'banner' | 'points' | 'categories' | 'rewards' | 'preview'>(
-    'banner'
-  );
+  const [tab, setTab] = useState<
+    'banner' | 'points' | 'categories' | 'rewards' | 'redemptions' | 'preview'
+  >('banner');
   const markDirty = () => setDirty(true);
 
   // ---- Banner ----
@@ -305,6 +346,58 @@ export function Spa2LoyaltyRewardsManageView() {
     markDirty();
   };
 
+  // ---- Đổi điểm thưởng (redemptions) ----
+  const rewardById = useMemo(() => new Map(rewards.map((r) => [r.id, r])), [rewards]);
+  const categoryLabelByValue = useMemo(
+    () => new Map(categories.map((c) => [c.value, c.label])),
+    [categories]
+  );
+  const [redemptions, setRedemptions] = useState<Spa2LoyaltyRedemption[]>(SPA2_LOYALTY_REDEMPTIONS);
+  const [redemptionSearch, setRedemptionSearch] = useState('');
+  const [redemptionStatusFilter, setRedemptionStatusFilter] =
+    useState<RedemptionStatusFilter>('all');
+  const [viewRedemption, setViewRedemption] = useState<Spa2LoyaltyRedemption | null>(null);
+  const redemptionTable = useTable({ defaultRowsPerPage: 5 });
+
+  const filteredRedemptions = useMemo(
+    () =>
+      redemptions.filter((r) => {
+        const q = redemptionSearch.toLowerCase();
+        const matchSearch =
+          !q ||
+          r.customer.toLowerCase().includes(q) ||
+          r.phone.includes(redemptionSearch) ||
+          r.rewardName.toLowerCase().includes(q);
+        const matchStatus = redemptionStatusFilter === 'all' || r.status === redemptionStatusFilter;
+        return matchSearch && matchStatus;
+      }),
+    [redemptions, redemptionSearch, redemptionStatusFilter]
+  );
+
+  const redemptionCounts = useMemo(
+    () => ({
+      all: redemptions.length,
+      new: redemptions.filter((r) => r.status === 'new').length,
+      approved: redemptions.filter((r) => r.status === 'approved').length,
+      delivered: redemptions.filter((r) => r.status === 'delivered').length,
+      cancelled: redemptions.filter((r) => r.status === 'cancelled').length,
+    }),
+    [redemptions]
+  );
+
+  const totalPointsRedeemed = useMemo(
+    () =>
+      redemptions
+        .filter((r) => r.status !== 'cancelled')
+        .reduce((sum, r) => sum + r.pointsUsed, 0),
+    [redemptions]
+  );
+
+  const handleSetRedemptionStatus = (id: number, status: Spa2LoyaltyRedemptionStatus) => {
+    setRedemptions((prev) => prev.map((r) => (r.id === id ? { ...r, status } : r)));
+    setViewRedemption((prev) => (prev?.id === id ? { ...prev, status } : prev));
+  };
+
   const handleSave = () => {
     setSavedAt(new Date());
     setDirty(false);
@@ -316,6 +409,7 @@ export function Spa2LoyaltyRewardsManageView() {
     setEarnRules(spa2LoyaltyEarnRules.map((r) => ({ ...r })));
     setCategories(spa2LoyaltyRewardCategories.map((c) => ({ ...c })));
     setRewards(spa2LoyaltyRewards.map((r) => ({ ...r })));
+    setRedemptions(SPA2_LOYALTY_REDEMPTIONS);
     setDirty(false);
   };
 
@@ -414,6 +508,12 @@ export function Spa2LoyaltyRewardsManageView() {
           value="rewards"
           label={t('loyalty_rewards.rewards_section')}
           icon={<Iconify icon="solar:gift-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
+          value="redemptions"
+          label="Đổi điểm thưởng"
+          icon={<Iconify icon="solar:clipboard-list-bold-duotone" width={20} />}
           iconPosition="start"
         />
         <Tab
@@ -774,6 +874,317 @@ export function Spa2LoyaltyRewardsManageView() {
         </Card>
       )}
 
+      {/* Đổi điểm thưởng (redemptions) */}
+      {tab === 'redemptions' && (
+        <Card>
+          <Box sx={{ p: 2.5, borderBottom: `1px solid ${SPA2_CREAM_DARK}` }}>
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <Iconify
+                icon="solar:clipboard-list-bold-duotone"
+                width={22}
+                sx={{ color: SPA2_TEAL }}
+              />
+              <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                Đổi điểm thưởng
+              </Typography>
+            </Stack>
+          </Box>
+
+          {/* KPI */}
+          <Scrollbar sx={{ minHeight: 108 }}>
+            <Stack
+              spacing={1}
+              direction="row"
+              divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+              sx={{ py: 2, px: 2.5 }}
+            >
+              <Spa2ListAnalytic
+                title="Tất cả"
+                total={redemptionCounts.all}
+                percent={100}
+                icon="solar:clipboard-list-bold-duotone"
+                color={SPA2_TEAL}
+                unitLabel="lượt đổi"
+                active={redemptionStatusFilter === 'all'}
+                onClick={() => {
+                  setRedemptionStatusFilter('all');
+                  redemptionTable.onResetPage();
+                }}
+              />
+              <Spa2ListAnalytic
+                title={REDEMPTION_STATUS_LABEL.new}
+                total={redemptionCounts.new}
+                percent={
+                  redemptionCounts.all ? (redemptionCounts.new / redemptionCounts.all) * 100 : 0
+                }
+                icon="solar:bell-bing-bold-duotone"
+                color="#00B8D9"
+                unitLabel="lượt đổi"
+                active={redemptionStatusFilter === 'new'}
+                onClick={() => {
+                  setRedemptionStatusFilter('new');
+                  redemptionTable.onResetPage();
+                }}
+              />
+              <Spa2ListAnalytic
+                title={REDEMPTION_STATUS_LABEL.approved}
+                total={redemptionCounts.approved}
+                percent={
+                  redemptionCounts.all
+                    ? (redemptionCounts.approved / redemptionCounts.all) * 100
+                    : 0
+                }
+                icon="solar:check-circle-bold-duotone"
+                color="#FFAB00"
+                unitLabel="lượt đổi"
+                active={redemptionStatusFilter === 'approved'}
+                onClick={() => {
+                  setRedemptionStatusFilter('approved');
+                  redemptionTable.onResetPage();
+                }}
+              />
+              <Spa2ListAnalytic
+                title={REDEMPTION_STATUS_LABEL.delivered}
+                total={redemptionCounts.delivered}
+                percent={
+                  redemptionCounts.all
+                    ? (redemptionCounts.delivered / redemptionCounts.all) * 100
+                    : 0
+                }
+                icon="solar:box-bold-duotone"
+                color="#22C55E"
+                unitLabel="lượt đổi"
+                active={redemptionStatusFilter === 'delivered'}
+                onClick={() => {
+                  setRedemptionStatusFilter('delivered');
+                  redemptionTable.onResetPage();
+                }}
+              />
+              <Spa2ListAnalytic
+                title={REDEMPTION_STATUS_LABEL.cancelled}
+                total={redemptionCounts.cancelled}
+                percent={
+                  redemptionCounts.all
+                    ? (redemptionCounts.cancelled / redemptionCounts.all) * 100
+                    : 0
+                }
+                icon="solar:close-circle-bold-duotone"
+                color="#637381"
+                unitLabel="lượt đổi"
+                active={redemptionStatusFilter === 'cancelled'}
+                onClick={() => {
+                  setRedemptionStatusFilter('cancelled');
+                  redemptionTable.onResetPage();
+                }}
+              />
+              <Spa2ListAnalytic
+                title="Tổng điểm đã đổi"
+                total={totalPointsRedeemed}
+                percent={100}
+                icon="solar:star-bold-duotone"
+                color={SPA2_TEAL_DARK}
+                unitLabel="điểm"
+                secondaryLine={
+                  <Typography variant="caption" color="text.disabled">
+                    (không tính lượt đã huỷ)
+                  </Typography>
+                }
+              />
+            </Stack>
+          </Scrollbar>
+
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ px: 2.5, pb: 2 }}>
+            <TextField
+              placeholder="Tìm khách hàng, SĐT, phần thưởng..."
+              value={redemptionSearch}
+              onChange={(e) => {
+                setRedemptionSearch(e.target.value);
+                redemptionTable.onResetPage();
+              }}
+              size="small"
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Stack>
+
+          <Box sx={{ px: 2.5 }}>
+            <Tabs
+              value={redemptionStatusFilter}
+              onChange={(_, v: RedemptionStatusFilter) => {
+                setRedemptionStatusFilter(v);
+                redemptionTable.onResetPage();
+              }}
+              variant="scrollable"
+              sx={{
+                '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+                '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
+              }}
+            >
+              <Tab value="all" label={`Tất cả (${redemptionCounts.all})`} />
+              <Tab value="new" label={`${REDEMPTION_STATUS_LABEL.new} (${redemptionCounts.new})`} />
+              <Tab
+                value="approved"
+                label={`${REDEMPTION_STATUS_LABEL.approved} (${redemptionCounts.approved})`}
+              />
+              <Tab
+                value="delivered"
+                label={`${REDEMPTION_STATUS_LABEL.delivered} (${redemptionCounts.delivered})`}
+              />
+              <Tab
+                value="cancelled"
+                label={`${REDEMPTION_STATUS_LABEL.cancelled} (${redemptionCounts.cancelled})`}
+              />
+            </Tabs>
+          </Box>
+
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Khách hàng</TableCell>
+                  <TableCell>Phần thưởng</TableCell>
+                  <TableCell>Điểm đã dùng</TableCell>
+                  <TableCell>Ngày đổi</TableCell>
+                  <TableCell>Trạng thái</TableCell>
+                  <TableCell align="right">Thao tác</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredRedemptions
+                  .slice(
+                    redemptionTable.page * redemptionTable.rowsPerPage,
+                    redemptionTable.page * redemptionTable.rowsPerPage + redemptionTable.rowsPerPage
+                  )
+                  .map((item) => {
+                    const rewardInfo = rewardById.get(item.rewardId);
+                    return (
+                      <TableRow key={item.id} hover>
+                        <TableCell>
+                          <Stack>
+                            <Typography variant="subtitle2" sx={{ color: SPA2_TEAL_DARK }}>
+                              {item.customer}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              {item.phone}
+                            </Typography>
+                          </Stack>
+                        </TableCell>
+                        <TableCell>
+                          <Stack>
+                            <Typography variant="body2">{item.rewardName}</Typography>
+                            <Stack direction="row" spacing={0.75} alignItems="center" sx={{ mt: 0.5 }}>
+                              <Chip
+                                size="small"
+                                label={item.rewardId}
+                                variant="outlined"
+                                sx={{ fontFamily: 'monospace', fontSize: 11 }}
+                              />
+                              {rewardInfo && (
+                                <Typography variant="caption" color="text.disabled">
+                                  {categoryLabelByValue.get(rewardInfo.category) ??
+                                    rewardInfo.category}{' '}
+                                  · còn {rewardInfo.stock}
+                                </Typography>
+                              )}
+                            </Stack>
+                          </Stack>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2" fontWeight={700} sx={{ color: SPA2_TEAL_DARK }}>
+                            {item.pointsUsed.toLocaleString('vi-VN')} điểm
+                          </Typography>
+                        </TableCell>
+                        <TableCell>{item.createdAt}</TableCell>
+                        <TableCell>
+                          <Chip
+                            size="small"
+                            label={REDEMPTION_STATUS_LABEL[item.status]}
+                            color={REDEMPTION_STATUS_COLOR[item.status]}
+                            variant="soft"
+                          />
+                        </TableCell>
+                        <TableCell align="right">
+                          <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
+                            {item.status === 'new' && (
+                              <>
+                                <Tooltip title="Duyệt">
+                                  <IconButton
+                                    size="small"
+                                    color="success"
+                                    onClick={() => handleSetRedemptionStatus(item.id, 'approved')}
+                                  >
+                                    <Iconify icon="solar:check-circle-bold" />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Huỷ">
+                                  <IconButton
+                                    size="small"
+                                    color="error"
+                                    onClick={() => handleSetRedemptionStatus(item.id, 'cancelled')}
+                                  >
+                                    <Iconify icon="solar:close-circle-bold" />
+                                  </IconButton>
+                                </Tooltip>
+                              </>
+                            )}
+                            {item.status === 'approved' && (
+                              <>
+                                <Tooltip title="Đã giao">
+                                  <IconButton
+                                    size="small"
+                                    sx={{ color: SPA2_TEAL_DARK }}
+                                    onClick={() => handleSetRedemptionStatus(item.id, 'delivered')}
+                                  >
+                                    <Iconify icon="solar:box-bold" />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Huỷ">
+                                  <IconButton
+                                    size="small"
+                                    color="error"
+                                    onClick={() => handleSetRedemptionStatus(item.id, 'cancelled')}
+                                  >
+                                    <Iconify icon="solar:close-circle-bold" />
+                                  </IconButton>
+                                </Tooltip>
+                              </>
+                            )}
+                            <Tooltip title={t('common.view')}>
+                              <IconButton size="small" onClick={() => setViewRedemption(item)}>
+                                <Iconify icon="solar:eye-bold" />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                {filteredRedemptions.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={6} align="center" sx={{ py: 6, color: 'text.disabled' }}>
+                      {t('common.no_data')}
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePaginationCustom
+            count={filteredRedemptions.length}
+            page={redemptionTable.page}
+            rowsPerPage={redemptionTable.rowsPerPage}
+            onPageChange={redemptionTable.onChangePage}
+            onRowsPerPageChange={redemptionTable.onChangeRowsPerPage}
+          />
+        </Card>
+      )}
+
       {/* Full page preview */}
       {tab === 'preview' && (
         <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
@@ -897,6 +1308,70 @@ export function Spa2LoyaltyRewardsManageView() {
           </Button>
         }
       />
+
+      {/* Xem chi tiết đổi điểm thưởng */}
+      <Dialog
+        open={!!viewRedemption}
+        onClose={() => setViewRedemption(null)}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>
+          Chi tiết đổi điểm #{viewRedemption?.id}
+        </DialogTitle>
+        <DialogContent dividers>
+          {viewRedemption && (
+            <Stack spacing={1.5}>
+              {(
+                [
+                  ['Khách hàng', viewRedemption.customer],
+                  ['Điện thoại', viewRedemption.phone],
+                  ['Phần thưởng', viewRedemption.rewardName],
+                  ['Mã phần thưởng', viewRedemption.rewardId],
+                  ['Điểm đã dùng', `${viewRedemption.pointsUsed.toLocaleString('vi-VN')} điểm`],
+                  ['Ngày đổi', viewRedemption.createdAt],
+                ] as [string, string][]
+              ).map(([label, value]) => (
+                <Box key={label} sx={{ display: 'flex', gap: 1 }}>
+                  <Typography variant="body2" color="text.secondary" sx={{ minWidth: 120 }}>
+                    {label}:
+                  </Typography>
+                  <Typography variant="body2" fontWeight={500}>
+                    {value}
+                  </Typography>
+                </Box>
+              ))}
+              <Divider />
+              <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                <Typography variant="body2" color="text.secondary" sx={{ minWidth: 120 }}>
+                  {t('common.status')}:
+                </Typography>
+                <TextField
+                  select
+                  size="small"
+                  value={viewRedemption.status}
+                  onChange={(e) =>
+                    handleSetRedemptionStatus(
+                      viewRedemption.id,
+                      e.target.value as Spa2LoyaltyRedemptionStatus
+                    )
+                  }
+                  sx={{ flex: 1 }}
+                >
+                  {REDEMPTION_STATUS_OPTIONS.map((s) => (
+                    <MenuItem key={s} value={s}>
+                      {REDEMPTION_STATUS_LABEL[s]}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Box>
+            </Stack>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setViewRedemption(null)}>{t('common.close')}</Button>
+        </DialogActions>
+      </Dialog>
     </Spa2ManageShell>
   );
 }

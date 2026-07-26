@@ -7,12 +7,19 @@ import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Tabs from '@mui/material/Tabs';
+import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
 import Accordion from '@mui/material/Accordion';
+import TableRow from '@mui/material/TableRow';
+import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Unstable_Grid2';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
 import TextField from '@mui/material/TextField';
 import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
@@ -20,6 +27,8 @@ import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import InputAdornment from '@mui/material/InputAdornment';
+import TableContainer from '@mui/material/TableContainer';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 
@@ -41,11 +50,17 @@ import {
   type Spa2HomeServiceArea,
   type Spa2AdjustableImage,
   type Spa2HomeServiceBanner,
+  SPA2_HOME_SERVICE_BOOKINGS,
+  type Spa2HomeServiceBooking,
   type Spa2HomeServiceProcessStep,
+  type Spa2HomeServiceBookingStatus,
 } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { useTable } from 'src/components/table/use-table';
 import { ConfirmDialog } from 'src/components/custom-dialog';
+import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
 
 import {
   Spa2ContentPageHero3,
@@ -62,6 +77,7 @@ import {
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2ListAnalytic } from './spa2-list-analytic';
 import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
@@ -90,6 +106,57 @@ const EMPTY_SERVICE_FORM = {
 };
 const EMPTY_PROCESS_FORM = { title: '', desc: '' };
 const EMPTY_FAQ_FORM = { q: '', a: '' };
+
+// ---- Đặt dịch vụ tại nhà (bookings) ----
+type BookingStatusFilter = Spa2HomeServiceBookingStatus | 'all';
+
+const BOOKING_STATUS_LABEL: Record<Spa2HomeServiceBookingStatus, string> = {
+  new: 'Mới',
+  confirmed: 'Đã xác nhận',
+  onway: 'Đang di chuyển',
+  completed: 'Hoàn tất',
+  cancelled: 'Đã huỷ',
+};
+
+const BOOKING_STATUS_COLOR: Record<
+  Spa2HomeServiceBookingStatus,
+  'info' | 'warning' | 'primary' | 'success' | 'error'
+> = {
+  new: 'info',
+  confirmed: 'warning',
+  onway: 'primary',
+  completed: 'success',
+  cancelled: 'error',
+};
+
+const BOOKING_STATUS_OPTIONS: Spa2HomeServiceBookingStatus[] = [
+  'new',
+  'confirmed',
+  'onway',
+  'completed',
+  'cancelled',
+];
+
+// Non-final statuses can always be cancelled; each non-final status also has
+// exactly one "advance" action, following the new -> confirmed -> onway ->
+// completed flow.
+const NEXT_BOOKING_STATUS: Partial<
+  Record<Spa2HomeServiceBookingStatus, Spa2HomeServiceBookingStatus>
+> = {
+  new: 'confirmed',
+  confirmed: 'onway',
+  onway: 'completed',
+};
+
+// Icon + tooltip shown on the single "advance to next status" action button
+// for each non-final status (see NEXT_BOOKING_STATUS above).
+const BOOKING_ADVANCE_META: Partial<
+  Record<Spa2HomeServiceBookingStatus, { icon: string; tooltip: string }>
+> = {
+  new: { icon: 'solar:phone-calling-bold', tooltip: 'Xác nhận đặt lịch' },
+  confirmed: { icon: 'solar:routing-2-bold', tooltip: 'KTV bắt đầu di chuyển' },
+  onway: { icon: 'solar:check-circle-bold', tooltip: 'Đánh dấu hoàn tất' },
+};
 
 function SectionCard({
   title,
@@ -335,10 +402,20 @@ export function Spa2HomeServiceManageView() {
   }));
   const [dirty, setDirty] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
-  const [tab, setTab] = useState<'banner' | 'areas' | 'services' | 'process' | 'faq' | 'preview'>(
-    'banner'
-  );
+  const [tab, setTab] = useState<
+    'banner' | 'areas' | 'services' | 'process' | 'faq' | 'bookings' | 'preview'
+  >('banner');
   const markDirty = () => setDirty(true);
+
+  // ---- Đặt dịch vụ tại nhà (bookings) ----
+  const [bookings, setBookings] = useState<Spa2HomeServiceBooking[]>(() =>
+    SPA2_HOME_SERVICE_BOOKINGS.map((b) => ({ ...b }))
+  );
+  const [bookingSearch, setBookingSearch] = useState('');
+  const [bookingAreaFilter, setBookingAreaFilter] = useState('all');
+  const [bookingStatusFilter, setBookingStatusFilter] = useState<BookingStatusFilter>('all');
+  const [viewBooking, setViewBooking] = useState<Spa2HomeServiceBooking | null>(null);
+  const bookingTable = useTable({ defaultRowsPerPage: 5 });
 
   // ---- Banner ----
   const updateBanner = (key: 'eyebrow' | 'title' | 'subtitle', value: string) => {
@@ -398,6 +475,36 @@ export function Spa2HomeServiceManageView() {
   const reorderAreas = (next: Array<Spa2HomeServiceArea & { id: string }>) => {
     setAreas(next.map(({ id, ...rest }) => rest));
     markDirty();
+  };
+
+  // ---- Đặt dịch vụ tại nhà (bookings) - derived from areas above ----
+  const areaLabel = (value: string) => areas.find((a) => a.value === value)?.label ?? value;
+
+  const filteredBookings = bookings.filter((b) => {
+    const q = bookingSearch.trim().toLowerCase();
+    const matchSearch =
+      !q ||
+      b.customer.toLowerCase().includes(q) ||
+      b.phone.includes(bookingSearch.trim()) ||
+      b.address.toLowerCase().includes(q) ||
+      b.serviceName.toLowerCase().includes(q);
+    const matchArea = bookingAreaFilter === 'all' || b.area === bookingAreaFilter;
+    const matchStatus = bookingStatusFilter === 'all' || b.status === bookingStatusFilter;
+    return matchSearch && matchArea && matchStatus;
+  });
+
+  const bookingCounts = {
+    all: bookings.length,
+    new: bookings.filter((b) => b.status === 'new').length,
+    confirmed: bookings.filter((b) => b.status === 'confirmed').length,
+    onway: bookings.filter((b) => b.status === 'onway').length,
+    completed: bookings.filter((b) => b.status === 'completed').length,
+    cancelled: bookings.filter((b) => b.status === 'cancelled').length,
+  };
+
+  const handleSetBookingStatus = (id: number, status: Spa2HomeServiceBookingStatus) => {
+    setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, status } : b)));
+    setViewBooking((prev) => (prev?.id === id ? { ...prev, status } : prev));
   };
 
   // ---- Services ----
@@ -531,6 +638,7 @@ export function Spa2HomeServiceManageView() {
     setServices(spa2HomeServices.map((s) => ({ ...s })));
     setProcess(spa2HomeServiceProcess.map((p) => ({ ...p })));
     setFaqs(spa2HomeServiceFaqs.map((f) => ({ ...f })));
+    setBookings(SPA2_HOME_SERVICE_BOOKINGS.map((b) => ({ ...b })));
     setDirty(false);
   };
 
@@ -635,6 +743,12 @@ export function Spa2HomeServiceManageView() {
           value="faq"
           label={t('home_service.faq_section')}
           icon={<Iconify icon="solar:question-circle-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
+          value="bookings"
+          label="Đặt lịch tại nhà"
+          icon={<Iconify icon="solar:calendar-mark-bold-duotone" width={20} />}
           iconPosition="start"
         />
         <Tab
@@ -985,6 +1099,296 @@ export function Spa2HomeServiceManageView() {
         </Grid>
       )}
 
+      {/* Đặt dịch vụ tại nhà (bookings) */}
+      {tab === 'bookings' && (
+        <Card>
+          <Box sx={{ p: 2.5, borderBottom: `1px solid ${SPA2_CREAM_DARK}` }}>
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <Iconify
+                icon="solar:calendar-mark-bold-duotone"
+                width={22}
+                sx={{ color: SPA2_TEAL }}
+              />
+              <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                Đặt dịch vụ tại nhà
+              </Typography>
+            </Stack>
+          </Box>
+
+          <Box sx={{ p: 2.5 }}>
+            <Card sx={{ bgcolor: SPA2_CREAM }}>
+              <Scrollbar sx={{ minHeight: 108 }}>
+                <Stack
+                  spacing={1}
+                  direction="row"
+                  divider={
+                    <Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />
+                  }
+                  sx={{ py: 2, px: 1 }}
+                >
+                  <Spa2ListAnalytic
+                    title="Tất cả"
+                    total={bookingCounts.all}
+                    percent={100}
+                    icon="solar:widget-5-bold-duotone"
+                    color={SPA2_TEAL}
+                    unitLabel="lịch hẹn"
+                    active={bookingStatusFilter === 'all'}
+                    onClick={() => {
+                      setBookingStatusFilter('all');
+                      bookingTable.onResetPage();
+                    }}
+                  />
+                  <Spa2ListAnalytic
+                    title={BOOKING_STATUS_LABEL.new}
+                    total={bookingCounts.new}
+                    percent={bookingCounts.all ? (bookingCounts.new / bookingCounts.all) * 100 : 0}
+                    icon="solar:bell-bold-duotone"
+                    color="#00B8D9"
+                    unitLabel="lịch hẹn"
+                    active={bookingStatusFilter === 'new'}
+                    onClick={() => {
+                      setBookingStatusFilter('new');
+                      bookingTable.onResetPage();
+                    }}
+                  />
+                  <Spa2ListAnalytic
+                    title={BOOKING_STATUS_LABEL.confirmed}
+                    total={bookingCounts.confirmed}
+                    percent={
+                      bookingCounts.all ? (bookingCounts.confirmed / bookingCounts.all) * 100 : 0
+                    }
+                    icon="solar:phone-calling-bold-duotone"
+                    color="#FFAB00"
+                    unitLabel="lịch hẹn"
+                    active={bookingStatusFilter === 'confirmed'}
+                    onClick={() => {
+                      setBookingStatusFilter('confirmed');
+                      bookingTable.onResetPage();
+                    }}
+                  />
+                  <Spa2ListAnalytic
+                    title={BOOKING_STATUS_LABEL.onway}
+                    total={bookingCounts.onway}
+                    percent={
+                      bookingCounts.all ? (bookingCounts.onway / bookingCounts.all) * 100 : 0
+                    }
+                    icon="solar:routing-2-bold-duotone"
+                    color="#3366FF"
+                    unitLabel="lịch hẹn"
+                    active={bookingStatusFilter === 'onway'}
+                    onClick={() => {
+                      setBookingStatusFilter('onway');
+                      bookingTable.onResetPage();
+                    }}
+                  />
+                  <Spa2ListAnalytic
+                    title={BOOKING_STATUS_LABEL.completed}
+                    total={bookingCounts.completed}
+                    percent={
+                      bookingCounts.all ? (bookingCounts.completed / bookingCounts.all) * 100 : 0
+                    }
+                    icon="solar:cup-star-bold-duotone"
+                    color="#22C55E"
+                    unitLabel="lịch hẹn"
+                    active={bookingStatusFilter === 'completed'}
+                    onClick={() => {
+                      setBookingStatusFilter('completed');
+                      bookingTable.onResetPage();
+                    }}
+                  />
+                  <Spa2ListAnalytic
+                    title={BOOKING_STATUS_LABEL.cancelled}
+                    total={bookingCounts.cancelled}
+                    percent={
+                      bookingCounts.all ? (bookingCounts.cancelled / bookingCounts.all) * 100 : 0
+                    }
+                    icon="solar:close-circle-bold-duotone"
+                    color="#FF5630"
+                    unitLabel="lịch hẹn"
+                    active={bookingStatusFilter === 'cancelled'}
+                    onClick={() => {
+                      setBookingStatusFilter('cancelled');
+                      bookingTable.onResetPage();
+                    }}
+                  />
+                </Stack>
+              </Scrollbar>
+            </Card>
+          </Box>
+
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ px: 2.5, pb: 2 }}>
+            <TextField
+              placeholder="Tìm theo tên, SĐT, địa chỉ hoặc dịch vụ..."
+              value={bookingSearch}
+              onChange={(e) => {
+                setBookingSearch(e.target.value);
+                bookingTable.onResetPage();
+              }}
+              size="small"
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <TextField
+              select
+              size="small"
+              label="Khu vực"
+              value={bookingAreaFilter}
+              onChange={(e) => {
+                setBookingAreaFilter(e.target.value);
+                bookingTable.onResetPage();
+              }}
+              sx={{ minWidth: 200 }}
+            >
+              <MenuItem value="all">Tất cả khu vực</MenuItem>
+              {areas.map((a) => (
+                <MenuItem key={a.value} value={a.value}>
+                  {a.label || a.value}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Stack>
+
+          <Box sx={{ px: 2.5 }}>
+            <Tabs
+              value={bookingStatusFilter}
+              onChange={(_, v: BookingStatusFilter) => {
+                setBookingStatusFilter(v);
+                bookingTable.onResetPage();
+              }}
+              variant="scrollable"
+              sx={{
+                '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+                '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
+              }}
+            >
+              <Tab value="all" label={`Tất cả (${bookingCounts.all})`} />
+              {BOOKING_STATUS_OPTIONS.map((s) => (
+                <Tab key={s} value={s} label={`${BOOKING_STATUS_LABEL[s]} (${bookingCounts[s]})`} />
+              ))}
+            </Tabs>
+          </Box>
+
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Khách hàng</TableCell>
+                  <TableCell>Địa chỉ &amp; khu vực</TableCell>
+                  <TableCell>Dịch vụ</TableCell>
+                  <TableCell>Lịch hẹn</TableCell>
+                  <TableCell>Ngày đặt</TableCell>
+                  <TableCell>Trạng thái</TableCell>
+                  <TableCell align="right">Thao tác</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredBookings
+                  .slice(
+                    bookingTable.page * bookingTable.rowsPerPage,
+                    bookingTable.page * bookingTable.rowsPerPage + bookingTable.rowsPerPage
+                  )
+                  .map((item) => {
+                    const isFinal = item.status === 'completed' || item.status === 'cancelled';
+                    const nextStatus = NEXT_BOOKING_STATUS[item.status];
+                    const advanceMeta = BOOKING_ADVANCE_META[item.status];
+                    return (
+                      <TableRow key={item.id} hover>
+                        <TableCell>
+                          <Stack>
+                            <Typography variant="subtitle2" sx={{ color: SPA2_TEAL_DARK }}>
+                              {item.customer}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              {item.phone}
+                            </Typography>
+                          </Stack>
+                        </TableCell>
+                        <TableCell>
+                          <Stack>
+                            <Typography variant="body2">{item.address}</Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              {areaLabel(item.area)}
+                            </Typography>
+                          </Stack>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2">{item.serviceName}</Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2">{item.scheduledAt}</Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2">{item.createdAt}</Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Chip
+                            size="small"
+                            variant="soft"
+                            label={BOOKING_STATUS_LABEL[item.status]}
+                            color={BOOKING_STATUS_COLOR[item.status]}
+                          />
+                        </TableCell>
+                        <TableCell align="right">
+                          <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
+                            {nextStatus && advanceMeta && (
+                              <Tooltip title={advanceMeta.tooltip}>
+                                <IconButton
+                                  size="small"
+                                  sx={{ color: SPA2_TEAL_DARK }}
+                                  onClick={() => handleSetBookingStatus(item.id, nextStatus)}
+                                >
+                                  <Iconify icon={advanceMeta.icon} />
+                                </IconButton>
+                              </Tooltip>
+                            )}
+                            {!isFinal && (
+                              <Tooltip title="Huỷ lịch hẹn">
+                                <IconButton
+                                  size="small"
+                                  color="error"
+                                  onClick={() => handleSetBookingStatus(item.id, 'cancelled')}
+                                >
+                                  <Iconify icon="solar:close-circle-bold" />
+                                </IconButton>
+                              </Tooltip>
+                            )}
+                            <Tooltip title="Xem chi tiết">
+                              <IconButton size="small" onClick={() => setViewBooking(item)}>
+                                <Iconify icon="solar:eye-bold" />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                {filteredBookings.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={7} align="center" sx={{ py: 6, color: 'text.disabled' }}>
+                      Không có dữ liệu
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePaginationCustom
+            count={filteredBookings.length}
+            page={bookingTable.page}
+            rowsPerPage={bookingTable.rowsPerPage}
+            onPageChange={bookingTable.onChangePage}
+            onRowsPerPageChange={bookingTable.onChangeRowsPerPage}
+          />
+        </Card>
+      )}
+
       {/* Full page preview */}
       {tab === 'preview' && (
         <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
@@ -1292,6 +1696,63 @@ export function Spa2HomeServiceManageView() {
           </Button>
         }
       />
+
+      {/* Booking view-detail dialog */}
+      <Dialog open={!!viewBooking} onClose={() => setViewBooking(null)} maxWidth="xs" fullWidth>
+        <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>Đặt lịch #{viewBooking?.id}</DialogTitle>
+        <DialogContent dividers>
+          {viewBooking && (
+            <Stack spacing={1.5}>
+              {[
+                ['Khách hàng', viewBooking.customer],
+                ['Số điện thoại', viewBooking.phone],
+                ['Địa chỉ', viewBooking.address],
+                ['Khu vực', areaLabel(viewBooking.area)],
+                ['Dịch vụ', viewBooking.serviceName],
+                ['Lịch hẹn', viewBooking.scheduledAt],
+                ['Ngày đặt', viewBooking.createdAt],
+                ['Ghi chú', viewBooking.note || '–'],
+              ].map(([label, value]) => (
+                <Box key={label} sx={{ display: 'flex', gap: 1 }}>
+                  <Typography variant="body2" color="text.secondary" sx={{ minWidth: 110 }}>
+                    {label}:
+                  </Typography>
+                  <Typography variant="body2" fontWeight={500}>
+                    {value}
+                  </Typography>
+                </Box>
+              ))}
+              <Divider />
+              <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                <Typography variant="body2" color="text.secondary" sx={{ minWidth: 110 }}>
+                  Trạng thái:
+                </Typography>
+                <TextField
+                  select
+                  size="small"
+                  value={viewBooking.status}
+                  onChange={(e) =>
+                    handleSetBookingStatus(
+                      viewBooking.id,
+                      e.target.value as Spa2HomeServiceBookingStatus
+                    )
+                  }
+                  sx={{ flex: 1 }}
+                >
+                  {BOOKING_STATUS_OPTIONS.map((s) => (
+                    <MenuItem key={s} value={s}>
+                      {BOOKING_STATUS_LABEL[s]}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Box>
+            </Stack>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setViewBooking(null)}>Đóng</Button>
+        </DialogActions>
+      </Dialog>
     </Spa2ManageShell>
   );
 }

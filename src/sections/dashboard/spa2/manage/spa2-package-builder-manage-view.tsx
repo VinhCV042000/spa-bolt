@@ -10,7 +10,9 @@ import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
 import Grid from '@mui/material/Unstable_Grid2';
 import TableBody from '@mui/material/TableBody';
@@ -22,6 +24,7 @@ import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import InputAdornment from '@mui/material/InputAdornment';
 import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
@@ -35,12 +38,23 @@ import {
   type Spa2PackageBuilderBanner,
   spa2PackageBuilderDiscountTiers,
   type Spa2PackageBuilderDiscountTier,
+  SPA2_PACKAGE_BUILDER_ORDERS,
+  type Spa2PackageBuilderOrder,
+  type Spa2PackageBuilderOrderStatus,
 } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { useTable } from 'src/components/table/use-table';
 import { ConfirmDialog } from 'src/components/custom-dialog';
+import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
 
-import { SPA2_TEAL, SPA2_TEAL_DARK, SPA2_CREAM_DARK } from 'src/sections/spa2/spa2-pages-data';
+import {
+  SPA2_TEAL,
+  SPA2_CREAM,
+  SPA2_TEAL_DARK,
+  SPA2_CREAM_DARK,
+} from 'src/sections/spa2/spa2-pages-data';
 import {
   Spa2ContentPageHero4,
   Spa2PackageBuilderPageView,
@@ -48,6 +62,7 @@ import {
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2ListAnalytic } from './spa2-list-analytic';
 
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages4.tsx's
@@ -67,6 +82,48 @@ const withId = <T extends object>(item: T): T & { id: string } => ({ id: uuidv4(
 type DiscountTier = Spa2PackageBuilderDiscountTier;
 
 const EMPTY_TIER_FORM = { minServices: 2, discountPercent: 10 };
+
+const ORDER_STATUS_LABEL: Record<Spa2PackageBuilderOrderStatus, string> = {
+  new: 'Mới',
+  confirmed: 'Đã xác nhận',
+  completed: 'Đã hoàn tất',
+  cancelled: 'Đã huỷ',
+};
+
+const ORDER_STATUS_COLOR: Record<
+  Spa2PackageBuilderOrderStatus,
+  'info' | 'warning' | 'success' | 'error'
+> = {
+  new: 'info',
+  confirmed: 'warning',
+  completed: 'success',
+  cancelled: 'error',
+};
+
+const ORDER_STATUS_ANALYTIC_COLOR: Record<Spa2PackageBuilderOrderStatus, string> = {
+  new: '#0C68E9',
+  confirmed: '#FFAB00',
+  completed: '#22C55E',
+  cancelled: '#FF5630',
+};
+
+const ORDER_STATUS_ICON: Record<Spa2PackageBuilderOrderStatus, string> = {
+  new: 'solar:bell-bing-bold-duotone',
+  confirmed: 'solar:check-circle-bold-duotone',
+  completed: 'solar:diploma-bold-duotone',
+  cancelled: 'solar:close-circle-bold-duotone',
+};
+
+const ORDER_STATUS_OPTIONS: Spa2PackageBuilderOrderStatus[] = [
+  'new',
+  'confirmed',
+  'completed',
+  'cancelled',
+];
+
+type OrderStatusFilter = Spa2PackageBuilderOrderStatus | 'all';
+
+const formatVND = (n: number) => `${new Intl.NumberFormat('vi-VN').format(n)}đ`;
 
 function PreviewFrame({ children }: { children: React.ReactNode }) {
   return (
@@ -93,9 +150,10 @@ export function Spa2PackageBuilderManageView() {
     image: { ...spa2PackageBuilderBanner.image },
   }));
   const [tiers, setTiers] = useState<DiscountTier[]>(spa2PackageBuilderDiscountTiers);
+  const [orders, setOrders] = useState<Spa2PackageBuilderOrder[]>(SPA2_PACKAGE_BUILDER_ORDERS);
   const [dirty, setDirty] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
-  const [tab, setTab] = useState<'banner' | 'tiers' | 'preview'>('banner');
+  const [tab, setTab] = useState<'banner' | 'tiers' | 'orders' | 'preview'>('banner');
 
   const updateBanner = (key: 'eyebrow' | 'title' | 'subtitle', value: string) => {
     setBanner((prev) => ({ ...prev, [key]: value }));
@@ -112,10 +170,41 @@ export function Spa2PackageBuilderManageView() {
   const handleReset = () => {
     setBanner({ ...spa2PackageBuilderBanner, image: { ...spa2PackageBuilderBanner.image } });
     setTiers(spa2PackageBuilderDiscountTiers);
+    setOrders(SPA2_PACKAGE_BUILDER_ORDERS);
     setDirty(false);
   };
 
   const sortedTiers = [...tiers].sort((a, b) => a.minServices - b.minServices);
+
+  // ---- Đơn đặt combo (orders) ----
+  const [orderSearch, setOrderSearch] = useState('');
+  const [orderStatusFilter, setOrderStatusFilter] = useState<OrderStatusFilter>('all');
+  const [viewOrder, setViewOrder] = useState<Spa2PackageBuilderOrder | null>(null);
+  const orderTable = useTable({ defaultRowsPerPage: 5 });
+
+  const filteredOrders = orders.filter((o) => {
+    const q = orderSearch.trim().toLowerCase();
+    const matchSearch = !q || o.customer.toLowerCase().includes(q) || o.phone.includes(q);
+    const matchStatus = orderStatusFilter === 'all' || o.status === orderStatusFilter;
+    return matchSearch && matchStatus;
+  });
+
+  const orderCounts = {
+    all: orders.length,
+    new: orders.filter((o) => o.status === 'new').length,
+    confirmed: orders.filter((o) => o.status === 'confirmed').length,
+    completed: orders.filter((o) => o.status === 'completed').length,
+    cancelled: orders.filter((o) => o.status === 'cancelled').length,
+  };
+
+  const orderRevenue = orders
+    .filter((o) => o.status !== 'cancelled')
+    .reduce((sum, o) => sum + o.total, 0);
+
+  const handleSetOrderStatus = (id: number, status: Spa2PackageBuilderOrderStatus) => {
+    setOrders((prev) => prev.map((o) => (o.id === id ? { ...o, status } : o)));
+    setViewOrder((prev) => (prev?.id === id ? { ...prev, status } : prev));
+  };
 
   const [openForm, setOpenForm] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
@@ -260,6 +349,12 @@ export function Spa2PackageBuilderManageView() {
           iconPosition="start"
         />
         <Tab
+          value="orders"
+          label={`Đơn đặt combo (${orders.length})`}
+          icon={<Iconify icon="solar:cart-check-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
           value="preview"
           label={t('common.preview_btn')}
           icon={<Iconify icon="solar:eye-bold-duotone" width={20} />}
@@ -388,6 +483,257 @@ export function Spa2PackageBuilderManageView() {
         </Card>
       )}
 
+      {/* Đơn đặt combo (orders) */}
+      {tab === 'orders' && (
+        <Card>
+          <Box sx={{ p: 2.5, borderBottom: `1px solid ${SPA2_CREAM_DARK}` }}>
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <Iconify icon="solar:cart-check-bold-duotone" width={22} sx={{ color: SPA2_TEAL }} />
+              <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                Đơn đặt combo
+              </Typography>
+            </Stack>
+          </Box>
+
+          {/* KPI */}
+          <Card sx={{ mx: 2.5, mt: 2.5, bgcolor: SPA2_CREAM }}>
+            <Scrollbar sx={{ minHeight: 108 }}>
+              <Stack
+                direction="row"
+                spacing={2}
+                divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+                sx={{ py: 2, px: 2 }}
+              >
+                <Spa2ListAnalytic
+                  title="Tất cả"
+                  total={orderCounts.all}
+                  percent={100}
+                  icon="solar:widget-5-bold-duotone"
+                  color={SPA2_TEAL}
+                  unitLabel="đơn"
+                  active={orderStatusFilter === 'all'}
+                  onClick={() => {
+                    setOrderStatusFilter('all');
+                    orderTable.onResetPage();
+                  }}
+                  secondaryLine={
+                    <Typography variant="caption" sx={{ color: SPA2_TEAL_DARK, fontWeight: 700 }}>
+                      Doanh thu: {formatVND(orderRevenue)}
+                    </Typography>
+                  }
+                />
+                {(['new', 'confirmed', 'completed', 'cancelled'] as Spa2PackageBuilderOrderStatus[]).map(
+                  (status) => (
+                    <Spa2ListAnalytic
+                      key={status}
+                      title={ORDER_STATUS_LABEL[status]}
+                      total={orderCounts[status]}
+                      percent={
+                        orderCounts.all ? (orderCounts[status] / orderCounts.all) * 100 : 0
+                      }
+                      icon={ORDER_STATUS_ICON[status]}
+                      color={ORDER_STATUS_ANALYTIC_COLOR[status]}
+                      unitLabel="đơn"
+                      active={orderStatusFilter === status}
+                      onClick={() => {
+                        setOrderStatusFilter(status);
+                        orderTable.onResetPage();
+                      }}
+                    />
+                  )
+                )}
+              </Stack>
+            </Scrollbar>
+          </Card>
+
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ p: 2.5 }}>
+            <TextField
+              placeholder="Tìm theo tên khách hàng hoặc số điện thoại..."
+              value={orderSearch}
+              onChange={(e) => {
+                setOrderSearch(e.target.value);
+                orderTable.onResetPage();
+              }}
+              size="small"
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Stack>
+
+          <Box sx={{ px: 2.5 }}>
+            <Tabs
+              value={orderStatusFilter}
+              onChange={(_, v: OrderStatusFilter) => {
+                setOrderStatusFilter(v);
+                orderTable.onResetPage();
+              }}
+              variant="scrollable"
+              sx={{
+                '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+                '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
+              }}
+            >
+              <Tab value="all" label={`Tất cả (${orderCounts.all})`} />
+              {ORDER_STATUS_OPTIONS.map((status) => (
+                <Tab
+                  key={status}
+                  value={status}
+                  label={`${ORDER_STATUS_LABEL[status]} (${orderCounts[status]})`}
+                />
+              ))}
+            </Tabs>
+          </Box>
+
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Khách hàng</TableCell>
+                  <TableCell>Dịch vụ đã chọn</TableCell>
+                  <TableCell>Giảm giá</TableCell>
+                  <TableCell>Tổng tiền</TableCell>
+                  <TableCell>Lịch hẹn</TableCell>
+                  <TableCell>Ngày đặt</TableCell>
+                  <TableCell>Trạng thái</TableCell>
+                  <TableCell align="right">{t('common.actions')}</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredOrders
+                  .slice(
+                    orderTable.page * orderTable.rowsPerPage,
+                    orderTable.page * orderTable.rowsPerPage + orderTable.rowsPerPage
+                  )
+                  .map((o) => (
+                    <TableRow key={o.id} hover>
+                      <TableCell>
+                        <Stack>
+                          <Typography variant="subtitle2" sx={{ color: SPA2_TEAL_DARK }}>
+                            {o.customer}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {o.phone}
+                          </Typography>
+                        </Stack>
+                      </TableCell>
+                      <TableCell>
+                        <Stack direction="row" spacing={0.5} flexWrap="wrap" sx={{ maxWidth: 260 }}>
+                          {o.services.slice(0, 2).map((s) => (
+                            <Chip key={s} size="small" label={s} sx={{ bgcolor: SPA2_CREAM }} />
+                          ))}
+                          {o.services.length > 2 && (
+                            <Chip size="small" label={`+${o.services.length - 2}`} variant="outlined" />
+                          )}
+                        </Stack>
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          size="small"
+                          label={`${o.discountPercent}%`}
+                          color="warning"
+                          variant="soft"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2" fontWeight={700} sx={{ color: SPA2_TEAL_DARK }}>
+                          {formatVND(o.total)}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">{o.scheduledAt}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">{o.createdAt}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          size="small"
+                          label={ORDER_STATUS_LABEL[o.status]}
+                          color={ORDER_STATUS_COLOR[o.status]}
+                          variant="soft"
+                        />
+                      </TableCell>
+                      <TableCell align="right">
+                        <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
+                          {o.status === 'new' && (
+                            <>
+                              <Tooltip title="Xác nhận">
+                                <IconButton
+                                  size="small"
+                                  color="success"
+                                  onClick={() => handleSetOrderStatus(o.id, 'confirmed')}
+                                >
+                                  <Iconify icon="solar:check-circle-bold" />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Huỷ">
+                                <IconButton
+                                  size="small"
+                                  color="error"
+                                  onClick={() => handleSetOrderStatus(o.id, 'cancelled')}
+                                >
+                                  <Iconify icon="solar:close-circle-bold" />
+                                </IconButton>
+                              </Tooltip>
+                            </>
+                          )}
+                          {o.status === 'confirmed' && (
+                            <>
+                              <Tooltip title="Đánh dấu hoàn tất">
+                                <IconButton
+                                  size="small"
+                                  sx={{ color: SPA2_TEAL_DARK }}
+                                  onClick={() => handleSetOrderStatus(o.id, 'completed')}
+                                >
+                                  <Iconify icon="solar:diploma-bold" />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Huỷ">
+                                <IconButton
+                                  size="small"
+                                  color="error"
+                                  onClick={() => handleSetOrderStatus(o.id, 'cancelled')}
+                                >
+                                  <Iconify icon="solar:close-circle-bold" />
+                                </IconButton>
+                              </Tooltip>
+                            </>
+                          )}
+                          <Tooltip title={t('common.view')}>
+                            <IconButton size="small" onClick={() => setViewOrder(o)}>
+                              <Iconify icon="solar:eye-bold" />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                {filteredOrders.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={8} align="center" sx={{ py: 6, color: 'text.disabled' }}>
+                      {t('common.no_data')}
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePaginationCustom
+            count={filteredOrders.length}
+            page={orderTable.page}
+            rowsPerPage={orderTable.rowsPerPage}
+            onPageChange={orderTable.onChangePage}
+            onRowsPerPageChange={orderTable.onChangeRowsPerPage}
+          />
+        </Card>
+      )}
+
       {/* Live preview - full public page */}
       {tab === 'preview' && (
         <Box sx={{ borderRadius: 3, overflow: 'hidden' }}>
@@ -445,6 +791,68 @@ export function Spa2PackageBuilderManageView() {
           </Button>
         }
       />
+
+      {/* Order view-detail dialog */}
+      <Dialog open={!!viewOrder} onClose={() => setViewOrder(null)} maxWidth="xs" fullWidth>
+        <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>Đơn đặt combo #{viewOrder?.id}</DialogTitle>
+        <DialogContent dividers>
+          {viewOrder && (
+            <Stack spacing={1.5}>
+              {[
+                ['Khách hàng', viewOrder.customer],
+                ['Số điện thoại', viewOrder.phone],
+                ['Giảm giá', `${viewOrder.discountPercent}%`],
+                ['Tổng tiền', formatVND(viewOrder.total)],
+                ['Lịch hẹn', viewOrder.scheduledAt],
+                ['Ngày đặt', viewOrder.createdAt],
+              ].map(([label, value]) => (
+                <Box key={label} sx={{ display: 'flex', gap: 1 }}>
+                  <Typography variant="body2" color="text.secondary" sx={{ minWidth: 110 }}>
+                    {label}:
+                  </Typography>
+                  <Typography variant="body2" fontWeight={500}>
+                    {value}
+                  </Typography>
+                </Box>
+              ))}
+              <Box>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+                  Dịch vụ đã chọn:
+                </Typography>
+                <Stack direction="row" spacing={0.5} flexWrap="wrap">
+                  {viewOrder.services.map((s) => (
+                    <Chip key={s} size="small" label={s} sx={{ bgcolor: SPA2_CREAM }} />
+                  ))}
+                </Stack>
+              </Box>
+              <Divider />
+              <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                <Typography variant="body2" color="text.secondary" sx={{ minWidth: 110 }}>
+                  Trạng thái:
+                </Typography>
+                <TextField
+                  select
+                  size="small"
+                  value={viewOrder.status}
+                  onChange={(e) =>
+                    handleSetOrderStatus(viewOrder.id, e.target.value as Spa2PackageBuilderOrderStatus)
+                  }
+                  sx={{ flex: 1 }}
+                >
+                  {ORDER_STATUS_OPTIONS.map((s) => (
+                    <MenuItem key={s} value={s}>
+                      {ORDER_STATUS_LABEL[s]}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Box>
+            </Stack>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setViewOrder(null)}>{t('common.close')}</Button>
+        </DialogActions>
+      </Dialog>
     </Spa2ManageShell>
   );
 }

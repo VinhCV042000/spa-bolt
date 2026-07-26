@@ -6381,4 +6381,528 @@ export const spa2Ingredients: Spa2Ingredient[] = [
   },
 ];
 
+// ---------- Đặt gói dịp đặc biệt (admin-only operational data) -----------
+
+export type Spa2OccasionBookingStatus = 'new' | 'confirmed' | 'completed' | 'cancelled';
+
+export type Spa2OccasionBooking = {
+  id: number;
+  customer: string;
+  phone: string;
+  email: string;
+  packageId: string;
+  packageTitle: string;
+  eventDate: string;
+  note: string;
+  createdAt: string;
+  status: Spa2OccasionBookingStatus;
+};
+
+export const SPA2_OCCASION_BOOKINGS: Spa2OccasionBooking[] = [
+  {
+    id: 1,
+    customer: 'Ngô Thanh Trúc',
+    phone: '0901 222 333',
+    email: 'truc.ngo@gmail.com',
+    packageId: 'bridal',
+    packageTitle: 'Bridal Glow Package',
+    eventDate: '2026-08-14',
+    note: 'Cần lịch cố định 2 tuần trước cưới',
+    createdAt: '2026-07-01',
+    status: 'confirmed',
+  },
+  {
+    id: 2,
+    customer: 'Đặng Hải Yến',
+    phone: '0912 333 444',
+    email: 'yen.dang@gmail.com',
+    packageId: 'birthday',
+    packageTitle: 'Birthday Luxe Spa',
+    eventDate: '2026-07-25',
+    note: '',
+    createdAt: '2026-07-10',
+    status: 'new',
+  },
+  {
+    id: 3,
+    customer: 'Hồ Nhật Anh',
+    phone: '0923 444 555',
+    email: 'anh.ho@gmail.com',
+    packageId: 'anniversary',
+    packageTitle: 'Anniversary Couple Retreat',
+    eventDate: '2026-07-20',
+    note: 'Kỷ niệm 5 năm cưới',
+    createdAt: '2026-07-05',
+    status: 'completed',
+  },
+  {
+    id: 4,
+    customer: 'Vũ Kim Chi',
+    phone: '0934 555 666',
+    email: 'chi.vu@gmail.com',
+    packageId: 'bachelorette',
+    packageTitle: 'Bachelorette Spa Party',
+    eventDate: '2026-08-02',
+    note: 'Nhóm 6 người',
+    createdAt: '2026-07-12',
+    status: 'cancelled',
+  },
+];
+
+// ---------- Đặt dịch vụ spa tại nhà (admin-only operational data) --------
+
+export type Spa2HomeServiceBookingStatus = 'new' | 'confirmed' | 'onway' | 'completed' | 'cancelled';
+
+export type Spa2HomeServiceBooking = {
+  id: number;
+  customer: string;
+  phone: string;
+  address: string;
+  area: string;
+  serviceId: string;
+  serviceName: string;
+  scheduledAt: string;
+  note: string;
+  createdAt: string;
+  status: Spa2HomeServiceBookingStatus;
+};
+
+export const SPA2_HOME_SERVICE_BOOKINGS: Spa2HomeServiceBooking[] = [
+  {
+    id: 1,
+    customer: 'Lâm Thuý Vy',
+    phone: '0901 666 777',
+    address: '12 Nguyễn Trãi, Q.1',
+    area: 'hcm',
+    serviceId: 'massage-at-home',
+    serviceName: 'Massage Tại Nhà',
+    scheduledAt: '2026-07-20 14:00',
+    note: 'Có chó tại nhà, KTV vui lòng báo trước khi đến',
+    createdAt: '2026-07-15',
+    status: 'confirmed',
+  },
+  {
+    id: 2,
+    customer: 'Bùi Đình Khoa',
+    phone: '0912 777 888',
+    address: '45 Kim Mã, Ba Đình',
+    area: 'hn',
+    serviceId: 'massage-at-home',
+    serviceName: 'Massage Tại Nhà',
+    scheduledAt: '2026-07-22 09:30',
+    note: '',
+    createdAt: '2026-07-16',
+    status: 'new',
+  },
+  {
+    id: 3,
+    customer: 'Trịnh Thu Hà',
+    phone: '0923 888 999',
+    address: '8 Trần Phú, Hải Châu',
+    area: 'dn',
+    serviceId: 'massage-at-home',
+    serviceName: 'Massage Tại Nhà',
+    scheduledAt: '2026-07-18 16:00',
+    note: 'Đã hoàn tất, khách hài lòng',
+    createdAt: '2026-07-10',
+    status: 'completed',
+  },
+  {
+    id: 4,
+    customer: 'Nguyễn Gia Hân',
+    phone: '0934 999 000',
+    address: '20 Lê Lợi, Q.1',
+    area: 'hcm',
+    serviceId: 'massage-at-home',
+    serviceName: 'Massage Tại Nhà',
+    scheduledAt: '2026-07-19 11:00',
+    note: 'Khách huỷ do bận đột xuất',
+    createdAt: '2026-07-11',
+    status: 'cancelled',
+  },
+];
+
+// ---------- Đặt lớp học mindfulness (admin-only operational data) --------
+
+export type Spa2MindfulnessBookingStatus = 'new' | 'confirmed' | 'attended' | 'cancelled';
+
+export type Spa2MindfulnessBooking = {
+  id: number;
+  customer: string;
+  phone: string;
+  email: string;
+  programId: string;
+  programName: string;
+  sessionDate: string;
+  createdAt: string;
+  status: Spa2MindfulnessBookingStatus;
+};
+
+export const SPA2_MINDFULNESS_BOOKINGS: Spa2MindfulnessBooking[] = [
+  {
+    id: 1,
+    customer: 'Phan Nhật Minh',
+    phone: '0901 333 222',
+    email: 'minh.phan@gmail.com',
+    programId: 'morning-flow-yoga',
+    programName: 'Morning Flow Yoga',
+    sessionDate: '2026-07-21',
+    createdAt: '2026-07-14',
+    status: 'confirmed',
+  },
+  {
+    id: 2,
+    customer: 'Đoàn Bảo Ngọc',
+    phone: '0912 222 111',
+    email: 'ngoc.doan@gmail.com',
+    programId: 'thien-chanh-niem',
+    programName: 'Thiền Chánh Niệm',
+    sessionDate: '2026-07-19',
+    createdAt: '2026-07-13',
+    status: 'attended',
+  },
+  {
+    id: 3,
+    customer: 'Lý Thành Đạt',
+    phone: '0923 111 000',
+    email: 'dat.ly@gmail.com',
+    programId: 'yin-yoga-phuc-hoi',
+    programName: 'Yin Yoga Phục Hồi',
+    sessionDate: '2026-07-23',
+    createdAt: '2026-07-16',
+    status: 'new',
+  },
+  {
+    id: 4,
+    customer: 'Trần Mỹ Duyên',
+    phone: '0934 000 999',
+    email: 'duyen.tran@gmail.com',
+    programId: 'morning-flow-yoga',
+    programName: 'Morning Flow Yoga',
+    sessionDate: '2026-07-17',
+    createdAt: '2026-07-08',
+    status: 'cancelled',
+  },
+];
+
+// ---------- Đặt lịch tư vấn thẩm mỹ y khoa (admin-only operational data) -
+
+export type Spa2MedicalConsultationStatus = 'new' | 'confirmed' | 'completed' | 'cancelled';
+
+export type Spa2MedicalConsultationBooking = {
+  id: number;
+  customer: string;
+  phone: string;
+  email: string;
+  treatmentId: string;
+  treatmentName: string;
+  preferredDate: string;
+  note: string;
+  createdAt: string;
+  status: Spa2MedicalConsultationStatus;
+};
+
+export const SPA2_MEDICAL_CONSULTATION_BOOKINGS: Spa2MedicalConsultationBooking[] = [
+  {
+    id: 1,
+    customer: 'Cao Bảo Trân',
+    phone: '0901 444 111',
+    email: 'tran.cao@gmail.com',
+    treatmentId: 'hifu-nang-co',
+    treatmentName: 'HIFU Nâng Cơ',
+    preferredDate: '2026-07-24',
+    note: 'Muốn tư vấn buổi chiều',
+    createdAt: '2026-07-15',
+    status: 'confirmed',
+  },
+  {
+    id: 2,
+    customer: 'Huỳnh Gia Linh',
+    phone: '0912 111 444',
+    email: 'linh.huynh@gmail.com',
+    treatmentId: 'hifu-nang-co',
+    treatmentName: 'HIFU Nâng Cơ',
+    preferredDate: '2026-07-26',
+    note: '',
+    createdAt: '2026-07-17',
+    status: 'new',
+  },
+  {
+    id: 3,
+    customer: 'Đỗ Thiên Kim',
+    phone: '0923 444 000',
+    email: 'kim.do@gmail.com',
+    treatmentId: 'hifu-nang-co',
+    treatmentName: 'HIFU Nâng Cơ',
+    preferredDate: '2026-07-16',
+    note: 'Đã hoàn tất tư vấn, khách đăng ký liệu trình',
+    createdAt: '2026-07-08',
+    status: 'completed',
+  },
+  {
+    id: 4,
+    customer: 'Mai Xuân Trường',
+    phone: '0934 000 444',
+    email: 'truong.mai@gmail.com',
+    treatmentId: 'hifu-nang-co',
+    treatmentName: 'HIFU Nâng Cơ',
+    preferredDate: '2026-07-19',
+    note: 'Khách huỷ hẹn',
+    createdAt: '2026-07-09',
+    status: 'cancelled',
+  },
+];
+
+// ---------- Đổi điểm thưởng thành viên (admin-only operational data) -----
+
+export type Spa2LoyaltyRedemptionStatus = 'new' | 'approved' | 'delivered' | 'cancelled';
+
+export type Spa2LoyaltyRedemption = {
+  id: number;
+  customer: string;
+  phone: string;
+  rewardId: string;
+  rewardName: string;
+  pointsUsed: number;
+  createdAt: string;
+  status: Spa2LoyaltyRedemptionStatus;
+};
+
+export const SPA2_LOYALTY_REDEMPTIONS: Spa2LoyaltyRedemption[] = [
+  {
+    id: 1,
+    customer: 'Nguyễn Phương Thảo',
+    phone: '0901 555 222',
+    rewardId: 'aromatherapy-30',
+    rewardName: 'Aromatherapy 30 phút',
+    pointsUsed: 500,
+    createdAt: '2026-07-12',
+    status: 'delivered',
+  },
+  {
+    id: 2,
+    customer: 'Trương Anh Khoa',
+    phone: '0912 555 333',
+    rewardId: 'voucher-200k',
+    rewardName: 'Voucher 200K dịch vụ',
+    pointsUsed: 200,
+    createdAt: '2026-07-16',
+    status: 'approved',
+  },
+  {
+    id: 3,
+    customer: 'Phùng Ngọc Diễm',
+    phone: '0923 555 444',
+    rewardId: 'natural-oil',
+    rewardName: 'Tinh dầu hương thiên nhiên',
+    pointsUsed: 300,
+    createdAt: '2026-07-17',
+    status: 'new',
+  },
+  {
+    id: 4,
+    customer: 'Lê Thành Long',
+    phone: '0934 555 111',
+    rewardId: 'voucher-200k',
+    rewardName: 'Voucher 200K dịch vụ',
+    pointsUsed: 200,
+    createdAt: '2026-07-05',
+    status: 'cancelled',
+  },
+];
+
+// ---------- Đơn tự chọn combo (Package Builder, admin-only) --------------
+// Trang public /spa2/package-builder cho khách tự chọn dịch vụ + xem chiết
+// khấu theo spa2PackageBuilderDiscountTiers, nhưng bước "Xác nhận đặt lịch"
+// hiện chỉ đổi state UI (setStep('done')), không có backend thật để lưu đơn.
+// Mảng này là dữ liệu mẫu vận hành (giống các mảng "requests/registrations"
+// khác trong dự án) để tab quản lý/thống kê có nội dung thật, không phải kết
+// nối trực tiếp với luồng public.
+
+export type Spa2PackageBuilderOrderStatus = 'new' | 'confirmed' | 'completed' | 'cancelled';
+
+export type Spa2PackageBuilderOrder = {
+  id: number;
+  customer: string;
+  phone: string;
+  services: string[];
+  discountPercent: number;
+  total: number;
+  scheduledAt: string;
+  createdAt: string;
+  status: Spa2PackageBuilderOrderStatus;
+};
+
+export const SPA2_PACKAGE_BUILDER_ORDERS: Spa2PackageBuilderOrder[] = [
+  {
+    id: 1,
+    customer: 'Vương Thảo My',
+    phone: '0901 666 222',
+    services: ['Massage Thảo Dược', 'Facial Organic'],
+    discountPercent: 10,
+    total: 1980000,
+    scheduledAt: '2026-07-25 10:00',
+    createdAt: '2026-07-14',
+    status: 'confirmed',
+  },
+  {
+    id: 2,
+    customer: 'Đinh Quang Vinh',
+    phone: '0912 666 333',
+    services: ['Massage Thảo Dược', 'Body Scrub & Wrap', 'Aromatherapy'],
+    discountPercent: 15,
+    total: 2680000,
+    scheduledAt: '2026-07-27 15:00',
+    createdAt: '2026-07-16',
+    status: 'new',
+  },
+  {
+    id: 3,
+    customer: 'Bạch Yến Nhi',
+    phone: '0923 666 444',
+    services: ['Facial Organic', 'Detox & Thanh Lọc'],
+    discountPercent: 10,
+    total: 2150000,
+    scheduledAt: '2026-07-18 09:00',
+    createdAt: '2026-07-09',
+    status: 'completed',
+  },
+  {
+    id: 4,
+    customer: 'Hoàng Tấn Phát',
+    phone: '0934 666 555',
+    services: ['Spa Đôi', 'Aromatherapy'],
+    discountPercent: 10,
+    total: 2410000,
+    scheduledAt: '2026-07-20 13:00',
+    createdAt: '2026-07-10',
+    status: 'cancelled',
+  },
+];
+
+// ---------- Newsletter - người đăng ký nhận bản tin ----------------------------
+
+export type Spa2NewsletterSubscriberStatus = 'active' | 'unsubscribed';
+
+export type Spa2NewsletterSubscriber = {
+  id: number;
+  email: string;
+  name: string;
+  source: string;
+  subscribedAt: string;
+  status: Spa2NewsletterSubscriberStatus;
+};
+
+export const SPA2_NEWSLETTER_SUBSCRIBERS: Spa2NewsletterSubscriber[] = [
+  {
+    id: 1,
+    email: 'linh.tran@gmail.com',
+    name: 'Trần Thuỳ Linh',
+    source: 'Trang chủ',
+    subscribedAt: '2026-06-02',
+    status: 'active',
+  },
+  {
+    id: 2,
+    email: 'minh.nguyen@gmail.com',
+    name: 'Nguyễn Anh Minh',
+    source: 'Popup ưu đãi',
+    subscribedAt: '2026-06-14',
+    status: 'active',
+  },
+  {
+    id: 3,
+    email: 'huong.pham@gmail.com',
+    name: 'Phạm Thu Hương',
+    source: 'Blog',
+    subscribedAt: '2026-07-01',
+    status: 'unsubscribed',
+  },
+  {
+    id: 4,
+    email: 'khanh.le@gmail.com',
+    name: 'Lê Gia Khánh',
+    source: 'Trang chủ',
+    subscribedAt: '2026-07-15',
+    status: 'active',
+  },
+];
+
+// ---------- Affiliate - đăng ký tham gia chương trình ---------------------------
+
+export type Spa2AffiliateRegistrationStatus = 'new' | 'approved' | 'rejected';
+
+export type Spa2AffiliateRegistration = {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  channel: string;
+  tierId: string;
+  tierName: string;
+  createdAt: string;
+  status: Spa2AffiliateRegistrationStatus;
+};
+
+export const SPA2_AFFILIATE_REGISTRATIONS: Spa2AffiliateRegistration[] = [
+  {
+    id: 1,
+    name: 'Đặng Quốc Bảo',
+    email: 'bao.dang@gmail.com',
+    phone: '0912 345 678',
+    channel: 'Instagram',
+    tierId: 'starter',
+    tierName: 'Starter',
+    createdAt: '2026-06-20',
+    status: 'approved',
+  },
+  {
+    id: 2,
+    name: 'Vũ Thị Mai Anh',
+    email: 'maianh.vu@gmail.com',
+    phone: '0987 654 321',
+    channel: 'TikTok',
+    tierId: 'pro',
+    tierName: 'Pro',
+    createdAt: '2026-07-05',
+    status: 'new',
+  },
+  {
+    id: 3,
+    name: 'Ngô Hải Đăng',
+    email: 'dang.ngo@gmail.com',
+    phone: '0909 111 222',
+    channel: 'Facebook',
+    tierId: 'starter',
+    tierName: 'Starter',
+    createdAt: '2026-07-12',
+    status: 'new',
+  },
+  {
+    id: 4,
+    name: 'Bùi Thanh Trúc',
+    email: 'truc.bui@gmail.com',
+    phone: '0933 222 111',
+    channel: 'Website',
+    tierId: 'elite',
+    tierName: 'Elite',
+    createdAt: '2026-06-28',
+    status: 'rejected',
+  },
+];
+
+// ---------- Ingredient guide - danh mục thành phần ------------------------------
+
+export type Spa2IngredientCategory = { value: string; label: string };
+
+export const SPA2_INGREDIENT_CATEGORIES: Spa2IngredientCategory[] = [
+  { value: 'all', label: 'Tất cả' },
+  { value: 'moisturizing', label: 'Dưỡng ẩm' },
+  { value: 'brightening', label: 'Sáng da' },
+  { value: 'anti-aging', label: 'Chống lão hóa' },
+  { value: 'acne', label: 'Trị mụn' },
+  { value: 'exfoliating', label: 'Tẩy tế bào' },
+  { value: 'soothing', label: 'Làm dịu' },
+];
+
 // ============================== SPA2 - END ====================================

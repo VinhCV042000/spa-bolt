@@ -80,10 +80,11 @@ const EMPTY_ROOM_FORM = {
   price: 0,
   duration: '',
   image: '',
-  features: '',
 };
 
 const EMPTY_PERK_FORM = { icon: 'solar:star-bold-duotone', title: '', desc: '' };
+
+type FeatureRow = { id: string; value: string };
 
 function SectionCard({
   title,
@@ -220,6 +221,36 @@ function RoomPreviewCard({
   );
 }
 
+// Mirrors a single perk's SoftCard exactly as rendered in the "Trải nghiệm
+// VIP độc quyền" grid on the public page (see Spa2VIPRoomPageView in
+// src/sections/spa2/view/spa2-content-pages4.tsx).
+function PerkPreviewCard({ icon, title, desc }: { icon: string; title: string; desc: string }) {
+  return (
+    <Card
+      sx={{
+        p: 3,
+        borderRadius: 4,
+        border: `1px solid ${SPA2_CREAM_DARK}`,
+        boxShadow: '0 8px 24px rgba(31,42,40,0.05)',
+        textAlign: 'center',
+        bgcolor: 'common.white',
+      }}
+    >
+      <Iconify
+        icon={icon || 'solar:star-bold-duotone'}
+        width={44}
+        sx={{ color: SPA2_TEAL, mb: 1.5 }}
+      />
+      <Typography sx={{ fontWeight: 600, color: SPA2_INK, mb: 0.75 }}>
+        {title || 'Tiêu đề đặc quyền'}
+      </Typography>
+      <Typography sx={{ fontSize: 13, color: 'text.secondary', lineHeight: 1.7 }}>
+        {desc || 'Mô tả đặc quyền…'}
+      </Typography>
+    </Card>
+  );
+}
+
 export function Spa2VipRoomManageView() {
   const { t } = useTranslate('spa2-manage');
 
@@ -257,6 +288,7 @@ export function Spa2VipRoomManageView() {
   const [editRoomId, setEditRoomId] = useState<string | null>(null);
   const [deleteRoomId, setDeleteRoomId] = useState<string | null>(null);
   const [roomForm, setRoomForm] = useState(EMPTY_ROOM_FORM);
+  const [roomFeatures, setRoomFeatures] = useState<FeatureRow[]>([]);
 
   const handleRoomChange =
     (field: keyof typeof roomForm) =>
@@ -266,8 +298,19 @@ export function Spa2VipRoomManageView() {
         [field]: field === 'price' ? Number(e.target.value) : e.target.value,
       }));
 
+  const addRoomFeature = () => {
+    setRoomFeatures((prev) => [...prev, { id: uuidv4(), value: '' }]);
+  };
+  const updateRoomFeature = (id: string, value: string) => {
+    setRoomFeatures((prev) => prev.map((row) => (row.id === id ? { ...row, value } : row)));
+  };
+  const removeRoomFeature = (id: string) => {
+    setRoomFeatures((prev) => prev.filter((row) => row.id !== id));
+  };
+
   const openCreateRoom = () => {
     setRoomForm(EMPTY_ROOM_FORM);
+    setRoomFeatures([]);
     setEditRoomId(null);
     setOpenRoomForm(true);
   };
@@ -279,11 +322,12 @@ export function Spa2VipRoomManageView() {
       price: room.price,
       duration: room.duration,
       image: room.image,
-      features: room.features.join(', '),
     });
+    setRoomFeatures(room.features.map((f) => ({ id: uuidv4(), value: f })));
     setEditRoomId(room.id);
     setOpenRoomForm(true);
   };
+  const roomFeaturesPreview = roomFeatures.map((row) => row.value.trim()).filter(Boolean);
   const handleRoomSubmit = useCallback(() => {
     const next = {
       name: roomForm.name,
@@ -292,10 +336,7 @@ export function Spa2VipRoomManageView() {
       price: Number(roomForm.price),
       duration: roomForm.duration,
       image: roomForm.image,
-      features: roomForm.features
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean),
+      features: roomFeatures.map((row) => row.value.trim()).filter(Boolean),
     };
     if (editRoomId !== null) {
       setRooms((p) => p.map((x) => (x.id === editRoomId ? { ...x, ...next } : x)));
@@ -304,7 +345,7 @@ export function Spa2VipRoomManageView() {
     }
     setOpenRoomForm(false);
     setDirty(true);
-  }, [roomForm, editRoomId]);
+  }, [roomForm, roomFeatures, editRoomId]);
   const handleRoomDelete = useCallback(() => {
     setRooms((p) => p.filter((x) => x.id !== deleteRoomId));
     setDeleteRoomId(null);
@@ -318,10 +359,7 @@ export function Spa2VipRoomManageView() {
     price: Number(roomForm.price),
     duration: roomForm.duration,
     image: roomForm.image,
-    features: roomForm.features
-      .split(',')
-      .map((s) => s.trim())
-      .filter(Boolean),
+    features: roomFeaturesPreview,
   };
 
   // ---- Perks ----
@@ -696,14 +734,50 @@ export function Spa2VipRoomManageView() {
                   onChange={handleRoomChange('image')}
                   fullWidth
                 />
-                <TextField
-                  label={t('vip_room.room_form_features')}
-                  value={roomForm.features}
-                  onChange={handleRoomChange('features')}
-                  fullWidth
-                  multiline
-                  rows={3}
-                />
+                <Box>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    sx={{ mb: 1 }}
+                  >
+                    <Typography variant="caption" color="text.secondary">
+                      Tiện nghi phòng
+                    </Typography>
+                    <Button
+                      size="small"
+                      startIcon={<Iconify icon="mingcute:add-line" width={16} />}
+                      onClick={addRoomFeature}
+                    >
+                      Thêm tiện nghi
+                    </Button>
+                  </Stack>
+                  {roomFeatures.length === 0 && (
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                      Chưa có tiện nghi nào — nhấn &quot;Thêm tiện nghi&quot; để bắt đầu.
+                    </Typography>
+                  )}
+                  <Stack spacing={1}>
+                    {roomFeatures.map((row) => (
+                      <Stack key={row.id} direction="row" spacing={1} alignItems="center">
+                        <TextField
+                          fullWidth
+                          size="small"
+                          value={row.value}
+                          onChange={(e) => updateRoomFeature(row.id, e.target.value)}
+                          placeholder="VD: Bồn tắm đá hoa cương"
+                        />
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => removeRoomFeature(row.id)}
+                        >
+                          <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                        </IconButton>
+                      </Stack>
+                    ))}
+                  </Stack>
+                </Box>
               </Stack>
             </Grid>
             <Grid xs={12} md={6}>
@@ -733,34 +807,49 @@ export function Spa2VipRoomManageView() {
       </Dialog>
 
       {/* Perk create / edit dialog */}
-      <Dialog open={openPerkForm} onClose={() => setOpenPerkForm(false)} maxWidth="sm" fullWidth>
+      <Dialog open={openPerkForm} onClose={() => setOpenPerkForm(false)} maxWidth="md" fullWidth>
         <DialogTitle>
           {editPerkId !== null ? t('vip_room.perk_form_edit') : t('vip_room.perk_form_create')}
         </DialogTitle>
         <DialogContent dividers>
-          <Stack spacing={2} sx={{ pt: 1 }}>
-            <TextField
-              label={t('vip_room.perk_form_icon')}
-              value={perkForm.icon}
-              onChange={handlePerkChange('icon')}
-              helperText={t('vip_room.perk_form_icon_help')}
-              fullWidth
-            />
-            <TextField
-              label={t('vip_room.perk_form_title')}
-              value={perkForm.title}
-              onChange={handlePerkChange('title')}
-              fullWidth
-            />
-            <TextField
-              label={t('vip_room.perk_form_desc')}
-              value={perkForm.desc}
-              onChange={handlePerkChange('desc')}
-              fullWidth
-              multiline
-              rows={3}
-            />
-          </Stack>
+          <Grid container spacing={3} sx={{ pt: 1 }}>
+            <Grid xs={12} md={6}>
+              <Stack spacing={2}>
+                <TextField
+                  label={t('vip_room.perk_form_icon')}
+                  value={perkForm.icon}
+                  onChange={handlePerkChange('icon')}
+                  helperText={t('vip_room.perk_form_icon_help')}
+                  fullWidth
+                />
+                <TextField
+                  label={t('vip_room.perk_form_title')}
+                  value={perkForm.title}
+                  onChange={handlePerkChange('title')}
+                  fullWidth
+                />
+                <TextField
+                  label={t('vip_room.perk_form_desc')}
+                  value={perkForm.desc}
+                  onChange={handlePerkChange('desc')}
+                  fullWidth
+                  multiline
+                  rows={3}
+                />
+              </Stack>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <Typography
+                variant="caption"
+                sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
+              >
+                {t('common.preview_btn')}
+              </Typography>
+              <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
+                <PerkPreviewCard icon={perkForm.icon} title={perkForm.title} desc={perkForm.desc} />
+              </Box>
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenPerkForm(false)}>{t('common.cancel')}</Button>

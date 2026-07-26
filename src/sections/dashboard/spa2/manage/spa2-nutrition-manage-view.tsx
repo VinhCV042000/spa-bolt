@@ -240,6 +240,51 @@ function TipPreviewCard({ icon, food, benefit }: { icon: string; food: string; b
   );
 }
 
+// Mirrors a single quiz question card in the public "Trắc nghiệm" section.
+function QuizPreviewCard({ question, options }: { question: string; options: string[] }) {
+  return (
+    <Card
+      sx={{
+        borderRadius: 4,
+        border: `1px solid ${SPA2_CREAM_DARK}`,
+        boxShadow: 'none',
+        overflow: 'hidden',
+      }}
+    >
+      <Box sx={{ p: 3 }}>
+        <Typography sx={{ fontSize: 12, color: 'text.disabled', mb: 2 }}>Câu 1 / 1</Typography>
+        <Typography variant="h6" sx={{ color: SPA2_INK, mb: 3 }}>
+          {question || 'Câu hỏi trắc nghiệm...'}
+        </Typography>
+        <Stack spacing={1.5}>
+          {options.length > 0 ? (
+            options.map((opt, idx) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <Box
+                key={idx}
+                sx={{
+                  py: 1.6,
+                  px: 2.5,
+                  borderRadius: 3,
+                  border: `1.5px solid ${SPA2_CREAM_DARK}`,
+                  color: SPA2_INK,
+                  fontSize: 14,
+                }}
+              >
+                {opt || 'Đáp án...'}
+              </Box>
+            ))
+          ) : (
+            <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
+              Chưa có đáp án nào.
+            </Typography>
+          )}
+        </Stack>
+      </Box>
+    </Card>
+  );
+}
+
 export function Spa2NutritionManageView() {
   const theme = useTheme();
   const { t } = useTranslate('spa2-manage');
@@ -1122,49 +1167,68 @@ export function Spa2NutritionManageView() {
       </Dialog>
 
       {/* Quiz question add/edit dialog */}
-      <Dialog open={quizDialog} onClose={() => setQuizDialog(false)} maxWidth="sm" fullWidth>
+      <Dialog open={quizDialog} onClose={() => setQuizDialog(false)} maxWidth="lg" fullWidth>
         <DialogTitle>{quizEditId ? t('common.edit') : t('nutrition.add_quiz_btn')}</DialogTitle>
         <DialogContent>
-          <Stack spacing={2} sx={{ mt: 0.5 }}>
-            <TextField
-              label={t('nutrition.form_quiz_question')}
-              fullWidth
-              multiline
-              minRows={2}
-              value={quizForm.question}
-              onChange={(e) => setQuizForm((p) => ({ ...p, question: e.target.value }))}
-            />
-            <Stack spacing={1}>
-              <Typography variant="caption" color="text.secondary">
-                {t('nutrition.form_quiz_options')}
-              </Typography>
-              <Stack spacing={1}>
-                {quizForm.options.map((opt, idx) => (
-                  // eslint-disable-next-line react/no-array-index-key
-                  <Stack key={idx} direction="row" spacing={1} alignItems="center">
-                    <TextField
-                      size="small"
-                      fullWidth
-                      value={opt}
-                      onChange={(e) => updateQuizOption(idx, e.target.value)}
-                      placeholder={t('nutrition.form_quiz_option_placeholder')}
-                    />
-                    <IconButton size="small" color="error" onClick={() => removeQuizOption(idx)}>
-                      <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                    </IconButton>
+          <Grid container spacing={3} sx={{ mt: 0.5 }}>
+            <Grid xs={12} sm={6}>
+              <Stack spacing={2}>
+                <TextField
+                  label={t('nutrition.form_quiz_question')}
+                  fullWidth
+                  multiline
+                  minRows={2}
+                  value={quizForm.question}
+                  onChange={(e) => setQuizForm((p) => ({ ...p, question: e.target.value }))}
+                />
+                <Stack spacing={1}>
+                  <Typography variant="caption" color="text.secondary">
+                    {t('nutrition.form_quiz_options')}
+                  </Typography>
+                  <Stack spacing={1}>
+                    {quizForm.options.map((opt, idx) => (
+                      // eslint-disable-next-line react/no-array-index-key
+                      <Stack key={idx} direction="row" spacing={1} alignItems="center">
+                        <TextField
+                          size="small"
+                          fullWidth
+                          value={opt}
+                          onChange={(e) => updateQuizOption(idx, e.target.value)}
+                          placeholder={t('nutrition.form_quiz_option_placeholder')}
+                        />
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => removeQuizOption(idx)}
+                        >
+                          <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                        </IconButton>
+                      </Stack>
+                    ))}
                   </Stack>
-                ))}
+                  <Button
+                    size="small"
+                    startIcon={<Iconify icon="mingcute:add-line" />}
+                    onClick={addQuizOption}
+                    sx={{ alignSelf: 'flex-start', color: SPA2_TEAL }}
+                  >
+                    {t('nutrition.add_quiz_option_btn')}
+                  </Button>
+                </Stack>
               </Stack>
-              <Button
-                size="small"
-                startIcon={<Iconify icon="mingcute:add-line" />}
-                onClick={addQuizOption}
-                sx={{ alignSelf: 'flex-start', color: SPA2_TEAL }}
-              >
-                {t('nutrition.add_quiz_option_btn')}
-              </Button>
-            </Stack>
-          </Stack>
+            </Grid>
+            <Grid xs={12} sm={6}>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+                {t('common.preview_btn')}
+              </Typography>
+              <Box sx={{ bgcolor: 'background.neutral', borderRadius: 3, p: 2 }}>
+                <QuizPreviewCard
+                  question={quizForm.question}
+                  options={quizForm.options.map((s) => s.trim()).filter(Boolean)}
+                />
+              </Box>
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setQuizDialog(false)}>{t('common.cancel')}</Button>

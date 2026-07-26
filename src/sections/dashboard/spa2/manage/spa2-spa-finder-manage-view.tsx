@@ -1,6 +1,8 @@
-import type { Spa2AdjustableImage ,
+import type {
+  Spa2AdjustableImage,
   Spa2SpaFinderBanner,
-  Spa2SpaFinderTherapist} from 'src/_mock/_spa2';
+  Spa2SpaFinderTherapist,
+} from 'src/_mock/_spa2';
 
 import { useState, useCallback } from 'react';
 
@@ -32,17 +34,24 @@ import { uuidv4 } from 'src/utils/uuidv4';
 import { useTranslate } from 'src/locales';
 import {
   spa2SpaFinderBanner,
-  spa2SpaFinderTherapists
+  spa2SpaFinderTherapists,
 } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
 import { Spa2SpaFinderPageView } from 'src/sections/spa2/view/spa2-content-pages4';
-import { SPA2_TEAL, SPA2_TEAL_DARK, SPA2_CREAM_DARK } from 'src/sections/spa2/spa2-pages-data';
+import {
+  SPA2_INK,
+  SPA2_TEAL,
+  SPA2_TEAL_DARK,
+  SPA2_CREAM_DARK,
+} from 'src/sections/spa2/spa2-pages-data';
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2SimpleImageField } from './spa2-simple-image-field';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages4.tsx's
@@ -83,6 +92,104 @@ function PreviewFrame({ children }: { children: React.ReactNode }) {
     >
       {children}
     </Box>
+  );
+}
+
+// Mirrors the KTV list-card markup from Spa2SpaFinderPageView (the public
+// /spa2/spa-finder page) so the add/edit dialog can show a live preview fed
+// by the in-progress form state, without the public card's click-to-open
+// detail dialog interaction.
+type TherapistPreviewData = {
+  name: string;
+  role: string;
+  avatar: string;
+  branch: string;
+  rating: number;
+  reviews: number;
+  exp: string;
+  available: boolean;
+  nextSlot: string;
+};
+
+function TherapistPreviewCard({ data }: { data: TherapistPreviewData }) {
+  return (
+    <Card
+      sx={{
+        p: 2.5,
+        borderRadius: 3,
+        border: `1px solid ${SPA2_CREAM_DARK}`,
+        boxShadow: 'none',
+      }}
+    >
+      <Stack direction="row" spacing={2} alignItems="center">
+        <Box sx={{ position: 'relative', flexShrink: 0 }}>
+          <Avatar src={data.avatar} sx={{ width: 56, height: 56 }} />
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: 0,
+              right: 0,
+              width: 14,
+              height: 14,
+              borderRadius: '50%',
+              bgcolor: data.available ? '#4CAF50' : '#9E9E9E',
+              border: '2px solid white',
+            }}
+          />
+        </Box>
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 0.25 }}>
+            <Typography sx={{ fontWeight: 600, color: SPA2_INK, fontSize: 15 }} noWrap>
+              {data.name || '(Chưa đặt tên)'}
+            </Typography>
+            <Chip
+              label={data.available ? 'Đang rảnh' : 'Bận'}
+              size="small"
+              sx={{
+                bgcolor: data.available ? '#E8F5E9' : SPA2_CREAM_DARK,
+                color: data.available ? '#2E7D32' : 'text.secondary',
+                fontSize: 11,
+                height: 20,
+              }}
+            />
+          </Stack>
+          <Typography sx={{ fontSize: 13, color: SPA2_TEAL, mb: 0.5 }} noWrap>
+            {data.role} · {data.exp}
+          </Typography>
+          <Stack direction="row" spacing={1.5} alignItems="center">
+            <Rating
+              value={data.rating}
+              readOnly
+              size="small"
+              precision={0.1}
+              sx={{ fontSize: 13, '& .MuiRating-icon': { color: '#EF9F27' } }}
+            />
+            <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>
+              ({data.reviews})
+            </Typography>
+            <Typography sx={{ fontSize: 12, color: 'text.disabled' }}>·</Typography>
+            <Iconify icon="solar:map-point-bold" width={12} sx={{ color: SPA2_TEAL }} />
+            <Typography sx={{ fontSize: 12, color: 'text.secondary' }} noWrap>
+              {data.branch}
+            </Typography>
+          </Stack>
+        </Box>
+        <Box sx={{ textAlign: 'right', flexShrink: 0 }}>
+          <Typography sx={{ fontSize: 12, color: 'text.secondary', mb: 0.5 }}>
+            Sớm nhất
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: 13,
+              fontWeight: 600,
+              color: data.available ? '#2E7D32' : 'text.secondary',
+            }}
+          >
+            {data.nextSlot}
+          </Typography>
+        </Box>
+      </Stack>
+    </Card>
   );
 }
 
@@ -172,6 +279,10 @@ export function Spa2SpaFinderManageView() {
     setDeleteId(null);
     setDirty(true);
   }, [deleteId]);
+  const reorderTherapists = useCallback((next: Spa2SpaFinderTherapist[]) => {
+    setTherapists(next);
+    setDirty(true);
+  }, []);
 
   return (
     <Spa2ManageShell
@@ -321,86 +432,113 @@ export function Spa2SpaFinderManageView() {
 
       {/* Therapists */}
       {tab === 'therapists' && (
-        <Grid container spacing={2}>
-          <Grid xs={12}>
-            <Stack direction="row" justifyContent="flex-end" sx={{ mb: 1 }}>
-              <Button
-                variant="contained"
-                startIcon={<Iconify icon="mingcute:add-line" />}
-                onClick={openCreate}
-                sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
-              >
-                {t('spaFinder.therapist_add_btn')}
-              </Button>
-            </Stack>
-          </Grid>
-          {therapists.map((item) => (
-            <Grid key={item.id} xs={12} sm={6} md={4}>
-              <Card sx={{ p: 2.5, borderRadius: 3, height: '100%' }}>
-                <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 1.5 }}>
-                  <Box sx={{ position: 'relative', flexShrink: 0 }}>
-                    <Avatar src={item.avatar} sx={{ width: 52, height: 52 }} />
-                    <Box
-                      sx={{
-                        position: 'absolute',
-                        bottom: 0,
-                        right: 0,
-                        width: 13,
-                        height: 13,
-                        borderRadius: '50%',
-                        bgcolor: item.available ? '#4CAF50' : '#9E9E9E',
-                        border: '2px solid white',
-                      }}
-                    />
-                  </Box>
-                  <Box sx={{ minWidth: 0 }}>
-                    <Typography sx={{ fontWeight: 600, fontSize: 14.5 }} noWrap>
-                      {item.name}
-                    </Typography>
-                    <Typography sx={{ fontSize: 12.5, color: SPA2_TEAL }} noWrap>
-                      {item.role}
-                    </Typography>
-                  </Box>
-                </Stack>
-                <Stack direction="row" spacing={0.75} alignItems="center" sx={{ mb: 1 }}>
-                  <Rating
-                    value={item.rating}
-                    readOnly
-                    size="small"
-                    precision={0.1}
-                    sx={{ fontSize: 14, '& .MuiRating-icon': { color: '#EF9F27' } }}
-                  />
-                  <Typography sx={{ fontSize: 11.5, color: 'text.secondary' }}>
-                    ({item.reviews})
-                  </Typography>
-                </Stack>
-                <Typography sx={{ fontSize: 12.5, color: 'text.secondary', mb: 0.5 }}>
-                  {item.branch}
-                </Typography>
-                <Typography sx={{ fontSize: 12.5, color: 'text.secondary', mb: 1.5 }}>
-                  {item.exp} · {item.nextSlot}
-                </Typography>
-                <Stack direction="row" spacing={0.75} flexWrap="wrap" sx={{ mb: 1.5, gap: 0.5 }}>
-                  {item.specialties.map((s) => (
-                    <Chip key={s} label={s} size="small" sx={{ fontSize: 11, height: 20 }} />
-                  ))}
-                </Stack>
-                <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
-                  <Tooltip title={t('common.edit')}>
-                    <IconButton size="small" onClick={() => openEdit(item)}>
-                      <Iconify icon="solar:pen-bold" />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title={t('common.delete')}>
-                    <IconButton size="small" color="error" onClick={() => setDeleteId(item.id)}>
-                      <Iconify icon="solar:trash-bin-trash-bold" />
-                    </IconButton>
-                  </Tooltip>
-                </Stack>
-              </Card>
+        <Stack spacing={1.5}>
+          <Stack direction="row" justifyContent="flex-end">
+            <Button
+              variant="contained"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+              onClick={openCreate}
+              sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
+            >
+              {t('spaFinder.therapist_add_btn')}
+            </Button>
+          </Stack>
+          <Typography variant="caption" color="text.secondary">
+            Kéo biểu tượng <Iconify icon="nimbus:drag-dots" width={12} /> để sắp xếp lại thứ tự
+            hiển thị.
+          </Typography>
+          <Spa2SortableGrid items={therapists} onReorder={reorderTherapists}>
+            <Grid container spacing={2}>
+              {therapists.map((item) => (
+                <Grid key={item.id} xs={12} sm={6} md={4}>
+                  <Spa2SortableItem id={item.id}>
+                    {(sortable) => (
+                      <Card sx={{ p: 2.5, borderRadius: 3, height: '100%' }}>
+                        <Stack
+                          direction="row"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          sx={{ mb: 0.5 }}
+                        >
+                          <Spa2DragHandle sortable={sortable} sx={{ ml: -1 }} />
+                          <Stack direction="row" spacing={0.5}>
+                            <Tooltip title={t('common.edit')}>
+                              <IconButton size="small" onClick={() => openEdit(item)}>
+                                <Iconify icon="solar:pen-bold" />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title={t('common.delete')}>
+                              <IconButton
+                                size="small"
+                                color="error"
+                                onClick={() => setDeleteId(item.id)}
+                              >
+                                <Iconify icon="solar:trash-bin-trash-bold" />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </Stack>
+                        <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 1.5 }}>
+                          <Box sx={{ position: 'relative', flexShrink: 0 }}>
+                            <Avatar src={item.avatar} sx={{ width: 52, height: 52 }} />
+                            <Box
+                              sx={{
+                                position: 'absolute',
+                                bottom: 0,
+                                right: 0,
+                                width: 13,
+                                height: 13,
+                                borderRadius: '50%',
+                                bgcolor: item.available ? '#4CAF50' : '#9E9E9E',
+                                border: '2px solid white',
+                              }}
+                            />
+                          </Box>
+                          <Box sx={{ minWidth: 0 }}>
+                            <Typography sx={{ fontWeight: 600, fontSize: 14.5 }} noWrap>
+                              {item.name}
+                            </Typography>
+                            <Typography sx={{ fontSize: 12.5, color: SPA2_TEAL }} noWrap>
+                              {item.role}
+                            </Typography>
+                          </Box>
+                        </Stack>
+                        <Stack direction="row" spacing={0.75} alignItems="center" sx={{ mb: 1 }}>
+                          <Rating
+                            value={item.rating}
+                            readOnly
+                            size="small"
+                            precision={0.1}
+                            sx={{ fontSize: 14, '& .MuiRating-icon': { color: '#EF9F27' } }}
+                          />
+                          <Typography sx={{ fontSize: 11.5, color: 'text.secondary' }}>
+                            ({item.reviews})
+                          </Typography>
+                        </Stack>
+                        <Typography sx={{ fontSize: 12.5, color: 'text.secondary', mb: 0.5 }}>
+                          {item.branch}
+                        </Typography>
+                        <Typography sx={{ fontSize: 12.5, color: 'text.secondary', mb: 1.5 }}>
+                          {item.exp} · {item.nextSlot}
+                        </Typography>
+                        <Stack
+                          direction="row"
+                          spacing={0.75}
+                          flexWrap="wrap"
+                          sx={{ gap: 0.5 }}
+                        >
+                          {item.specialties.map((s) => (
+                            <Chip key={s} label={s} size="small" sx={{ fontSize: 11, height: 20 }} />
+                          ))}
+                        </Stack>
+                      </Card>
+                    )}
+                  </Spa2SortableItem>
+                </Grid>
+              ))}
             </Grid>
-          ))}
-        </Grid>
+          </Spa2SortableGrid>
+        </Stack>
       )}
 
       {/* Live preview - full public page */}
@@ -419,6 +557,24 @@ export function Spa2SpaFinderManageView() {
         </DialogTitle>
         <DialogContent dividers>
           <Stack spacing={2} sx={{ pt: 1 }}>
+            <Box>
+              <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1, display: 'block' }}>
+                {t('common.preview_btn')}
+              </Typography>
+              <TherapistPreviewCard
+                data={{
+                  name: form.name,
+                  role: form.role,
+                  avatar: form.avatar,
+                  branch: form.branch,
+                  rating: form.rating,
+                  reviews: form.reviews,
+                  exp: form.exp,
+                  available: form.available,
+                  nextSlot: form.nextSlot,
+                }}
+              />
+            </Box>
             <TextField
               label={t('spaFinder.therapist_form_name')}
               value={form.name}
@@ -431,11 +587,13 @@ export function Spa2SpaFinderManageView() {
               onChange={(e) => setForm((p) => ({ ...p, role: e.target.value }))}
               fullWidth
             />
-            <TextField
+            <Spa2SimpleImageField
               label={t('spaFinder.therapist_form_avatar')}
               value={form.avatar}
-              onChange={(e) => setForm((p) => ({ ...p, avatar: e.target.value }))}
-              fullWidth
+              onChange={(avatar) => setForm((p) => ({ ...p, avatar }))}
+              height={140}
+              rounded
+              helperText="Ảnh đại diện vuông/chân dung, khuyên dùng ảnh rõ mặt KTV."
             />
             <TextField
               label={t('spaFinder.therapist_form_branch')}

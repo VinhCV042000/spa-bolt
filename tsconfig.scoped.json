@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [],
+  "files": [
+    "src/sections/dashboard/spa2/manage/spa2-appointment-manage-view.tsx",
+    "src/sections/dashboard/spa2/manage/spa2-newsletter-manage-view.tsx",
+    "src/sections/dashboard/spa2/manage/spa2-press-manage-view.tsx",
+    "src/sections/dashboard/spa2/manage/spa2-affiliate-manage-view.tsx",
+    "src/sections/dashboard/spa2/manage/spa2-spa-finder-manage-view.tsx",
+    "src/sections/dashboard/spa2/manage/spa2-spa-menu-manage-view.tsx",
+    "src/sections/dashboard/spa2/manage/spa2-ingredient-guide-manage-view.tsx"
+  ]
+}
