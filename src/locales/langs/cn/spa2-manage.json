@@ -1102,7 +1102,8 @@
     "add_category_btn": "添加分类",
     "category_all_locked": "全部（已锁定）",
     "form_category_label": "分类名称",
-    "form_package_category": "分类"
+    "form_package_category": "分类",
+    "reorder_filter_hint": "按分类筛选中——拖放仅在当前筛选范围内重新排序。"
   },
   "home_service": {
     "page_title": "上门服务管理",
@@ -1268,7 +1269,8 @@
     "form_reward_name": "奖励名称",
     "form_reward_points": "所需积分",
     "form_reward_stock": "剩余数量",
-    "form_reward_image": "奖励图片"
+    "form_reward_image": "奖励图片",
+    "reorder_filter_hint": "按分类筛选中——拖放仅在当前筛选范围内重新排序。"
   },
   "review": {
     "page_title": "管理评价",
@@ -1303,7 +1305,8 @@
     "form_package_name": "套餐名称",
     "form_package_price": "价格（VND）",
     "form_package_desc": "描述",
-    "form_package_image": "套餐图片"
+    "form_package_image": "套餐图片",
+    "reorder_filter_hint": "按季节筛选中——拖放仅在当前筛选范围内重新排序。"
   },
   "nutrition": {
     "page_title": "管理营养计划",
@@ -1340,7 +1343,9 @@
     "form_quiz_question": "问题",
     "form_quiz_options": "选项",
     "form_quiz_option_placeholder": "输入一个选项...",
-    "add_quiz_option_btn": "添加选项"
+    "add_quiz_option_btn": "添加选项",
+    "bookings_section": "咨询预约管理",
+    "booking_stats_section": "预约统计"
   },
   "consultation": {
     "page_title": "管理专家咨询",
@@ -1413,7 +1418,10 @@
     "perk_form_title": "标题",
     "perk_form_desc": "描述",
     "perk_delete_title": "删除权益",
-    "perk_delete_content": "此权益将被永久删除。"
+    "perk_delete_content": "此权益将被永久删除。",
+    "room_form_image_help": "将图片拖放到此处，或粘贴房间图片链接。",
+    "bookings_section": "VIP房间预订管理",
+    "booking_stats_section": "预订统计"
   },
   "package_builder": {
     "page_title": "管理自选套餐",

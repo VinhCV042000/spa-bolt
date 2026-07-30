@@ -426,6 +426,10 @@ export function Spa2MedicalSpaManageView() {
     setCredentialDeleteId(null);
     markDirty();
   };
+  const reorderCredentials = (next: Spa2MedicalSpaCredential[]) => {
+    setCredentials(next);
+    markDirty();
+  };
 
   // ---- Categories ----
   const [categories, setCategories] = useState<Spa2MedicalSpaCategory[]>(() =>
@@ -787,32 +791,38 @@ export function Spa2MedicalSpaManageView() {
                 </Button>
               }
             >
-              <Stack spacing={1.5}>
-                {credentials.map((item) => (
-                  <Stack
-                    key={item.id}
-                    direction="row"
-                    alignItems="center"
-                    spacing={2}
-                    sx={{ p: 1.5, borderRadius: 2, border: `1px solid ${SPA2_CREAM_DARK}` }}
-                  >
-                    <Iconify icon={item.icon} width={20} sx={{ color: SPA2_TEAL }} />
-                    <Typography sx={{ flex: 1, fontSize: 13, color: SPA2_INK }}>
-                      {item.text}
-                    </Typography>
-                    <IconButton size="small" onClick={() => openEditCredential(item)}>
-                      <Iconify icon="solar:pen-bold" width={16} />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      color="error"
-                      onClick={() => setCredentialDeleteId(item.id)}
-                    >
-                      <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                    </IconButton>
-                  </Stack>
-                ))}
-              </Stack>
+              <Spa2SortableGrid items={credentials} onReorder={reorderCredentials}>
+                <Stack spacing={1.5}>
+                  {credentials.map((item) => (
+                    <Spa2SortableItem key={item.id} id={item.id}>
+                      {(sortable) => (
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          spacing={2}
+                          sx={{ p: 1.5, borderRadius: 2, border: `1px solid ${SPA2_CREAM_DARK}` }}
+                        >
+                          <Spa2DragHandle sortable={sortable} />
+                          <Iconify icon={item.icon} width={20} sx={{ color: SPA2_TEAL }} />
+                          <Typography sx={{ flex: 1, fontSize: 13, color: SPA2_INK }}>
+                            {item.text}
+                          </Typography>
+                          <IconButton size="small" onClick={() => openEditCredential(item)}>
+                            <Iconify icon="solar:pen-bold" width={16} />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => setCredentialDeleteId(item.id)}
+                          >
+                            <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                          </IconButton>
+                        </Stack>
+                      )}
+                    </Spa2SortableItem>
+                  ))}
+                </Stack>
+              </Spa2SortableGrid>
             </SectionCard>
           </Grid>
           <Grid xs={12} md={5}>

@@ -308,7 +308,6 @@ export function Spa2CorporateManageView() {
     setBenefitDeleteId(null);
     markDirty();
   };
-
   // ---- Plans ----
   const [plans, setPlans] = useState<Spa2CorporatePlan[]>(() =>
     spa2CorporatePlans.map((p) => ({ ...p, perks: [...p.perks] }))

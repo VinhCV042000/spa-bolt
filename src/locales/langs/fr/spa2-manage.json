@@ -1102,7 +1102,8 @@
     "add_category_btn": "Ajouter une catégorie",
     "category_all_locked": "Toutes (verrouillé)",
     "form_category_label": "Nom de la catégorie",
-    "form_package_category": "Catégorie"
+    "form_package_category": "Catégorie",
+    "reorder_filter_hint": "Filtré par catégorie — le glisser-déposer ne réorganise que dans le filtre actuel."
   },
   "home_service": {
     "page_title": "Gestion du Service à Domicile",
@@ -1268,7 +1269,8 @@
     "form_reward_name": "Nom de la récompense",
     "form_reward_points": "Points requis",
     "form_reward_stock": "Stock restant",
-    "form_reward_image": "Image de la récompense"
+    "form_reward_image": "Image de la récompense",
+    "reorder_filter_hint": "Filtré par catégorie — le glisser-déposer ne réorganise que dans le filtre actuel."
   },
   "review": {
     "page_title": "Gérer les Avis",
@@ -1303,7 +1305,8 @@
     "form_package_name": "Nom du forfait",
     "form_package_price": "Prix (VND)",
     "form_package_desc": "Description",
-    "form_package_image": "Image du forfait"
+    "form_package_image": "Image du forfait",
+    "reorder_filter_hint": "Filtré par saison — le glisser-déposer ne réorganise que dans le filtre actuel."
   },
   "nutrition": {
     "page_title": "Gérer les programmes nutritionnels",
@@ -1340,7 +1343,9 @@
     "form_quiz_question": "Question",
     "form_quiz_options": "Options",
     "form_quiz_option_placeholder": "Saisissez une option...",
-    "add_quiz_option_btn": "Ajouter une option"
+    "add_quiz_option_btn": "Ajouter une option",
+    "bookings_section": "Réservations de consultation",
+    "booking_stats_section": "Statistiques des réservations"
   },
   "consultation": {
     "page_title": "Gérer la consultation d’experts",
@@ -1413,7 +1418,10 @@
     "perk_form_title": "Titre",
     "perk_form_desc": "Description",
     "perk_delete_title": "Supprimer l'avantage",
-    "perk_delete_content": "Cet avantage sera définitivement supprimé."
+    "perk_delete_content": "Cet avantage sera définitivement supprimé.",
+    "room_form_image_help": "Glissez-déposez une image ici ou collez l'URL de l'image de la chambre.",
+    "bookings_section": "Réservations de chambres VIP",
+    "booking_stats_section": "Statistiques des réservations"
   },
   "package_builder": {
     "page_title": "Gérer le créateur de forfait",

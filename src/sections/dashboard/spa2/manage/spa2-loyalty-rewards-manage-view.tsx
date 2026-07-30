@@ -345,6 +345,19 @@ export function Spa2LoyaltyRewardsManageView() {
     setRewardDeleteId(null);
     markDirty();
   };
+  const reorderRewards = (next: Spa2LoyaltyReward[]) => {
+    if (rewardFilter === 'all') {
+      setRewards(next);
+    } else {
+      // Filtered view: splice the reordered subset back into its original
+      // slots within the full list so rewards outside the current filter
+      // keep their relative position.
+      const queue = [...next];
+      const nextIds = new Set(next.map((r) => r.id));
+      setRewards((prev) => prev.map((r) => (nextIds.has(r.id) ? queue.shift()! : r)));
+    }
+    markDirty();
+  };
 
   // ---- Đổi điểm thưởng (redemptions) ----
   const rewardById = useMemo(() => new Map(rewards.map((r) => [r.id, r])), [rewards]);
@@ -387,9 +400,7 @@ export function Spa2LoyaltyRewardsManageView() {
 
   const totalPointsRedeemed = useMemo(
     () =>
-      redemptions
-        .filter((r) => r.status !== 'cancelled')
-        .reduce((sum, r) => sum + r.pointsUsed, 0),
+      redemptions.filter((r) => r.status !== 'cancelled').reduce((sum, r) => sum + r.pointsUsed, 0),
     [redemptions]
   );
 
@@ -841,36 +852,51 @@ export function Spa2LoyaltyRewardsManageView() {
               </Button>
             </Stack>
           </Stack>
-          <Grid container spacing={2}>
-            {filteredRewards.map((item) => (
-              <Grid key={item.id} xs={12} sm={6} md={3}>
-                <Box sx={{ position: 'relative' }}>
-                  <RewardPreviewCard {...item} />
-                  <Stack
-                    direction="row"
-                    spacing={0.5}
-                    sx={{ position: 'absolute', top: 8, left: 8 }}
-                  >
-                    <IconButton
-                      size="small"
-                      onClick={() => openEditReward(item)}
-                      sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                    >
-                      <Iconify icon="solar:pen-bold" width={14} />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      color="error"
-                      onClick={() => setRewardDeleteId(item.id)}
-                      sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                    >
-                      <Iconify icon="solar:trash-bin-trash-bold" width={14} />
-                    </IconButton>
-                  </Stack>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
+          {rewardFilter !== 'all' && (
+            <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1, display: 'block' }}>
+              {t('loyalty_rewards.reorder_filter_hint')}
+            </Typography>
+          )}
+          <Spa2SortableGrid items={filteredRewards} onReorder={reorderRewards}>
+            <Grid container spacing={2}>
+              {filteredRewards.map((item) => (
+                <Grid key={item.id} xs={12} sm={6} md={3}>
+                  <Spa2SortableItem id={item.id}>
+                    {(sortable) => (
+                      <Box sx={{ position: 'relative' }}>
+                        <RewardPreviewCard {...item} />
+                        <Stack
+                          direction="row"
+                          spacing={0.5}
+                          sx={{ position: 'absolute', top: 8, left: 8 }}
+                        >
+                          <Spa2DragHandle
+                            sortable={sortable}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          />
+                          <IconButton
+                            size="small"
+                            onClick={() => openEditReward(item)}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          >
+                            <Iconify icon="solar:pen-bold" width={14} />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => setRewardDeleteId(item.id)}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          >
+                            <Iconify icon="solar:trash-bin-trash-bold" width={14} />
+                          </IconButton>
+                        </Stack>
+                      </Box>
+                    )}
+                  </Spa2SortableItem>
+                </Grid>
+              ))}
+            </Grid>
+          </Spa2SortableGrid>
         </Card>
       )}
 
@@ -1078,7 +1104,12 @@ export function Spa2LoyaltyRewardsManageView() {
                         <TableCell>
                           <Stack>
                             <Typography variant="body2">{item.rewardName}</Typography>
-                            <Stack direction="row" spacing={0.75} alignItems="center" sx={{ mt: 0.5 }}>
+                            <Stack
+                              direction="row"
+                              spacing={0.75}
+                              alignItems="center"
+                              sx={{ mt: 0.5 }}
+                            >
                               <Chip
                                 size="small"
                                 label={item.rewardId}
@@ -1096,7 +1127,11 @@ export function Spa2LoyaltyRewardsManageView() {
                           </Stack>
                         </TableCell>
                         <TableCell>
-                          <Typography variant="body2" fontWeight={700} sx={{ color: SPA2_TEAL_DARK }}>
+                          <Typography
+                            variant="body2"
+                            fontWeight={700}
+                            sx={{ color: SPA2_TEAL_DARK }}
+                          >
                             {item.pointsUsed.toLocaleString('vi-VN')} điểm
                           </Typography>
                         </TableCell>

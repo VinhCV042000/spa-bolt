@@ -421,9 +421,9 @@ export function Spa2SpecialOccasionsManageView() {
   }));
   const [dirty, setDirty] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
-  const [tab, setTab] = useState<
-    'banner' | 'categories' | 'packages' | 'bookings' | 'preview'
-  >('banner');
+  const [tab, setTab] = useState<'banner' | 'categories' | 'packages' | 'bookings' | 'preview'>(
+    'banner'
+  );
   const markDirty = () => setDirty(true);
 
   // ---- Banner ----
@@ -557,6 +557,19 @@ export function Spa2SpecialOccasionsManageView() {
   const confirmDeletePackage = () => {
     setPackages((prev) => prev.filter((p) => p.id !== packageDeleteId));
     setPackageDeleteId(null);
+    markDirty();
+  };
+  const reorderPackages = (next: Spa2OccasionPackage[]) => {
+    if (packageFilter === 'all') {
+      setPackages(next);
+    } else {
+      // Filtered view: splice the reordered subset back into its original
+      // slots within the full list so packages outside the current filter
+      // keep their relative position.
+      const queue = [...next];
+      const nextIds = new Set(next.map((p) => p.id));
+      setPackages((prev) => prev.map((p) => (nextIds.has(p.id) ? queue.shift()! : p)));
+    }
     markDirty();
   };
 
@@ -897,45 +910,62 @@ export function Spa2SpecialOccasionsManageView() {
               </Button>
             </Stack>
           </Stack>
-          <Grid container spacing={2}>
-            {filteredPackages.map((item) => (
-              <Grid key={item.id} xs={12} sm={6} md={4}>
-                <Box
-                  onClick={() => setPackageViewItem(item)}
-                  sx={{ position: 'relative', cursor: 'pointer' }}
-                >
-                  <PackagePreviewCard {...item} />
-                  <Stack
-                    direction="row"
-                    spacing={0.5}
-                    sx={{ position: 'absolute', top: 8, right: 8 }}
-                  >
-                    <IconButton
-                      size="small"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openEditPackage(item);
-                      }}
-                      sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                    >
-                      <Iconify icon="solar:pen-bold" width={14} />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      color="error"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setPackageDeleteId(item.id);
-                      }}
-                      sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                    >
-                      <Iconify icon="solar:trash-bin-trash-bold" width={14} />
-                    </IconButton>
-                  </Stack>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
+          {packageFilter !== 'all' && (
+            <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1, display: 'block' }}>
+              {t('special_occasions.reorder_filter_hint')}
+            </Typography>
+          )}
+          <Spa2SortableGrid items={filteredPackages} onReorder={reorderPackages}>
+            <Grid container spacing={2}>
+              {filteredPackages.map((item) => (
+                <Grid key={item.id} xs={12} sm={6} md={4}>
+                  <Spa2SortableItem id={item.id}>
+                    {(sortable) => (
+                      <Box
+                        onClick={() => setPackageViewItem(item)}
+                        sx={{ position: 'relative', cursor: 'pointer' }}
+                      >
+                        <PackagePreviewCard {...item} />
+                        <Stack
+                          direction="row"
+                          spacing={0.5}
+                          sx={{ position: 'absolute', top: 8, right: 8 }}
+                        >
+                          <Box onClick={(e) => e.stopPropagation()}>
+                            <Spa2DragHandle
+                              sortable={sortable}
+                              sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                            />
+                          </Box>
+                          <IconButton
+                            size="small"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openEditPackage(item);
+                            }}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          >
+                            <Iconify icon="solar:pen-bold" width={14} />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setPackageDeleteId(item.id);
+                            }}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          >
+                            <Iconify icon="solar:trash-bin-trash-bold" width={14} />
+                          </IconButton>
+                        </Stack>
+                      </Box>
+                    )}
+                  </Spa2SortableItem>
+                </Grid>
+              ))}
+            </Grid>
+          </Spa2SortableGrid>
         </Card>
       )}
 

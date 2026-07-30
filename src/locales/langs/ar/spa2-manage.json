@@ -1102,7 +1102,8 @@
     "add_category_btn": "إضافة فئة",
     "category_all_locked": "الكل (مقفل)",
     "form_category_label": "اسم الفئة",
-    "form_package_category": "الفئة"
+    "form_package_category": "الفئة",
+    "reorder_filter_hint": "التصفية حسب الفئة — السحب والإفلات يعيد الترتيب فقط ضمن التصفية الحالية."
   },
   "home_service": {
     "page_title": "إدارة الخدمة المنزلية",
@@ -1268,7 +1269,8 @@
     "form_reward_name": "اسم المكافأة",
     "form_reward_points": "النقاط المطلوبة",
     "form_reward_stock": "الكمية المتبقية",
-    "form_reward_image": "صورة المكافأة"
+    "form_reward_image": "صورة المكافأة",
+    "reorder_filter_hint": "التصفية حسب الفئة — السحب والإفلات يعيد الترتيب فقط ضمن التصفية الحالية."
   },
   "review": {
     "page_title": "إدارة التقييمات",
@@ -1303,7 +1305,8 @@
     "form_package_name": "اسم الباقة",
     "form_package_price": "السعر (VND)",
     "form_package_desc": "الوصف",
-    "form_package_image": "صورة الباقة"
+    "form_package_image": "صورة الباقة",
+    "reorder_filter_hint": "التصفية حسب الموسم — السحب والإفلات يعيد الترتيب فقط ضمن التصفية الحالية."
   },
   "nutrition": {
     "page_title": "إدارة برامج التغذية",
@@ -1340,7 +1343,9 @@
     "form_quiz_question": "السؤال",
     "form_quiz_options": "الخيارات",
     "form_quiz_option_placeholder": "أدخل خيارًا...",
-    "add_quiz_option_btn": "إضافة خيار"
+    "add_quiz_option_btn": "إضافة خيار",
+    "bookings_section": "إدارة حجوزات الاستشارة",
+    "booking_stats_section": "إحصائيات الحجوزات"
   },
   "consultation": {
     "page_title": "إدارة استشارة الخبراء",
@@ -1413,7 +1418,10 @@
     "perk_form_title": "العنوان",
     "perk_form_desc": "الوصف",
     "perk_delete_title": "حذف الامتياز",
-    "perk_delete_content": "سيتم حذف هذا الامتياز نهائيًا."
+    "perk_delete_content": "سيتم حذف هذا الامتياز نهائيًا.",
+    "room_form_image_help": "اسحب وأفلت صورة هنا أو الصق رابط صورة الغرفة.",
+    "bookings_section": "إدارة حجوزات الغرف VIP",
+    "booking_stats_section": "إحصائيات الحجوزات"
   },
   "package_builder": {
     "page_title": "إدارة منشئ الباقات",

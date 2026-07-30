@@ -392,6 +392,10 @@ export function Spa2MindfulnessManageView() {
     setBenefitDeleteId(null);
     markDirty();
   };
+  const reorderBenefits = (next: Spa2MindfulnessBenefit[]) => {
+    setBenefits(next);
+    markDirty();
+  };
 
   // ---- Programs ----
   const [programs, setPrograms] = useState<Spa2MindfulnessProgram[]>(() =>
@@ -722,36 +726,46 @@ export function Spa2MindfulnessManageView() {
               {t('mindfulness.add_benefit_btn')}
             </Button>
           </Stack>
-          <Grid container spacing={2}>
-            {benefits.map((item) => (
-              <Grid key={item.id} xs={12} sm={6} md={3}>
-                <Box sx={{ position: 'relative' }}>
-                  <BenefitPreviewCard icon={item.icon} title={item.title} desc={item.desc} />
-                  <Stack
-                    direction="row"
-                    spacing={0.5}
-                    sx={{ position: 'absolute', top: 8, right: 8 }}
-                  >
-                    <IconButton
-                      size="small"
-                      onClick={() => openEditBenefit(item)}
-                      sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                    >
-                      <Iconify icon="solar:pen-bold" width={14} />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      color="error"
-                      onClick={() => setBenefitDeleteId(item.id)}
-                      sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                    >
-                      <Iconify icon="solar:trash-bin-trash-bold" width={14} />
-                    </IconButton>
-                  </Stack>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
+          <Spa2SortableGrid items={benefits} onReorder={reorderBenefits}>
+            <Grid container spacing={2}>
+              {benefits.map((item) => (
+                <Grid key={item.id} xs={12} sm={6} md={3}>
+                  <Spa2SortableItem id={item.id}>
+                    {(sortable) => (
+                      <Box sx={{ position: 'relative' }}>
+                        <BenefitPreviewCard icon={item.icon} title={item.title} desc={item.desc} />
+                        <Stack
+                          direction="row"
+                          spacing={0.5}
+                          sx={{ position: 'absolute', top: 8, right: 8 }}
+                        >
+                          <Spa2DragHandle
+                            sortable={sortable}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          />
+                          <IconButton
+                            size="small"
+                            onClick={() => openEditBenefit(item)}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          >
+                            <Iconify icon="solar:pen-bold" width={14} />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => setBenefitDeleteId(item.id)}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          >
+                            <Iconify icon="solar:trash-bin-trash-bold" width={14} />
+                          </IconButton>
+                        </Stack>
+                      </Box>
+                    )}
+                  </Spa2SortableItem>
+                </Grid>
+              ))}
+            </Grid>
+          </Spa2SortableGrid>
         </Card>
       )}
 
@@ -958,9 +972,7 @@ export function Spa2MindfulnessManageView() {
               <Stack
                 spacing={1}
                 direction="row"
-                divider={
-                  <Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />
-                }
+                divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
                 sx={{ py: 1 }}
               >
                 <Spa2ListAnalytic

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -8,17 +8,27 @@ import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Tabs from '@mui/material/Tabs';
 import Stack from '@mui/material/Stack';
+import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
+import TableRow from '@mui/material/TableRow';
 import Grid from '@mui/material/Unstable_Grid2';
 import TextField from '@mui/material/TextField';
 import { useTheme } from '@mui/material/styles';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import InputAdornment from '@mui/material/InputAdornment';
+import LinearProgress from '@mui/material/LinearProgress';
+import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 
@@ -36,10 +46,16 @@ import {
   type Spa2NutritionStat,
   type Spa2AdjustableImage,
   type Spa2NutritionBanner,
+  SPA2_NUTRITION_CONSULTATION_BOOKINGS,
+  type Spa2NutritionConsultationStatus,
+  type Spa2NutritionConsultationBooking,
 } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { useTable } from 'src/components/table/use-table';
 import { ConfirmDialog } from 'src/components/custom-dialog';
+import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
 
 import {
   Spa2ContentPageHero4,
@@ -56,6 +72,7 @@ import {
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2ListAnalytic } from './spa2-list-analytic';
 import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
@@ -96,6 +113,32 @@ const EMPTY_QUIZ_FORM = {
   question: '',
   options: [] as string[],
 };
+
+const NUTRITION_BOOKING_STATUS_LABEL: Record<Spa2NutritionConsultationStatus, string> = {
+  new: 'Mới',
+  confirmed: 'Đã xác nhận',
+  completed: 'Đã hoàn tất',
+  cancelled: 'Đã huỷ',
+};
+
+const NUTRITION_BOOKING_STATUS_COLOR: Record<
+  Spa2NutritionConsultationStatus,
+  'info' | 'warning' | 'success' | 'error'
+> = {
+  new: 'info',
+  confirmed: 'warning',
+  completed: 'success',
+  cancelled: 'error',
+};
+
+const NUTRITION_BOOKING_STATUS_OPTIONS: Spa2NutritionConsultationStatus[] = [
+  'new',
+  'confirmed',
+  'completed',
+  'cancelled',
+];
+
+type NutritionBookingStatusFilter = Spa2NutritionConsultationStatus | 'all';
 
 function SectionCard({
   title,
@@ -285,6 +328,36 @@ function QuizPreviewCard({ question, options }: { question: string; options: str
   );
 }
 
+// KPI tile used on the "booking_stats" tab.
+function StatCard({ icon, label, value }: { icon: string; label: string; value: string | number }) {
+  return (
+    <Card sx={{ p: 2, borderRadius: 2.5, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+      <Box
+        sx={{
+          width: 40,
+          height: 40,
+          borderRadius: 2,
+          bgcolor: SPA2_CREAM_DARK,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0,
+        }}
+      >
+        <Iconify icon={icon} width={20} sx={{ color: SPA2_TEAL }} />
+      </Box>
+      <Box>
+        <Typography variant="h6" sx={{ color: SPA2_INK, lineHeight: 1.2 }}>
+          {value}
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          {label}
+        </Typography>
+      </Box>
+    </Card>
+  );
+}
+
 export function Spa2NutritionManageView() {
   const theme = useTheme();
   const { t } = useTranslate('spa2-manage');
@@ -295,9 +368,9 @@ export function Spa2NutritionManageView() {
   }));
   const [dirty, setDirty] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
-  const [tab, setTab] = useState<'banner' | 'stats' | 'plans' | 'tips' | 'quiz' | 'preview'>(
-    'banner'
-  );
+  const [tab, setTab] = useState<
+    'banner' | 'stats' | 'plans' | 'tips' | 'quiz' | 'bookings' | 'booking_stats' | 'preview'
+  >('banner');
   const markDirty = () => setDirty(true);
 
   // ---- Banner ----
@@ -410,6 +483,10 @@ export function Spa2NutritionManageView() {
   const removePlanInclude = (idx: number) => {
     setPlanForm((p) => ({ ...p, includes: p.includes.filter((_, i) => i !== idx) }));
   };
+  const reorderPlans = (next: Spa2NutritionPlan[]) => {
+    setPlans(next);
+    markDirty();
+  };
 
   // ---- Superfood tips ----
   const [tips, setTips] = useState<Spa2SuperfoodTip[]>(() =>
@@ -504,6 +581,83 @@ export function Spa2NutritionManageView() {
     setQuizForm((p) => ({ ...p, options: p.options.filter((_, i) => i !== idx) }));
   };
 
+  // ---- Đặt lịch tư vấn dinh dưỡng (bookings) ----
+  const [bookings, setBookings] = useState<Spa2NutritionConsultationBooking[]>(
+    SPA2_NUTRITION_CONSULTATION_BOOKINGS
+  );
+  const [bookingSearch, setBookingSearch] = useState('');
+  const [bookingStatusFilter, setBookingStatusFilter] =
+    useState<NutritionBookingStatusFilter>('all');
+  const [bookingPlanFilter, setBookingPlanFilter] = useState('all');
+  const [viewBooking, setViewBooking] = useState<Spa2NutritionConsultationBooking | null>(null);
+  const bookingTable = useTable({ defaultRowsPerPage: 5 });
+
+  const filteredBookings = bookings.filter((b) => {
+    const q = bookingSearch.toLowerCase();
+    const matchSearch =
+      !q ||
+      b.customer.toLowerCase().includes(q) ||
+      b.email.toLowerCase().includes(q) ||
+      b.planName.toLowerCase().includes(q) ||
+      b.phone.includes(bookingSearch);
+    const matchStatus = bookingStatusFilter === 'all' || b.status === bookingStatusFilter;
+    const matchPlan = bookingPlanFilter === 'all' || b.planId === bookingPlanFilter;
+    return matchSearch && matchStatus && matchPlan;
+  });
+
+  const handleSetBookingStatus = (id: number, status: Spa2NutritionConsultationStatus) => {
+    setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, status } : b)));
+    setViewBooking((prev) => (prev?.id === id ? { ...prev, status } : prev));
+  };
+
+  const bookingCounts = {
+    all: bookings.length,
+    new: bookings.filter((b) => b.status === 'new').length,
+    confirmed: bookings.filter((b) => b.status === 'confirmed').length,
+    completed: bookings.filter((b) => b.status === 'completed').length,
+    cancelled: bookings.filter((b) => b.status === 'cancelled').length,
+  };
+
+  // ---- Thống kê đặt lịch tư vấn (theo chương trình dinh dưỡng) ----
+  const bookingPlanStats = useMemo(
+    () =>
+      plans.map((p) => {
+        const inPlan = bookings.filter((b) => b.planId === p.id);
+        const completed = inPlan.filter((b) => b.status === 'completed').length;
+        const cancelled = inPlan.filter((b) => b.status === 'cancelled').length;
+        const resolved = completed + cancelled;
+        return {
+          id: p.id,
+          name: p.name,
+          icon: p.icon,
+          color: p.color,
+          count: inPlan.length,
+          new: inPlan.filter((b) => b.status === 'new').length,
+          confirmed: inPlan.filter((b) => b.status === 'confirmed').length,
+          completed,
+          cancelled,
+          completionRate: resolved ? Math.round((completed / resolved) * 100) : null,
+        };
+      }),
+    [plans, bookings]
+  );
+
+  const mostRequestedPlan = useMemo(
+    () => [...bookingPlanStats].sort((a, b) => b.count - a.count)[0] ?? null,
+    [bookingPlanStats]
+  );
+
+  const bookingCompletionRate =
+    bookingCounts.completed + bookingCounts.cancelled
+      ? Math.round(
+          (bookingCounts.completed / (bookingCounts.completed + bookingCounts.cancelled)) * 100
+        )
+      : null;
+
+  const bookingCancellationRate = bookingCounts.all
+    ? Math.round((bookingCounts.cancelled / bookingCounts.all) * 100)
+    : null;
+
   const handleSave = () => {
     setSavedAt(new Date());
     setDirty(false);
@@ -515,6 +669,7 @@ export function Spa2NutritionManageView() {
     setPlans(spa2NutritionPlans.map((p) => ({ ...p, includes: [...p.includes] })));
     setTips(spa2SuperfoodTips.map((tp) => ({ ...tp })));
     setQuiz(spa2NutritionQuizQuestions.map((q) => ({ ...q, options: [...q.options] })));
+    setBookings(SPA2_NUTRITION_CONSULTATION_BOOKINGS);
     setDirty(false);
   };
 
@@ -619,6 +774,18 @@ export function Spa2NutritionManageView() {
           value="quiz"
           label={t('nutrition.quiz_section')}
           icon={<Iconify icon="solar:question-circle-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
+          value="bookings"
+          label={t('nutrition.bookings_section')}
+          icon={<Iconify icon="solar:calendar-mark-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
+          value="booking_stats"
+          label={t('nutrition.booking_stats_section')}
+          icon={<Iconify icon="solar:chart-square-bold-duotone" width={20} />}
           iconPosition="start"
         />
         <Tab
@@ -768,36 +935,46 @@ export function Spa2NutritionManageView() {
               {t('nutrition.add_plan_btn')}
             </Button>
           </Stack>
-          <Grid container spacing={2}>
-            {plans.map((item) => (
-              <Grid key={item.id} xs={12} sm={6} md={4}>
-                <Box sx={{ position: 'relative' }}>
-                  <PlanPreviewCard {...item} />
-                  <Stack
-                    direction="row"
-                    spacing={0.5}
-                    sx={{ position: 'absolute', top: 8, right: 8 }}
-                  >
-                    <IconButton
-                      size="small"
-                      onClick={() => openEditPlan(item)}
-                      sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                    >
-                      <Iconify icon="solar:pen-bold" width={14} />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      color="error"
-                      onClick={() => setPlanDeleteId(item.id)}
-                      sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                    >
-                      <Iconify icon="solar:trash-bin-trash-bold" width={14} />
-                    </IconButton>
-                  </Stack>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
+          <Spa2SortableGrid items={plans} onReorder={reorderPlans}>
+            <Grid container spacing={2}>
+              {plans.map((item) => (
+                <Grid key={item.id} xs={12} sm={6} md={4}>
+                  <Spa2SortableItem id={item.id}>
+                    {(sortable) => (
+                      <Box sx={{ position: 'relative' }}>
+                        <PlanPreviewCard {...item} />
+                        <Stack
+                          direction="row"
+                          spacing={0.5}
+                          sx={{ position: 'absolute', top: 8, right: 8 }}
+                        >
+                          <Spa2DragHandle
+                            sortable={sortable}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          />
+                          <IconButton
+                            size="small"
+                            onClick={() => openEditPlan(item)}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          >
+                            <Iconify icon="solar:pen-bold" width={14} />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => setPlanDeleteId(item.id)}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          >
+                            <Iconify icon="solar:trash-bin-trash-bold" width={14} />
+                          </IconButton>
+                        </Stack>
+                      </Box>
+                    )}
+                  </Spa2SortableItem>
+                </Grid>
+              ))}
+            </Grid>
+          </Spa2SortableGrid>
         </Card>
       )}
 
@@ -934,6 +1111,474 @@ export function Spa2NutritionManageView() {
             </Stack>
           </Spa2SortableGrid>
         </Card>
+      )}
+
+      {/* Đặt lịch tư vấn dinh dưỡng (bookings) */}
+      {tab === 'bookings' && (
+        <Card sx={{ p: 3, borderRadius: 3 }}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ mb: 2 }}
+            flexWrap="wrap"
+            useFlexGap
+            gap={1}
+          >
+            <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+              {t('nutrition.bookings_section')}
+            </Typography>
+            <TextField
+              select
+              size="small"
+              value={bookingPlanFilter}
+              onChange={(e) => {
+                setBookingPlanFilter(e.target.value);
+                bookingTable.onResetPage();
+              }}
+              sx={{ minWidth: 220 }}
+            >
+              <MenuItem value="all">Tất cả chương trình</MenuItem>
+              {plans.map((item) => (
+                <MenuItem key={item.id} value={item.id}>
+                  {item.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Stack>
+
+          <Card sx={{ bgcolor: SPA2_TEAL_DARK, mb: 2.5 }}>
+            <Scrollbar sx={{ minHeight: 108 }}>
+              <Stack
+                spacing={1}
+                direction="row"
+                divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+                sx={{ py: 2, px: 1 }}
+              >
+                <Spa2ListAnalytic
+                  title="Tất cả"
+                  total={bookingCounts.all}
+                  percent={100}
+                  icon="solar:calendar-mark-bold-duotone"
+                  color={SPA2_TEAL}
+                  unitLabel="lượt đặt"
+                  active={bookingStatusFilter === 'all'}
+                  onClick={() => {
+                    setBookingStatusFilter('all');
+                    bookingTable.onResetPage();
+                  }}
+                />
+                <Spa2ListAnalytic
+                  title={NUTRITION_BOOKING_STATUS_LABEL.new}
+                  total={bookingCounts.new}
+                  percent={bookingCounts.all ? (bookingCounts.new / bookingCounts.all) * 100 : 0}
+                  icon="solar:bell-bold-duotone"
+                  color="#0C447C"
+                  unitLabel="lượt đặt"
+                  active={bookingStatusFilter === 'new'}
+                  onClick={() => {
+                    setBookingStatusFilter('new');
+                    bookingTable.onResetPage();
+                  }}
+                />
+                <Spa2ListAnalytic
+                  title={NUTRITION_BOOKING_STATUS_LABEL.confirmed}
+                  total={bookingCounts.confirmed}
+                  percent={
+                    bookingCounts.all ? (bookingCounts.confirmed / bookingCounts.all) * 100 : 0
+                  }
+                  icon="solar:phone-calling-bold-duotone"
+                  color="#FFAB00"
+                  unitLabel="lượt đặt"
+                  active={bookingStatusFilter === 'confirmed'}
+                  onClick={() => {
+                    setBookingStatusFilter('confirmed');
+                    bookingTable.onResetPage();
+                  }}
+                />
+                <Spa2ListAnalytic
+                  title={NUTRITION_BOOKING_STATUS_LABEL.completed}
+                  total={bookingCounts.completed}
+                  percent={
+                    bookingCounts.all ? (bookingCounts.completed / bookingCounts.all) * 100 : 0
+                  }
+                  icon="solar:check-circle-bold-duotone"
+                  color="#22C55E"
+                  unitLabel="lượt đặt"
+                  active={bookingStatusFilter === 'completed'}
+                  onClick={() => {
+                    setBookingStatusFilter('completed');
+                    bookingTable.onResetPage();
+                  }}
+                />
+                <Spa2ListAnalytic
+                  title={NUTRITION_BOOKING_STATUS_LABEL.cancelled}
+                  total={bookingCounts.cancelled}
+                  percent={
+                    bookingCounts.all ? (bookingCounts.cancelled / bookingCounts.all) * 100 : 0
+                  }
+                  icon="solar:close-circle-bold-duotone"
+                  color="#637381"
+                  unitLabel="lượt đặt"
+                  active={bookingStatusFilter === 'cancelled'}
+                  onClick={() => {
+                    setBookingStatusFilter('cancelled');
+                    bookingTable.onResetPage();
+                  }}
+                />
+              </Stack>
+            </Scrollbar>
+          </Card>
+
+          <TextField
+            placeholder="Tìm theo khách hàng, SĐT, email hoặc chương trình..."
+            value={bookingSearch}
+            onChange={(e) => {
+              setBookingSearch(e.target.value);
+              bookingTable.onResetPage();
+            }}
+            size="small"
+            fullWidth
+            sx={{ mb: 2 }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <Tabs
+            value={bookingStatusFilter}
+            onChange={(_, v: NutritionBookingStatusFilter) => {
+              setBookingStatusFilter(v);
+              bookingTable.onResetPage();
+            }}
+            variant="scrollable"
+            sx={{
+              mb: 2,
+              '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+              '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
+            }}
+          >
+            <Tab value="all" label={`Tất cả (${bookingCounts.all})`} />
+            <Tab
+              value="new"
+              label={`${NUTRITION_BOOKING_STATUS_LABEL.new} (${bookingCounts.new})`}
+            />
+            <Tab
+              value="confirmed"
+              label={`${NUTRITION_BOOKING_STATUS_LABEL.confirmed} (${bookingCounts.confirmed})`}
+            />
+            <Tab
+              value="completed"
+              label={`${NUTRITION_BOOKING_STATUS_LABEL.completed} (${bookingCounts.completed})`}
+            />
+            <Tab
+              value="cancelled"
+              label={`${NUTRITION_BOOKING_STATUS_LABEL.cancelled} (${bookingCounts.cancelled})`}
+            />
+          </Tabs>
+
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Khách hàng</TableCell>
+                  <TableCell>Chương trình quan tâm</TableCell>
+                  <TableCell>Ngày mong muốn</TableCell>
+                  <TableCell>Ngày đặt</TableCell>
+                  <TableCell>Trạng thái</TableCell>
+                  <TableCell align="right">Thao tác</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredBookings
+                  .slice(
+                    bookingTable.page * bookingTable.rowsPerPage,
+                    bookingTable.page * bookingTable.rowsPerPage + bookingTable.rowsPerPage
+                  )
+                  .map((item) => (
+                    <TableRow key={item.id} hover>
+                      <TableCell>
+                        <Stack>
+                          <Typography variant="subtitle2" sx={{ color: SPA2_TEAL_DARK }}>
+                            {item.customer}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {item.phone} · {item.email}
+                          </Typography>
+                        </Stack>
+                      </TableCell>
+                      <TableCell>
+                        <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
+                          <Typography variant="body2">{item.planName}</Typography>
+                          <Chip
+                            size="small"
+                            label={item.planId}
+                            sx={{ bgcolor: 'background.neutral', fontSize: 11 }}
+                          />
+                        </Stack>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">{item.preferredDate}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">{item.createdAt}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          size="small"
+                          label={NUTRITION_BOOKING_STATUS_LABEL[item.status]}
+                          color={NUTRITION_BOOKING_STATUS_COLOR[item.status]}
+                          variant="soft"
+                        />
+                      </TableCell>
+                      <TableCell align="right">
+                        <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
+                          {item.status === 'new' && (
+                            <>
+                              <Tooltip title="Xác nhận lịch hẹn">
+                                <IconButton
+                                  size="small"
+                                  sx={{ color: SPA2_TEAL_DARK }}
+                                  onClick={() => handleSetBookingStatus(item.id, 'confirmed')}
+                                >
+                                  <Iconify icon="solar:check-circle-bold" />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Huỷ lịch hẹn">
+                                <IconButton
+                                  size="small"
+                                  color="error"
+                                  onClick={() => handleSetBookingStatus(item.id, 'cancelled')}
+                                >
+                                  <Iconify icon="solar:close-circle-bold" />
+                                </IconButton>
+                              </Tooltip>
+                            </>
+                          )}
+                          {item.status === 'confirmed' && (
+                            <>
+                              <Tooltip title="Đánh dấu đã hoàn tất">
+                                <IconButton
+                                  size="small"
+                                  color="success"
+                                  onClick={() => handleSetBookingStatus(item.id, 'completed')}
+                                >
+                                  <Iconify icon="solar:diploma-bold" />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Huỷ lịch hẹn">
+                                <IconButton
+                                  size="small"
+                                  color="error"
+                                  onClick={() => handleSetBookingStatus(item.id, 'cancelled')}
+                                >
+                                  <Iconify icon="solar:close-circle-bold" />
+                                </IconButton>
+                              </Tooltip>
+                            </>
+                          )}
+                          <Tooltip title="Xem chi tiết">
+                            <IconButton size="small" onClick={() => setViewBooking(item)}>
+                              <Iconify icon="solar:eye-bold" />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                {filteredBookings.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={6} align="center" sx={{ py: 6, color: 'text.disabled' }}>
+                      Không có dữ liệu
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePaginationCustom
+            count={filteredBookings.length}
+            page={bookingTable.page}
+            rowsPerPage={bookingTable.rowsPerPage}
+            onPageChange={bookingTable.onChangePage}
+            onRowsPerPageChange={bookingTable.onChangeRowsPerPage}
+          />
+        </Card>
+      )}
+
+      {/* Thống kê đặt lịch tư vấn — KPI tổng quan → phân bổ theo trạng thái (lọc nhanh)
+          → bảng chi tiết theo từng chương trình dinh dưỡng */}
+      {tab === 'booking_stats' && (
+        <Stack spacing={2.5}>
+          <Grid container spacing={2}>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:calendar-mark-bold"
+                label="Tổng lượt đặt lịch"
+                value={bookingCounts.all}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:leaf-bold"
+                label="Chương trình được quan tâm nhất"
+                value={mostRequestedPlan?.name ?? '—'}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:check-circle-bold"
+                label="Tỷ lệ hoàn tất"
+                value={bookingCompletionRate === null ? '—' : `${bookingCompletionRate}%`}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:close-circle-bold"
+                label="Tỷ lệ huỷ lịch"
+                value={bookingCancellationRate === null ? '—' : `${bookingCancellationRate}%`}
+              />
+            </Grid>
+          </Grid>
+
+          <Card sx={{ bgcolor: SPA2_CREAM_DARK, borderRadius: 3, p: 2 }}>
+            <Typography
+              variant="overline"
+              sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
+            >
+              Phân bổ theo trạng thái
+            </Typography>
+            <Scrollbar sx={{ maxHeight: 120 }}>
+              <Stack
+                direction="row"
+                divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+                spacing={2}
+                sx={{ py: 1 }}
+              >
+                <Spa2ListAnalytic
+                  icon="solar:calendar-mark-bold-duotone"
+                  title="Tất cả"
+                  total={bookingCounts.all}
+                  percent={100}
+                  active={bookingStatusFilter === 'all'}
+                  onClick={() => setBookingStatusFilter('all')}
+                />
+                <Spa2ListAnalytic
+                  icon="solar:bell-bold-duotone"
+                  title={NUTRITION_BOOKING_STATUS_LABEL.new}
+                  total={bookingCounts.new}
+                  percent={bookingCounts.all ? (bookingCounts.new / bookingCounts.all) * 100 : 0}
+                  active={bookingStatusFilter === 'new'}
+                  onClick={() => setBookingStatusFilter('new')}
+                />
+                <Spa2ListAnalytic
+                  icon="solar:phone-calling-bold-duotone"
+                  title={NUTRITION_BOOKING_STATUS_LABEL.confirmed}
+                  total={bookingCounts.confirmed}
+                  percent={
+                    bookingCounts.all ? (bookingCounts.confirmed / bookingCounts.all) * 100 : 0
+                  }
+                  active={bookingStatusFilter === 'confirmed'}
+                  onClick={() => setBookingStatusFilter('confirmed')}
+                />
+                <Spa2ListAnalytic
+                  icon="solar:check-circle-bold-duotone"
+                  title={NUTRITION_BOOKING_STATUS_LABEL.completed}
+                  total={bookingCounts.completed}
+                  percent={
+                    bookingCounts.all ? (bookingCounts.completed / bookingCounts.all) * 100 : 0
+                  }
+                  active={bookingStatusFilter === 'completed'}
+                  onClick={() => setBookingStatusFilter('completed')}
+                />
+                <Spa2ListAnalytic
+                  icon="solar:close-circle-bold-duotone"
+                  title={NUTRITION_BOOKING_STATUS_LABEL.cancelled}
+                  total={bookingCounts.cancelled}
+                  percent={
+                    bookingCounts.all ? (bookingCounts.cancelled / bookingCounts.all) * 100 : 0
+                  }
+                  active={bookingStatusFilter === 'cancelled'}
+                  onClick={() => setBookingStatusFilter('cancelled')}
+                />
+              </Stack>
+            </Scrollbar>
+          </Card>
+
+          <Card>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Chương trình dinh dưỡng</TableCell>
+                    <TableCell align="center">Lượt đặt</TableCell>
+                    <TableCell align="center">Mới / Đã xác nhận</TableCell>
+                    <TableCell align="center">Hoàn tất / Huỷ</TableCell>
+                    <TableCell sx={{ minWidth: 180 }}>Tỷ lệ hoàn tất</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {bookingPlanStats.map((p) => (
+                    <TableRow key={p.id} hover>
+                      <TableCell>
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          <Iconify icon={p.icon} width={18} sx={{ color: p.color }} />
+                          <Typography variant="body2">{p.name}</Typography>
+                        </Stack>
+                      </TableCell>
+                      <TableCell align="center">{p.count}</TableCell>
+                      <TableCell align="center">
+                        <Chip
+                          size="small"
+                          label={`${p.new}/${p.confirmed}`}
+                          sx={{ bgcolor: 'background.neutral' }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <Stack direction="row" spacing={1} justifyContent="center">
+                          <Box component="span" sx={{ fontSize: 13, color: 'success.main' }}>
+                            {p.completed}
+                          </Box>
+                          <Box component="span" sx={{ fontSize: 13, color: 'error.main' }}>
+                            {p.cancelled}
+                          </Box>
+                        </Stack>
+                      </TableCell>
+                      <TableCell>
+                        {p.completionRate === null ? (
+                          <Typography variant="caption" color="text.disabled">
+                            —
+                          </Typography>
+                        ) : (
+                          <Stack direction="row" spacing={1.5} alignItems="center">
+                            <LinearProgress
+                              variant="determinate"
+                              value={p.completionRate}
+                              sx={{
+                                flex: 1,
+                                height: 6,
+                                borderRadius: 3,
+                                bgcolor: SPA2_CREAM_DARK,
+                                '& .MuiLinearProgress-bar': { bgcolor: SPA2_TEAL },
+                              }}
+                            />
+                            <Typography variant="caption" sx={{ minWidth: 34, fontWeight: 600 }}>
+                              {p.completionRate}%
+                            </Typography>
+                          </Stack>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Card>
+        </Stack>
       )}
 
       {/* Full page preview */}
@@ -1240,6 +1885,96 @@ export function Spa2NutritionManageView() {
             {quizEditId ? t('common.update') : t('common.create')}
           </Button>
         </DialogActions>
+      </Dialog>
+
+      {/* Booking detail dialog */}
+      <Dialog open={!!viewBooking} onClose={() => setViewBooking(null)} maxWidth="sm" fullWidth>
+        {viewBooking && (
+          <>
+            <DialogTitle>Chi tiết đặt lịch tư vấn dinh dưỡng</DialogTitle>
+            <DialogContent dividers>
+              <Stack spacing={2} sx={{ pt: 0.5 }}>
+                <TextField
+                  label="Khách hàng"
+                  value={viewBooking.customer}
+                  fullWidth
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    label="Số điện thoại"
+                    value={viewBooking.phone}
+                    fullWidth
+                    size="small"
+                    InputProps={{ readOnly: true }}
+                  />
+                  <TextField
+                    label="Email"
+                    value={viewBooking.email}
+                    fullWidth
+                    size="small"
+                    InputProps={{ readOnly: true }}
+                  />
+                </Stack>
+                <TextField
+                  label="Chương trình quan tâm"
+                  value={`${viewBooking.planName} (${viewBooking.planId})`}
+                  fullWidth
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    label="Ngày mong muốn"
+                    value={viewBooking.preferredDate}
+                    fullWidth
+                    size="small"
+                    InputProps={{ readOnly: true }}
+                  />
+                  <TextField
+                    label="Ngày đặt"
+                    value={viewBooking.createdAt}
+                    fullWidth
+                    size="small"
+                    InputProps={{ readOnly: true }}
+                  />
+                </Stack>
+                <TextField
+                  label="Ghi chú"
+                  value={viewBooking.note || '—'}
+                  fullWidth
+                  multiline
+                  minRows={2}
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+                <TextField
+                  select
+                  label="Trạng thái"
+                  value={viewBooking.status}
+                  size="small"
+                  fullWidth
+                  onChange={(e) =>
+                    handleSetBookingStatus(
+                      viewBooking.id,
+                      e.target.value as Spa2NutritionConsultationStatus
+                    )
+                  }
+                >
+                  {NUTRITION_BOOKING_STATUS_OPTIONS.map((s) => (
+                    <MenuItem key={s} value={s}>
+                      {NUTRITION_BOOKING_STATUS_LABEL[s]}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Stack>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setViewBooking(null)}>Đóng</Button>
+            </DialogActions>
+          </>
+        )}
       </Dialog>
 
       <ConfirmDialog

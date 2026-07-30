@@ -548,6 +548,10 @@ export function Spa2HomeServiceManageView() {
     setServiceDeleteId(null);
     markDirty();
   };
+  const reorderServices = (next: Spa2HomeService[]) => {
+    setServices(next);
+    markDirty();
+  };
 
   // ---- Process steps ----
   const [process, setProcess] = useState<Spa2HomeServiceProcessStep[]>(() =>
@@ -909,36 +913,46 @@ export function Spa2HomeServiceManageView() {
               {t('home_service.add_service_btn')}
             </Button>
           </Stack>
-          <Grid container spacing={2}>
-            {services.map((item) => (
-              <Grid key={item.id} xs={12} sm={6} md={4}>
-                <Box sx={{ position: 'relative' }}>
-                  <ServicePreviewCard {...item} />
-                  <Stack
-                    direction="row"
-                    spacing={0.5}
-                    sx={{ position: 'absolute', top: 8, right: 8 }}
-                  >
-                    <IconButton
-                      size="small"
-                      onClick={() => openEditService(item)}
-                      sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                    >
-                      <Iconify icon="solar:pen-bold" width={14} />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      color="error"
-                      onClick={() => setServiceDeleteId(item.id)}
-                      sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                    >
-                      <Iconify icon="solar:trash-bin-trash-bold" width={14} />
-                    </IconButton>
-                  </Stack>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
+          <Spa2SortableGrid items={services} onReorder={reorderServices}>
+            <Grid container spacing={2}>
+              {services.map((item) => (
+                <Grid key={item.id} xs={12} sm={6} md={4}>
+                  <Spa2SortableItem id={item.id}>
+                    {(sortable) => (
+                      <Box sx={{ position: 'relative' }}>
+                        <ServicePreviewCard {...item} />
+                        <Stack
+                          direction="row"
+                          spacing={0.5}
+                          sx={{ position: 'absolute', top: 8, right: 8 }}
+                        >
+                          <Spa2DragHandle
+                            sortable={sortable}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          />
+                          <IconButton
+                            size="small"
+                            onClick={() => openEditService(item)}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          >
+                            <Iconify icon="solar:pen-bold" width={14} />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => setServiceDeleteId(item.id)}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          >
+                            <Iconify icon="solar:trash-bin-trash-bold" width={14} />
+                          </IconButton>
+                        </Stack>
+                      </Box>
+                    )}
+                  </Spa2SortableItem>
+                </Grid>
+              ))}
+            </Grid>
+          </Spa2SortableGrid>
         </Card>
       )}
 

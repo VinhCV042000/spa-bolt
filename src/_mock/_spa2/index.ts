@@ -6451,7 +6451,12 @@ export const SPA2_OCCASION_BOOKINGS: Spa2OccasionBooking[] = [
 
 // ---------- Đặt dịch vụ spa tại nhà (admin-only operational data) --------
 
-export type Spa2HomeServiceBookingStatus = 'new' | 'confirmed' | 'onway' | 'completed' | 'cancelled';
+export type Spa2HomeServiceBookingStatus =
+  | 'new'
+  | 'confirmed'
+  | 'onway'
+  | 'completed'
+  | 'cancelled';
 
 export type Spa2HomeServiceBooking = {
   id: number;
@@ -6903,6 +6908,204 @@ export const SPA2_INGREDIENT_CATEGORIES: Spa2IngredientCategory[] = [
   { value: 'acne', label: 'Trị mụn' },
   { value: 'exfoliating', label: 'Tẩy tế bào' },
   { value: 'soothing', label: 'Làm dịu' },
+];
+
+// ---------- Đặt lịch tư vấn dinh dưỡng (admin-only operational data) -----
+
+export type Spa2NutritionConsultationStatus = 'new' | 'confirmed' | 'completed' | 'cancelled';
+
+export type Spa2NutritionConsultationBooking = {
+  id: number;
+  customer: string;
+  phone: string;
+  email: string;
+  planId: string;
+  planName: string;
+  preferredDate: string;
+  note: string;
+  createdAt: string;
+  status: Spa2NutritionConsultationStatus;
+};
+
+export const SPA2_NUTRITION_CONSULTATION_BOOKINGS: Spa2NutritionConsultationBooking[] = [
+  {
+    id: 1,
+    customer: 'Lâm Thuỵ Khanh',
+    phone: '0901 777 222',
+    email: 'khanh.lam@gmail.com',
+    planId: 'detox-7',
+    planName: 'Detox & Thải Độc 7 ngày',
+    preferredDate: '2026-07-25',
+    note: 'Muốn tư vấn trước khi bắt đầu detox',
+    createdAt: '2026-07-16',
+    status: 'confirmed',
+  },
+  {
+    id: 2,
+    customer: 'Đỗ Gia Bảo',
+    phone: '0912 777 333',
+    email: 'bao.do@gmail.com',
+    planId: 'juice-cleanse-3',
+    planName: 'Juice Cleanse 3 ngày',
+    preferredDate: '2026-07-27',
+    note: '',
+    createdAt: '2026-07-18',
+    status: 'new',
+  },
+  {
+    id: 3,
+    customer: 'Trịnh Yến Nhi',
+    phone: '0923 777 444',
+    email: 'nhi.trinh@gmail.com',
+    planId: 'nutrition-30',
+    planName: 'Gói Dinh Dưỡng Toàn Diện 30 ngày',
+    preferredDate: '2026-07-14',
+    note: 'Đã tư vấn xong, khách đăng ký gói 30 ngày',
+    createdAt: '2026-07-05',
+    status: 'completed',
+  },
+  {
+    id: 4,
+    customer: 'Phan Đức Anh',
+    phone: '0934 777 555',
+    email: 'anh.phan@gmail.com',
+    planId: 'detox-7',
+    planName: 'Detox & Thải Độc 7 ngày',
+    preferredDate: '2026-07-20',
+    note: 'Khách bận, xin dời lịch nhưng không phản hồi lại',
+    createdAt: '2026-07-10',
+    status: 'cancelled',
+  },
+  {
+    id: 5,
+    customer: 'Ngô Bích Trâm',
+    phone: '0945 777 666',
+    email: 'tram.ngo@gmail.com',
+    planId: 'juice-cleanse-3',
+    planName: 'Juice Cleanse 3 ngày',
+    preferredDate: '2026-07-29',
+    note: 'Hỏi thêm về chế độ ăn kèm trong 3 ngày',
+    createdAt: '2026-07-19',
+    status: 'new',
+  },
+  {
+    id: 6,
+    customer: 'Vương Hải Yến',
+    phone: '0956 777 777',
+    email: 'yen.vuong@gmail.com',
+    planId: 'nutrition-30',
+    planName: 'Gói Dinh Dưỡng Toàn Diện 30 ngày',
+    preferredDate: '2026-07-22',
+    note: 'Cần bác sĩ xem xét thể trạng dị ứng trước',
+    createdAt: '2026-07-13',
+    status: 'confirmed',
+  },
+];
+
+// ---------- Đặt phòng VIP (admin-only operational data) -----------------
+
+export type Spa2VipRoomBookingStatus = 'new' | 'confirmed' | 'completed' | 'cancelled';
+
+export type Spa2VipRoomBooking = {
+  id: number;
+  customer: string;
+  phone: string;
+  email: string;
+  roomId: string;
+  roomName: string;
+  preferredDate: string;
+  preferredTime: string;
+  guests: number;
+  note: string;
+  createdAt: string;
+  status: Spa2VipRoomBookingStatus;
+};
+
+export const SPA2_VIP_ROOM_BOOKINGS: Spa2VipRoomBooking[] = [
+  {
+    id: 1,
+    customer: 'Nguyễn Thảo Vy',
+    phone: '0901 888 111',
+    email: 'vy.nguyen@gmail.com',
+    roomId: 'garden-suite',
+    roomName: 'The Garden Suite',
+    preferredDate: '2026-07-28',
+    preferredTime: '14:00',
+    guests: 2,
+    note: 'Kỷ niệm ngày cưới, muốn trang trí thêm hoa tươi',
+    createdAt: '2026-07-18',
+    status: 'confirmed',
+  },
+  {
+    id: 2,
+    customer: 'Trần Minh Khôi',
+    phone: '0912 888 222',
+    email: 'khoi.tran@gmail.com',
+    roomId: 'lotus-penthouse',
+    roomName: 'The Lotus Penthouse',
+    preferredDate: '2026-08-02',
+    preferredTime: '10:00',
+    guests: 2,
+    note: '',
+    createdAt: '2026-07-20',
+    status: 'new',
+  },
+  {
+    id: 3,
+    customer: 'Lê Bảo Ngọc',
+    phone: '0923 888 333',
+    email: 'ngoc.le@gmail.com',
+    roomId: 'bamboo-haven',
+    roomName: 'The Bamboo Haven',
+    preferredDate: '2026-07-15',
+    preferredTime: '09:00',
+    guests: 1,
+    note: 'Đã trải nghiệm và rất hài lòng',
+    createdAt: '2026-07-05',
+    status: 'completed',
+  },
+  {
+    id: 4,
+    customer: 'Phạm Anh Tuấn',
+    phone: '0934 888 444',
+    email: 'tuan.pham@gmail.com',
+    roomId: 'garden-suite',
+    roomName: 'The Garden Suite',
+    preferredDate: '2026-07-21',
+    preferredTime: '16:00',
+    guests: 2,
+    note: 'Khách báo huỷ do đổi lịch công tác',
+    createdAt: '2026-07-11',
+    status: 'cancelled',
+  },
+  {
+    id: 5,
+    customer: 'Đặng Quỳnh Chi',
+    phone: '0945 888 555',
+    email: 'chi.dang@gmail.com',
+    roomId: 'lotus-penthouse',
+    roomName: 'The Lotus Penthouse',
+    preferredDate: '2026-08-05',
+    preferredTime: '13:00',
+    guests: 2,
+    note: 'Hỏi thêm về gói champagne đi kèm',
+    createdAt: '2026-07-22',
+    status: 'new',
+  },
+  {
+    id: 6,
+    customer: 'Vũ Hoàng Long',
+    phone: '0956 888 666',
+    email: 'long.vu@gmail.com',
+    roomId: 'bamboo-haven',
+    roomName: 'The Bamboo Haven',
+    preferredDate: '2026-07-24',
+    preferredTime: '11:00',
+    guests: 1,
+    note: 'Yêu cầu phòng yên tĩnh, hạn chế tiếng ồn',
+    createdAt: '2026-07-14',
+    status: 'confirmed',
+  },
 ];
 
 // ============================== SPA2 - END ====================================

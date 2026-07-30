@@ -1102,7 +1102,8 @@
     "add_category_btn": "Add category",
     "category_all_locked": "All (locked)",
     "form_category_label": "Category name",
-    "form_package_category": "Category"
+    "form_package_category": "Category",
+    "reorder_filter_hint": "Filtering by category — drag and drop only reorders within the current filter."
   },
   "home_service": {
     "page_title": "Home Service Management",
@@ -1268,7 +1269,8 @@
     "form_reward_name": "Reward name",
     "form_reward_points": "Points required",
     "form_reward_stock": "Remaining stock",
-    "form_reward_image": "Reward image"
+    "form_reward_image": "Reward image",
+    "reorder_filter_hint": "Filtering by category — drag and drop only reorders within the current filter."
   },
   "review": {
     "page_title": "Manage Review",
@@ -1303,7 +1305,8 @@
     "form_package_name": "Package name",
     "form_package_price": "Price (VND)",
     "form_package_desc": "Description",
-    "form_package_image": "Package image"
+    "form_package_image": "Package image",
+    "reorder_filter_hint": "Filtering by season — drag and drop only reorders within the current filter."
   },
   "nutrition": {
     "page_title": "Manage Nutrition Programs",
@@ -1340,7 +1343,9 @@
     "form_quiz_question": "Question",
     "form_quiz_options": "Options",
     "form_quiz_option_placeholder": "Enter an option...",
-    "add_quiz_option_btn": "Add option"
+    "add_quiz_option_btn": "Add option",
+    "bookings_section": "Consultation Bookings",
+    "booking_stats_section": "Booking Statistics"
   },
   "consultation": {
     "page_title": "Manage Expert Consultation",
@@ -1413,7 +1418,10 @@
     "perk_form_title": "Title",
     "perk_form_desc": "Description",
     "perk_delete_title": "Delete perk",
-    "perk_delete_content": "This perk will be permanently deleted."
+    "perk_delete_content": "This perk will be permanently deleted.",
+    "room_form_image_help": "Drag and drop an image here or paste the room image URL.",
+    "bookings_section": "VIP Room Bookings",
+    "booking_stats_section": "Booking Statistics"
   },
   "package_builder": {
     "page_title": "Manage Package Builder",

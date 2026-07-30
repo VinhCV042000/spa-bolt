@@ -3,9 +3,11 @@ import type {
   Spa2VipRoomPerk,
   Spa2VipRoomBanner,
   Spa2AdjustableImage,
+  Spa2VipRoomBooking,
+  Spa2VipRoomBookingStatus,
 } from 'src/_mock/_spa2';
 
-import { useState, useCallback } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -18,6 +20,7 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -30,6 +33,8 @@ import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import InputAdornment from '@mui/material/InputAdornment';
+import LinearProgress from '@mui/material/LinearProgress';
 import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
@@ -37,10 +42,18 @@ import { paths } from 'src/routes/paths';
 import { uuidv4 } from 'src/utils/uuidv4';
 
 import { useTranslate } from 'src/locales';
-import { spa2VipRooms, spa2VipRoomPerks, spa2VipRoomBanner } from 'src/_mock/_spa2';
+import {
+  spa2VipRooms,
+  spa2VipRoomPerks,
+  spa2VipRoomBanner,
+  SPA2_VIP_ROOM_BOOKINGS,
+} from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { useTable } from 'src/components/table/use-table';
 import { ConfirmDialog } from 'src/components/custom-dialog';
+import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
 
 import { spa2ImageBackgroundStyle } from 'src/sections/spa2/spa2-image-utils';
 import { Spa2VIPRoomPageView } from 'src/sections/spa2/view/spa2-content-pages4';
@@ -55,6 +68,9 @@ import {
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2ListAnalytic } from './spa2-list-analytic';
+import { Spa2SimpleImageField } from './spa2-simple-image-field';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages4.tsx's
@@ -83,6 +99,32 @@ const EMPTY_ROOM_FORM = {
 };
 
 const EMPTY_PERK_FORM = { icon: 'solar:star-bold-duotone', title: '', desc: '' };
+
+const VIP_BOOKING_STATUS_LABEL: Record<Spa2VipRoomBookingStatus, string> = {
+  new: 'Mới',
+  confirmed: 'Đã xác nhận',
+  completed: 'Đã hoàn tất',
+  cancelled: 'Đã huỷ',
+};
+
+const VIP_BOOKING_STATUS_COLOR: Record<
+  Spa2VipRoomBookingStatus,
+  'info' | 'warning' | 'success' | 'error'
+> = {
+  new: 'info',
+  confirmed: 'warning',
+  completed: 'success',
+  cancelled: 'error',
+};
+
+const VIP_BOOKING_STATUS_OPTIONS: Spa2VipRoomBookingStatus[] = [
+  'new',
+  'confirmed',
+  'completed',
+  'cancelled',
+];
+
+type VipBookingStatusFilter = Spa2VipRoomBookingStatus | 'all';
 
 type FeatureRow = { id: string; value: string };
 
@@ -251,6 +293,36 @@ function PerkPreviewCard({ icon, title, desc }: { icon: string; title: string; d
   );
 }
 
+// KPI tile used on the "booking_stats" tab.
+function StatCard({ icon, label, value }: { icon: string; label: string; value: string | number }) {
+  return (
+    <Card sx={{ p: 2, borderRadius: 2.5, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+      <Box
+        sx={{
+          width: 40,
+          height: 40,
+          borderRadius: 2,
+          bgcolor: SPA2_CREAM_DARK,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0,
+        }}
+      >
+        <Iconify icon={icon} width={20} sx={{ color: SPA2_TEAL }} />
+      </Box>
+      <Box>
+        <Typography variant="h6" sx={{ color: SPA2_INK, lineHeight: 1.2 }}>
+          {value}
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          {label}
+        </Typography>
+      </Box>
+    </Card>
+  );
+}
+
 export function Spa2VipRoomManageView() {
   const { t } = useTranslate('spa2-manage');
 
@@ -262,7 +334,9 @@ export function Spa2VipRoomManageView() {
   const [perks, setPerks] = useState<Spa2VipRoomPerk[]>(spa2VipRoomPerks);
   const [dirty, setDirty] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
-  const [tab, setTab] = useState<'banner' | 'rooms' | 'perks' | 'preview'>('banner');
+  const [tab, setTab] = useState<
+    'banner' | 'rooms' | 'perks' | 'bookings' | 'booking_stats' | 'preview'
+  >('banner');
 
   const updateBanner = (key: 'eyebrow' | 'title' | 'subtitle' | 'badge', value: string) => {
     setBanner((prev) => ({ ...prev, [key]: value }));
@@ -280,6 +354,7 @@ export function Spa2VipRoomManageView() {
     setBanner({ ...spa2VipRoomBanner, image: { ...spa2VipRoomBanner.image } });
     setRooms(spa2VipRooms);
     setPerks(spa2VipRoomPerks);
+    setBookings(SPA2_VIP_ROOM_BOOKINGS);
     setDirty(false);
   };
 
@@ -397,6 +472,83 @@ export function Spa2VipRoomManageView() {
     setDeletePerkId(null);
     setDirty(true);
   }, [deletePerkId]);
+  const reorderPerks = (next: Spa2VipRoomPerk[]) => {
+    setPerks(next);
+    setDirty(true);
+  };
+
+  // ---- Đặt phòng VIP (bookings) ----
+  const [bookings, setBookings] = useState<Spa2VipRoomBooking[]>(SPA2_VIP_ROOM_BOOKINGS);
+  const [bookingSearch, setBookingSearch] = useState('');
+  const [bookingStatusFilter, setBookingStatusFilter] = useState<VipBookingStatusFilter>('all');
+  const [bookingRoomFilter, setBookingRoomFilter] = useState('all');
+  const [viewBooking, setViewBooking] = useState<Spa2VipRoomBooking | null>(null);
+  const bookingTable = useTable({ defaultRowsPerPage: 5 });
+
+  const filteredBookings = bookings.filter((b) => {
+    const q = bookingSearch.toLowerCase();
+    const matchSearch =
+      !q ||
+      b.customer.toLowerCase().includes(q) ||
+      b.email.toLowerCase().includes(q) ||
+      b.roomName.toLowerCase().includes(q) ||
+      b.phone.includes(bookingSearch);
+    const matchStatus = bookingStatusFilter === 'all' || b.status === bookingStatusFilter;
+    const matchRoom = bookingRoomFilter === 'all' || b.roomId === bookingRoomFilter;
+    return matchSearch && matchStatus && matchRoom;
+  });
+
+  const handleSetBookingStatus = (id: number, status: Spa2VipRoomBookingStatus) => {
+    setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, status } : b)));
+    setViewBooking((prev) => (prev?.id === id ? { ...prev, status } : prev));
+  };
+
+  const bookingCounts = {
+    all: bookings.length,
+    new: bookings.filter((b) => b.status === 'new').length,
+    confirmed: bookings.filter((b) => b.status === 'confirmed').length,
+    completed: bookings.filter((b) => b.status === 'completed').length,
+    cancelled: bookings.filter((b) => b.status === 'cancelled').length,
+  };
+
+  // ---- Thống kê đặt phòng VIP (theo phòng) ----
+  const bookingRoomStats = useMemo(
+    () =>
+      rooms.map((room) => {
+        const inRoom = bookings.filter((b) => b.roomId === room.id);
+        const completed = inRoom.filter((b) => b.status === 'completed').length;
+        const cancelled = inRoom.filter((b) => b.status === 'cancelled').length;
+        const resolved = completed + cancelled;
+        return {
+          id: room.id,
+          name: room.name,
+          image: room.image,
+          count: inRoom.length,
+          new: inRoom.filter((b) => b.status === 'new').length,
+          confirmed: inRoom.filter((b) => b.status === 'confirmed').length,
+          completed,
+          cancelled,
+          completionRate: resolved ? Math.round((completed / resolved) * 100) : null,
+        };
+      }),
+    [rooms, bookings]
+  );
+
+  const mostBookedRoom = useMemo(
+    () => [...bookingRoomStats].sort((a, b) => b.count - a.count)[0] ?? null,
+    [bookingRoomStats]
+  );
+
+  const bookingCompletionRate =
+    bookingCounts.completed + bookingCounts.cancelled
+      ? Math.round(
+          (bookingCounts.completed / (bookingCounts.completed + bookingCounts.cancelled)) * 100
+        )
+      : null;
+
+  const bookingCancellationRate = bookingCounts.all
+    ? Math.round((bookingCounts.cancelled / bookingCounts.all) * 100)
+    : null;
 
   return (
     <Spa2ManageShell
@@ -490,6 +642,18 @@ export function Spa2VipRoomManageView() {
           value="perks"
           label={t('vip_room.perks_section')}
           icon={<Iconify icon="solar:star-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
+          value="bookings"
+          label={t('vip_room.bookings_section')}
+          icon={<Iconify icon="solar:calendar-mark-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
+          value="booking_stats"
+          label={t('vip_room.booking_stats_section')}
+          icon={<Iconify icon="solar:chart-square-bold-duotone" width={20} />}
           iconPosition="start"
         />
         <Tab
@@ -649,32 +813,528 @@ export function Spa2VipRoomManageView() {
               </Button>
             </Stack>
           </Grid>
-          {perks.map((perk) => (
-            <Grid key={perk.id} xs={12} sm={6} md={3}>
-              <Card sx={{ p: 2.5, borderRadius: 3, textAlign: 'center', height: '100%' }}>
-                <Iconify icon={perk.icon} width={36} sx={{ color: SPA2_TEAL, mb: 1 }} />
-                <Typography sx={{ fontWeight: 600, color: SPA2_INK, mb: 0.5 }}>
-                  {perk.title}
-                </Typography>
-                <Typography sx={{ fontSize: 12.5, color: 'text.secondary', mb: 1.5 }}>
-                  {perk.desc}
-                </Typography>
-                <Stack direction="row" justifyContent="center" spacing={0.5}>
-                  <Tooltip title={t('common.edit')}>
-                    <IconButton size="small" onClick={() => openEditPerk(perk)}>
-                      <Iconify icon="solar:pen-bold" />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title={t('common.delete')}>
-                    <IconButton size="small" color="error" onClick={() => setDeletePerkId(perk.id)}>
-                      <Iconify icon="solar:trash-bin-trash-bold" />
-                    </IconButton>
-                  </Tooltip>
-                </Stack>
-              </Card>
-            </Grid>
-          ))}
+          <Grid xs={12}>
+            <Spa2SortableGrid items={perks} onReorder={reorderPerks}>
+              <Grid container spacing={2}>
+                {perks.map((perk) => (
+                  <Grid key={perk.id} xs={12} sm={6} md={3}>
+                    <Spa2SortableItem id={perk.id}>
+                      {(sortable) => (
+                        <Card sx={{ p: 2.5, borderRadius: 3, textAlign: 'center', height: '100%' }}>
+                          <Iconify icon={perk.icon} width={36} sx={{ color: SPA2_TEAL, mb: 1 }} />
+                          <Typography sx={{ fontWeight: 600, color: SPA2_INK, mb: 0.5 }}>
+                            {perk.title}
+                          </Typography>
+                          <Typography sx={{ fontSize: 12.5, color: 'text.secondary', mb: 1.5 }}>
+                            {perk.desc}
+                          </Typography>
+                          <Stack direction="row" justifyContent="center" spacing={0.5}>
+                            <Spa2DragHandle sortable={sortable} />
+                            <Tooltip title={t('common.edit')}>
+                              <IconButton size="small" onClick={() => openEditPerk(perk)}>
+                                <Iconify icon="solar:pen-bold" />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title={t('common.delete')}>
+                              <IconButton
+                                size="small"
+                                color="error"
+                                onClick={() => setDeletePerkId(perk.id)}
+                              >
+                                <Iconify icon="solar:trash-bin-trash-bold" />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </Card>
+                      )}
+                    </Spa2SortableItem>
+                  </Grid>
+                ))}
+              </Grid>
+            </Spa2SortableGrid>
+          </Grid>
         </Grid>
+      )}
+
+      {/* Quản lý đặt phòng VIP (bookings) */}
+      {tab === 'bookings' && (
+        <Card sx={{ p: 3, borderRadius: 3 }}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ mb: 2 }}
+            flexWrap="wrap"
+            useFlexGap
+            gap={1}
+          >
+            <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+              {t('vip_room.bookings_section')}
+            </Typography>
+            <TextField
+              select
+              size="small"
+              value={bookingRoomFilter}
+              onChange={(e) => {
+                setBookingRoomFilter(e.target.value);
+                bookingTable.onResetPage();
+              }}
+              sx={{ minWidth: 220 }}
+            >
+              <MenuItem value="all">Tất cả phòng</MenuItem>
+              {rooms.map((room) => (
+                <MenuItem key={room.id} value={room.id}>
+                  {room.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Stack>
+
+          <Card sx={{ bgcolor: SPA2_TEAL_DARK, mb: 2.5 }}>
+            <Scrollbar sx={{ minHeight: 108 }}>
+              <Stack
+                spacing={1}
+                direction="row"
+                divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+                sx={{ py: 2, px: 1 }}
+              >
+                <Spa2ListAnalytic
+                  title="Tất cả"
+                  total={bookingCounts.all}
+                  percent={100}
+                  icon="solar:calendar-mark-bold-duotone"
+                  color={SPA2_TEAL}
+                  unitLabel="lượt đặt"
+                  active={bookingStatusFilter === 'all'}
+                  onClick={() => {
+                    setBookingStatusFilter('all');
+                    bookingTable.onResetPage();
+                  }}
+                />
+                <Spa2ListAnalytic
+                  title={VIP_BOOKING_STATUS_LABEL.new}
+                  total={bookingCounts.new}
+                  percent={bookingCounts.all ? (bookingCounts.new / bookingCounts.all) * 100 : 0}
+                  icon="solar:bell-bold-duotone"
+                  color="#0C447C"
+                  unitLabel="lượt đặt"
+                  active={bookingStatusFilter === 'new'}
+                  onClick={() => {
+                    setBookingStatusFilter('new');
+                    bookingTable.onResetPage();
+                  }}
+                />
+                <Spa2ListAnalytic
+                  title={VIP_BOOKING_STATUS_LABEL.confirmed}
+                  total={bookingCounts.confirmed}
+                  percent={
+                    bookingCounts.all ? (bookingCounts.confirmed / bookingCounts.all) * 100 : 0
+                  }
+                  icon="solar:phone-calling-bold-duotone"
+                  color="#FFAB00"
+                  unitLabel="lượt đặt"
+                  active={bookingStatusFilter === 'confirmed'}
+                  onClick={() => {
+                    setBookingStatusFilter('confirmed');
+                    bookingTable.onResetPage();
+                  }}
+                />
+                <Spa2ListAnalytic
+                  title={VIP_BOOKING_STATUS_LABEL.completed}
+                  total={bookingCounts.completed}
+                  percent={
+                    bookingCounts.all ? (bookingCounts.completed / bookingCounts.all) * 100 : 0
+                  }
+                  icon="solar:check-circle-bold-duotone"
+                  color="#22C55E"
+                  unitLabel="lượt đặt"
+                  active={bookingStatusFilter === 'completed'}
+                  onClick={() => {
+                    setBookingStatusFilter('completed');
+                    bookingTable.onResetPage();
+                  }}
+                />
+                <Spa2ListAnalytic
+                  title={VIP_BOOKING_STATUS_LABEL.cancelled}
+                  total={bookingCounts.cancelled}
+                  percent={
+                    bookingCounts.all ? (bookingCounts.cancelled / bookingCounts.all) * 100 : 0
+                  }
+                  icon="solar:close-circle-bold-duotone"
+                  color="#637381"
+                  unitLabel="lượt đặt"
+                  active={bookingStatusFilter === 'cancelled'}
+                  onClick={() => {
+                    setBookingStatusFilter('cancelled');
+                    bookingTable.onResetPage();
+                  }}
+                />
+              </Stack>
+            </Scrollbar>
+          </Card>
+
+          <TextField
+            placeholder="Tìm theo khách hàng, SĐT, email hoặc phòng..."
+            value={bookingSearch}
+            onChange={(e) => {
+              setBookingSearch(e.target.value);
+              bookingTable.onResetPage();
+            }}
+            size="small"
+            fullWidth
+            sx={{ mb: 2 }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <Tabs
+            value={bookingStatusFilter}
+            onChange={(_, v: VipBookingStatusFilter) => {
+              setBookingStatusFilter(v);
+              bookingTable.onResetPage();
+            }}
+            variant="scrollable"
+            sx={{
+              mb: 2,
+              '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+              '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
+            }}
+          >
+            <Tab value="all" label={`Tất cả (${bookingCounts.all})`} />
+            <Tab value="new" label={`${VIP_BOOKING_STATUS_LABEL.new} (${bookingCounts.new})`} />
+            <Tab
+              value="confirmed"
+              label={`${VIP_BOOKING_STATUS_LABEL.confirmed} (${bookingCounts.confirmed})`}
+            />
+            <Tab
+              value="completed"
+              label={`${VIP_BOOKING_STATUS_LABEL.completed} (${bookingCounts.completed})`}
+            />
+            <Tab
+              value="cancelled"
+              label={`${VIP_BOOKING_STATUS_LABEL.cancelled} (${bookingCounts.cancelled})`}
+            />
+          </Tabs>
+
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Khách hàng</TableCell>
+                  <TableCell>Phòng đặt</TableCell>
+                  <TableCell>Ngày & giờ mong muốn</TableCell>
+                  <TableCell align="center">Số khách</TableCell>
+                  <TableCell>Ngày đặt</TableCell>
+                  <TableCell>Trạng thái</TableCell>
+                  <TableCell align="right">Thao tác</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredBookings
+                  .slice(
+                    bookingTable.page * bookingTable.rowsPerPage,
+                    bookingTable.page * bookingTable.rowsPerPage + bookingTable.rowsPerPage
+                  )
+                  .map((item) => (
+                    <TableRow key={item.id} hover>
+                      <TableCell>
+                        <Stack>
+                          <Typography variant="subtitle2" sx={{ color: SPA2_TEAL_DARK }}>
+                            {item.customer}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {item.phone} · {item.email}
+                          </Typography>
+                        </Stack>
+                      </TableCell>
+                      <TableCell>
+                        <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
+                          <Typography variant="body2">{item.roomName}</Typography>
+                          <Chip
+                            size="small"
+                            label={item.roomId}
+                            sx={{ bgcolor: 'background.neutral', fontSize: 11 }}
+                          />
+                        </Stack>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">
+                          {item.preferredDate} · {item.preferredTime}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography variant="body2">{item.guests}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">{item.createdAt}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          size="small"
+                          label={VIP_BOOKING_STATUS_LABEL[item.status]}
+                          color={VIP_BOOKING_STATUS_COLOR[item.status]}
+                          variant="soft"
+                        />
+                      </TableCell>
+                      <TableCell align="right">
+                        <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
+                          {item.status === 'new' && (
+                            <>
+                              <Tooltip title="Xác nhận đặt phòng">
+                                <IconButton
+                                  size="small"
+                                  sx={{ color: SPA2_TEAL_DARK }}
+                                  onClick={() => handleSetBookingStatus(item.id, 'confirmed')}
+                                >
+                                  <Iconify icon="solar:check-circle-bold" />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Huỷ đặt phòng">
+                                <IconButton
+                                  size="small"
+                                  color="error"
+                                  onClick={() => handleSetBookingStatus(item.id, 'cancelled')}
+                                >
+                                  <Iconify icon="solar:close-circle-bold" />
+                                </IconButton>
+                              </Tooltip>
+                            </>
+                          )}
+                          {item.status === 'confirmed' && (
+                            <>
+                              <Tooltip title="Đánh dấu đã hoàn tất">
+                                <IconButton
+                                  size="small"
+                                  color="success"
+                                  onClick={() => handleSetBookingStatus(item.id, 'completed')}
+                                >
+                                  <Iconify icon="solar:diploma-bold" />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Huỷ đặt phòng">
+                                <IconButton
+                                  size="small"
+                                  color="error"
+                                  onClick={() => handleSetBookingStatus(item.id, 'cancelled')}
+                                >
+                                  <Iconify icon="solar:close-circle-bold" />
+                                </IconButton>
+                              </Tooltip>
+                            </>
+                          )}
+                          <Tooltip title="Xem chi tiết">
+                            <IconButton size="small" onClick={() => setViewBooking(item)}>
+                              <Iconify icon="solar:eye-bold" />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                {filteredBookings.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={7} align="center" sx={{ py: 6, color: 'text.disabled' }}>
+                      Không có dữ liệu
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePaginationCustom
+            count={filteredBookings.length}
+            page={bookingTable.page}
+            rowsPerPage={bookingTable.rowsPerPage}
+            onPageChange={bookingTable.onChangePage}
+            onRowsPerPageChange={bookingTable.onChangeRowsPerPage}
+          />
+        </Card>
+      )}
+
+      {/* Thống kê đặt phòng VIP — KPI tổng quan → phân bổ theo trạng thái (lọc nhanh)
+          → bảng chi tiết theo từng phòng VIP */}
+      {tab === 'booking_stats' && (
+        <Stack spacing={2.5}>
+          <Grid container spacing={2}>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:calendar-mark-bold"
+                label="Tổng lượt đặt phòng"
+                value={bookingCounts.all}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:bed-bold"
+                label="Phòng được đặt nhiều nhất"
+                value={mostBookedRoom?.name ?? '—'}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:check-circle-bold"
+                label="Tỷ lệ hoàn tất"
+                value={bookingCompletionRate === null ? '—' : `${bookingCompletionRate}%`}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:close-circle-bold"
+                label="Tỷ lệ huỷ đặt phòng"
+                value={bookingCancellationRate === null ? '—' : `${bookingCancellationRate}%`}
+              />
+            </Grid>
+          </Grid>
+
+          <Card sx={{ bgcolor: SPA2_CREAM_DARK, borderRadius: 3, p: 2 }}>
+            <Typography
+              variant="overline"
+              sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
+            >
+              Phân bổ theo trạng thái
+            </Typography>
+            <Scrollbar sx={{ maxHeight: 120 }}>
+              <Stack
+                direction="row"
+                divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+                spacing={2}
+                sx={{ py: 1 }}
+              >
+                <Spa2ListAnalytic
+                  icon="solar:calendar-mark-bold-duotone"
+                  title="Tất cả"
+                  total={bookingCounts.all}
+                  percent={100}
+                  active={bookingStatusFilter === 'all'}
+                  onClick={() => setBookingStatusFilter('all')}
+                />
+                <Spa2ListAnalytic
+                  icon="solar:bell-bold-duotone"
+                  title={VIP_BOOKING_STATUS_LABEL.new}
+                  total={bookingCounts.new}
+                  percent={bookingCounts.all ? (bookingCounts.new / bookingCounts.all) * 100 : 0}
+                  active={bookingStatusFilter === 'new'}
+                  onClick={() => setBookingStatusFilter('new')}
+                />
+                <Spa2ListAnalytic
+                  icon="solar:phone-calling-bold-duotone"
+                  title={VIP_BOOKING_STATUS_LABEL.confirmed}
+                  total={bookingCounts.confirmed}
+                  percent={
+                    bookingCounts.all ? (bookingCounts.confirmed / bookingCounts.all) * 100 : 0
+                  }
+                  active={bookingStatusFilter === 'confirmed'}
+                  onClick={() => setBookingStatusFilter('confirmed')}
+                />
+                <Spa2ListAnalytic
+                  icon="solar:check-circle-bold-duotone"
+                  title={VIP_BOOKING_STATUS_LABEL.completed}
+                  total={bookingCounts.completed}
+                  percent={
+                    bookingCounts.all ? (bookingCounts.completed / bookingCounts.all) * 100 : 0
+                  }
+                  active={bookingStatusFilter === 'completed'}
+                  onClick={() => setBookingStatusFilter('completed')}
+                />
+                <Spa2ListAnalytic
+                  icon="solar:close-circle-bold-duotone"
+                  title={VIP_BOOKING_STATUS_LABEL.cancelled}
+                  total={bookingCounts.cancelled}
+                  percent={
+                    bookingCounts.all ? (bookingCounts.cancelled / bookingCounts.all) * 100 : 0
+                  }
+                  active={bookingStatusFilter === 'cancelled'}
+                  onClick={() => setBookingStatusFilter('cancelled')}
+                />
+              </Stack>
+            </Scrollbar>
+          </Card>
+
+          <Card>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Phòng VIP</TableCell>
+                    <TableCell align="center">Lượt đặt</TableCell>
+                    <TableCell align="center">Mới / Đã xác nhận</TableCell>
+                    <TableCell align="center">Hoàn tất / Huỷ</TableCell>
+                    <TableCell sx={{ minWidth: 180 }}>Tỷ lệ hoàn tất</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {bookingRoomStats.map((room) => (
+                    <TableRow key={room.id} hover>
+                      <TableCell>
+                        <Stack direction="row" spacing={1.5} alignItems="center">
+                          <Box
+                            sx={{
+                              width: 32,
+                              height: 32,
+                              borderRadius: 1,
+                              flexShrink: 0,
+                              backgroundImage: `url(${room.image})`,
+                              backgroundSize: 'cover',
+                              backgroundPosition: 'center',
+                            }}
+                          />
+                          <Typography variant="body2">{room.name}</Typography>
+                        </Stack>
+                      </TableCell>
+                      <TableCell align="center">{room.count}</TableCell>
+                      <TableCell align="center">
+                        <Chip
+                          size="small"
+                          label={`${room.new}/${room.confirmed}`}
+                          sx={{ bgcolor: 'background.neutral' }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <Stack direction="row" spacing={1} justifyContent="center">
+                          <Box component="span" sx={{ fontSize: 13, color: 'success.main' }}>
+                            {room.completed}
+                          </Box>
+                          <Box component="span" sx={{ fontSize: 13, color: 'error.main' }}>
+                            {room.cancelled}
+                          </Box>
+                        </Stack>
+                      </TableCell>
+                      <TableCell>
+                        {room.completionRate === null ? (
+                          <Typography variant="caption" color="text.disabled">
+                            —
+                          </Typography>
+                        ) : (
+                          <Stack direction="row" spacing={1.5} alignItems="center">
+                            <LinearProgress
+                              variant="determinate"
+                              value={room.completionRate}
+                              sx={{
+                                flex: 1,
+                                height: 6,
+                                borderRadius: 3,
+                                bgcolor: SPA2_CREAM_DARK,
+                                '& .MuiLinearProgress-bar': { bgcolor: SPA2_TEAL },
+                              }}
+                            />
+                            <Typography variant="caption" sx={{ minWidth: 34, fontWeight: 600 }}>
+                              {room.completionRate}%
+                            </Typography>
+                          </Stack>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Card>
+        </Stack>
       )}
 
       {/* Live preview - full public page */}
@@ -728,11 +1388,12 @@ export function Spa2VipRoomManageView() {
                     fullWidth
                   />
                 </Stack>
-                <TextField
+                <Spa2SimpleImageField
                   label={t('vip_room.room_form_image')}
                   value={roomForm.image}
-                  onChange={handleRoomChange('image')}
-                  fullWidth
+                  onChange={(next) => setRoomForm((p) => ({ ...p, image: next }))}
+                  height={160}
+                  helperText={t('vip_room.room_form_image_help')}
                 />
                 <Box>
                   <Stack
@@ -862,6 +1523,103 @@ export function Spa2VipRoomManageView() {
             {editPerkId !== null ? t('vip_room.perk_form_edit') : t('vip_room.perk_form_create')}
           </Button>
         </DialogActions>
+      </Dialog>
+
+      {/* Booking detail dialog */}
+      <Dialog open={!!viewBooking} onClose={() => setViewBooking(null)} maxWidth="sm" fullWidth>
+        {viewBooking && (
+          <>
+            <DialogTitle>Chi tiết đặt phòng VIP</DialogTitle>
+            <DialogContent dividers>
+              <Stack spacing={2} sx={{ pt: 0.5 }}>
+                <TextField
+                  label="Khách hàng"
+                  value={viewBooking.customer}
+                  fullWidth
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    label="Số điện thoại"
+                    value={viewBooking.phone}
+                    fullWidth
+                    size="small"
+                    InputProps={{ readOnly: true }}
+                  />
+                  <TextField
+                    label="Email"
+                    value={viewBooking.email}
+                    fullWidth
+                    size="small"
+                    InputProps={{ readOnly: true }}
+                  />
+                </Stack>
+                <TextField
+                  label="Phòng VIP"
+                  value={`${viewBooking.roomName} (${viewBooking.roomId})`}
+                  fullWidth
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    label="Ngày & giờ mong muốn"
+                    value={`${viewBooking.preferredDate} · ${viewBooking.preferredTime}`}
+                    fullWidth
+                    size="small"
+                    InputProps={{ readOnly: true }}
+                  />
+                  <TextField
+                    label="Số khách"
+                    value={viewBooking.guests}
+                    fullWidth
+                    size="small"
+                    InputProps={{ readOnly: true }}
+                  />
+                </Stack>
+                <TextField
+                  label="Ngày đặt"
+                  value={viewBooking.createdAt}
+                  fullWidth
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+                <TextField
+                  label="Ghi chú"
+                  value={viewBooking.note || '—'}
+                  fullWidth
+                  multiline
+                  minRows={2}
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+                <TextField
+                  select
+                  label="Trạng thái"
+                  value={viewBooking.status}
+                  size="small"
+                  fullWidth
+                  onChange={(e) =>
+                    handleSetBookingStatus(
+                      viewBooking.id,
+                      e.target.value as Spa2VipRoomBookingStatus
+                    )
+                  }
+                >
+                  {VIP_BOOKING_STATUS_OPTIONS.map((s) => (
+                    <MenuItem key={s} value={s}>
+                      {VIP_BOOKING_STATUS_LABEL[s]}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Stack>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setViewBooking(null)}>Đóng</Button>
+            </DialogActions>
+          </>
+        )}
       </Dialog>
 
       <ConfirmDialog
