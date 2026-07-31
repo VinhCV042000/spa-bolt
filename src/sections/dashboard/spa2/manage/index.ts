@@ -51,3 +51,15 @@ export { Spa2AffiliateManageView } from 'src/sections/dashboard/spa2/manage/spa2
 export { Spa2SpaFinderManageView } from 'src/sections/dashboard/spa2/manage/spa2-spa-finder-manage-view';
 export { Spa2SpaMenuManageView } from 'src/sections/dashboard/spa2/manage/spa2-spa-menu-manage-view';
 export { Spa2IngredientGuideManageView } from 'src/sections/dashboard/spa2/manage/spa2-ingredient-guide-manage-view';
+export { Spa2SkinSchoolManageView } from 'src/sections/dashboard/spa2/manage/spa2-skin-school-manage-view';
+export { Spa2TherapistProfileManageView } from 'src/sections/dashboard/spa2/manage/spa2-therapist-profile-manage-view';
+export { Spa2SleepWellnessManageView } from 'src/sections/dashboard/spa2/manage/spa2-sleep-wellness-manage-view';
+export { Spa2PrenatalSpaManageView } from 'src/sections/dashboard/spa2/manage/spa2-prenatal-spa-manage-view';
+export { Spa2WellnessAssessmentManageView } from 'src/sections/dashboard/spa2/manage/spa2-wellness-assessment-manage-view';
+export { Spa2MenSpaManageView } from 'src/sections/dashboard/spa2/manage/spa2-men-spa-manage-view';
+export { Spa2HairBeautyManageView } from 'src/sections/dashboard/spa2/manage/spa2-hair-beauty-manage-view';
+export { Spa2AntiAgingManageView } from 'src/sections/dashboard/spa2/manage/spa2-anti-aging-manage-view';
+export { Spa2WaterTherapyManageView } from 'src/sections/dashboard/spa2/manage/spa2-water-therapy-manage-view';
+export { Spa2AyurvedaManageView } from 'src/sections/dashboard/spa2/manage/spa2-ayurveda-manage-view';
+export { Spa2SpaHotelManageView } from 'src/sections/dashboard/spa2/manage/spa2-spa-hotel-manage-view';
+export { Spa2CommunityManageView } from 'src/sections/dashboard/spa2/manage/spa2-community-manage-view';

@@ -7108,4 +7108,1359 @@ export const SPA2_VIP_ROOM_BOOKINGS: Spa2VipRoomBooking[] = [
   },
 ];
 
+// ---------- Skin School (eLearning) banner + courses + quiz
+
+export type Spa2SkinSchoolBanner = {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  certBadgeLabel: string;
+};
+
+export const spa2SkinSchoolBanner: Spa2SkinSchoolBanner = {
+  eyebrow: 'HỌC VIỆN DA',
+  title: 'Skin School by Nature Spa',
+  subtitle:
+    'Học skincare đúng từ các chuyên gia — video bài giảng, bài kiểm tra và chứng chỉ hoàn thành.',
+  certBadgeLabel: 'Chứng chỉ Nature Spa',
+};
+
+export type Spa2SkinSchoolCourse = {
+  id: string;
+  title: string;
+  level: string;
+  lessons: number;
+  duration: string;
+  icon: string;
+  color: string;
+  enrolled: number;
+  rating: number;
+  free: boolean;
+  price?: number;
+  topics: string[];
+};
+
+export const spa2SkinSchoolCourses: Spa2SkinSchoolCourse[] = [
+  {
+    id: 'basics',
+    title: 'Skincare 101: Nền tảng chăm sóc da',
+    level: 'Cơ bản',
+    lessons: 8,
+    duration: '2 giờ',
+    icon: 'solar:book-bold-duotone',
+    color: '#4CAF50',
+    enrolled: 2341,
+    rating: 4.9,
+    free: true,
+    topics: [
+      'Cấu trúc da',
+      'pH và da',
+      'Thứ tự bước skincare',
+      'Đọc bảng thành phần',
+      'Chọn sản phẩm theo loại da',
+    ],
+  },
+  {
+    id: 'actives',
+    title: 'Hoạt Chất Skincare: A–Z',
+    level: 'Trung cấp',
+    lessons: 12,
+    duration: '3.5 giờ',
+    icon: 'solar:flask-bold-duotone',
+    color: '#2E8B7A',
+    enrolled: 1876,
+    rating: 4.8,
+    free: false,
+    price: 290000,
+    topics: [
+      'Vitamin C, Niacinamide, Retinol',
+      'AHA/BHA/PHA',
+      'Peptides & Growth factors',
+      'Cách phối trộn & thứ tự dùng',
+      'Lịch skincare theo tuần',
+    ],
+  },
+  {
+    id: 'advanced',
+    title: 'Liệu Pháp Da Nâng Cao',
+    level: 'Nâng cao',
+    lessons: 10,
+    duration: '4 giờ',
+    icon: 'solar:medal-star-bold-duotone',
+    color: '#7F77DD',
+    enrolled: 892,
+    rating: 5.0,
+    free: false,
+    price: 590000,
+    topics: [
+      'Microneedling & RF',
+      'Laser & IPL cơ bản',
+      'Filler & Botox kiến thức',
+      'Đọc hiểu đơn điều trị',
+      'Lịch trình phục hồi sau điều trị',
+    ],
+  },
+  {
+    id: 'nutrition',
+    title: 'Dinh Dưỡng & Làn Da',
+    level: 'Cơ bản',
+    lessons: 6,
+    duration: '1.5 giờ',
+    icon: 'solar:leaf-bold-duotone',
+    color: '#EF9F27',
+    enrolled: 1543,
+    rating: 4.7,
+    free: true,
+    topics: [
+      'Gut-skin connection',
+      'Thực phẩm pro-skin',
+      'Thực phẩm gây mụn',
+      'Uống nước đúng cách',
+      'Supplement cho da',
+    ],
+  },
+];
+
+export type Spa2SkinSchoolQuizQuestion = {
+  id: string;
+  q: string;
+  opts: string[];
+  correct: number;
+  explain: string;
+};
+
+export const spa2SkinSchoolQuiz: Spa2SkinSchoolQuizQuestion[] = [
+  {
+    id: 'q1',
+    q: 'Bạn nên dùng Vitamin C vào buổi nào?',
+    opts: ['Sáng', 'Tối', 'Cả hai đều được', 'Không quan trọng'],
+    correct: 0,
+    explain: 'Vitamin C dùng buổi sáng để bảo vệ da khỏi ô nhiễm và tia UV trong ngày.',
+  },
+  {
+    id: 'q2',
+    q: 'AHA hoạt động hiệu quả nhất ở pH bao nhiêu?',
+    opts: ['pH 6–7', 'pH 3–4', 'pH 8–9', 'pH 10+'],
+    correct: 1,
+    explain:
+      'AHA cần môi trường axit (pH 3–4) để hoạt động, tương ứng với pH da lành mạnh (4.5–5.5).',
+  },
+  {
+    id: 'q3',
+    q: 'Thứ tự nào đúng khi dùng nhiều serum?',
+    opts: [
+      'Đặc trước, loãng sau',
+      'Loãng trước, đặc sau',
+      'Thứ tự không quan trọng',
+      'Chỉ dùng 1 serum mỗi lần',
+    ],
+    correct: 1,
+    explain: 'Serum loãng (nước) thấm trước để tạo nền, serum đặc (dầu/gel) phủ lên sau.',
+  },
+];
+
+// ---------- Therapist Profile banner + roster
+
+export type Spa2TherapistProfileBanner = {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+};
+
+export const spa2TherapistProfileBanner: Spa2TherapistProfileBanner = {
+  eyebrow: 'ĐỘI NGŨ CHUYÊN VIÊN',
+  title: 'Gặp gỡ chuyên viên của bạn',
+  subtitle:
+    'Mỗi liệu trình tại Nature Spa được thực hiện bởi chuyên viên được đào tạo chính thống và tận tâm.',
+};
+
+export type Spa2Therapist = {
+  id: string;
+  name: string;
+  role: string;
+  avatar: string;
+  exp: string;
+  branch: string;
+  rating: number;
+  reviews: number;
+  certs: string[];
+  specialties: string[];
+  bio: string;
+  achievements: string[];
+  gallery: string[];
+  slots: string[];
+};
+
+export const spa2Therapists: Spa2Therapist[] = [
+  {
+    id: 'hong-nhi',
+    name: 'Phạm Hồng Nhi',
+    role: 'Senior Facial Specialist',
+    avatar: 'https://i.pravatar.cc/300?img=32',
+    exp: '8 năm',
+    branch: 'Quận 1, TP.HCM',
+    rating: 4.9,
+    reviews: 312,
+    certs: ['CIDESCO', 'CIBTAC', 'Skin Analysis'],
+    specialties: ['Facial chuyên sâu', 'Điều trị mụn', 'Chống lão hóa'],
+    bio: 'Tốt nghiệp CIDESCO tại Pháp năm 2016, Hồng Nhi có 8 năm kinh nghiệm điều trị da liễu thẩm mỹ. Chuyên gia trong các liệu trình facial phục hồi và chống lão hóa không xâm lấn.',
+    achievements: [
+      'Top 3 KTV xuất sắc 2024',
+      '500+ khách hàng thành công',
+      'Giảng viên khóa đào tạo nội bộ',
+    ],
+    gallery: [SPA2_PAGE_IMAGES.treatments, SPA2_PAGE_IMAGES.services, SPA2_PAGE_IMAGES.beforeAfter],
+    slots: ['9:00', '11:00', '14:00', '16:00'],
+  },
+  {
+    id: 'minh-khoi',
+    name: 'Trần Minh Khôi',
+    role: 'Master Massage Therapist',
+    avatar: 'https://i.pravatar.cc/300?img=12',
+    exp: '10 năm',
+    branch: 'Hồ Tây, Hà Nội',
+    rating: 4.8,
+    reviews: 256,
+    certs: ['CIDESCO', 'Thai Massage', 'Sports Therapy'],
+    specialties: ['Massage phục hồi', 'Deep tissue', 'Sports recovery'],
+    bio: 'Tu nghiệp tại Pháp và Hàn Quốc về liệu pháp thể chất. Minh Khôi nổi tiếng với kỹ thuật massage deep tissue giảm đau mãn tính và phục hồi chấn thương thể thao.',
+    achievements: [
+      'Chứng chỉ Thai Massage Chiang Mai',
+      'Cố vấn đội tuyển bóng đá 2022',
+      'Master Trainer nội bộ',
+    ],
+    gallery: [SPA2_PAGE_IMAGES.training, SPA2_PAGE_IMAGES.gallery, SPA2_PAGE_IMAGES.services],
+    slots: ['10:00', '13:00', '15:30', '18:00'],
+  },
+  {
+    id: 'thao-vy',
+    name: 'Nguyễn Thảo Vy',
+    role: 'Wellness & Detox Expert',
+    avatar: 'https://i.pravatar.cc/300?img=47',
+    exp: '15 năm',
+    branch: 'Biển Mỹ Khê, Đà Nẵng',
+    rating: 5.0,
+    reviews: 189,
+    certs: ['CIDESCO', 'Master Trainer', 'Ayurveda'],
+    specialties: ['Detox toàn thân', 'Wellness coaching', 'Ayurveda'],
+    bio: 'Nhà sáng lập và CEO Nature Spa, 15 năm kinh nghiệm trong ngành spa cao cấp. Thạc sĩ Dược học và chứng chỉ Ayurveda từ Ấn Độ.',
+    achievements: [
+      'Founder Nature Spa',
+      '25.000+ khách hàng đồng hành',
+      'Speaker tại Vietnam Beauty Summit 2024',
+    ],
+    gallery: [SPA2_PAGE_IMAGES.about, SPA2_PAGE_IMAGES.training, SPA2_PAGE_IMAGES.contact],
+    slots: ['10:00', '14:00', '16:00'],
+  },
+];
+
+// ---------- Sleep Wellness banner + programs + nightly ritual timeline
+
+export type Spa2SleepWellnessBanner = {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+};
+
+export const spa2SleepWellnessBanner: Spa2SleepWellnessBanner = {
+  eyebrow: 'GIẤC NGỦ & SỨC KHỎE',
+  title: 'Ngủ đủ giấc là nền tảng của mọi vẻ đẹp',
+  subtitle:
+    'Trong giấc ngủ sâu, cơ thể tiết hormone tăng trưởng — tái tạo da, phục hồi cơ bắp và xử lý stress.',
+};
+
+export type Spa2SleepProgram = {
+  id: string;
+  name: string;
+  price: number;
+  duration: string;
+  icon: string;
+  color: string;
+  desc: string;
+  includes: string[];
+};
+
+export const spa2SleepPrograms: Spa2SleepProgram[] = [
+  {
+    id: 'sleep-reset',
+    name: 'Sleep Reset 1 buổi',
+    price: 990000,
+    duration: '90 phút',
+    icon: 'solar:moon-bold-duotone',
+    color: '#3949AB',
+    desc: 'Massage thư giãn + Aromatherapy lavender + Âm thanh binaural beats — reset nhịp sinh học.',
+    includes: [
+      'Massage toàn thân nhẹ',
+      'Tinh dầu lavender & chamomile',
+      'Headphone + binaural beats',
+      'Trà valerian & mật ong',
+    ],
+  },
+  {
+    id: 'deep-sleep-program',
+    name: 'Deep Sleep Program 4 tuần',
+    price: 3990000,
+    duration: '1 buổi/tuần',
+    icon: 'solar:stars-bold-duotone',
+    color: '#1A237E',
+    desc: 'Chương trình 4 tuần kết hợp spa + hướng dẫn vệ sinh giấc ngủ tại nhà.',
+    includes: [
+      '4 buổi massage thư giãn',
+      'Sleep journal',
+      'App theo dõi giấc ngủ 1 tháng',
+      'Bộ sản phẩm sleep ritual',
+      'Coaching online hàng tuần',
+    ],
+  },
+];
+
+export type Spa2SleepTip = {
+  id: string;
+  time: string;
+  emoji: string;
+  tip: string;
+};
+
+export const spa2SleepTips: Spa2SleepTip[] = [
+  { id: 'tip-1', time: '21:00', emoji: '📵', tip: 'Tắt màn hình xanh, chuyển sang đèn vàng ấm.' },
+  { id: 'tip-2', time: '21:30', emoji: '🛁', tip: 'Tắm nước ấm 37–40°C trong 10–15 phút.' },
+  {
+    id: 'tip-3',
+    time: '22:00',
+    emoji: '🌿',
+    tip: 'Uống trà thảo mộc (lavender, chamomile, valerian).',
+  },
+  {
+    id: 'tip-4',
+    time: '22:15',
+    emoji: '✍️',
+    tip: 'Viết 3 điều biết ơn trong ngày — giải phóng lo âu.',
+  },
+  {
+    id: 'tip-5',
+    time: '22:30',
+    emoji: '🧘',
+    tip: 'Thở 4-7-8: hít 4s, nín 7s, thở 8s — lặp 4 lần.',
+  },
+  {
+    id: 'tip-6',
+    time: '23:00',
+    emoji: '😴',
+    tip: 'Mục tiêu: ngủ trước 23:00 để đạt đủ giấc deep sleep.',
+  },
+];
+
+// ---------- Prenatal Spa banner + services + safety badges + reasons
+
+export type Spa2PrenatalSpaBanner = {
+  emoji: string;
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  disclaimerText: string;
+};
+
+export const spa2PrenatalSpaBanner: Spa2PrenatalSpaBanner = {
+  emoji: '🤰',
+  eyebrow: 'SPA THAI KỲ',
+  title: 'Chăm sóc đặc biệt cho mẹ bầu & mẹ sau sinh',
+  subtitle:
+    'Tất cả dịch vụ được thiết kế dưới sự tư vấn của bác sĩ sản khoa — an toàn tuyệt đối cho mẹ và bé.',
+  disclaimerText:
+    'Tham khảo ý kiến bác sĩ sản khoa trước khi sử dụng bất kỳ dịch vụ spa nào trong thai kỳ.',
+};
+
+export type Spa2PrenatalService = {
+  id: string;
+  name: string;
+  trimester: string;
+  price: number;
+  duration: string;
+  icon: string;
+  desc: string;
+  safe: boolean;
+};
+
+export const spa2PrenatalServices: Spa2PrenatalService[] = [
+  {
+    id: 'prenatal-massage',
+    name: 'Prenatal Massage',
+    trimester: '2–3',
+    price: 890000,
+    duration: '75 phút',
+    icon: 'solar:heart-bold-duotone',
+    desc: 'Massage nhẹ nhàng giảm đau lưng, phù chân và stress thai kỳ. Tư thế nằm nghiêng an toàn.',
+    safe: true,
+  },
+  {
+    id: 'pregnancy-facial',
+    name: 'Pregnancy Facial',
+    trimester: '1–3',
+    price: 790000,
+    duration: '60 phút',
+    icon: 'solar:face-scan-circle-bold-duotone',
+    desc: 'Facial không retinol, không AHA mạnh — dưỡng ẩm và kiểm soát nám thai kỳ an toàn tuyệt đối.',
+    safe: true,
+  },
+  {
+    id: 'foot-leg-relief',
+    name: 'Foot & Leg Relief',
+    trimester: '2–3',
+    price: 490000,
+    duration: '45 phút',
+    icon: 'solar:hand-heart-bold-duotone',
+    desc: 'Ngâm chân muối khoáng và massage nhẹ kích thích tuần hoàn, giảm phù nề hiệu quả.',
+    safe: true,
+  },
+  {
+    id: 'stretch-mark-prevention',
+    name: 'Stretch Mark Prevention',
+    trimester: '2–3',
+    price: 690000,
+    duration: '60 phút',
+    icon: 'solar:leaf-bold-duotone',
+    desc: 'Ủ dưỡng bụng với dầu rosehip và shea butter — giảm thiểu rạn da trong và sau thai kỳ.',
+    safe: true,
+  },
+  {
+    id: 'postpartum-recovery',
+    name: 'Postpartum Recovery',
+    trimester: 'Sau sinh',
+    price: 1290000,
+    duration: '90 phút',
+    icon: 'solar:stars-bold-duotone',
+    desc: 'Massage phục hồi sau sinh, chăm sóc vùng bụng và hỗ trợ tâm lý cho mẹ mới.',
+    safe: true,
+  },
+  {
+    id: 'mom-baby-bonding',
+    name: 'Mom & Baby Bonding',
+    trimester: 'Sau sinh 2–6 tháng',
+    price: 690000,
+    duration: '60 phút',
+    icon: 'solar:smile-bold-duotone',
+    desc: 'Hướng dẫn massage cho bé và massage thư giãn cho mẹ — tăng cường gắn kết tình cảm.',
+    safe: true,
+  },
+];
+
+export const spa2PrenatalSafetyBadges: string[] = [
+  '✅ Không retinol',
+  '✅ Không BHA/AHA mạnh',
+  '✅ Không tinh dầu cấm',
+  '✅ Áp lực massage nhẹ',
+  '✅ Tư thế an toàn',
+  '✅ Sản phẩm hữu cơ',
+];
+
+export type Spa2PrenatalReason = {
+  id: string;
+  icon: string;
+  title: string;
+  desc: string;
+};
+
+export const spa2PrenatalReasons: Spa2PrenatalReason[] = [
+  {
+    id: 'doctor-advised',
+    icon: 'solar:shield-check-bold-duotone',
+    title: 'Được bác sĩ tư vấn',
+    desc: 'Mọi liệu trình được đội ngũ bác sĩ sản khoa và da liễu kiểm duyệt — đảm bảo an toàn tuyệt đối.',
+  },
+  {
+    id: 'safe-products',
+    icon: 'solar:leaf-bold-duotone',
+    title: 'Sản phẩm an toàn tuyệt đối',
+    desc: 'Loại bỏ hoàn toàn các thành phần có hại: retinol, salicylic acid, tinh dầu cấm trong thai kỳ.',
+  },
+  {
+    id: 'trained-staff',
+    icon: 'solar:heart-bold-duotone',
+    title: 'KTV được đào tạo chuyên biệt',
+    desc: 'KTV được học riêng về giải phẫu thai kỳ, tư thế an toàn và kỹ thuật massage nhẹ nhàng.',
+  },
+  {
+    id: 'community',
+    icon: 'solar:users-group-bold-duotone',
+    title: 'Cộng đồng mẹ bầu',
+    desc: 'Kết nối với cộng đồng 500+ mẹ bầu đã tin tưởng Nature Spa trong hành trình thai kỳ.',
+  },
+];
+
+// ---------- Wellness Assessment banner + questions
+
+export type Spa2WellnessAssessmentBanner = {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+};
+
+export const spa2WellnessAssessmentBanner: Spa2WellnessAssessmentBanner = {
+  eyebrow: 'ĐÁNH GIÁ SỨC KHỎE',
+  title: 'Wellness Score — Sức khỏe tổng thể của bạn',
+  subtitle: '6 chỉ số quan trọng nhất — đánh giá nhanh và nhận lộ trình chăm sóc cá nhân hóa.',
+};
+
+export type Spa2WellnessQuestion = {
+  id: string;
+  label: string;
+  icon: string;
+  question: string;
+};
+
+export const spa2WellnessQuestions: Spa2WellnessQuestion[] = [
+  {
+    id: 'sleep',
+    label: 'Chất lượng giấc ngủ',
+    icon: 'solar:moon-bold',
+    question: 'Bạn ngủ bao nhiêu tiếng mỗi đêm và cảm thấy thế nào khi thức dậy?',
+  },
+  {
+    id: 'stress',
+    label: 'Mức độ stress',
+    icon: 'solar:bolt-bold',
+    question: 'Bạn cảm thấy căng thẳng như thế nào trong cuộc sống hàng ngày?',
+  },
+  {
+    id: 'skin',
+    label: 'Tình trạng da',
+    icon: 'solar:face-scan-circle-bold',
+    question: 'Da bạn đang gặp vấn đề gì? (mụn, khô, dầu, lão hóa...)',
+  },
+  {
+    id: 'energy',
+    label: 'Năng lượng',
+    icon: 'solar:sun-bold',
+    question: 'Bạn cảm thấy mức năng lượng của mình trong ngày như thế nào?',
+  },
+  {
+    id: 'nutrition',
+    label: 'Chế độ ăn',
+    icon: 'solar:leaf-bold',
+    question: 'Bạn ăn uống lành mạnh và cân bằng như thế nào?',
+  },
+  {
+    id: 'activity',
+    label: 'Vận động',
+    icon: 'solar:running-bold',
+    question: 'Bạn có tập thể dục hoặc vận động thường xuyên không?',
+  },
+];
+
+// ---------- Men Spa banner + stats + services + packages + faqs
+
+export type Spa2MenSpaBanner = {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+};
+
+export const spa2MenSpaBanner: Spa2MenSpaBanner = {
+  eyebrow: 'SPA DÀNH CHO NAM',
+  title: 'Chăm sóc bản thân không phân biệt giới tính',
+  subtitle:
+    'Liệu trình thiết kế riêng cho da và cơ thể nam — thư giãn, trẻ hóa và phục hồi năng lượng.',
+};
+
+export type Spa2MenSpaStat = {
+  id: string;
+  n: string;
+  l: string;
+};
+
+export const spa2MenSpaStats: Spa2MenSpaStat[] = [
+  { id: 'male-clients', n: '40%', l: 'Khách hàng là nam' },
+  { id: 'rating', n: '4.9★', l: 'Đánh giá từ nam giới' },
+  { id: 'services-count', n: '6', l: 'Dịch vụ chuyên biệt' },
+  { id: 'judgment', n: '0', l: 'Phán xét' },
+];
+
+export type Spa2MenService = {
+  id: string;
+  name: string;
+  price: number;
+  duration: string;
+  icon: string;
+  desc: string;
+  tags: string[];
+};
+
+export const spa2MenServices: Spa2MenService[] = [
+  {
+    id: 'deep-clean-facial',
+    name: 'Deep Clean Facial For Men',
+    price: 790000,
+    duration: '60 phút',
+    icon: 'solar:face-scan-circle-bold-duotone',
+    desc: 'Làm sạch sâu, kiểm soát dầu và thu nhỏ lỗ chân lông — dành riêng cho da nam.',
+    tags: ['Da dầu', 'Mụn đầu đen'],
+  },
+  {
+    id: 'sports-recovery-massage',
+    name: 'Sports Recovery Massage',
+    price: 890000,
+    duration: '75 phút',
+    icon: 'solar:running-bold-duotone',
+    desc: 'Giải phóng cơ bắp căng cứng sau tập luyện bằng deep tissue massage chuyên biệt.',
+    tags: ['Thể thao', 'Đau cơ'],
+  },
+  {
+    id: 'executive-stress-relief',
+    name: 'Executive Stress Relief',
+    price: 1190000,
+    duration: '90 phút',
+    icon: 'solar:briefcase-bold-duotone',
+    desc: 'Massage toàn thân + facial + head massage — dành cho doanh nhân bận rộn.',
+    tags: ['Stress', 'Mệt mỏi'],
+  },
+  {
+    id: 'gentleman-grooming-package',
+    name: 'Gentleman Grooming Package',
+    price: 690000,
+    duration: '60 phút',
+    icon: 'solar:scissor-bold-duotone',
+    desc: 'Cạo râu cổ điển, chăm sóc da mặt và massage đầu thư giãn.',
+    tags: ['Grooming', 'Cổ điển'],
+  },
+  {
+    id: 'anti-aging-for-men',
+    name: 'Anti-Aging For Men',
+    price: 1090000,
+    duration: '75 phút',
+    icon: 'solar:star-shine-bold-duotone',
+    desc: 'Liệu trình chống lão hóa chuyên biệt — cấu trúc da nam khác hoàn toàn với da nữ.',
+    tags: ['Lão hóa', 'Collagen'],
+  },
+  {
+    id: 'detox-body-for-men',
+    name: 'Detox Body For Men',
+    price: 990000,
+    duration: '90 phút',
+    icon: 'solar:drop-bold-duotone',
+    desc: 'Tẩy da chết với muối biển + massage detox — thải độc hiệu quả cho cơ thể nam.',
+    tags: ['Detox', 'Thể hình'],
+  },
+];
+
+export type Spa2MenPackage = {
+  id: string;
+  name: string;
+  price: number;
+  sessions: string;
+  desc: string;
+  hot?: boolean;
+};
+
+export const spa2MenPackages: Spa2MenPackage[] = [
+  {
+    id: 'monthly-gentleman',
+    name: 'Monthly Gentleman',
+    price: 2990000,
+    sessions: '1 lần/tháng',
+    desc: 'Facial + Grooming hàng tháng — duy trì làn da tươi trẻ, chuyên nghiệp.',
+  },
+  {
+    id: 'executive-monthly',
+    name: 'Executive Monthly',
+    price: 4990000,
+    sessions: '2 lần/tháng',
+    desc: 'Stress relief + Facial + Grooming — dành cho doanh nhân bận rộn.',
+  },
+  {
+    id: 'all-in-annual',
+    name: 'All-In Annual',
+    price: 24900000,
+    sessions: 'Không giới hạn',
+    desc: 'Tất cả dịch vụ men spa không giới hạn trong 12 tháng.',
+    hot: true,
+  },
+];
+
+export type Spa2MenFaq = {
+  id: string;
+  q: string;
+  a: string;
+};
+
+export const spa2MenFaqs: Spa2MenFaq[] = [
+  {
+    id: 'should-men-go-spa',
+    q: 'Nam giới có nên đi spa không?',
+    a: 'Hoàn toàn có. Da nam dày hơn và tiết dầu nhiều hơn, cần được chăm sóc đúng cách. Ngày càng nhiều nam giới nhận ra lợi ích của việc chăm sóc da và thư giãn định kỳ.',
+  },
+  {
+    id: 'is-it-comfortable',
+    q: 'Có thoải mái không khi là nam giới đến spa?',
+    a: 'Nature Spa có phòng riêng, KTV chuyên biệt cho nam. Không gian hoàn toàn riêng tư và thoải mái — không khác gì phòng gym hay tiệm barber.',
+  },
+  {
+    id: 'which-service-first',
+    q: 'Nên bắt đầu từ dịch vụ nào?',
+    a: 'Gentleman Grooming Package hoặc Deep Clean Facial là lựa chọn lý tưởng cho lần đầu. KTV sẽ tư vấn thêm dựa trên tình trạng da thực tế của bạn.',
+  },
+];
+
+// ---------- Hair & Scalp Treatments banner + services + tips
+
+export type Spa2HairBeautyBanner = {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+};
+
+export const spa2HairBeautyBanner: Spa2HairBeautyBanner = {
+  eyebrow: 'TÓC & DA ĐẦU',
+  title: 'Liệu trình chăm sóc tóc & da đầu',
+  subtitle:
+    'Phục hồi mái tóc hư tổn, trị rụng tóc và nuôi dưỡng da đầu từ tầng sâu nhất bằng thảo dược hữu cơ.',
+};
+
+export type Spa2HairService = {
+  id: string;
+  name: string;
+  price: number;
+  duration: string;
+  icon: string;
+  desc: string;
+  concerns: string[];
+};
+
+export const spa2HairServices: Spa2HairService[] = [
+  {
+    id: 'herbal-shampoo',
+    name: 'Gội Đầu Thảo Mộc Cao Cấp',
+    price: 290000,
+    duration: '45 phút',
+    icon: 'solar:magic-stick-3-bold-duotone',
+    desc: 'Gội sạch với thảo dược tự nhiên, massage da đầu kích thích tuần hoàn.',
+    concerns: ['Gàu', 'Da đầu nhờn'],
+  },
+  {
+    id: 'deep-conditioning',
+    name: 'Deep Conditioning Treatment',
+    price: 590000,
+    duration: '60 phút',
+    icon: 'solar:drop-bold-duotone',
+    desc: 'Ủ dưỡng chuyên sâu phục hồi mái tóc hư tổn, khô xơ và chẻ ngọn.',
+    concerns: ['Tóc khô', 'Hư tổn'],
+  },
+  {
+    id: 'scalp-detox',
+    name: 'Scalp Detox & Massage',
+    price: 490000,
+    duration: '60 phút',
+    icon: 'solar:leaf-bold-duotone',
+    desc: 'Tẩy tế bào chết da đầu, làm sạch nang tóc và kích thích mọc tóc.',
+    concerns: ['Rụng tóc', 'Da đầu khô'],
+  },
+  {
+    id: 'keratin-repair',
+    name: 'Keratin Repair Treatment',
+    price: 1290000,
+    duration: '90 phút',
+    icon: 'solar:stars-bold-duotone',
+    desc: 'Phục hồi keratin tóc bằng protein tự nhiên — tóc mềm mượt bền đến 6 tuần.',
+    concerns: ['Tóc hư nặng', 'Uốn/nhuộm'],
+  },
+  {
+    id: 'anti-hair-loss',
+    name: 'Anti Hair Loss Program',
+    price: 890000,
+    duration: '75 phút',
+    icon: 'solar:shield-bold-duotone',
+    desc: 'Liệu trình trị rụng tóc chuyên sâu: serum + massage + ánh sáng hồng ngoại.',
+    concerns: ['Rụng tóc', 'Thưa tóc'],
+  },
+  {
+    id: 'scalp-hydration-facial',
+    name: 'Scalp Hydration Facial',
+    price: 690000,
+    duration: '60 phút',
+    icon: 'solar:snowflake-bold-duotone',
+    desc: 'Cấp ẩm sâu cho da đầu khô ngứa — kết hợp chiết xuất lô hội và dầu argan.',
+    concerns: ['Da đầu khô', 'Ngứa'],
+  },
+];
+
+export type Spa2HairTip = {
+  id: string;
+  icon: string;
+  tip: string;
+};
+
+export const spa2HairTips: Spa2HairTip[] = [
+  {
+    id: 'tip-1',
+    icon: '💧',
+    tip: 'Gội đầu đúng cách: xoa nhẹ da đầu 3–5 phút thay vì cọ mạnh.',
+  },
+  {
+    id: 'tip-2',
+    icon: '🌿',
+    tip: 'Sử dụng nước lạnh để xả tóc — giúp đóng vảy tóc và tăng độ bóng.',
+  },
+  {
+    id: 'tip-3',
+    icon: '🌞',
+    tip: 'Tránh để tóc ướt khi ra nắng — gốc tóc dễ tổn thương nhất khi ẩm.',
+  },
+  {
+    id: 'tip-4',
+    icon: '🥚',
+    tip: 'Ăn đủ protein và biotin — dinh dưỡng quyết định 80% sức khỏe của tóc.',
+  },
+  {
+    id: 'tip-5',
+    icon: '✂️',
+    tip: 'Cắt ngọn tóc mỗi 8–12 tuần để ngăn chẻ ngọn lan lên phần thân tóc.',
+  },
+  {
+    id: 'tip-6',
+    icon: '🧴',
+    tip: 'Dùng dầu xả cách gốc tóc 5cm để tránh làm tắc nghẽn nang lông.',
+  },
+];
+
+// ---------- Anti-Aging Program banner + age-stage roadmap + concerns
+
+export type Spa2AntiAgingBanner = {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+};
+
+export const spa2AntiAgingBanner: Spa2AntiAgingBanner = {
+  eyebrow: 'CHỐNG LÃO HÓA',
+  title: 'Giải pháp chống lão hóa cá nhân hóa theo từng độ tuổi',
+  subtitle:
+    'Không có một công thức chống lão hóa chung. Chương trình của bạn phụ thuộc vào tuổi, tình trạng da và mục tiêu riêng.',
+};
+
+export type Spa2AntiAgingStage = {
+  id: string;
+  age: string;
+  title: string;
+  color: string;
+  icon: string;
+  desc: string;
+  services: string[];
+};
+
+export const spa2AntiAgingStages: Spa2AntiAgingStage[] = [
+  {
+    id: 'stage-25-35',
+    age: '25–35',
+    title: 'Phòng ngừa',
+    color: '#4CAF50',
+    icon: 'solar:shield-bold-duotone',
+    desc: 'Duy trì collagen, chống nắng và dưỡng ẩm sâu để làm chậm lão hóa.',
+    services: ['Hydrating Facial', 'Collagen Infusion', 'SPF Treatment'],
+  },
+  {
+    id: 'stage-35-45',
+    age: '35–45',
+    title: 'Phục hồi sớm',
+    color: '#2E8B7A',
+    icon: 'solar:refresh-bold-duotone',
+    desc: 'Kích thích tái tạo collagen, cải thiện độ đàn hồi và mờ nếp nhăn đầu tiên.',
+    services: ['RF Facial', 'Vitamin C Infusion', 'Eye Zone Treatment'],
+  },
+  {
+    id: 'stage-45-55',
+    age: '45–55',
+    title: 'Tái cấu trúc',
+    color: '#EF9F27',
+    icon: 'solar:chart-2-bold-duotone',
+    desc: 'Nâng cơ, xóa nếp nhăn sâu và phục hồi khung xương mặt bằng công nghệ tiên tiến.',
+    services: ['HIFU', 'Filler nhẹ', 'Stem Cell Treatment'],
+  },
+  {
+    id: 'stage-55-plus',
+    age: '55+',
+    title: 'Phục hồi toàn diện',
+    color: '#7F77DD',
+    icon: 'solar:stars-bold-duotone',
+    desc: 'Chương trình kết hợp đa phương pháp — phục hồi sức sống cho làn da theo từng giai đoạn.',
+    services: ['Multi-Modal Program', 'Platelet Rich Plasma', 'Luxury Anti-Aging Ritual'],
+  },
+];
+
+export type Spa2AgingConcern = {
+  id: string;
+  concern: string;
+  icon: string;
+  treatments: string[];
+};
+
+export const spa2AgingConcerns: Spa2AgingConcern[] = [
+  {
+    id: 'wrinkles',
+    concern: 'Nếp nhăn',
+    icon: '〰️',
+    treatments: ['HIFU nâng cơ', 'RF trẻ hóa', 'Collagen Infusion'],
+  },
+  {
+    id: 'sagging-skin',
+    concern: 'Da chùng nhão',
+    icon: '📉',
+    treatments: ['RF nâng cơ', 'Tế bào gốc', 'Laser CO2'],
+  },
+  {
+    id: 'pigmentation',
+    concern: 'Đốm nâu & sắc tố',
+    icon: '🍂',
+    treatments: ['Laser trị nám', 'Vitamin C điện di', 'Peel'],
+  },
+  {
+    id: 'large-pores',
+    concern: 'Lỗ chân lông to',
+    icon: '🔍',
+    treatments: ['Laser se khít', 'RF vi điểm', 'Retinol Facial'],
+  },
+  {
+    id: 'dull-skin',
+    concern: 'Da xỉn màu',
+    icon: '🌥️',
+    treatments: ['Tế bào gốc', 'Brightening Facial', 'Mặt nạ ngọc trai'],
+  },
+  {
+    id: 'dark-circles',
+    concern: 'Quầng thâm mắt',
+    icon: '👁️',
+    treatments: ['Lymphatic Drainage', 'Vitamin K serum', 'Cooling Eye Mask'],
+  },
+];
+
+// ---------- Water Therapy banner + treatments + science facts
+
+export type Spa2WaterTherapyBanner = {
+  emoji: string;
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+};
+
+export const spa2WaterTherapyBanner: Spa2WaterTherapyBanner = {
+  emoji: '💧',
+  eyebrow: 'THỦY TRỊ LIỆU',
+  title: 'Sức mạnh chữa lành của nước',
+  subtitle:
+    'Hydrotherapy — liệu pháp dùng nước ở các nhiệt độ và áp suất khác nhau để chữa bệnh và phục hồi từ ngàn năm trước.',
+};
+
+export type Spa2WaterTreatment = {
+  id: string;
+  name: string;
+  price: number;
+  duration: string;
+  image: string;
+  desc: string;
+  benefits: string[];
+};
+
+export const spa2WaterTreatments: Spa2WaterTreatment[] = [
+  {
+    id: 'himalaya-mineral-bath',
+    name: 'Bồn Tắm Khoáng Himalaya',
+    price: 590000,
+    duration: '45 phút',
+    image: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=800&q=80',
+    desc: 'Ngâm mình trong nước muối hồng Himalaya giàu khoáng chất — detox và thư giãn cơ sâu.',
+    benefits: ['Thải độc cơ thể', 'Giảm đau cơ', 'Cân bằng pH da'],
+  },
+  {
+    id: 'milk-rose-bath',
+    name: 'Bồn Tắm Sữa & Hoa Hồng',
+    price: 790000,
+    duration: '45 phút',
+    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&q=80',
+    desc: 'Bồn tắm Cleopatra với sữa bò tươi, cánh hoa hồng và tinh dầu dưỡng ẩm sâu.',
+    benefits: ['Dưỡng ẩm sâu', 'Sáng da tự nhiên', 'Thư giãn toàn thân'],
+  },
+  {
+    id: 'herbal-steam',
+    name: 'Xông Hơi Thảo Dược',
+    price: 390000,
+    duration: '30 phút',
+    image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80',
+    desc: 'Xông hơi với hỗn hợp sả, gừng, lá bưởi và thảo mộc Việt — khai thông hệ hô hấp.',
+    benefits: ['Khai thông lỗ chân lông', 'Giảm stress', 'Tăng miễn dịch'],
+  },
+  {
+    id: 'hot-cold-stone-therapy',
+    name: 'Liệu Pháp Đá Lạnh & Đá Nóng',
+    price: 890000,
+    duration: '60 phút',
+    image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=800&q=80',
+    desc: 'Kết hợp nhiệt học — đá nóng giãn cơ, đá lạnh kích thích tuần hoàn và làn da.',
+    benefits: ['Tuần hoàn máu', 'Giảm viêm', 'Sức sống làn da'],
+  },
+];
+
+export type Spa2WaterScienceFact = {
+  id: string;
+  icon: string;
+  title: string;
+  desc: string;
+};
+
+export const spa2WaterScienceFacts: Spa2WaterScienceFact[] = [
+  {
+    id: 'temperature',
+    icon: '🌡️',
+    title: 'Nhiệt độ',
+    desc: 'Nước nóng (38–42°C) giãn cơ, kích thích tuần hoàn. Nước lạnh (15–20°C) giảm viêm, tăng cường miễn dịch.',
+  },
+  {
+    id: 'minerals',
+    icon: '⚗️',
+    title: 'Khoáng chất',
+    desc: 'Muối khoáng được hấp thụ qua da, bổ sung Mg, K, Ca — cân bằng điện giải tự nhiên.',
+  },
+  {
+    id: 'pressure',
+    icon: '💨',
+    title: 'Áp suất',
+    desc: 'Áp lực nước tạo hiệu ứng massage tự nhiên, kích thích hệ bạch huyết và giải phóng endorphin.',
+  },
+];
+
+// ─── Ayurveda & Traditional Medicine ────────────────────────────────
+
+export type Spa2AyurvedaBanner = {
+  emoji: string;
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+};
+
+export const spa2AyurvedaBanner: Spa2AyurvedaBanner = {
+  emoji: '🪔',
+  eyebrow: 'Y HỌC CỔ TRUYỀN',
+  title: 'Trí tuệ chữa lành từ phương Đông ngàn năm',
+  subtitle:
+    'Ayurveda, Tuina, Đông Y Việt Nam, Thai Massage và Bali Ritual — được thực hiện bởi KTV được đào tạo chính thống.',
+};
+
+export type Spa2AyurvedaTreatment = {
+  id: string;
+  name: string;
+  origin: string;
+  price: number;
+  duration: string;
+  icon: string;
+  desc: string;
+};
+
+export const spa2AyurvedaTreatments: Spa2AyurvedaTreatment[] = [
+  {
+    id: 'abhyanga',
+    name: 'Abhyanga Full Body Massage',
+    origin: 'Ấn Độ',
+    price: 1190000,
+    duration: '90 phút',
+    icon: 'solar:hand-stars-bold-duotone',
+    desc: 'Massage toàn thân bằng dầu thảo dược ấm — kỹ thuật Ayurveda 5000 năm tuổi, cân bằng 3 dosha.',
+  },
+  {
+    id: 'shirodhara',
+    name: 'Shirodhara (Rót Dầu Đầu)',
+    origin: 'Ấn Độ',
+    price: 890000,
+    duration: '60 phút',
+    icon: 'solar:drop-bold-duotone',
+    desc: 'Rót dầu thảo dược ấm liên tục lên trán — kích hoạt trực giác, giảm lo âu và mất ngủ sâu.',
+  },
+  {
+    id: 'tuina',
+    name: 'Tuina Therapeutic Massage',
+    origin: 'Trung Quốc',
+    price: 890000,
+    duration: '75 phút',
+    icon: 'solar:lightning-bold-duotone',
+    desc: 'Massage y học cổ truyền Trung Quốc — tác động vào kinh lạc và huyệt đạo, điều hòa khí huyết.',
+  },
+  {
+    id: 'dong-y-herbal-bath',
+    name: 'Đông Y Herbal Bath',
+    origin: 'Việt Nam',
+    price: 690000,
+    duration: '60 phút',
+    icon: 'solar:leaf-bold-duotone',
+    desc: 'Ngâm trong bồn thuốc Đông Y với 20+ thảo dược truyền thống — phục hồi sức khỏe toàn diện.',
+  },
+  {
+    id: 'thai-yoga-massage',
+    name: 'Thai Yoga Massage',
+    origin: 'Thái Lan',
+    price: 1090000,
+    duration: '90 phút',
+    icon: 'solar:body-bold-duotone',
+    desc: 'Kết hợp yoga thụ động và ấn huyệt — mở rộng các đường năng lượng và tăng linh hoạt cơ thể.',
+  },
+  {
+    id: 'balinese-spirit-ritual',
+    name: 'Balinese Spirit Ritual',
+    origin: 'Indonesia',
+    price: 1390000,
+    duration: '120 phút',
+    icon: 'solar:stars-bold-duotone',
+    desc: 'Nghi thức Bali đầy đủ: tẩy tế bào chết + massage + hoa + dầu thơm — trải nghiệm hoàn toàn khác biệt.',
+  },
+];
+
+export type Spa2AyurvedaPhilosophy = {
+  id: string;
+  icon: string;
+  question: string;
+  answer: string;
+};
+
+export const spa2AyurvedaPhilosophies: Spa2AyurvedaPhilosophy[] = [
+  {
+    id: 'self-healing',
+    icon: '♾️',
+    question: 'Cơ thể tự chữa lành',
+    answer:
+      'Mọi liệu pháp truyền thống đều hướng đến việc kích hoạt khả năng tự phục hồi bẩm sinh của cơ thể, không chỉ điều trị triệu chứng.',
+  },
+  {
+    id: 'holistic-balance',
+    icon: '⚖️',
+    question: 'Cân bằng tổng thể',
+    answer:
+      'Sức khỏe không chỉ là thiếu bệnh tật — mà là sự cân bằng hoàn hảo giữa thể xác, tâm trí và năng lượng sống.',
+  },
+  {
+    id: 'nature-as-healer',
+    icon: '🌿',
+    question: 'Thiên nhiên là thầy thuốc',
+    answer:
+      'Hơn 5000 năm kinh nghiệm của y học phương Đông chứng minh: thiên nhiên cung cấp tất cả những gì cơ thể cần để khỏe mạnh.',
+  },
+];
+
+// ─── Spa Hotel & Staycation ──────────────────────────────────────────
+
+export type Spa2SpaHotelBanner = {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  badges: string[];
+};
+
+export const spa2SpaHotelBanner: Spa2SpaHotelBanner = {
+  eyebrow: 'SPA HOTEL & STAYCATION',
+  title: 'Kỳ nghỉ dưỡng spa ngay tại thành phố của bạn',
+  subtitle:
+    'Kết hợp lưu trú khách sạn 4–5 sao với liệu trình spa trọn gói — không cần ra nước ngoài.',
+  badges: ['4★ & 5★ Hotels', 'Gói từ 2 người', 'Spa không giới hạn'],
+};
+
+export type Spa2StaycationPackage = {
+  id: string;
+  name: string;
+  nights: number;
+  price: number;
+  image: string;
+  hotel: string;
+  spa: string;
+  includes: string[];
+  badge: string;
+};
+
+export const spa2StaycationPackages: Spa2StaycationPackage[] = [
+  {
+    id: 'spa-escape-weeknight',
+    name: 'Spa Escape Weeknight',
+    nights: 1,
+    price: 3900000,
+    image: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=900&q=80',
+    hotel: 'Khách sạn đối tác 4★',
+    spa: '2 giờ spa trọn gói',
+    includes: [
+      'Phòng Superior 1 đêm',
+      'Bữa sáng 2 người',
+      'Facial Organic 60 phút',
+      'Massage thư giãn 60 phút',
+      'Minibar không cồn',
+    ],
+    badge: '',
+  },
+  {
+    id: 'weekend-wellness-retreat',
+    name: 'Weekend Wellness Retreat',
+    nights: 2,
+    price: 7900000,
+    image: 'https://images.unsplash.com/photo-1596178060671-7a80dc8059ea?w=900&q=80',
+    hotel: 'Khách sạn đối tác 5★',
+    spa: '5 giờ spa cao cấp',
+    includes: [
+      'Phòng Deluxe 2 đêm',
+      'Bữa sáng & tối 2 người',
+      'Body Ritual 90 phút',
+      'Anti-Aging Facial 75 phút',
+      'Yoga buổi sáng',
+      'Bồn tắm hoa',
+      'Xe đưa đón',
+    ],
+    badge: 'Best Value',
+  },
+  {
+    id: 'luxury-detox-journey',
+    name: 'Luxury Detox Journey 3D2N',
+    nights: 3,
+    price: 14900000,
+    image: 'https://images.unsplash.com/photo-1531112068337-3cd6d0d2b56b?w=900&q=80',
+    hotel: 'Resort 5★ Nha Trang',
+    spa: 'Unlimited spa',
+    includes: [
+      'Suite 3 đêm view biển',
+      'All meals healthy menu',
+      'Spa không giới hạn',
+      'Detox program',
+      'Personal trainer',
+      'Yoga & thiền 2x/ngày',
+      'Tư vấn dinh dưỡng',
+      'Spa photo session',
+    ],
+    badge: 'Premium',
+  },
+];
+
+export type Spa2HotelPartner = {
+  id: string;
+  name: string;
+  stars: number;
+  location: string;
+  logo: string;
+};
+
+export const spa2HotelPartners: Spa2HotelPartner[] = [
+  {
+    id: 'intercontinental-saigon',
+    name: 'InterContinental Saigon',
+    stars: 5,
+    location: 'TP.HCM',
+    logo: 'IC',
+  },
+  { id: 'sofitel-legend', name: 'Sofitel Legend', stars: 5, location: 'Hà Nội', logo: 'SL' },
+  { id: 'vinpearl-resort', name: 'Vinpearl Resort', stars: 5, location: 'Nha Trang', logo: 'VP' },
+  { id: 'hyatt-regency', name: 'Hyatt Regency', stars: 5, location: 'Đà Nẵng', logo: 'HY' },
+  { id: 'melia-ho-chi-minh', name: 'Melia Ho Chi Minh', stars: 4, location: 'TP.HCM', logo: 'ME' },
+  { id: 'lotte-hotel', name: 'Lotte Hotel', stars: 5, location: 'Hà Nội', logo: 'LT' },
+];
+
+// ─── Community & Lifestyle ───────────────────────────────────────────
+
+export type Spa2CommunityBanner = {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+};
+
+export const spa2CommunityBanner: Spa2CommunityBanner = {
+  eyebrow: 'CỘNG ĐỒNG',
+  title: 'Nature Spa Community',
+  subtitle:
+    'Chia sẻ hành trình chăm sóc sức khỏe, tham gia thử thách và kết nối với những người cùng chí hướng.',
+};
+
+export type Spa2CommunityPost = {
+  id: string;
+  author: string;
+  avatar: string;
+  role: string;
+  time: string;
+  content: string;
+  image?: string;
+  likes: number;
+  comments: number;
+  tags: string[];
+};
+
+export const spa2CommunityPosts: Spa2CommunityPost[] = [
+  {
+    id: 'post-1',
+    author: 'Minh Anh',
+    avatar: 'https://i.pravatar.cc/60?img=11',
+    role: 'Gold Member',
+    time: '2 giờ trước',
+    content:
+      'Vừa hoàn thành liệu trình Anti-Aging 10 buổi — da mình thay đổi hoàn toàn! Nếp nhăn mờ đi 70%, da căng và sáng hơn hẳn. Cảm ơn team Nature Spa ❤️',
+    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&q=80',
+    likes: 48,
+    comments: 12,
+    tags: ['AntiAging', 'Kết quả thực tế'],
+  },
+  {
+    id: 'post-2',
+    author: 'Thu Hà',
+    avatar: 'https://i.pravatar.cc/60?img=16',
+    role: 'Platinum Member',
+    time: '5 giờ trước',
+    content:
+      'Tip nhỏ cho chị em: uống đủ 2.5L nước/ngày và ngủ trước 11pm — kết hợp cùng facial định kỳ, da của mình không cần makeup vẫn đẹp tự nhiên 🌿',
+    likes: 89,
+    comments: 23,
+    tags: ['Skincare Tips', 'Lối sống lành mạnh'],
+  },
+  {
+    id: 'post-3',
+    author: 'Hoàng Nam',
+    avatar: 'https://i.pravatar.cc/60?img=23',
+    role: 'Silver Member',
+    time: '1 ngày trước',
+    content:
+      "Lần đầu thử Men's Spa — ban đầu hơi ngại nhưng thật sự rất đáng! Massage phục hồi sau gym xịn hơn foam roller rất nhiều lần. Anh em cứ thử đi, không hối hận đâu 💪",
+    likes: 67,
+    comments: 18,
+    tags: ['MenSpa', 'Recovery'],
+  },
+];
+
+export type Spa2CommunityChallenge = {
+  id: string;
+  name: string;
+  participants: number;
+  icon: string;
+  color: string;
+  progress: number;
+};
+
+export const spa2CommunityChallenges: Spa2CommunityChallenge[] = [
+  {
+    id: 'water-challenge',
+    name: 'Thử thách 7 ngày uống nước',
+    participants: 1243,
+    icon: '💧',
+    color: '#0D47A1',
+    progress: 65,
+  },
+  {
+    id: 'meditation-challenge',
+    name: 'Thiền 10 phút mỗi sáng',
+    participants: 876,
+    icon: '🧘',
+    color: '#2E8B7A',
+    progress: 43,
+  },
+  {
+    id: 'sugar-free-challenge',
+    name: 'Không đường 14 ngày',
+    participants: 534,
+    icon: '🥗',
+    color: '#2E7D32',
+    progress: 28,
+  },
+  {
+    id: 'minimal-skincare-challenge',
+    name: 'Skincare tối giản 30 ngày',
+    participants: 1891,
+    icon: '✨',
+    color: '#C2185B',
+    progress: 80,
+  },
+];
+
 // ============================== SPA2 - END ====================================

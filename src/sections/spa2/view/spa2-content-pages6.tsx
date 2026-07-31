@@ -36,6 +36,52 @@ import {
   SPA2_TEAL_LIGHT,
   SPA2_CREAM_DARK,
   SPA2_PAGE_IMAGES,
+  spa2MenSpaBanner,
+  spa2MenSpaStats,
+  spa2MenServices,
+  spa2MenPackages,
+  spa2MenFaqs,
+  type Spa2MenSpaBanner,
+  type Spa2MenSpaStat,
+  type Spa2MenService,
+  type Spa2MenPackage,
+  type Spa2MenFaq,
+  spa2HairBeautyBanner,
+  spa2HairServices,
+  spa2HairTips,
+  type Spa2HairBeautyBanner,
+  type Spa2HairService,
+  type Spa2HairTip,
+  spa2AntiAgingBanner,
+  spa2AntiAgingStages,
+  spa2AgingConcerns,
+  type Spa2AntiAgingBanner,
+  type Spa2AntiAgingStage,
+  type Spa2AgingConcern,
+  spa2WaterTherapyBanner,
+  spa2WaterTreatments,
+  spa2WaterScienceFacts,
+  type Spa2WaterTherapyBanner,
+  type Spa2WaterTreatment,
+  type Spa2WaterScienceFact,
+  spa2AyurvedaBanner,
+  spa2AyurvedaTreatments,
+  spa2AyurvedaPhilosophies,
+  type Spa2AyurvedaBanner,
+  type Spa2AyurvedaTreatment,
+  type Spa2AyurvedaPhilosophy,
+  spa2SpaHotelBanner,
+  spa2StaycationPackages,
+  spa2HotelPartners,
+  type Spa2SpaHotelBanner,
+  type Spa2StaycationPackage,
+  type Spa2HotelPartner,
+  spa2CommunityBanner,
+  spa2CommunityPosts,
+  spa2CommunityChallenges,
+  type Spa2CommunityBanner,
+  type Spa2CommunityPost,
+  type Spa2CommunityChallenge,
 } from '../spa2-pages-data';
 
 const formatVND = (n: number) => `${new Intl.NumberFormat('vi-VN').format(n)}đ`;
@@ -264,96 +310,20 @@ function GradientCta({
 // 1. MEN'S SPA
 // ══════════════════════════════════════════════════════════
 
-const MEN_SERVICES = [
-  {
-    name: 'Deep Clean Facial For Men',
-    price: 790000,
-    duration: '60 phút',
-    icon: 'solar:face-scan-circle-bold-duotone',
-    desc: 'Làm sạch sâu, kiểm soát dầu và thu nhỏ lỗ chân lông — dành riêng cho da nam.',
-    tags: ['Da dầu', 'Mụn đầu đen'],
-  },
-  {
-    name: 'Sports Recovery Massage',
-    price: 890000,
-    duration: '75 phút',
-    icon: 'solar:running-bold-duotone',
-    desc: 'Giải phóng cơ bắp căng cứng sau tập luyện bằng deep tissue massage chuyên biệt.',
-    tags: ['Thể thao', 'Đau cơ'],
-  },
-  {
-    name: 'Executive Stress Relief',
-    price: 1190000,
-    duration: '90 phút',
-    icon: 'solar:briefcase-bold-duotone',
-    desc: 'Massage toàn thân + facial + head massage — dành cho doanh nhân bận rộn.',
-    tags: ['Stress', 'Mệt mỏi'],
-  },
-  {
-    name: 'Gentleman Grooming Package',
-    price: 690000,
-    duration: '60 phút',
-    icon: 'solar:scissor-bold-duotone',
-    desc: 'Cạo râu cổ điển, chăm sóc da mặt và massage đầu thư giãn.',
-    tags: ['Grooming', 'Cổ điển'],
-  },
-  {
-    name: 'Anti-Aging For Men',
-    price: 1090000,
-    duration: '75 phút',
-    icon: 'solar:star-shine-bold-duotone',
-    desc: 'Liệu trình chống lão hóa chuyên biệt — cấu trúc da nam khác hoàn toàn với da nữ.',
-    tags: ['Lão hóa', 'Collagen'],
-  },
-  {
-    name: 'Detox Body For Men',
-    price: 990000,
-    duration: '90 phút',
-    icon: 'solar:drop-bold-duotone',
-    desc: 'Tẩy da chết với muối biển + massage detox — thải độc hiệu quả cho cơ thể nam.',
-    tags: ['Detox', 'Thể hình'],
-  },
-];
-
-const MEN_FAQS = [
-  {
-    q: 'Nam giới có nên đi spa không?',
-    a: 'Hoàn toàn có. Da nam dày hơn và tiết dầu nhiều hơn, cần được chăm sóc đúng cách. Ngày càng nhiều nam giới nhận ra lợi ích của việc chăm sóc da và thư giãn định kỳ.',
-  },
-  {
-    q: 'Có thoải mái không khi là nam giới đến spa?',
-    a: 'Nature Spa có phòng riêng, KTV chuyên biệt cho nam. Không gian hoàn toàn riêng tư và thoải mái — không khác gì phòng gym hay tiệm barber.',
-  },
-  {
-    q: 'Nên bắt đầu từ dịch vụ nào?',
-    a: 'Gentleman Grooming Package hoặc Deep Clean Facial là lựa chọn lý tưởng cho lần đầu. KTV sẽ tư vấn thêm dựa trên tình trạng da thực tế của bạn.',
-  },
-];
-
-export function Spa2MenSpaPageView() {
+export function Spa2MenSpaPageView({
+  banner = spa2MenSpaBanner,
+  stats = spa2MenSpaStats,
+  services = spa2MenServices,
+  packages = spa2MenPackages,
+  faqs = spa2MenFaqs,
+}: {
+  banner?: Spa2MenSpaBanner;
+  stats?: Spa2MenSpaStat[];
+  services?: Spa2MenService[];
+  packages?: Spa2MenPackage[];
+  faqs?: Spa2MenFaq[];
+} = {}) {
   const [toast, setToast] = useState('');
-
-  const MEN_PACKAGES = [
-    {
-      name: 'Monthly Gentleman',
-      price: 2990000,
-      sessions: '1 lần/tháng',
-      desc: 'Facial + Grooming hàng tháng — duy trì làn da tươi trẻ, chuyên nghiệp.',
-    },
-    {
-      name: 'Executive Monthly',
-      price: 4990000,
-      sessions: '2 lần/tháng',
-      desc: 'Stress relief + Facial + Grooming — dành cho doanh nhân bận rộn.',
-    },
-    {
-      name: 'All-In Annual',
-      price: 24900000,
-      sessions: 'Không giới hạn',
-      desc: 'Tất cả dịch vụ men spa không giới hạn trong 12 tháng.',
-      hot: true,
-    },
-  ];
 
   return (
     <Box sx={{ bgcolor: 'background.default' }}>
@@ -391,17 +361,16 @@ export function Spa2MenSpaPageView() {
         <Container sx={{ position: 'relative', textAlign: 'center' }}>
           <Stack spacing={2.5} alignItems="center">
             <Typography variant="overline" sx={{ color: SPA2_TEAL_LIGHT, letterSpacing: 3 }}>
-              SPA DÀNH CHO NAM
+              {banner.eyebrow}
             </Typography>
             <Typography
               variant="h1"
               sx={{ color: 'white', fontWeight: 600, lineHeight: 1.1, maxWidth: 680 }}
             >
-              Chăm sóc bản thân không phân biệt giới tính
+              {banner.title}
             </Typography>
             <Typography sx={{ color: 'rgba(255,255,255,0.7)', fontSize: 17, maxWidth: 520 }}>
-              Liệu trình thiết kế riêng cho da và cơ thể nam — thư giãn, trẻ hóa và phục hồi năng
-              lượng.
+              {banner.subtitle}
             </Typography>
             <Stack direction="row" spacing={2}>
               <Button
@@ -441,13 +410,8 @@ export function Spa2MenSpaPageView() {
       <Box sx={{ py: 4, bgcolor: SPA2_TEAL }}>
         <Container>
           <Grid container spacing={3} justifyContent="center">
-            {[
-              { n: '40%', l: 'Khách hàng là nam' },
-              { n: '4.9★', l: 'Đánh giá từ nam giới' },
-              { n: '6', l: 'Dịch vụ chuyên biệt' },
-              { n: '0', l: 'Phán xét' },
-            ].map((s) => (
-              <Grid key={s.l} xs={6} sm={3}>
+            {stats.map((s) => (
+              <Grid key={s.id} xs={6} sm={3}>
                 <Stack alignItems="center" sx={{ color: 'white', textAlign: 'center' }}>
                   <Typography variant="h3" sx={{ fontWeight: 700 }}>
                     {s.n}
@@ -469,8 +433,8 @@ export function Spa2MenSpaPageView() {
             subtitle="Tất cả liệu trình được điều chỉnh phù hợp với cấu trúc da và cơ thể đặc thù của nam giới."
           />
           <Grid container spacing={3}>
-            {MEN_SERVICES.map((s) => (
-              <Grid key={s.name} xs={12} sm={6} md={4}>
+            {services.map((s) => (
+              <Grid key={s.id} xs={12} sm={6} md={4}>
                 <SoftCard>
                   <Box
                     sx={{
@@ -539,8 +503,8 @@ export function Spa2MenSpaPageView() {
         <Container>
           <SectionTitle eyebrow="Gói thành viên" title="Gói định kỳ dành cho nam" />
           <Grid container spacing={3}>
-            {MEN_PACKAGES.map((p) => (
-              <Grid key={p.name} xs={12} md={4}>
+            {packages.map((p) => (
+              <Grid key={p.id} xs={12} md={4}>
                 <Card
                   sx={{
                     p: 3,
@@ -599,9 +563,9 @@ export function Spa2MenSpaPageView() {
       <Box sx={{ py: { xs: 6, md: 10 } }}>
         <Container maxWidth="md">
           <SectionTitle eyebrow="FAQ" title="Câu hỏi từ khách hàng nam" />
-          {MEN_FAQS.map((f, i) => (
+          {faqs.map((f, i) => (
             <Accordion
-              key={f.q}
+              key={f.id}
               defaultExpanded={i === 0}
               sx={{
                 mb: 1.5,
@@ -649,83 +613,29 @@ export function Spa2MenSpaPageView() {
 // 2. HAIR & SCALP TREATMENTS
 // ══════════════════════════════════════════════════════════
 
-const HAIR_SERVICES = [
-  {
-    name: 'Gội Đầu Thảo Mộc Cao Cấp',
-    price: 290000,
-    duration: '45 phút',
-    icon: 'solar:magic-stick-3-bold-duotone',
-    desc: 'Gội sạch với thảo dược tự nhiên, massage da đầu kích thích tuần hoàn.',
-    concerns: ['Gàu', 'Da đầu nhờn'],
-  },
-  {
-    name: 'Deep Conditioning Treatment',
-    price: 590000,
-    duration: '60 phút',
-    icon: 'solar:drop-bold-duotone',
-    desc: 'Ủ dưỡng chuyên sâu phục hồi mái tóc hư tổn, khô xơ và chẻ ngọn.',
-    concerns: ['Tóc khô', 'Hư tổn'],
-  },
-  {
-    name: 'Scalp Detox & Massage',
-    price: 490000,
-    duration: '60 phút',
-    icon: 'solar:leaf-bold-duotone',
-    desc: 'Tẩy tế bào chết da đầu, làm sạch nang tóc và kích thích mọc tóc.',
-    concerns: ['Rụng tóc', 'Da đầu khô'],
-  },
-  {
-    name: 'Keratin Repair Treatment',
-    price: 1290000,
-    duration: '90 phút',
-    icon: 'solar:stars-bold-duotone',
-    desc: 'Phục hồi keratin tóc bằng protein tự nhiên — tóc mềm mượt bền đến 6 tuần.',
-    concerns: ['Tóc hư nặng', 'Uốn/nhuộm'],
-  },
-  {
-    name: 'Anti Hair Loss Program',
-    price: 890000,
-    duration: '75 phút',
-    icon: 'solar:shield-bold-duotone',
-    desc: 'Liệu trình trị rụng tóc chuyên sâu: serum + massage + ánh sáng hồng ngoại.',
-    concerns: ['Rụng tóc', 'Thưa tóc'],
-  },
-  {
-    name: 'Scalp Hydration Facial',
-    price: 690000,
-    duration: '60 phút',
-    icon: 'solar:snowflake-bold-duotone',
-    desc: 'Cấp ẩm sâu cho da đầu khô ngứa — kết hợp chiết xuất lô hội và dầu argan.',
-    concerns: ['Da đầu khô', 'Ngứa'],
-  },
-];
-
-export function Spa2HairBeautyPageView() {
+export function Spa2HairBeautyPageView({
+  banner = spa2HairBeautyBanner,
+  services = spa2HairServices,
+  tips = spa2HairTips,
+}: {
+  banner?: Spa2HairBeautyBanner;
+  services?: Spa2HairService[];
+  tips?: Spa2HairTip[];
+} = {}) {
   const [concern, setConcern] = useState('all');
   const [toast, setToast] = useState('');
 
   const CONCERNS = ['all', 'Rụng tóc', 'Tóc khô', 'Hư tổn', 'Da đầu khô', 'Gàu', 'Ngứa'];
   const filtered =
-    concern === 'all'
-      ? HAIR_SERVICES
-      : HAIR_SERVICES.filter((s) => s.concerns.some((c) => c === concern));
-
-  const HAIR_TIPS = [
-    { icon: '💧', tip: 'Gội đầu đúng cách: xoa nhẹ da đầu 3–5 phút thay vì cọ mạnh.' },
-    { icon: '🌿', tip: 'Sử dụng nước lạnh để xả tóc — giúp đóng vảy tóc và tăng độ bóng.' },
-    { icon: '🌞', tip: 'Tránh để tóc ướt khi ra nắng — gốc tóc dễ tổn thương nhất khi ẩm.' },
-    { icon: '🥚', tip: 'Ăn đủ protein và biotin — dinh dưỡng quyết định 80% sức khỏe của tóc.' },
-    { icon: '✂️', tip: 'Cắt ngọn tóc mỗi 8–12 tuần để ngăn chẻ ngọn lan lên phần thân tóc.' },
-    { icon: '🧴', tip: 'Dùng dầu xả cách gốc tóc 5cm để tránh làm tắc nghẽn nang lông.' },
-  ];
+    concern === 'all' ? services : services.filter((s) => s.concerns.some((c) => c === concern));
 
   return (
     <Box sx={{ bgcolor: 'background.default' }}>
       <PageHero
         img={SPA2_PAGE_IMAGES.gallery}
-        eyebrow="TÓC & DA ĐẦU"
-        title="Liệu trình chăm sóc tóc & da đầu"
-        subtitle="Phục hồi mái tóc hư tổn, trị rụng tóc và nuôi dưỡng da đầu từ tầng sâu nhất bằng thảo dược hữu cơ."
+        eyebrow={banner.eyebrow}
+        title={banner.title}
+        subtitle={banner.subtitle}
       />
 
       <Box sx={{ py: { xs: 8, md: 10 } }}>
@@ -749,7 +659,7 @@ export function Spa2HairBeautyPageView() {
 
           <Grid container spacing={3}>
             {filtered.map((s) => (
-              <Grid key={s.name} xs={12} sm={6} md={4}>
+              <Grid key={s.id} xs={12} sm={6} md={4}>
                 <SoftCard>
                   <Box
                     sx={{
@@ -822,8 +732,8 @@ export function Spa2HairBeautyPageView() {
         <Container>
           <SectionTitle eyebrow="Bí quyết" title="6 thói quen bảo vệ mái tóc" />
           <Grid container spacing={2}>
-            {HAIR_TIPS.map((t, i) => (
-              <Grid key={i} xs={12} sm={6} md={4}>
+            {tips.map((t) => (
+              <Grid key={t.id} xs={12} sm={6} md={4}>
                 <SoftCard sx={{ bgcolor: 'common.white' }}>
                   <Stack direction="row" spacing={2} alignItems="flex-start">
                     <Typography sx={{ fontSize: 32, lineHeight: 1, flexShrink: 0 }}>
@@ -1209,73 +1119,17 @@ export function Spa2KidsSpaPageView() {
 // 4. ANTI-AGING PROGRAM
 // ══════════════════════════════════════════════════════════
 
-const AGING_CONCERNS = [
-  {
-    concern: 'Nếp nhăn',
-    icon: '〰️',
-    treatments: ['HIFU nâng cơ', 'RF trẻ hóa', 'Collagen Infusion'],
-  },
-  { concern: 'Da chùng nhão', icon: '📉', treatments: ['RF nâng cơ', 'Tế bào gốc', 'Laser CO2'] },
-  {
-    concern: 'Đốm nâu & sắc tố',
-    icon: '🍂',
-    treatments: ['Laser trị nám', 'Vitamin C điện di', 'Peel'],
-  },
-  {
-    concern: 'Lỗ chân lông to',
-    icon: '🔍',
-    treatments: ['Laser se khít', 'RF vi điểm', 'Retinol Facial'],
-  },
-  {
-    concern: 'Da xỉn màu',
-    icon: '🌥️',
-    treatments: ['Tế bào gốc', 'Brightening Facial', 'Mặt nạ ngọc trai'],
-  },
-  {
-    concern: 'Quầng thâm mắt',
-    icon: '👁️',
-    treatments: ['Lymphatic Drainage', 'Vitamin K serum', 'Cooling Eye Mask'],
-  },
-];
-
-const ANTIAGING_STAGES = [
-  {
-    age: '25–35',
-    title: 'Phòng ngừa',
-    color: '#4CAF50',
-    icon: 'solar:shield-bold-duotone',
-    desc: 'Duy trì collagen, chống nắng và dưỡng ẩm sâu để làm chậm lão hóa.',
-    services: ['Hydrating Facial', 'Collagen Infusion', 'SPF Treatment'],
-  },
-  {
-    age: '35–45',
-    title: 'Phục hồi sớm',
-    color: SPA2_TEAL,
-    icon: 'solar:refresh-bold-duotone',
-    desc: 'Kích thích tái tạo collagen, cải thiện độ đàn hồi và mờ nếp nhăn đầu tiên.',
-    services: ['RF Facial', 'Vitamin C Infusion', 'Eye Zone Treatment'],
-  },
-  {
-    age: '45–55',
-    title: 'Tái cấu trúc',
-    color: '#EF9F27',
-    icon: 'solar:chart-2-bold-duotone',
-    desc: 'Nâng cơ, xóa nếp nhăn sâu và phục hồi khung xương mặt bằng công nghệ tiên tiến.',
-    services: ['HIFU', 'Filler nhẹ', 'Stem Cell Treatment'],
-  },
-  {
-    age: '55+',
-    title: 'Phục hồi toàn diện',
-    color: '#7F77DD',
-    icon: 'solar:stars-bold-duotone',
-    desc: 'Chương trình kết hợp đa phương pháp — phục hồi sức sống cho làn da theo từng giai đoạn.',
-    services: ['Multi-Modal Program', 'Platelet Rich Plasma', 'Luxury Anti-Aging Ritual'],
-  },
-];
-
-export function Spa2AntiAgingPageView() {
+export function Spa2AntiAgingPageView({
+  banner = spa2AntiAgingBanner,
+  stages = spa2AntiAgingStages,
+  concerns = spa2AgingConcerns,
+}: {
+  banner?: Spa2AntiAgingBanner;
+  stages?: Spa2AntiAgingStage[];
+  concerns?: Spa2AgingConcern[];
+} = {}) {
   const [activeAge, setActiveAge] = useState(0);
-  const stage = ANTIAGING_STAGES[activeAge];
+  const stage = stages[activeAge];
 
   return (
     <Box sx={{ bgcolor: 'background.default' }}>
@@ -1301,17 +1155,16 @@ export function Spa2AntiAgingPageView() {
         <Container sx={{ position: 'relative', textAlign: 'center' }}>
           <Stack spacing={2.5} alignItems="center">
             <Typography variant="overline" sx={{ color: SPA2_TEAL_LIGHT, letterSpacing: 3 }}>
-              CHỐNG LÃO HÓA
+              {banner.eyebrow}
             </Typography>
             <Typography
               variant="h1"
               sx={{ color: 'white', fontWeight: 600, lineHeight: 1.1, maxWidth: 700 }}
             >
-              Giải pháp chống lão hóa cá nhân hóa theo từng độ tuổi
+              {banner.title}
             </Typography>
             <Typography sx={{ color: 'rgba(255,255,255,0.7)', fontSize: 17, maxWidth: 560 }}>
-              Không có một công thức chống lão hóa chung. Chương trình của bạn phụ thuộc vào tuổi,
-              tình trạng da và mục tiêu riêng.
+              {banner.subtitle}
             </Typography>
           </Stack>
         </Container>
@@ -1328,9 +1181,9 @@ export function Spa2AntiAgingPageView() {
             flexWrap="wrap"
             sx={{ mb: 5, gap: 1 }}
           >
-            {ANTIAGING_STAGES.map((s, i) => (
+            {stages.map((s, i) => (
               <Chip
-                key={s.age}
+                key={s.id}
                 label={`${s.age}: ${s.title}`}
                 onClick={() => setActiveAge(i)}
                 sx={{
@@ -1412,8 +1265,8 @@ export function Spa2AntiAgingPageView() {
             <Grid xs={12} md={7}>
               <SectionTitle eyebrow="Vấn đề" title="Chúng tôi giải quyết được gì?" align="left" />
               <Grid container spacing={2}>
-                {AGING_CONCERNS.map((c) => (
-                  <Grid key={c.concern} xs={12} sm={6}>
+                {concerns.map((c) => (
+                  <Grid key={c.id} xs={12} sm={6}>
                     <Card
                       sx={{
                         p: 2,
@@ -1472,43 +1325,16 @@ export function Spa2AntiAgingPageView() {
 // 5. WATER THERAPY (THỦY TRỊ LIỆU)
 // ══════════════════════════════════════════════════════════
 
-const WATER_TREATMENTS = [
-  {
-    name: 'Bồn Tắm Khoáng Himalaya',
-    price: 590000,
-    duration: '45 phút',
-    image: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=800&q=80',
-    desc: 'Ngâm mình trong nước muối hồng Himalaya giàu khoáng chất — detox và thư giãn cơ sâu.',
-    benefits: ['Thải độc cơ thể', 'Giảm đau cơ', 'Cân bằng pH da'],
-  },
-  {
-    name: 'Bồn Tắm Sữa & Hoa Hồng',
-    price: 790000,
-    duration: '45 phút',
-    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&q=80',
-    desc: 'Bồn tắm Cleopatra với sữa bò tươi, cánh hoa hồng và tinh dầu dưỡng ẩm sâu.',
-    benefits: ['Dưỡng ẩm sâu', 'Sáng da tự nhiên', 'Thư giãn toàn thân'],
-  },
-  {
-    name: 'Xông Hơi Thảo Dược',
-    price: 390000,
-    duration: '30 phút',
-    image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80',
-    desc: 'Xông hơi với hỗn hợp sả, gừng, lá bưởi và thảo mộc Việt — khai thông hệ hô hấp.',
-    benefits: ['Khai thông lỗ chân lông', 'Giảm stress', 'Tăng miễn dịch'],
-  },
-  {
-    name: 'Liệu Pháp Đá Lạnh & Đá Nóng',
-    price: 890000,
-    duration: '60 phút',
-    image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=800&q=80',
-    desc: 'Kết hợp nhiệt học — đá nóng giãn cơ, đá lạnh kích thích tuần hoàn và làn da.',
-    benefits: ['Tuần hoàn máu', 'Giảm viêm', 'Sức sống làn da'],
-  },
-];
-
-export function Spa2WaterTherapyPageView() {
-  const [selected, setSelected] = useState<(typeof WATER_TREATMENTS)[0] | null>(null);
+export function Spa2WaterTherapyPageView({
+  banner = spa2WaterTherapyBanner,
+  treatments = spa2WaterTreatments,
+  scienceFacts = spa2WaterScienceFacts,
+}: {
+  banner?: Spa2WaterTherapyBanner;
+  treatments?: Spa2WaterTreatment[];
+  scienceFacts?: Spa2WaterScienceFact[];
+} = {}) {
+  const [selected, setSelected] = useState<Spa2WaterTreatment | null>(null);
   const [step, setStep] = useState<'browse' | 'book' | 'done'>('browse');
 
   return (
@@ -1533,19 +1359,18 @@ export function Spa2WaterTherapyPageView() {
         />
         <Container sx={{ position: 'relative', textAlign: 'center' }}>
           <Stack spacing={2.5} alignItems="center">
-            <Typography sx={{ fontSize: 56, lineHeight: 1 }}>💧</Typography>
+            <Typography sx={{ fontSize: 56, lineHeight: 1 }}>{banner.emoji}</Typography>
             <Typography variant="overline" sx={{ color: '#80DEEA', letterSpacing: 3 }}>
-              THỦY TRỊ LIỆU
+              {banner.eyebrow}
             </Typography>
             <Typography
               variant="h1"
               sx={{ color: 'white', fontWeight: 600, lineHeight: 1.1, maxWidth: 680 }}
             >
-              Sức mạnh chữa lành của nước
+              {banner.title}
             </Typography>
             <Typography sx={{ color: 'rgba(255,255,255,0.8)', fontSize: 17, maxWidth: 540 }}>
-              Hydrotherapy — liệu pháp dùng nước ở các nhiệt độ và áp suất khác nhau để chữa bệnh và
-              phục hồi từ ngàn năm trước.
+              {banner.subtitle}
             </Typography>
           </Stack>
         </Container>
@@ -1555,8 +1380,8 @@ export function Spa2WaterTherapyPageView() {
         <Container>
           <SectionTitle eyebrow="Liệu pháp" title="Các liệu pháp thủy trị liệu" />
           <Grid container spacing={4}>
-            {WATER_TREATMENTS.map((t) => (
-              <Grid key={t.name} xs={12} sm={6} md={3}>
+            {treatments.map((t) => (
+              <Grid key={t.id} xs={12} sm={6} md={3}>
                 <SoftCard sx={{ p: 0, overflow: 'hidden' }}>
                   <Box
                     sx={{
@@ -1638,24 +1463,8 @@ export function Spa2WaterTherapyPageView() {
         <Container maxWidth="md">
           <SectionTitle eyebrow="Khoa học" title="Tại sao nước lại có sức mạnh chữa lành?" />
           <Grid container spacing={3}>
-            {[
-              {
-                icon: '🌡️',
-                title: 'Nhiệt độ',
-                desc: 'Nước nóng (38–42°C) giãn cơ, kích thích tuần hoàn. Nước lạnh (15–20°C) giảm viêm, tăng cường miễn dịch.',
-              },
-              {
-                icon: '⚗️',
-                title: 'Khoáng chất',
-                desc: 'Muối khoáng được hấp thụ qua da, bổ sung Mg, K, Ca — cân bằng điện giải tự nhiên.',
-              },
-              {
-                icon: '💨',
-                title: 'Áp suất',
-                desc: 'Áp lực nước tạo hiệu ứng massage tự nhiên, kích thích hệ bạch huyết và giải phóng endorphin.',
-              },
-            ].map((s) => (
-              <Grid key={s.title} xs={12} md={4}>
+            {scienceFacts.map((s) => (
+              <Grid key={s.id} xs={12} md={4}>
                 <SoftCard sx={{ bgcolor: 'common.white', textAlign: 'center' }}>
                   <Typography sx={{ fontSize: 48, lineHeight: 1, mb: 1.5 }}>{s.icon}</Typography>
                   <Typography sx={{ fontWeight: 600, color: SPA2_INK, mb: 0.75 }}>
@@ -1752,63 +1561,19 @@ export function Spa2WaterTherapyPageView() {
 // 6. AYURVEDA & TRADITIONAL MEDICINE
 // ══════════════════════════════════════════════════════════
 
-const AYURVEDA_TREATMENTS = [
-  {
-    name: 'Abhyanga Full Body Massage',
-    origin: 'Ấn Độ',
-    price: 1190000,
-    duration: '90 phút',
-    icon: 'solar:hand-stars-bold-duotone',
-    desc: 'Massage toàn thân bằng dầu thảo dược ấm — kỹ thuật Ayurveda 5000 năm tuổi, cân bằng 3 dosha.',
-  },
-  {
-    name: 'Shirodhara (Rót Dầu Đầu)',
-    origin: 'Ấn Độ',
-    price: 890000,
-    duration: '60 phút',
-    icon: 'solar:drop-bold-duotone',
-    desc: 'Rót dầu thảo dược ấm liên tục lên trán — kích hoạt trực giác, giảm lo âu và mất ngủ sâu.',
-  },
-  {
-    name: 'Tuina Therapeutic Massage',
-    origin: 'Trung Quốc',
-    price: 890000,
-    duration: '75 phút',
-    icon: 'solar:lightning-bold-duotone',
-    desc: 'Massage y học cổ truyền Trung Quốc — tác động vào kinh lạc và huyệt đạo, điều hòa khí huyết.',
-  },
-  {
-    name: 'Đông Y Herbal Bath',
-    origin: 'Việt Nam',
-    price: 690000,
-    duration: '60 phút',
-    icon: 'solar:leaf-bold-duotone',
-    desc: 'Ngâm trong bồn thuốc Đông Y với 20+ thảo dược truyền thống — phục hồi sức khỏe toàn diện.',
-  },
-  {
-    name: 'Thai Yoga Massage',
-    origin: 'Thái Lan',
-    price: 1090000,
-    duration: '90 phút',
-    icon: 'solar:body-bold-duotone',
-    desc: 'Kết hợp yoga thụ động và ấn huyệt — mở rộng các đường năng lượng và tăng linh hoạt cơ thể.',
-  },
-  {
-    name: 'Balinese Spirit Ritual',
-    origin: 'Indonesia',
-    price: 1390000,
-    duration: '120 phút',
-    icon: 'solar:stars-bold-duotone',
-    desc: 'Nghi thức Bali đầy đủ: tẩy tế bào chết + massage + hoa + dầu thơm — trải nghiệm hoàn toàn khác biệt.',
-  },
-];
-
-export function Spa2AyurvedaPageView() {
+export function Spa2AyurvedaPageView({
+  banner = spa2AyurvedaBanner,
+  treatments = spa2AyurvedaTreatments,
+  philosophies = spa2AyurvedaPhilosophies,
+}: {
+  banner?: Spa2AyurvedaBanner;
+  treatments?: Spa2AyurvedaTreatment[];
+  philosophies?: Spa2AyurvedaPhilosophy[];
+} = {}) {
   const [origin, setOrigin] = useState('all');
 
   const ORIGINS = ['all', 'Ấn Độ', 'Trung Quốc', 'Việt Nam', 'Thái Lan', 'Indonesia'];
-  const filtered =
-    origin === 'all' ? AYURVEDA_TREATMENTS : AYURVEDA_TREATMENTS.filter((t) => t.origin === origin);
+  const filtered = origin === 'all' ? treatments : treatments.filter((t) => t.origin === origin);
 
   const ORIGIN_FLAGS: Record<string, string> = {
     'Ấn Độ': '🇮🇳',
@@ -1840,19 +1605,18 @@ export function Spa2AyurvedaPageView() {
         />
         <Container sx={{ position: 'relative', textAlign: 'center' }}>
           <Stack spacing={2.5} alignItems="center">
-            <Typography sx={{ fontSize: 56, lineHeight: 1 }}>🪔</Typography>
+            <Typography sx={{ fontSize: 56, lineHeight: 1 }}>{banner.emoji}</Typography>
             <Typography variant="overline" sx={{ color: '#FFCC80', letterSpacing: 3 }}>
-              Y HỌC CỔ TRUYỀN
+              {banner.eyebrow}
             </Typography>
             <Typography
               variant="h1"
               sx={{ color: 'white', fontWeight: 600, lineHeight: 1.1, maxWidth: 700 }}
             >
-              Trí tuệ chữa lành từ phương Đông ngàn năm
+              {banner.title}
             </Typography>
             <Typography sx={{ color: 'rgba(255,255,255,0.8)', fontSize: 17, maxWidth: 540 }}>
-              Ayurveda, Tuina, Đông Y Việt Nam, Thai Massage và Bali Ritual — được thực hiện bởi KTV
-              được đào tạo chính thống.
+              {banner.subtitle}
             </Typography>
           </Stack>
         </Container>
@@ -1885,7 +1649,7 @@ export function Spa2AyurvedaPageView() {
 
           <Grid container spacing={3}>
             {filtered.map((t) => (
-              <Grid key={t.name} xs={12} sm={6} md={4}>
+              <Grid key={t.id} xs={12} sm={6} md={4}>
                 <SoftCard>
                   <Stack direction="row" spacing={2} alignItems="flex-start" sx={{ mb: 2 }}>
                     <Box
@@ -1957,29 +1721,15 @@ export function Spa2AyurvedaPageView() {
         <Container maxWidth="md">
           <SectionTitle eyebrow="Triết lý" title="Chúng tôi tin vào gì?" />
           <Grid container spacing={3}>
-            {[
-              {
-                q: 'Cơ thể tự chữa lành',
-                a: 'Mọi liệu pháp truyền thống đều hướng đến việc kích hoạt khả năng tự phục hồi bẩm sinh của cơ thể, không chỉ điều trị triệu chứng.',
-                icon: '♾️',
-              },
-              {
-                q: 'Cân bằng tổng thể',
-                a: 'Sức khỏe không chỉ là thiếu bệnh tật — mà là sự cân bằng hoàn hảo giữa thể xác, tâm trí và năng lượng sống.',
-                icon: '⚖️',
-              },
-              {
-                q: 'Thiên nhiên là thầy thuốc',
-                a: 'Hơn 5000 năm kinh nghiệm của y học phương Đông chứng minh: thiên nhiên cung cấp tất cả những gì cơ thể cần để khỏe mạnh.',
-                icon: '🌿',
-              },
-            ].map((p) => (
-              <Grid key={p.q} xs={12} md={4}>
+            {philosophies.map((p) => (
+              <Grid key={p.id} xs={12} md={4}>
                 <SoftCard sx={{ textAlign: 'center', bgcolor: 'common.white' }}>
                   <Typography sx={{ fontSize: 44, lineHeight: 1, mb: 1.5 }}>{p.icon}</Typography>
-                  <Typography sx={{ fontWeight: 600, color: SPA2_INK, mb: 1 }}>{p.q}</Typography>
+                  <Typography sx={{ fontWeight: 600, color: SPA2_INK, mb: 1 }}>
+                    {p.question}
+                  </Typography>
                   <Typography sx={{ fontSize: 13, color: 'text.secondary', lineHeight: 1.7 }}>
-                    {p.a}
+                    {p.answer}
                   </Typography>
                 </SoftCard>
               </Grid>
@@ -2003,73 +1753,16 @@ export function Spa2AyurvedaPageView() {
 // 7. SPA HOTEL / STAYCATION
 // ══════════════════════════════════════════════════════════
 
-const STAYCATION_PACKAGES = [
-  {
-    name: 'Spa Escape Weeknight',
-    nights: 1,
-    price: 3900000,
-    image: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=900&q=80',
-    hotel: 'Khách sạn đối tác 4★',
-    spa: '2 giờ spa trọn gói',
-    includes: [
-      'Phòng Superior 1 đêm',
-      'Bữa sáng 2 người',
-      'Facial Organic 60 phút',
-      'Massage thư giãn 60 phút',
-      'Minibar không cồn',
-    ],
-    badge: '',
-  },
-  {
-    name: 'Weekend Wellness Retreat',
-    nights: 2,
-    price: 7900000,
-    image: 'https://images.unsplash.com/photo-1596178060671-7a80dc8059ea?w=900&q=80',
-    hotel: 'Khách sạn đối tác 5★',
-    spa: '5 giờ spa cao cấp',
-    includes: [
-      'Phòng Deluxe 2 đêm',
-      'Bữa sáng & tối 2 người',
-      'Body Ritual 90 phút',
-      'Anti-Aging Facial 75 phút',
-      'Yoga buổi sáng',
-      'Bồn tắm hoa',
-      'Xe đưa đón',
-    ],
-    badge: 'Best Value',
-  },
-  {
-    name: 'Luxury Detox Journey 3D2N',
-    nights: 3,
-    price: 14900000,
-    image: 'https://images.unsplash.com/photo-1531112068337-3cd6d0d2b56b?w=900&q=80',
-    hotel: 'Resort 5★ Nha Trang',
-    spa: 'Unlimited spa',
-    includes: [
-      'Suite 3 đêm view biển',
-      'All meals healthy menu',
-      'Spa không giới hạn',
-      'Detox program',
-      'Personal trainer',
-      'Yoga & thiền 2x/ngày',
-      'Tư vấn dinh dưỡng',
-      'Spa photo session',
-    ],
-    badge: 'Premium',
-  },
-];
-
-export function Spa2SpaHotelPageView() {
-  const [selected, setSelected] = useState<(typeof STAYCATION_PACKAGES)[0] | null>(null);
-
-  const HOTEL_PARTNERS = [
-    { name: 'InterContinental Saigon', stars: 5, location: 'TP.HCM', logo: 'IC' },
-    { name: 'Sofitel Legend', stars: 5, location: 'Hà Nội', logo: 'SL' },
-    { name: 'Vinpearl Resort', stars: 5, location: 'Nha Trang', logo: 'VP' },
-    { name: 'Hyatt Regency', stars: 5, location: 'Đà Nẵng', logo: 'HY' },
-    { name: 'Melia Ho Chi Minh', stars: 4, location: 'TP.HCM', logo: 'ME' },
-    { name: 'Lotte Hotel', stars: 5, location: 'Hà Nội', logo: 'LT' },
-  ];
+export function Spa2SpaHotelPageView({
+  banner = spa2SpaHotelBanner,
+  packages = spa2StaycationPackages,
+  partners = spa2HotelPartners,
+}: {
+  banner?: Spa2SpaHotelBanner;
+  packages?: Spa2StaycationPackage[];
+  partners?: Spa2HotelPartner[];
+} = {}) {
+  const [selected, setSelected] = useState<Spa2StaycationPackage | null>(null);
 
   return (
     <Box sx={{ bgcolor: 'background.default' }}>
@@ -2095,31 +1788,25 @@ export function Spa2SpaHotelPageView() {
         <Container sx={{ position: 'relative', textAlign: 'center' }}>
           <Stack spacing={2.5} alignItems="center">
             <Typography variant="overline" sx={{ color: SPA2_TEAL_LIGHT, letterSpacing: 3 }}>
-              SPA HOTEL & STAYCATION
+              {banner.eyebrow}
             </Typography>
             <Typography
               variant="h1"
               sx={{ color: 'white', fontWeight: 600, lineHeight: 1.1, maxWidth: 720 }}
             >
-              Kỳ nghỉ dưỡng spa ngay tại thành phố của bạn
+              {banner.title}
             </Typography>
             <Typography sx={{ color: 'rgba(255,255,255,0.7)', fontSize: 17, maxWidth: 540 }}>
-              Kết hợp lưu trú khách sạn 4–5 sao với liệu trình spa trọn gói — không cần ra nước
-              ngoài.
+              {banner.subtitle}
             </Typography>
             <Stack direction="row" spacing={1.5}>
-              <Chip
-                label="4★ & 5★ Hotels"
-                sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }}
-              />
-              <Chip
-                label="Gói từ 2 người"
-                sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }}
-              />
-              <Chip
-                label="Spa không giới hạn"
-                sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }}
-              />
+              {banner.badges.map((b) => (
+                <Chip
+                  key={b}
+                  label={b}
+                  sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }}
+                />
+              ))}
             </Stack>
           </Stack>
         </Container>
@@ -2130,8 +1817,8 @@ export function Spa2SpaHotelPageView() {
         <Container>
           <SectionTitle eyebrow="Gói staycation" title="Chọn kỳ nghỉ dưỡng của bạn" />
           <Grid container spacing={4}>
-            {STAYCATION_PACKAGES.map((pkg) => (
-              <Grid key={pkg.name} xs={12} md={4}>
+            {packages.map((pkg) => (
+              <Grid key={pkg.id} xs={12} md={4}>
                 <SoftCard sx={{ p: 0, overflow: 'hidden' }}>
                   <Box sx={{ position: 'relative' }}>
                     <Box
@@ -2231,8 +1918,8 @@ export function Spa2SpaHotelPageView() {
         <Container>
           <SectionTitle eyebrow="Đối tác" title="Khách sạn đối tác" />
           <Grid container spacing={2} justifyContent="center">
-            {HOTEL_PARTNERS.map((h) => (
-              <Grid key={h.name} xs={6} sm={4} md={2}>
+            {partners.map((h) => (
+              <Grid key={h.id} xs={6} sm={4} md={2}>
                 <SoftCard sx={{ textAlign: 'center', bgcolor: 'common.white', py: 3 }}>
                   <Box
                     sx={{
@@ -2345,73 +2032,22 @@ export function Spa2SpaHotelPageView() {
 // 8. COMMUNITY & LIFESTYLE
 // ══════════════════════════════════════════════════════════
 
-const COMMUNITY_POSTS = [
-  {
-    id: 1,
-    author: 'Minh Anh',
-    avatar: 'https://i.pravatar.cc/60?img=11',
-    role: 'Gold Member',
-    time: '2 giờ trước',
-    content:
-      'Vừa hoàn thành liệu trình Anti-Aging 10 buổi — da mình thay đổi hoàn toàn! Nếp nhăn mờ đi 70%, da căng và sáng hơn hẳn. Cảm ơn team Nature Spa ❤️',
-    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&q=80',
-    likes: 48,
-    comments: 12,
-    tags: ['AntiAging', 'Kết quả thực tế'],
-  },
-  {
-    id: 2,
-    author: 'Thu Hà',
-    avatar: 'https://i.pravatar.cc/60?img=16',
-    role: 'Platinum Member',
-    time: '5 giờ trước',
-    content:
-      'Tip nhỏ cho chị em: uống đủ 2.5L nước/ngày và ngủ trước 11pm — kết hợp cùng facial định kỳ, da của mình không cần makeup vẫn đẹp tự nhiên 🌿',
-    likes: 89,
-    comments: 23,
-    tags: ['Skincare Tips', 'Lối sống lành mạnh'],
-  },
-  {
-    id: 3,
-    author: 'Hoàng Nam',
-    avatar: 'https://i.pravatar.cc/60?img=23',
-    role: 'Silver Member',
-    time: '1 ngày trước',
-    content:
-      "Lần đầu thử Men's Spa — ban đầu hơi ngại nhưng thật sự rất đáng! Massage phục hồi sau gym xịn hơn foam roller rất nhiều lần. Anh em cứ thử đi, không hối hận đâu 💪",
-    likes: 67,
-    comments: 18,
-    tags: ['MenSpa', 'Recovery'],
-  },
-];
-
-const CHALLENGES = [
-  {
-    name: 'Thử thách 7 ngày uống nước',
-    participants: 1243,
-    icon: '💧',
-    color: '#0D47A1',
-    progress: 65,
-  },
-  { name: 'Thiền 10 phút mỗi sáng', participants: 876, icon: '🧘', color: SPA2_TEAL, progress: 43 },
-  { name: 'Không đường 14 ngày', participants: 534, icon: '🥗', color: '#2E7D32', progress: 28 },
-  {
-    name: 'Skincare tối giản 30 ngày',
-    participants: 1891,
-    icon: '✨',
-    color: '#C2185B',
-    progress: 80,
-  },
-];
-
-export function Spa2CommunityPageView() {
-  const [liked, setLiked] = useState<number[]>([]);
+export function Spa2CommunityPageView({
+  banner = spa2CommunityBanner,
+  posts = spa2CommunityPosts,
+  challenges = spa2CommunityChallenges,
+}: {
+  banner?: Spa2CommunityBanner;
+  posts?: Spa2CommunityPost[];
+  challenges?: Spa2CommunityChallenge[];
+} = {}) {
+  const [liked, setLiked] = useState<string[]>([]);
   const [joined, setJoined] = useState<string[]>([]);
   const [toast, setToast] = useState('');
   const [newPost, setNewPost] = useState('');
   const [posting, setPosting] = useState(false);
 
-  const toggleLike = (id: number) =>
+  const toggleLike = (id: string) =>
     setLiked((prev) => (prev.includes(id) ? prev.filter((l) => l !== id) : [...prev, id]));
   const toggleChallenge = (name: string) => {
     setJoined((prev) => (prev.includes(name) ? prev.filter((j) => j !== name) : [...prev, name]));
@@ -2422,9 +2058,9 @@ export function Spa2CommunityPageView() {
     <Box sx={{ bgcolor: 'background.default' }}>
       <PageHero
         img={SPA2_PAGE_IMAGES.blog}
-        eyebrow="CỘNG ĐỒNG"
-        title="Nature Spa Community"
-        subtitle="Chia sẻ hành trình chăm sóc sức khỏe, tham gia thử thách và kết nối với những người cùng chí hướng."
+        eyebrow={banner.eyebrow}
+        title={banner.title}
+        subtitle={banner.subtitle}
       />
 
       <Box sx={{ py: { xs: 8, md: 12 } }}>
@@ -2505,7 +2141,7 @@ export function Spa2CommunityPageView() {
 
               {/* Posts */}
               <Stack spacing={3}>
-                {COMMUNITY_POSTS.map((post) => (
+                {posts.map((post) => (
                   <SoftCard key={post.id}>
                     <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
                       <Avatar src={post.avatar} sx={{ width: 44, height: 44 }} />
@@ -2610,8 +2246,8 @@ export function Spa2CommunityPageView() {
                     Tháng 7/2026
                   </Typography>
                   <Stack spacing={2}>
-                    {CHALLENGES.map((c) => (
-                      <Box key={c.name}>
+                    {challenges.map((c) => (
+                      <Box key={c.id}>
                         <Stack
                           direction="row"
                           justifyContent="space-between"

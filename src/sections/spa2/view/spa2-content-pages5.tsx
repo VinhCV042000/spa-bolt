@@ -40,8 +40,35 @@ import {
   SPA2_CREAM_DARK,
   SPA2_PAGE_IMAGES,
   type Spa2Ingredient,
+  spa2SleepTips,
+  spa2Therapists,
+  spa2SleepPrograms,
+  spa2SkinSchoolQuiz,
+  type Spa2SleepTip,
+  type Spa2Therapist,
+  spa2SkinSchoolCourses,
+  type Spa2SleepProgram,
   spa2IngredientGuideBanner,
+  spa2SkinSchoolBanner,
+  spa2SleepWellnessBanner,
   type Spa2IngredientGuideBanner,
+  type Spa2SkinSchoolCourse,
+  spa2TherapistProfileBanner,
+  type Spa2SkinSchoolBanner,
+  type Spa2SleepWellnessBanner,
+  type Spa2TherapistProfileBanner,
+  type Spa2SkinSchoolQuizQuestion,
+  spa2PrenatalSpaBanner,
+  spa2PrenatalServices,
+  spa2PrenatalSafetyBadges,
+  spa2PrenatalReasons,
+  type Spa2PrenatalSpaBanner,
+  type Spa2PrenatalService,
+  type Spa2PrenatalReason,
+  spa2WellnessAssessmentBanner,
+  spa2WellnessQuestions,
+  type Spa2WellnessAssessmentBanner,
+  type Spa2WellnessQuestion,
 } from '../spa2-pages-data';
 
 const formatVND = (n: number) => `${new Intl.NumberFormat('vi-VN').format(n)}đ`;
@@ -467,120 +494,22 @@ export function Spa2IngredientGuidePageView({
 // 2. SKIN SCHOOL (eLEARNING)
 // ═══════════════════════════════════════════════════════════
 
-const SKIN_COURSES = [
-  {
-    id: 'basics',
-    title: 'Skincare 101: Nền tảng chăm sóc da',
-    level: 'Cơ bản',
-    lessons: 8,
-    duration: '2 giờ',
-    icon: 'solar:book-bold-duotone',
-    color: '#4CAF50',
-    enrolled: 2341,
-    rating: 4.9,
-    free: true,
-    topics: [
-      'Cấu trúc da',
-      'pH và da',
-      'Thứ tự bước skincare',
-      'Đọc bảng thành phần',
-      'Chọn sản phẩm theo loại da',
-    ],
-  },
-  {
-    id: 'actives',
-    title: 'Hoạt Chất Skincare: A–Z',
-    level: 'Trung cấp',
-    lessons: 12,
-    duration: '3.5 giờ',
-    icon: 'solar:flask-bold-duotone',
-    color: SPA2_TEAL,
-    enrolled: 1876,
-    rating: 4.8,
-    free: false,
-    price: 290000,
-    topics: [
-      'Vitamin C, Niacinamide, Retinol',
-      'AHA/BHA/PHA',
-      'Peptides & Growth factors',
-      'Cách phối trộn & thứ tự dùng',
-      'Lịch skincare theo tuần',
-    ],
-  },
-  {
-    id: 'advanced',
-    title: 'Liệu Pháp Da Nâng Cao',
-    level: 'Nâng cao',
-    lessons: 10,
-    duration: '4 giờ',
-    icon: 'solar:medal-star-bold-duotone',
-    color: '#7F77DD',
-    enrolled: 892,
-    rating: 5.0,
-    free: false,
-    price: 590000,
-    topics: [
-      'Microneedling & RF',
-      'Laser & IPL cơ bản',
-      'Filler & Botox kiến thức',
-      'Đọc hiểu đơn điều trị',
-      'Lịch trình phục hồi sau điều trị',
-    ],
-  },
-  {
-    id: 'nutrition',
-    title: 'Dinh Dưỡng & Làn Da',
-    level: 'Cơ bản',
-    lessons: 6,
-    duration: '1.5 giờ',
-    icon: 'solar:leaf-bold-duotone',
-    color: '#EF9F27',
-    enrolled: 1543,
-    rating: 4.7,
-    free: true,
-    topics: [
-      'Gut-skin connection',
-      'Thực phẩm pro-skin',
-      'Thực phẩm gây mụn',
-      'Uống nước đúng cách',
-      'Supplement cho da',
-    ],
-  },
-];
-
-const QUIZ_LESSONS = [
-  {
-    q: 'Bạn nên dùng Vitamin C vào buổi nào?',
-    opts: ['Sáng', 'Tối', 'Cả hai đều được', 'Không quan trọng'],
-    correct: 0,
-    explain: 'Vitamin C dùng buổi sáng để bảo vệ da khỏi ô nhiễm và tia UV trong ngày.',
-  },
-  {
-    q: 'AHA hoạt động hiệu quả nhất ở pH bao nhiêu?',
-    opts: ['pH 6–7', 'pH 3–4', 'pH 8–9', 'pH 10+'],
-    correct: 1,
-    explain:
-      'AHA cần môi trường axit (pH 3–4) để hoạt động, tương ứng với pH da lành mạnh (4.5–5.5).',
-  },
-  {
-    q: 'Thứ tự nào đúng khi dùng nhiều serum?',
-    opts: [
-      'Đặc trước, loãng sau',
-      'Loãng trước, đặc sau',
-      'Thứ tự không quan trọng',
-      'Chỉ dùng 1 serum mỗi lần',
-    ],
-    correct: 1,
-    explain: 'Serum loãng (nước) thấm trước để tạo nền, serum đặc (dầu/gel) phủ lên sau.',
-  },
-];
-
-export function Spa2SkinSchoolPageView() {
+export function Spa2SkinSchoolPageView({
+  banner = spa2SkinSchoolBanner,
+  courses = spa2SkinSchoolCourses,
+  quiz = spa2SkinSchoolQuiz,
+}: {
+  banner?: Spa2SkinSchoolBanner;
+  courses?: Spa2SkinSchoolCourse[];
+  quiz?: Spa2SkinSchoolQuizQuestion[];
+} = {}) {
   const [activeTab, setActiveTab] = useState(0);
   const [enrolledCourses, setEnrolledCourses] = useState<string[]>(['basics', 'nutrition']);
   const [quizIdx, setQuizIdx] = useState(0);
   const [quizAnswer, setQuizAnswer] = useState<number | null>(null);
   const [toast, setToast] = useState('');
+
+  const freeCount = courses.filter((c) => c.free).length;
 
   const enroll = (id: string) => {
     setEnrolledCourses((prev) => (prev.includes(id) ? prev : [...prev, id]));
@@ -614,17 +543,16 @@ export function Spa2SkinSchoolPageView() {
         <Container sx={{ position: 'relative', textAlign: 'center' }}>
           <Stack spacing={2.5} alignItems="center">
             <Typography variant="overline" sx={{ color: SPA2_TEAL_LIGHT, letterSpacing: 3 }}>
-              HỌC VIỆN DA
+              {banner.eyebrow}
             </Typography>
             <Typography
               variant="h1"
               sx={{ color: 'white', fontWeight: 600, lineHeight: 1.1, maxWidth: 700 }}
             >
-              Skin School by Nature Spa
+              {banner.title}
             </Typography>
             <Typography sx={{ color: 'rgba(255,255,255,0.75)', fontSize: 17, maxWidth: 540 }}>
-              Học skincare đúng từ các chuyên gia — video bài giảng, bài kiểm tra và chứng chỉ hoàn
-              thành.
+              {banner.subtitle}
             </Typography>
             <Stack
               direction="row"
@@ -633,13 +561,16 @@ export function Spa2SkinSchoolPageView() {
               justifyContent="center"
               sx={{ gap: 1 }}
             >
-              <Chip label="4 khóa học" sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }} />
               <Chip
-                label="2 khóa miễn phí"
+                label={`${courses.length} khóa học`}
+                sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }}
+              />
+              <Chip
+                label={`${freeCount} khóa miễn phí`}
                 sx={{ bgcolor: SPA2_TEAL, color: 'white', fontWeight: 600 }}
               />
               <Chip
-                label="Chứng chỉ Nature Spa"
+                label={banner.certBadgeLabel}
                 sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: 'white' }}
               />
             </Stack>
@@ -665,7 +596,7 @@ export function Spa2SkinSchoolPageView() {
 
           {activeTab === 0 && (
             <Grid container spacing={3}>
-              {SKIN_COURSES.map((c) => {
+              {courses.map((c) => {
                 const isEnrolled = enrolledCourses.includes(c.id);
                 return (
                   <Grid key={c.id} xs={12} sm={6} md={3}>
@@ -773,71 +704,73 @@ export function Spa2SkinSchoolPageView() {
 
           {activeTab === 1 && (
             <Grid container spacing={3}>
-              {SKIN_COURSES.filter((c) => enrolledCourses.includes(c.id)).map((c) => (
-                <Grid key={c.id} xs={12} sm={6}>
-                  <SoftCard>
-                    <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
-                      <Iconify icon={c.icon} width={32} sx={{ color: c.color }} />
-                      <Box sx={{ flex: 1 }}>
-                        <Typography sx={{ fontWeight: 600, color: SPA2_INK, fontSize: 14 }}>
-                          {c.title}
-                        </Typography>
-                        <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>
-                          {c.lessons} bài · {c.duration}
-                        </Typography>
-                      </Box>
-                    </Stack>
-                    <Box sx={{ mb: 1.5 }}>
-                      <Stack direction="row" justifyContent="space-between" sx={{ mb: 0.75 }}>
-                        <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>
-                          Tiến độ
-                        </Typography>
-                        <Typography sx={{ fontSize: 12, fontWeight: 600, color: c.color }}>
-                          60%
-                        </Typography>
+              {courses
+                .filter((c) => enrolledCourses.includes(c.id))
+                .map((c) => (
+                  <Grid key={c.id} xs={12} sm={6}>
+                    <SoftCard>
+                      <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
+                        <Iconify icon={c.icon} width={32} sx={{ color: c.color }} />
+                        <Box sx={{ flex: 1 }}>
+                          <Typography sx={{ fontWeight: 600, color: SPA2_INK, fontSize: 14 }}>
+                            {c.title}
+                          </Typography>
+                          <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>
+                            {c.lessons} bài · {c.duration}
+                          </Typography>
+                        </Box>
                       </Stack>
-                      <LinearProgress
-                        variant="determinate"
-                        value={60}
-                        sx={{
-                          height: 7,
-                          borderRadius: 99,
-                          bgcolor: SPA2_CREAM_DARK,
-                          '& .MuiLinearProgress-bar': { bgcolor: c.color, borderRadius: 99 },
-                        }}
-                      />
-                    </Box>
-                    <Stack spacing={0.75}>
-                      {c.topics.slice(0, 3).map((t, i) => (
-                        <Stack key={t} direction="row" spacing={1.5} alignItems="center">
-                          <Iconify
-                            icon={i < 2 ? 'solar:check-circle-bold' : 'solar:play-circle-bold'}
-                            width={15}
-                            sx={{ color: i < 2 ? '#2E7D32' : 'text.disabled', flexShrink: 0 }}
-                          />
-                          <Typography
-                            sx={{ fontSize: 13, color: i < 2 ? SPA2_INK : 'text.disabled' }}
-                          >
-                            {t}
+                      <Box sx={{ mb: 1.5 }}>
+                        <Stack direction="row" justifyContent="space-between" sx={{ mb: 0.75 }}>
+                          <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>
+                            Tiến độ
+                          </Typography>
+                          <Typography sx={{ fontSize: 12, fontWeight: 600, color: c.color }}>
+                            60%
                           </Typography>
                         </Stack>
-                      ))}
-                    </Stack>
-                    <Button
-                      fullWidth
-                      sx={{
-                        mt: 2,
-                        borderRadius: 99,
-                        bgcolor: c.color,
-                        color: 'white',
-                        '&:hover': { opacity: 0.88, bgcolor: c.color },
-                      }}
-                    >
-                      Tiếp tục học
-                    </Button>
-                  </SoftCard>
-                </Grid>
-              ))}
+                        <LinearProgress
+                          variant="determinate"
+                          value={60}
+                          sx={{
+                            height: 7,
+                            borderRadius: 99,
+                            bgcolor: SPA2_CREAM_DARK,
+                            '& .MuiLinearProgress-bar': { bgcolor: c.color, borderRadius: 99 },
+                          }}
+                        />
+                      </Box>
+                      <Stack spacing={0.75}>
+                        {c.topics.slice(0, 3).map((t, i) => (
+                          <Stack key={t} direction="row" spacing={1.5} alignItems="center">
+                            <Iconify
+                              icon={i < 2 ? 'solar:check-circle-bold' : 'solar:play-circle-bold'}
+                              width={15}
+                              sx={{ color: i < 2 ? '#2E7D32' : 'text.disabled', flexShrink: 0 }}
+                            />
+                            <Typography
+                              sx={{ fontSize: 13, color: i < 2 ? SPA2_INK : 'text.disabled' }}
+                            >
+                              {t}
+                            </Typography>
+                          </Stack>
+                        ))}
+                      </Stack>
+                      <Button
+                        fullWidth
+                        sx={{
+                          mt: 2,
+                          borderRadius: 99,
+                          bgcolor: c.color,
+                          color: 'white',
+                          '&:hover': { opacity: 0.88, bgcolor: c.color },
+                        }}
+                      >
+                        Tiếp tục học
+                      </Button>
+                    </SoftCard>
+                  </Grid>
+                ))}
             </Grid>
           )}
 
@@ -853,7 +786,7 @@ export function Spa2SkinSchoolPageView() {
               >
                 <LinearProgress
                   variant="determinate"
-                  value={(quizIdx / QUIZ_LESSONS.length) * 100}
+                  value={(quizIdx / quiz.length) * 100}
                   sx={{
                     height: 4,
                     bgcolor: SPA2_CREAM_DARK,
@@ -862,25 +795,22 @@ export function Spa2SkinSchoolPageView() {
                 />
                 <Box sx={{ p: 3 }}>
                   <Typography sx={{ fontSize: 12, color: 'text.disabled', mb: 2 }}>
-                    Câu {quizIdx + 1} / {QUIZ_LESSONS.length}
+                    Câu {quizIdx + 1} / {quiz.length}
                   </Typography>
                   <Typography variant="h6" sx={{ color: SPA2_INK, mb: 3, lineHeight: 1.4 }}>
-                    {QUIZ_LESSONS[quizIdx].q}
+                    {quiz[quizIdx].q}
                   </Typography>
                   <Stack spacing={1.5} sx={{ mb: 3 }}>
-                    {QUIZ_LESSONS[quizIdx].opts.map((opt, i) => {
+                    {quiz[quizIdx].opts.map((opt, i) => {
                       let bg = 'transparent';
                       let border = SPA2_CREAM_DARK;
                       let color = SPA2_INK;
                       if (quizAnswer !== null) {
-                        if (i === QUIZ_LESSONS[quizIdx].correct) {
+                        if (i === quiz[quizIdx].correct) {
                           bg = '#E8F5E9';
                           border = '#2E7D32';
                           color = '#2E7D32';
-                        } else if (
-                          i === quizAnswer &&
-                          quizAnswer !== QUIZ_LESSONS[quizIdx].correct
-                        ) {
+                        } else if (i === quizAnswer && quizAnswer !== quiz[quizIdx].correct) {
                           bg = '#FFEBEE';
                           border = '#C62828';
                           color = '#C62828';
@@ -902,9 +832,7 @@ export function Spa2SkinSchoolPageView() {
                             color,
                             textAlign: 'left',
                             fontWeight:
-                              quizAnswer !== null && i === QUIZ_LESSONS[quizIdx].correct
-                                ? 600
-                                : 400,
+                              quizAnswer !== null && i === quiz[quizIdx].correct ? 600 : 400,
                           }}
                         >
                           <Box
@@ -931,20 +859,18 @@ export function Spa2SkinSchoolPageView() {
                   </Stack>
                   {quizAnswer !== null && (
                     <Alert
-                      severity={quizAnswer === QUIZ_LESSONS[quizIdx].correct ? 'success' : 'error'}
+                      severity={quizAnswer === quiz[quizIdx].correct ? 'success' : 'error'}
                       sx={{ borderRadius: 2.5, mb: 2 }}
                     >
-                      {quizAnswer === QUIZ_LESSONS[quizIdx].correct
-                        ? '🎉 Chính xác! '
-                        : '❌ Chưa đúng. '}
-                      {QUIZ_LESSONS[quizIdx].explain}
+                      {quizAnswer === quiz[quizIdx].correct ? '🎉 Chính xác! ' : '❌ Chưa đúng. '}
+                      {quiz[quizIdx].explain}
                     </Alert>
                   )}
                   {quizAnswer !== null && (
                     <Button
                       fullWidth
                       onClick={() => {
-                        setQuizIdx((q) => (q + 1) % QUIZ_LESSONS.length);
+                        setQuizIdx((q) => (q + 1) % quiz.length);
                         setQuizAnswer(null);
                       }}
                       sx={{
@@ -955,7 +881,7 @@ export function Spa2SkinSchoolPageView() {
                         '&:hover': { bgcolor: SPA2_TEAL_DARK },
                       }}
                     >
-                      {quizIdx < QUIZ_LESSONS.length - 1 ? 'Câu tiếp theo →' : 'Bắt đầu lại'}
+                      {quizIdx < quiz.length - 1 ? 'Câu tiếp theo →' : 'Bắt đầu lại'}
                     </Button>
                   )}
                 </Box>
@@ -986,71 +912,14 @@ export function Spa2SkinSchoolPageView() {
 // 3. THERAPIST PROFILE
 // ═══════════════════════════════════════════════════════════
 
-const THERAPISTS = [
-  {
-    id: 'hong-nhi',
-    name: 'Phạm Hồng Nhi',
-    role: 'Senior Facial Specialist',
-    avatar: 'https://i.pravatar.cc/300?img=32',
-    exp: '8 năm',
-    branch: 'Quận 1, TP.HCM',
-    rating: 4.9,
-    reviews: 312,
-    certs: ['CIDESCO', 'CIBTAC', 'Skin Analysis'],
-    specialties: ['Facial chuyên sâu', 'Điều trị mụn', 'Chống lão hóa'],
-    bio: 'Tốt nghiệp CIDESCO tại Pháp năm 2016, Hồng Nhi có 8 năm kinh nghiệm điều trị da liễu thẩm mỹ. Chuyên gia trong các liệu trình facial phục hồi và chống lão hóa không xâm lấn.',
-    achievements: [
-      'Top 3 KTV xuất sắc 2024',
-      '500+ khách hàng thành công',
-      'Giảng viên khóa đào tạo nội bộ',
-    ],
-    gallery: [SPA2_PAGE_IMAGES.treatments, SPA2_PAGE_IMAGES.services, SPA2_PAGE_IMAGES.beforeAfter],
-    slots: ['9:00', '11:00', '14:00', '16:00'],
-  },
-  {
-    id: 'minh-khoi',
-    name: 'Trần Minh Khôi',
-    role: 'Master Massage Therapist',
-    avatar: 'https://i.pravatar.cc/300?img=12',
-    exp: '10 năm',
-    branch: 'Hồ Tây, Hà Nội',
-    rating: 4.8,
-    reviews: 256,
-    certs: ['CIDESCO', 'Thai Massage', 'Sports Therapy'],
-    specialties: ['Massage phục hồi', 'Deep tissue', 'Sports recovery'],
-    bio: 'Tu nghiệp tại Pháp và Hàn Quốc về liệu pháp thể chất. Minh Khôi nổi tiếng với kỹ thuật massage deep tissue giảm đau mãn tính và phục hồi chấn thương thể thao.',
-    achievements: [
-      'Chứng chỉ Thai Massage Chiang Mai',
-      'Cố vấn đội tuyển bóng đá 2022',
-      'Master Trainer nội bộ',
-    ],
-    gallery: [SPA2_PAGE_IMAGES.training, SPA2_PAGE_IMAGES.gallery, SPA2_PAGE_IMAGES.services],
-    slots: ['10:00', '13:00', '15:30', '18:00'],
-  },
-  {
-    id: 'thao-vy',
-    name: 'Nguyễn Thảo Vy',
-    role: 'Wellness & Detox Expert',
-    avatar: 'https://i.pravatar.cc/300?img=47',
-    exp: '15 năm',
-    branch: 'Biển Mỹ Khê, Đà Nẵng',
-    rating: 5.0,
-    reviews: 189,
-    certs: ['CIDESCO', 'Master Trainer', 'Ayurveda'],
-    specialties: ['Detox toàn thân', 'Wellness coaching', 'Ayurveda'],
-    bio: 'Nhà sáng lập và CEO Nature Spa, 15 năm kinh nghiệm trong ngành spa cao cấp. Thạc sĩ Dược học và chứng chỉ Ayurveda từ Ấn Độ.',
-    achievements: [
-      'Founder Nature Spa',
-      '25.000+ khách hàng đồng hành',
-      'Speaker tại Vietnam Beauty Summit 2024',
-    ],
-    gallery: [SPA2_PAGE_IMAGES.about, SPA2_PAGE_IMAGES.training, SPA2_PAGE_IMAGES.contact],
-    slots: ['10:00', '14:00', '16:00'],
-  },
-];
-
-export function Spa2TherapistProfilePageView() {
-  const [selected, setSelected] = useState(THERAPISTS[0]);
+export function Spa2TherapistProfilePageView({
+  banner = spa2TherapistProfileBanner,
+  therapists = spa2Therapists,
+}: {
+  banner?: Spa2TherapistProfileBanner;
+  therapists?: Spa2Therapist[];
+} = {}) {
+  const [selected, setSelected] = useState(therapists[0]);
   const [bookingOpen, setBookingOpen] = useState(false);
   const [slot, setSlot] = useState('');
   const [booked, setBooked] = useState(false);
@@ -1081,14 +950,13 @@ export function Spa2TherapistProfilePageView() {
         />
         <Container sx={{ position: 'relative', textAlign: 'center' }}>
           <Typography variant="overline" sx={{ color: SPA2_TEAL, letterSpacing: 3 }}>
-            ĐỘI NGŨ CHUYÊN VIÊN
+            {banner.eyebrow}
           </Typography>
           <Typography variant="h1" sx={{ color: SPA2_INK, fontWeight: 600, mt: 1, mb: 2 }}>
-            Gặp gỡ chuyên viên của bạn
+            {banner.title}
           </Typography>
           <Typography sx={{ color: 'text.secondary', fontSize: 16, maxWidth: 500, mx: 'auto' }}>
-            Mỗi liệu trình tại Nature Spa được thực hiện bởi chuyên viên được đào tạo chính thống và
-            tận tâm.
+            {banner.subtitle}
           </Typography>
         </Container>
       </Box>
@@ -1103,7 +971,7 @@ export function Spa2TherapistProfilePageView() {
             flexWrap="wrap"
             sx={{ mb: 6, gap: 2 }}
           >
-            {THERAPISTS.map((t) => (
+            {therapists.map((t) => (
               <Card
                 key={t.id}
                 onClick={() => setSelected(t)}
@@ -1468,48 +1336,15 @@ export function Spa2TherapistProfilePageView() {
 // 4. SLEEP WELLNESS
 // ═══════════════════════════════════════════════════════════
 
-const SLEEP_PROGRAMS = [
-  {
-    name: 'Sleep Reset 1 buổi',
-    price: 990000,
-    duration: '90 phút',
-    icon: 'solar:moon-bold-duotone',
-    color: '#3949AB',
-    desc: 'Massage thư giãn + Aromatherapy lavender + Âm thanh binaural beats — reset nhịp sinh học.',
-    includes: [
-      'Massage toàn thân nhẹ',
-      'Tinh dầu lavender & chamomile',
-      'Headphone + binaural beats',
-      'Trà valerian & mật ong',
-    ],
-  },
-  {
-    name: 'Deep Sleep Program 4 tuần',
-    price: 3990000,
-    duration: '1 buổi/tuần',
-    icon: 'solar:stars-bold-duotone',
-    color: '#1A237E',
-    desc: 'Chương trình 4 tuần kết hợp spa + hướng dẫn vệ sinh giấc ngủ tại nhà.',
-    includes: [
-      '4 buổi massage thư giãn',
-      'Sleep journal',
-      'App theo dõi giấc ngủ 1 tháng',
-      'Bộ sản phẩm sleep ritual',
-      'Coaching online hàng tuần',
-    ],
-  },
-];
-
-const SLEEP_TIPS = [
-  { time: '21:00', emoji: '📵', tip: 'Tắt màn hình xanh, chuyển sang đèn vàng ấm.' },
-  { time: '21:30', emoji: '🛁', tip: 'Tắm nước ấm 37–40°C trong 10–15 phút.' },
-  { time: '22:00', emoji: '🌿', tip: 'Uống trà thảo mộc (lavender, chamomile, valerian).' },
-  { time: '22:15', emoji: '✍️', tip: 'Viết 3 điều biết ơn trong ngày — giải phóng lo âu.' },
-  { time: '22:30', emoji: '🧘', tip: 'Thở 4-7-8: hít 4s, nín 7s, thở 8s — lặp 4 lần.' },
-  { time: '23:00', emoji: '😴', tip: 'Mục tiêu: ngủ trước 23:00 để đạt đủ giấc deep sleep.' },
-];
-
-export function Spa2SleepWellnessPageView() {
+export function Spa2SleepWellnessPageView({
+  banner = spa2SleepWellnessBanner,
+  programs = spa2SleepPrograms,
+  tips = spa2SleepTips,
+}: {
+  banner?: Spa2SleepWellnessBanner;
+  programs?: Spa2SleepProgram[];
+  tips?: Spa2SleepTip[];
+} = {}) {
   const [sleepScore, setSleepScore] = useState({ quality: 50, duration: 6, stress: 70 });
   const [toast, setToast] = useState('');
 
@@ -1548,17 +1383,16 @@ export function Spa2SleepWellnessPageView() {
           <Stack spacing={2.5} alignItems="center">
             <Typography sx={{ fontSize: 60, lineHeight: 1 }}>🌙</Typography>
             <Typography variant="overline" sx={{ color: '#9FA8DA', letterSpacing: 3 }}>
-              GIẤC NGỦ & SỨC KHỎE
+              {banner.eyebrow}
             </Typography>
             <Typography
               variant="h1"
               sx={{ color: 'white', fontWeight: 600, lineHeight: 1.1, maxWidth: 700 }}
             >
-              Ngủ đủ giấc là nền tảng của mọi vẻ đẹp
+              {banner.title}
             </Typography>
             <Typography sx={{ color: 'rgba(255,255,255,0.75)', fontSize: 17, maxWidth: 540 }}>
-              Trong giấc ngủ sâu, cơ thể tiết hormone tăng trưởng — tái tạo da, phục hồi cơ bắp và
-              xử lý stress.
+              {banner.subtitle}
             </Typography>
           </Stack>
         </Container>
@@ -1719,8 +1553,8 @@ export function Spa2SleepWellnessPageView() {
         <Container maxWidth="md">
           <SectionTitle eyebrow="Thói quen" title="Ritual đêm tối ưu hóa giấc ngủ" />
           <Stack spacing={0}>
-            {SLEEP_TIPS.map((tip, i) => (
-              <Stack key={tip.time} direction="row" spacing={2.5}>
+            {tips.map((tip, i) => (
+              <Stack key={tip.id} direction="row" spacing={2.5}>
                 <Stack alignItems="center" sx={{ width: 72, flexShrink: 0 }}>
                   <Box
                     sx={{
@@ -1740,7 +1574,7 @@ export function Spa2SleepWellnessPageView() {
                       {tip.time}
                     </Typography>
                   </Box>
-                  {i < SLEEP_TIPS.length - 1 && (
+                  {i < tips.length - 1 && (
                     <Box sx={{ width: 2, flex: 1, bgcolor: '#9FA8DA', my: 0.5 }} />
                   )}
                 </Stack>
@@ -1763,8 +1597,8 @@ export function Spa2SleepWellnessPageView() {
         <Container>
           <SectionTitle eyebrow="Chương trình" title="Sleep Wellness tại Nature Spa" />
           <Grid container spacing={3} justifyContent="center">
-            {SLEEP_PROGRAMS.map((p) => (
-              <Grid key={p.name} xs={12} md={5}>
+            {programs.map((p) => (
+              <Grid key={p.id} xs={12} md={5}>
                 <SoftCard sx={{ borderTop: `4px solid ${p.color}` }}>
                   <Box
                     sx={{
@@ -1854,71 +1688,22 @@ export function Spa2SleepWellnessPageView() {
 // 5. PRENATAL SPA (SPA THAI KỲ)
 // ═══════════════════════════════════════════════════════════
 
-const PRENATAL_SERVICES = [
-  {
-    name: 'Prenatal Massage',
-    trimester: '2–3',
-    price: 890000,
-    duration: '75 phút',
-    icon: 'solar:heart-bold-duotone',
-    desc: 'Massage nhẹ nhàng giảm đau lưng, phù chân và stress thai kỳ. Tư thế nằm nghiêng an toàn.',
-    safe: true,
-  },
-  {
-    name: 'Pregnancy Facial',
-    trimester: '1–3',
-    price: 790000,
-    duration: '60 phút',
-    icon: 'solar:face-scan-circle-bold-duotone',
-    desc: 'Facial không retinol, không AHA mạnh — dưỡng ẩm và kiểm soát nám thai kỳ an toàn tuyệt đối.',
-    safe: true,
-  },
-  {
-    name: 'Foot & Leg Relief',
-    trimester: '2–3',
-    price: 490000,
-    duration: '45 phút',
-    icon: 'solar:hand-heart-bold-duotone',
-    desc: 'Ngâm chân muối khoáng và massage nhẹ kích thích tuần hoàn, giảm phù nề hiệu quả.',
-    safe: true,
-  },
-  {
-    name: 'Stretch Mark Prevention',
-    trimester: '2–3',
-    price: 690000,
-    duration: '60 phút',
-    icon: 'solar:leaf-bold-duotone',
-    desc: 'Ủ dưỡng bụng với dầu rosehip và shea butter — giảm thiểu rạn da trong và sau thai kỳ.',
-    safe: true,
-  },
-  {
-    name: 'Postpartum Recovery',
-    trimester: 'Sau sinh',
-    price: 1290000,
-    duration: '90 phút',
-    icon: 'solar:stars-bold-duotone',
-    desc: 'Massage phục hồi sau sinh, chăm sóc vùng bụng và hỗ trợ tâm lý cho mẹ mới.',
-    safe: true,
-  },
-  {
-    name: 'Mom & Baby Bonding',
-    trimester: 'Sau sinh 2–6 tháng',
-    price: 690000,
-    duration: '60 phút',
-    icon: 'solar:smile-bold-duotone',
-    desc: 'Hướng dẫn massage cho bé và massage thư giãn cho mẹ — tăng cường gắn kết tình cảm.',
-    safe: true,
-  },
-];
-
-export function Spa2PrenatalSpaPageView() {
+export function Spa2PrenatalSpaPageView({
+  banner = spa2PrenatalSpaBanner,
+  services = spa2PrenatalServices,
+  safetyBadges = spa2PrenatalSafetyBadges,
+  reasons = spa2PrenatalReasons,
+}: {
+  banner?: Spa2PrenatalSpaBanner;
+  services?: Spa2PrenatalService[];
+  safetyBadges?: string[];
+  reasons?: Spa2PrenatalReason[];
+} = {}) {
   const [trimester, setTrimester] = useState('all');
 
   const TRIMESTERS = ['all', '1–3', '2–3', 'Sau sinh', 'Sau sinh 2–6 tháng'];
   const filtered =
-    trimester === 'all'
-      ? PRENATAL_SERVICES
-      : PRENATAL_SERVICES.filter((s) => s.trimester === trimester);
+    trimester === 'all' ? services : services.filter((s) => s.trimester === trimester);
 
   return (
     <Box sx={{ bgcolor: 'background.default' }}>
@@ -1946,26 +1731,24 @@ export function Spa2PrenatalSpaPageView() {
         />
         <Container sx={{ position: 'relative', textAlign: 'center' }}>
           <Stack spacing={2.5} alignItems="center">
-            <Typography sx={{ fontSize: 56, lineHeight: 1 }}>🤰</Typography>
+            <Typography sx={{ fontSize: 56, lineHeight: 1 }}>{banner.emoji}</Typography>
             <Typography variant="overline" sx={{ color: '#C2185B', letterSpacing: 3 }}>
-              SPA THAI KỲ
+              {banner.eyebrow}
             </Typography>
             <Typography
               variant="h1"
               sx={{ color: SPA2_INK, fontWeight: 600, lineHeight: 1.1, maxWidth: 700 }}
             >
-              Chăm sóc đặc biệt cho mẹ bầu & mẹ sau sinh
+              {banner.title}
             </Typography>
             <Typography sx={{ color: 'text.secondary', fontSize: 17, maxWidth: 560 }}>
-              Tất cả dịch vụ được thiết kế dưới sự tư vấn của bác sĩ sản khoa — an toàn tuyệt đối
-              cho mẹ và bé.
+              {banner.subtitle}
             </Typography>
             <Alert
               severity="info"
               sx={{ borderRadius: 3, bgcolor: '#E3F2FD', color: '#0C447C', maxWidth: 480 }}
             >
-              <strong>Khuyến cáo:</strong> Tham khảo ý kiến bác sĩ sản khoa trước khi sử dụng bất kỳ
-              dịch vụ spa nào trong thai kỳ.
+              <strong>Khuyến cáo:</strong> {banner.disclaimerText}
             </Alert>
           </Stack>
         </Container>
@@ -1981,14 +1764,7 @@ export function Spa2PrenatalSpaPageView() {
             flexWrap="wrap"
             sx={{ gap: 1 }}
           >
-            {[
-              '✅ Không retinol',
-              '✅ Không BHA/AHA mạnh',
-              '✅ Không tinh dầu cấm',
-              '✅ Áp lực massage nhẹ',
-              '✅ Tư thế an toàn',
-              '✅ Sản phẩm hữu cơ',
-            ].map((b) => (
+            {safetyBadges.map((b) => (
               <Chip
                 key={b}
                 label={b}
@@ -2020,7 +1796,7 @@ export function Spa2PrenatalSpaPageView() {
 
           <Grid container spacing={3}>
             {filtered.map((s) => (
-              <Grid key={s.name} xs={12} sm={6} md={4}>
+              <Grid key={s.id} xs={12} sm={6} md={4}>
                 <SoftCard>
                   <Box
                     sx={{
@@ -2094,29 +1870,8 @@ export function Spa2PrenatalSpaPageView() {
         <Container>
           <SectionTitle eyebrow="Cam kết" title="Tại sao mẹ bầu chọn Nature Spa?" />
           <Grid container spacing={3}>
-            {[
-              {
-                icon: 'solar:shield-check-bold-duotone',
-                title: 'Được bác sĩ tư vấn',
-                desc: 'Mọi liệu trình được đội ngũ bác sĩ sản khoa và da liễu kiểm duyệt — đảm bảo an toàn tuyệt đối.',
-              },
-              {
-                icon: 'solar:leaf-bold-duotone',
-                title: 'Sản phẩm an toàn tuyệt đối',
-                desc: 'Loại bỏ hoàn toàn các thành phần có hại: retinol, salicylic acid, tinh dầu cấm trong thai kỳ.',
-              },
-              {
-                icon: 'solar:heart-bold-duotone',
-                title: 'KTV được đào tạo chuyên biệt',
-                desc: 'KTV được học riêng về giải phẫu thai kỳ, tư thế an toàn và kỹ thuật massage nhẹ nhàng.',
-              },
-              {
-                icon: 'solar:users-group-bold-duotone',
-                title: 'Cộng đồng mẹ bầu',
-                desc: 'Kết nối với cộng đồng 500+ mẹ bầu đã tin tưởng Nature Spa trong hành trình thai kỳ.',
-              },
-            ].map((i) => (
-              <Grid key={i.title} xs={12} sm={6} md={3}>
+            {reasons.map((i) => (
+              <Grid key={i.id} xs={12} sm={6} md={3}>
                 <SoftCard sx={{ textAlign: 'center', bgcolor: 'common.white' }}>
                   <Iconify icon={i.icon} width={44} sx={{ color: '#C2185B', mb: 1.5 }} />
                   <Typography sx={{ fontWeight: 600, color: SPA2_INK, mb: 0.75 }}>
@@ -2147,46 +1902,13 @@ export function Spa2PrenatalSpaPageView() {
 // 6. WELLNESS ASSESSMENT (ĐÁNH GIÁ SỨC KHỎE TỔNG QUÁT)
 // ═══════════════════════════════════════════════════════════
 
-const ASSESSMENT_QUESTIONS = [
-  {
-    id: 'sleep',
-    label: 'Chất lượng giấc ngủ',
-    icon: 'solar:moon-bold',
-    question: 'Bạn ngủ bao nhiêu tiếng mỗi đêm và cảm thấy thế nào khi thức dậy?',
-  },
-  {
-    id: 'stress',
-    label: 'Mức độ stress',
-    icon: 'solar:bolt-bold',
-    question: 'Bạn cảm thấy căng thẳng như thế nào trong cuộc sống hàng ngày?',
-  },
-  {
-    id: 'skin',
-    label: 'Tình trạng da',
-    icon: 'solar:face-scan-circle-bold',
-    question: 'Da bạn đang gặp vấn đề gì? (mụn, khô, dầu, lão hóa...)',
-  },
-  {
-    id: 'energy',
-    label: 'Năng lượng',
-    icon: 'solar:sun-bold',
-    question: 'Bạn cảm thấy mức năng lượng của mình trong ngày như thế nào?',
-  },
-  {
-    id: 'nutrition',
-    label: 'Chế độ ăn',
-    icon: 'solar:leaf-bold',
-    question: 'Bạn ăn uống lành mạnh và cân bằng như thế nào?',
-  },
-  {
-    id: 'activity',
-    label: 'Vận động',
-    icon: 'solar:running-bold',
-    question: 'Bạn có tập thể dục hoặc vận động thường xuyên không?',
-  },
-];
-
-export function Spa2WellnessAssessmentPageView() {
+export function Spa2WellnessAssessmentPageView({
+  banner = spa2WellnessAssessmentBanner,
+  questions = spa2WellnessQuestions,
+}: {
+  banner?: Spa2WellnessAssessmentBanner;
+  questions?: Spa2WellnessQuestion[];
+} = {}) {
   const [scores, setScores] = useState<Record<string, number>>({
     sleep: 50,
     stress: 60,
@@ -2277,16 +1999,16 @@ export function Spa2WellnessAssessmentPageView() {
         <Container sx={{ position: 'relative', textAlign: 'center' }}>
           <Stack spacing={2.5} alignItems="center">
             <Typography variant="overline" sx={{ color: SPA2_TEAL, letterSpacing: 3 }}>
-              ĐÁNH GIÁ SỨC KHỎE
+              {banner.eyebrow}
             </Typography>
             <Typography
               variant="h1"
               sx={{ color: SPA2_INK, fontWeight: 600, lineHeight: 1.1, maxWidth: 700 }}
             >
-              Wellness Score — Sức khỏe tổng thể của bạn
+              {banner.title}
             </Typography>
             <Typography sx={{ color: 'text.secondary', fontSize: 17, maxWidth: 560 }}>
-              6 chỉ số quan trọng nhất — đánh giá nhanh và nhận lộ trình chăm sóc cá nhân hóa.
+              {banner.subtitle}
             </Typography>
           </Stack>
         </Container>
@@ -2303,7 +2025,7 @@ export function Spa2WellnessAssessmentPageView() {
                     Di chuyển thanh trượt để đánh giá
                   </Typography>
                   <Stack spacing={3}>
-                    {ASSESSMENT_QUESTIONS.map((q) => {
+                    {questions.map((q) => {
                       const scoreInfo = SCORE_CONFIG(scores[q.id]);
                       return (
                         <Box key={q.id}>
@@ -2394,7 +2116,7 @@ export function Spa2WellnessAssessmentPageView() {
                       }}
                     />
                     <Stack spacing={1} sx={{ mb: 3 }}>
-                      {ASSESSMENT_QUESTIONS.map((q) => (
+                      {questions.map((q) => (
                         <Stack
                           key={q.id}
                           direction="row"
@@ -2487,7 +2209,7 @@ export function Spa2WellnessAssessmentPageView() {
                 </Box>
                 <Box sx={{ p: 3 }}>
                   <Grid container spacing={2} sx={{ mb: 3 }}>
-                    {ASSESSMENT_QUESTIONS.map((q) => {
+                    {questions.map((q) => {
                       const info = SCORE_CONFIG(scores[q.id]);
                       return (
                         <Grid key={q.id} xs={6} sm={4}>
