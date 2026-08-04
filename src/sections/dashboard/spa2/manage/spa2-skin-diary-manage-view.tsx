@@ -53,8 +53,8 @@ import {
 } from 'src/sections/spa2/spa2-pages-data';
 
 import { Spa2ImageField } from './spa2-image-field';
-import { Spa2ListAnalytic } from './spa2-list-analytic';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2ListAnalytic } from './spa2-list-analytic';
 import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------

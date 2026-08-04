@@ -44,6 +44,12 @@ import {
   SPA2_TEAL_LIGHT,
   SPA2_CREAM_DARK,
   SPA2_PAGE_IMAGES,
+  spa2WaitlistSlots,
+  spa2WaitlistBanner,
+  spa2PriceListBanner,
+  type Spa2WaitlistSlot,
+  type Spa2WaitlistBanner,
+  type Spa2PriceListBanner,
 } from '../spa2-pages-data';
 
 const formatVND = (n: number) => `${new Intl.NumberFormat('vi-VN').format(n)}đ`;
@@ -241,7 +247,11 @@ function GradientCta({
 // 1. FULL PRICE LIST (BẢNG GIÁ ĐẦY ĐỦ)
 // ══════════════════════════════════════════════════════════
 
-export function Spa2PriceListPageView() {
+export function Spa2PriceListPageView({
+  banner = spa2PriceListBanner,
+}: {
+  banner?: Spa2PriceListBanner;
+} = {}) {
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('name');
 
@@ -251,18 +261,18 @@ export function Spa2PriceListPageView() {
         name: s.name,
         price: s.price,
         duration: s.duration,
-        category: 'Dịch vụ lẻ',
+        category: banner.serviceCategoryLabel,
         icon: s.icon,
       })),
       ...spa2Treatments.map((t: any) => ({
         name: t.name,
         price: t.price,
         duration: `${t.sessions} buổi`,
-        category: 'Liệu trình',
+        category: banner.treatmentCategoryLabel,
         icon: 'solar:stars-bold-duotone',
       })),
     ],
-    []
+    [banner.serviceCategoryLabel, banner.treatmentCategoryLabel]
   );
 
   const filtered = useMemo(() => {
@@ -286,9 +296,9 @@ export function Spa2PriceListPageView() {
     <Box sx={{ bgcolor: 'background.default' }}>
       <PageHero
         img={SPA2_PAGE_IMAGES.services}
-        eyebrow="BẢNG GIÁ"
-        title="Bảng giá dịch vụ đầy đủ"
-        subtitle="Minh bạch từng mức giá — không phụ phí ẩn, áp dụng đồng nhất tại tất cả chi nhánh."
+        eyebrow={banner.eyebrow}
+        title={banner.title}
+        subtitle={banner.subtitle}
         cta={
           <Button
             startIcon={<Iconify icon="solar:printer-bold" />}
@@ -301,7 +311,7 @@ export function Spa2PriceListPageView() {
               '&:hover': { bgcolor: SPA2_TEAL_DARK },
             }}
           >
-            In bảng giá
+            {banner.printLabel}
           </Button>
         }
       />
@@ -383,8 +393,7 @@ export function Spa2PriceListPageView() {
           ))}
 
           <Alert severity="info" sx={{ borderRadius: 3, mt: 2 }}>
-            Giá đã bao gồm VAT. Chưa bao gồm phụ phí giờ vàng (nếu có) và phí spa tại nhà. Giá có
-            thể thay đổi theo chương trình khuyến mãi.
+            {banner.note}
           </Alert>
         </Container>
       </Box>
@@ -403,30 +412,19 @@ export function Spa2PriceListPageView() {
 // 2. WAITLIST (DANH SÁCH CHỜ)
 // ══════════════════════════════════════════════════════════
 
-const FULL_SLOTS = [
-  {
-    service: 'Facial Organic',
-    branch: 'Quận 1, TP.HCM',
-    date: '15/07/2026',
-    time: '14:00',
-    waiting: 4,
-  },
-  {
-    service: 'Massage Thảo Dược',
-    branch: 'Hồ Tây, Hà Nội',
-    date: '16/07/2026',
-    time: '10:00',
-    waiting: 2,
-  },
-  { service: 'Spa Đôi', branch: 'Quận 1, TP.HCM', date: '18/07/2026', time: '18:00', waiting: 7 },
-  { service: 'Detox 3 ngày', branch: 'Nha Trang', date: '20/07/2026', time: 'Cả ngày', waiting: 3 },
-];
-
-export function Spa2WaitlistPageView() {
+export function Spa2WaitlistPageView({
+  banner = spa2WaitlistBanner,
+  slots = spa2WaitlistSlots,
+}: {
+  banner?: Spa2WaitlistBanner;
+  slots?: Spa2WaitlistSlot[];
+} = {}) {
   const [joined, setJoined] = useState<number[]>([]);
-  const [notifyDialog, setNotifyDialog] = useState<(typeof FULL_SLOTS)[0] | null>(null);
+  const [notifyDialog, setNotifyDialog] = useState<Spa2WaitlistSlot | null>(null);
   const [toast, setToast] = useState('');
   const [flexible, setFlexible] = useState(false);
+
+  const uniqueServices = Array.from(new Set(slots.map((s) => s.service)));
 
   const join = (idx: number) => {
     setJoined((prev) => [...prev, idx]);
@@ -438,9 +436,9 @@ export function Spa2WaitlistPageView() {
     <Box sx={{ bgcolor: 'background.default' }}>
       <PageHero
         img={SPA2_PAGE_IMAGES.booking}
-        eyebrow="DANH SÁCH CHỜ"
-        title="Khung giờ yêu thích đã kín? Đừng lo!"
-        subtitle="Tham gia danh sách chờ — chúng tôi tự động thông báo ngay khi có người hủy lịch."
+        eyebrow={banner.eyebrow}
+        title={banner.title}
+        subtitle={banner.subtitle}
       />
 
       <Box sx={{ py: { xs: 8, md: 12 } }}>
@@ -450,8 +448,7 @@ export function Spa2WaitlistPageView() {
             icon={<Iconify icon="solar:bell-bold" />}
             sx={{ mb: 4, borderRadius: 3 }}
           >
-            Khách trong danh sách chờ được ưu tiên nhận thông báo qua SMS/Zalo trong vòng 5 phút khi
-            có slot trống — trước khi mở đặt công khai.
+            {banner.infoNote}
           </Alert>
 
           <SectionTitle
@@ -461,7 +458,7 @@ export function Spa2WaitlistPageView() {
           />
 
           <Stack spacing={2}>
-            {FULL_SLOTS.map((slot, idx) => {
+            {slots.map((slot, idx) => {
               const isJoined = joined.includes(idx);
               return (
                 <Card
@@ -574,13 +571,11 @@ export function Spa2WaitlistPageView() {
                 {flexible && (
                   <Stack spacing={1.5} sx={{ mt: 1.5 }}>
                     <TextField fullWidth size="small" select label="Dịch vụ mong muốn">
-                      {['Facial Organic', 'Massage Thảo Dược', 'Spa Đôi', 'Detox 3 ngày'].map(
-                        (s) => (
-                          <MenuItem key={s} value={s}>
-                            {s}
-                          </MenuItem>
-                        )
-                      )}
+                      {uniqueServices.map((s) => (
+                        <MenuItem key={s} value={s}>
+                          {s}
+                        </MenuItem>
+                      ))}
                     </TextField>
                     <TextField fullWidth size="small" label="Số điện thoại" />
                     <Button
@@ -631,7 +626,7 @@ export function Spa2WaitlistPageView() {
               <TextField fullWidth size="small" label="Số điện thoại (nhận SMS)" />
               <Button
                 fullWidth
-                onClick={() => join(FULL_SLOTS.indexOf(notifyDialog))}
+                onClick={() => join(slots.indexOf(notifyDialog))}
                 sx={{
                   borderRadius: 99,
                   py: 1.3,
