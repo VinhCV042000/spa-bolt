@@ -17,6 +17,7 @@ export { Spa2CareersManageView } from 'src/sections/dashboard/spa2/manage/spa2-c
 export { Spa2GalleryManageView } from 'src/sections/dashboard/spa2/manage/spa2-gallery-manage-view';
 export { Spa2ServiceEditorView } from 'src/sections/dashboard/spa2/manage/spa2-service-editor-view';
 export { Spa2VipRoomManageView } from 'src/sections/dashboard/spa2/manage/spa2-vip-room-manage-view';
+export { Spa2KidsSpaManageView } from 'src/sections/dashboard/spa2/manage/spa2-kids-spa-manage-view';
 export { Spa2SpaMenuManageView } from 'src/sections/dashboard/spa2/manage/spa2-spa-menu-manage-view';
 export { Spa2ServicesManageView } from 'src/sections/dashboard/spa2/manage/spa2-services-manage-view';
 export { Spa2BookingsManageView } from 'src/sections/dashboard/spa2/manage/spa2-bookings-manage-view';
@@ -55,9 +56,11 @@ export { Spa2AppDownloadManageView } from 'src/sections/dashboard/spa2/manage/sp
 export { Spa2HomeServiceManageView } from 'src/sections/dashboard/spa2/manage/spa2-home-service-manage-view';
 export { Spa2PrenatalSpaManageView } from 'src/sections/dashboard/spa2/manage/spa2-prenatal-spa-manage-view';
 export { Spa2ConsultationManageView } from 'src/sections/dashboard/spa2/manage/spa2-consultation-manage-view';
+export { Spa2VoucherCheckManageView } from 'src/sections/dashboard/spa2/manage/spa2-voucher-check-manage-view';
 export { Spa2SpaEtiquetteManageView } from 'src/sections/dashboard/spa2/manage/spa2-spa-etiquette-manage-view';
 export { Spa2WaterTherapyManageView } from 'src/sections/dashboard/spa2/manage/spa2-water-therapy-manage-view';
 export { Spa2GroupBookingManageView } from 'src/sections/dashboard/spa2/manage/spa2-group-booking-manage-view';
+export { Spa2AccessibilityManageView } from 'src/sections/dashboard/spa2/manage/spa2-accessibility-manage-view';
 export { Spa2SleepWellnessManageView } from 'src/sections/dashboard/spa2/manage/spa2-sleep-wellness-manage-view';
 export { Spa2SustainabilityManageView } from 'src/sections/dashboard/spa2/manage/spa2-sustainability-manage-view';
 export { Spa2LoyaltyRewardsManageView } from 'src/sections/dashboard/spa2/manage/spa2-loyalty-rewards-manage-view';

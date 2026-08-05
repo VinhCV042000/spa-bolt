@@ -31,56 +31,62 @@ import {
   SPA2_INK,
   SPA2_TEAL,
   SPA2_CREAM,
+  spa2MenFaqs,
+  spa2HairTips,
   spa2Feedbacks,
   SPA2_TEAL_DARK,
   SPA2_TEAL_LIGHT,
   SPA2_CREAM_DARK,
-  SPA2_PAGE_IMAGES,
-  spa2MenSpaBanner,
   spa2MenSpaStats,
   spa2MenServices,
   spa2MenPackages,
-  spa2MenFaqs,
-  type Spa2MenSpaBanner,
+  type Spa2MenFaq,
+  SPA2_PAGE_IMAGES,
+  spa2MenSpaBanner,
+  spa2HairServices,
+  type Spa2HairTip,
+  spa2KidsServices,
+  spa2KidsSpaBanner,
+  spa2AgingConcerns,
+  spa2HotelPartners,
+  spa2AyurvedaBanner,
+  spa2SpaHotelBanner,
+  spa2CommunityPosts,
   type Spa2MenSpaStat,
   type Spa2MenService,
   type Spa2MenPackage,
-  type Spa2MenFaq,
-  spa2HairBeautyBanner,
-  spa2HairServices,
-  spa2HairTips,
-  type Spa2HairBeautyBanner,
-  type Spa2HairService,
-  type Spa2HairTip,
   spa2AntiAgingBanner,
   spa2AntiAgingStages,
-  spa2AgingConcerns,
-  type Spa2AntiAgingBanner,
-  type Spa2AntiAgingStage,
-  type Spa2AgingConcern,
-  spa2WaterTherapyBanner,
   spa2WaterTreatments,
-  spa2WaterScienceFacts,
-  type Spa2WaterTherapyBanner,
-  type Spa2WaterTreatment,
-  type Spa2WaterScienceFact,
-  spa2AyurvedaBanner,
-  spa2AyurvedaTreatments,
-  spa2AyurvedaPhilosophies,
-  type Spa2AyurvedaBanner,
-  type Spa2AyurvedaTreatment,
-  type Spa2AyurvedaPhilosophy,
-  spa2SpaHotelBanner,
-  spa2StaycationPackages,
-  spa2HotelPartners,
-  type Spa2SpaHotelBanner,
-  type Spa2StaycationPackage,
-  type Spa2HotelPartner,
   spa2CommunityBanner,
-  spa2CommunityPosts,
-  spa2CommunityChallenges,
-  type Spa2CommunityBanner,
+  spa2HairBeautyBanner,
+  type Spa2HairService,
+  type Spa2KidsService,
+  spa2KidsSafetyBadges,
+  type Spa2MenSpaBanner,
+  type Spa2AgingConcern,
+  spa2WaterScienceFacts,
+  type Spa2HotelPartner,
+  type Spa2KidsSpaBanner,
+  spa2WaterTherapyBanner,
+  spa2AyurvedaTreatments,
+  spa2StaycationPackages,
   type Spa2CommunityPost,
+  type Spa2AntiAgingStage,
+  type Spa2WaterTreatment,
+  type Spa2AyurvedaBanner,
+  type Spa2SpaHotelBanner,
+  spa2CommunityChallenges,
+  type Spa2KidsSafetyBadge,
+  type Spa2AntiAgingBanner,
+  spa2AyurvedaPhilosophies,
+  type Spa2CommunityBanner,
+  type Spa2HairBeautyBanner,
+  type Spa2WaterScienceFact,
+  type Spa2AyurvedaTreatment,
+  type Spa2StaycationPackage,
+  type Spa2WaterTherapyBanner,
+  type Spa2AyurvedaPhilosophy,
   type Spa2CommunityChallenge,
 } from '../spa2-pages-data';
 
@@ -771,73 +777,15 @@ export function Spa2HairBeautyPageView({
 // 3. KIDS & TEEN SPA
 // ══════════════════════════════════════════════════════════
 
-const KIDS_SERVICES = [
-  {
-    name: 'Mini Facial Cho Bé',
-    ageRange: '8–12 tuổi',
-    price: 390000,
-    duration: '30 phút',
-    icon: 'solar:face-scan-circle-bold-duotone',
-    desc: 'Làm sạch nhẹ nhàng và dưỡng ẩm với sản phẩm 100% thiên nhiên, pH trung tính.',
-    color: '#F48FB1',
-  },
-  {
-    name: 'Teen Skin Clear',
-    ageRange: '13–17 tuổi',
-    price: 590000,
-    duration: '45 phút',
-    icon: 'solar:leaf-bold-duotone',
-    desc: 'Kiểm soát dầu và mụn đầu đen giai đoạn dậy thì — không dùng hóa chất mạnh.',
-    color: SPA2_TEAL,
-  },
-  {
-    name: 'Nail Art Cho Bé',
-    ageRange: '6–12 tuổi',
-    price: 290000,
-    duration: '45 phút',
-    icon: 'solar:hand-heart-bold-duotone',
-    desc: 'Làm đẹp móng với sơn không độc hại, an toàn cho trẻ em — màu sắc ngộ nghĩnh.',
-    color: '#EF9F27',
-  },
-  {
-    name: 'Gội Đầu Thư Giãn',
-    ageRange: '5+ tuổi',
-    price: 190000,
-    duration: '30 phút',
-    icon: 'solar:magic-stick-3-bold-duotone',
-    desc: 'Gội đầu với shampoo thảo mộc dành riêng cho trẻ, massage nhẹ nhàng thư giãn.',
-    color: '#7F77DD',
-  },
-  {
-    name: 'Mẹ & Bé Spa Together',
-    ageRange: 'Mọi lứa tuổi',
-    price: 1290000,
-    duration: '90 phút',
-    icon: 'solar:heart-bold-duotone',
-    desc: 'Trải nghiệm spa song song — mẹ làm facial, bé làm nail — kỷ niệm đáng nhớ.',
-    color: '#C2185B',
-  },
-  {
-    name: 'Birthday Princess Party',
-    ageRange: '6–14 tuổi',
-    price: 2490000,
-    duration: '2 giờ (nhóm 4+)',
-    icon: 'solar:gift-bold-duotone',
-    desc: 'Tiệc sinh nhật spa phong cách công chúa — nail, facial nhẹ, makeup và chụp ảnh.',
-    color: '#E91E63',
-  },
-];
-
-const SAFETY_BADGES = [
-  { icon: 'solar:leaf-bold', label: 'pH trung tính' },
-  { icon: 'solar:shield-check-bold', label: 'Không paraben' },
-  { icon: 'solar:drop-bold', label: 'Không cồn' },
-  { icon: 'solar:check-circle-bold', label: 'Bác sĩ nhi chứng nhận' },
-  { icon: 'solar:heart-bold', label: 'An toàn từ 5 tuổi' },
-  { icon: 'solar:star-bold', label: 'Sản phẩm hữu cơ' },
-];
-
-export function Spa2KidsSpaPageView() {
+export function Spa2KidsSpaPageView({
+  banner = spa2KidsSpaBanner,
+  safetyBadges = spa2KidsSafetyBadges,
+  services = spa2KidsServices,
+}: {
+  banner?: Spa2KidsSpaBanner;
+  safetyBadges?: Spa2KidsSafetyBadge[];
+  services?: Spa2KidsService[];
+} = {}) {
   const [openBooking, setOpenBooking] = useState(false);
   const [selectedService, setSelectedService] = useState('');
 
@@ -879,26 +827,24 @@ export function Spa2KidsSpaPageView() {
         />
         <Container sx={{ position: 'relative', textAlign: 'center' }}>
           <Stack spacing={2.5} alignItems="center">
-            <Typography sx={{ fontSize: 64, lineHeight: 1 }}>🌸✨💆</Typography>
+            <Typography sx={{ fontSize: 64, lineHeight: 1 }}>{banner.emoji}</Typography>
             <Typography variant="overline" sx={{ color: '#C2185B', letterSpacing: 3 }}>
-              SPA DÀNH CHO TRẺ EM & TEEN
+              {banner.eyebrow}
             </Typography>
             <Typography
               variant="h1"
               sx={{ color: SPA2_INK, fontWeight: 600, lineHeight: 1.1, maxWidth: 720 }}
             >
-              Những khoảnh khắc làm đẹp an toàn & vui vẻ cho bé
+              {banner.title}
             </Typography>
             <Typography sx={{ color: 'text.secondary', fontSize: 17, maxWidth: 560 }}>
-              Sản phẩm 100% hữu cơ, an toàn cho trẻ — mang đến trải nghiệm spa đầu tiên thật đặc
-              biệt.
+              {banner.subtitle}
             </Typography>
             <Alert
               severity="success"
               sx={{ borderRadius: 3, bgcolor: '#E8F5E9', color: '#1B5E20', maxWidth: 420 }}
             >
-              <strong>Phụ huynh có thể ở lại</strong> trong suốt quá trình thực hiện dịch vụ cho
-              con.
+              {banner.alertText}
             </Alert>
           </Stack>
         </Container>
@@ -914,9 +860,9 @@ export function Spa2KidsSpaPageView() {
             flexWrap="wrap"
             sx={{ gap: 1 }}
           >
-            {SAFETY_BADGES.map((b) => (
+            {safetyBadges.map((b) => (
               <Chip
-                key={b.label}
+                key={b.id}
                 icon={<Iconify icon={b.icon} width={14} />}
                 label={b.label}
                 sx={{
@@ -936,8 +882,8 @@ export function Spa2KidsSpaPageView() {
         <Container>
           <SectionTitle eyebrow="Dịch vụ" title="Trải nghiệm spa cho bé yêu" />
           <Grid container spacing={3}>
-            {KIDS_SERVICES.map((s) => (
-              <Grid key={s.name} xs={12} sm={6} md={4}>
+            {services.map((s) => (
+              <Grid key={s.id} xs={12} sm={6} md={4}>
                 <SoftCard sx={{ borderTop: `4px solid ${s.color}` }}>
                   <Stack direction="row" spacing={2} alignItems="flex-start" sx={{ mb: 2 }}>
                     <Box

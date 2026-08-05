@@ -43,13 +43,27 @@ import {
   spa2Treatments,
   SPA2_TEAL_LIGHT,
   SPA2_CREAM_DARK,
+  spa2VoucherFaqs,
   SPA2_PAGE_IMAGES,
   spa2WaitlistSlots,
   spa2WaitlistBanner,
+  spa2VoucherRecords,
   spa2PriceListBanner,
+  type Spa2VoucherFaq,
   type Spa2WaitlistSlot,
+  spa2VoucherCheckBanner,
+  type Spa2VoucherRecord,
   type Spa2WaitlistBanner,
+  spa2AccessibilityBanner,
   type Spa2PriceListBanner,
+  spa2AccessibilityFeatures,
+  spa2AccessibilityChecklist,
+  spa2SpecialNeedsCategories,
+  type Spa2VoucherCheckBanner,
+  type Spa2AccessibilityBanner,
+  type Spa2AccessibilityFeature,
+  type Spa2SpecialNeedsCategory,
+  type Spa2AccessibilityChecklistItem,
 } from '../spa2-pages-data';
 
 const formatVND = (n: number) => `${new Intl.NumberFormat('vi-VN').format(n)}đ`;
@@ -657,7 +671,15 @@ export function Spa2WaitlistPageView({
 // 3. VOUCHER / GIFT CARD BALANCE CHECK
 // ══════════════════════════════════════════════════════════
 
-export function Spa2VoucherCheckPageView() {
+export function Spa2VoucherCheckPageView({
+  banner = spa2VoucherCheckBanner,
+  vouchers = spa2VoucherRecords,
+  faqs = spa2VoucherFaqs,
+}: {
+  banner?: Spa2VoucherCheckBanner;
+  vouchers?: Spa2VoucherRecord[];
+  faqs?: Spa2VoucherFaq[];
+} = {}) {
   const [code, setCode] = useState('');
   const [result, setResult] = useState<null | {
     valid: boolean;
@@ -667,18 +689,17 @@ export function Spa2VoucherCheckPageView() {
   }>(null);
   const [checking, setChecking] = useState(false);
 
-  const MOCK_VOUCHERS: Record<string, { balance: number; expiry: string; type: string }> = {
-    'NSP-A7K92': { balance: 500000, expiry: '31/12/2026', type: 'Thẻ quà tặng' },
-    NEW30: { balance: 0, expiry: '31/12/2026', type: 'Mã giảm giá 30%' },
-    GIFT500K: { balance: 500000, expiry: '15/08/2026', type: 'Thẻ quà tặng' },
-  };
+  const voucherMap = useMemo(
+    () => Object.fromEntries(vouchers.map((v) => [v.code.toUpperCase(), v])),
+    [vouchers]
+  );
 
   const checkVoucher = () => {
     if (!code.trim()) return;
     setChecking(true);
     setResult(null);
     setTimeout(() => {
-      const found = MOCK_VOUCHERS[code.toUpperCase().trim()];
+      const found = voucherMap[code.toUpperCase().trim()];
       setResult(found ? { valid: true, ...found } : { valid: false });
       setChecking(false);
     }, 1200);
@@ -688,9 +709,9 @@ export function Spa2VoucherCheckPageView() {
     <Box sx={{ bgcolor: 'background.default' }}>
       <PageHero
         img={SPA2_PAGE_IMAGES.offers}
-        eyebrow="KIỂM TRA VOUCHER"
-        title="Tra cứu số dư thẻ quà tặng & voucher"
-        subtitle="Nhập mã để kiểm tra số dư, thời hạn và tình trạng hiệu lực của voucher."
+        eyebrow={banner.eyebrow}
+        title={banner.title}
+        subtitle={banner.subtitle}
       />
 
       <Box sx={{ py: { xs: 8, md: 12 } }}>
@@ -812,22 +833,9 @@ export function Spa2VoucherCheckPageView() {
             <Typography sx={{ fontWeight: 600, color: SPA2_INK, mb: 2, textAlign: 'center' }}>
               Câu hỏi thường gặp
             </Typography>
-            {[
-              {
-                q: 'Tôi tìm mã voucher ở đâu?',
-                a: 'Mã voucher được gửi qua email/SMS khi bạn nhận thẻ quà tặng, hoặc in trên phiếu voucher vật lý.',
-              },
-              {
-                q: 'Voucher hết hạn có gia hạn được không?',
-                a: 'Voucher hết hạn không tự động gia hạn. Vui lòng liên hệ hotline trong vòng 30 ngày sau hết hạn để được xem xét từng trường hợp.',
-              },
-              {
-                q: 'Có thể dùng nhiều voucher cùng lúc không?',
-                a: 'Có thể kết hợp tối đa 2 voucher cho 1 hóa đơn, miễn tổng giá trị không vượt quá 80% hóa đơn.',
-              },
-            ].map((f, i) => (
+            {faqs.map((f) => (
               <Accordion
-                key={f.q}
+                key={f.id}
                 sx={{
                   mb: 1,
                   borderRadius: '10px !important',
@@ -859,72 +867,26 @@ export function Spa2VoucherCheckPageView() {
 // 4. ACCESSIBILITY & SPECIAL NEEDS
 // ══════════════════════════════════════════════════════════
 
-const ACCESSIBILITY_FEATURES = [
-  {
-    icon: 'solar:wheelchair-bold-duotone',
-    title: 'Lối đi cho xe lăn',
-    desc: 'Toàn bộ 4 chi nhánh có lối vào không bậc thềm, thang máy và phòng vệ sinh đạt chuẩn tiếp cận.',
-  },
-  {
-    icon: 'solar:hearing-bold-duotone',
-    title: 'Hỗ trợ khiếm thính',
-    desc: 'KTV được đào tạo giao tiếp bằng chữ viết và ngôn ngữ ký hiệu cơ bản khi cần thiết.',
-  },
-  {
-    icon: 'solar:eye-closed-bold-duotone',
-    title: 'Hỗ trợ khiếm thị',
-    desc: 'Nhân viên hỗ trợ dẫn đường tận nơi, mô tả chi tiết quy trình trước khi thực hiện.',
-  },
-  {
-    icon: 'solar:health-bold-duotone',
-    title: 'Điều chỉnh cho bệnh mãn tính',
-    desc: 'Tham vấn với KTV về tiểu đường, cao huyết áp, hoặc các tình trạng sức khỏe đặc biệt trước liệu trình.',
-  },
-  {
-    icon: 'solar:accessibility-bold-duotone',
-    title: 'Giường & ghế điều chỉnh',
-    desc: 'Giường massage có thể điều chỉnh độ cao, ghế hỗ trợ cho khách hạn chế vận động.',
-  },
-  {
-    icon: 'solar:user-heart-bold-duotone',
-    title: 'Người đồng hành miễn phí',
-    desc: 'Người chăm sóc/phiên dịch đi cùng được miễn phí vào khu vực chờ và hỗ trợ trong phòng nếu cần.',
-  },
-];
-
-const SPECIAL_NEEDS_CATEGORIES = [
-  {
-    name: 'Người cao tuổi',
-    icon: 'solar:user-bold',
-    note: 'Áp lực massage nhẹ nhàng hơn, thời gian nghỉ giữa các bước dài hơn.',
-  },
-  {
-    name: 'Khuyết tật vận động',
-    icon: 'solar:wheelchair-bold',
-    note: 'Hỗ trợ di chuyển, giường/ghế điều chỉnh, không gian đủ rộng.',
-  },
-  {
-    name: 'Bệnh nhân ung thư (đang/đã điều trị)',
-    icon: 'solar:health-bold',
-    note: 'Liệu trình Oncology-safe, tránh vùng nhạy cảm, tham vấn bác sĩ điều trị.',
-  },
-  {
-    name: 'Rối loạn cảm giác (tự kỷ, ASD)',
-    icon: 'solar:magic-stick-bold',
-    note: 'Không gian yên tĩnh riêng, giảm ánh sáng/mùi hương mạnh, thời gian linh hoạt.',
-  },
-];
-
-export function Spa2AccessibilityPageView() {
+export function Spa2AccessibilityPageView({
+  banner = spa2AccessibilityBanner,
+  features = spa2AccessibilityFeatures,
+  categories = spa2SpecialNeedsCategories,
+  checklist = spa2AccessibilityChecklist,
+}: {
+  banner?: Spa2AccessibilityBanner;
+  features?: Spa2AccessibilityFeature[];
+  categories?: Spa2SpecialNeedsCategory[];
+  checklist?: Spa2AccessibilityChecklistItem[];
+} = {}) {
   const [submitted, setSubmitted] = useState(false);
 
   return (
     <Box sx={{ bgcolor: 'background.default' }}>
       <PageHero
         img={SPA2_PAGE_IMAGES.about}
-        eyebrow="TIẾP CẬN CHO MỌI NGƯỜI"
-        title="Chăm sóc sức khỏe không rào cản"
-        subtitle="Nature Spa cam kết mang đến trải nghiệm thư giãn trọn vẹn cho mọi khách hàng, không phân biệt khả năng."
+        eyebrow={banner.eyebrow}
+        title={banner.title}
+        subtitle={banner.subtitle}
       />
 
       {/* Features */}
@@ -932,8 +894,8 @@ export function Spa2AccessibilityPageView() {
         <Container>
           <SectionTitle eyebrow="Cơ sở vật chất" title="Những gì chúng tôi hỗ trợ" />
           <Grid container spacing={3}>
-            {ACCESSIBILITY_FEATURES.map((f) => (
-              <Grid key={f.title} xs={12} sm={6} md={4}>
+            {features.map((f) => (
+              <Grid key={f.id} xs={12} sm={6} md={4}>
                 <SoftCard>
                   <Box
                     sx={{
@@ -967,8 +929,8 @@ export function Spa2AccessibilityPageView() {
         <Container>
           <SectionTitle eyebrow="Đối tượng" title="Chúng tôi hỗ trợ đặc biệt cho" />
           <Grid container spacing={2.5}>
-            {SPECIAL_NEEDS_CATEGORIES.map((c) => (
-              <Grid key={c.name} xs={12} sm={6}>
+            {categories.map((c) => (
+              <Grid key={c.id} xs={12} sm={6}>
                 <SoftCard sx={{ bgcolor: 'common.white' }}>
                   <Stack direction="row" spacing={2} alignItems="flex-start">
                     <Box
@@ -1020,19 +982,15 @@ export function Spa2AccessibilityPageView() {
                     {b.name}
                   </Typography>
                   <Stack spacing={0.75}>
-                    {[
-                      'Lối vào không bậc thềm',
-                      'Phòng vệ sinh đạt chuẩn',
-                      'Thang máy / lối đi rộng',
-                    ].map((f) => (
-                      <Stack key={f} direction="row" spacing={1} alignItems="center">
+                    {checklist.map((item) => (
+                      <Stack key={item.id} direction="row" spacing={1} alignItems="center">
                         <Iconify
                           icon="solar:check-circle-bold"
                           width={14}
                           sx={{ color: '#2E7D32' }}
                         />
                         <Typography sx={{ fontSize: 12.5, color: 'text.secondary' }}>
-                          {f}
+                          {item.label}
                         </Typography>
                       </Stack>
                     ))}
@@ -1066,8 +1024,8 @@ export function Spa2AccessibilityPageView() {
                 <TextField fullWidth size="small" label="Họ và tên" />
                 <TextField fullWidth size="small" label="Số điện thoại" />
                 <TextField fullWidth size="small" select label="Nhu cầu hỗ trợ">
-                  {SPECIAL_NEEDS_CATEGORIES.map((c) => (
-                    <MenuItem key={c.name} value={c.name}>
+                  {categories.map((c) => (
+                    <MenuItem key={c.id} value={c.name}>
                       {c.name}
                     </MenuItem>
                   ))}

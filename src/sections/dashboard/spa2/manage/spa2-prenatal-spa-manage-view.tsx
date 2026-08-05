@@ -355,6 +355,10 @@ export function Spa2PrenatalSpaManageView() {
     setSafetyBadges((prev) => prev.filter((_, i) => i !== idx));
     markDirty();
   };
+  const reorderSafetyBadges = (next: { id: string; value: string }[]) => {
+    setSafetyBadges(next.map((item) => item.value));
+    markDirty();
+  };
 
   // ---- Reasons CRUD ----
   const [reasonDialog, setReasonDialog] = useState(false);
@@ -656,27 +660,45 @@ export function Spa2PrenatalSpaManageView() {
           }
         >
           <Stack spacing={2}>
+            <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+              {t('prenatal_spa.drag_hint')}
+            </Typography>
             <Stack spacing={1}>
-              {safetyBadges.map((badge, idx) => (
-                // eslint-disable-next-line react/no-array-index-key
-                <Stack key={idx} direction="row" spacing={1} alignItems="center">
-                  <TextField
-                    size="small"
-                    fullWidth
-                    value={badge}
-                    onChange={(e) => updateSafetyBadge(idx, e.target.value)}
-                    placeholder={t('prenatal_spa.badge_placeholder')}
-                  />
-                  <IconButton size="small" color="error" onClick={() => removeSafetyBadge(idx)}>
-                    <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                  </IconButton>
-                </Stack>
-              ))}
               {safetyBadges.length === 0 && (
                 <Typography variant="body2" color="text.secondary">
                   {t('prenatal_spa.no_badges')}
                 </Typography>
               )}
+              <Spa2SortableGrid
+                items={safetyBadges.map((badge, idx) => ({ id: String(idx), value: badge }))}
+                onReorder={reorderSafetyBadges}
+              >
+                <Stack spacing={1}>
+                  {safetyBadges.map((badge, idx) => (
+                    <Spa2SortableItem key={idx} id={String(idx)}>
+                      {(sortable) => (
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          <Spa2DragHandle sortable={sortable} />
+                          <TextField
+                            size="small"
+                            fullWidth
+                            value={badge}
+                            onChange={(e) => updateSafetyBadge(idx, e.target.value)}
+                            placeholder={t('prenatal_spa.badge_placeholder')}
+                          />
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => removeSafetyBadge(idx)}
+                          >
+                            <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                          </IconButton>
+                        </Stack>
+                      )}
+                    </Spa2SortableItem>
+                  ))}
+                </Stack>
+              </Spa2SortableGrid>
             </Stack>
             <Divider />
             <Typography variant="caption" color="text.secondary">

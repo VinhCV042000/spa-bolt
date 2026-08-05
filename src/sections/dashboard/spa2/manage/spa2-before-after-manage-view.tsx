@@ -429,6 +429,10 @@ export function Spa2BeforeAfterManageView() {
     setTechDeleteId(null);
     setDirty(true);
   }, [techDeleteId]);
+  const reorderTechs = (next: Array<Omit<Technology, 'id'> & { id: string }>) => {
+    setTechs(next.map((x) => ({ ...x, id: Number(x.id) })));
+    setDirty(true);
+  };
 
   // ---- Đội ngũ chuyên gia (spa2TreatmentExperts) ----
   const [experts, setExperts] = useState<Expert[]>(() =>
@@ -464,6 +468,10 @@ export function Spa2BeforeAfterManageView() {
     setExpertDeleteId(null);
     setDirty(true);
   }, [expertDeleteId]);
+  const reorderExperts = (next: Array<Omit<Expert, 'id'> & { id: string }>) => {
+    setExperts(next.map((x) => ({ ...x, id: Number(x.id) })));
+    setDirty(true);
+  };
 
   // ---- Đánh giá (spa2Feedbacks, chia sẻ với trang Đánh giá) ----
   const [reviews, setReviews] = useState<Feedback[]>(() =>
@@ -1025,40 +1033,56 @@ export function Spa2BeforeAfterManageView() {
             </Button>
           </Stack>
           <Box sx={{ p: 2, pt: 0 }}>
-            <Grid container spacing={2}>
-              {techs.map((tech) => (
-                <Grid key={tech.id} xs={12} sm={6} md={4}>
-                  <Box sx={{ position: 'relative' }}>
-                    <TechPreviewCard form={tech} />
-                    <Stack
-                      direction="row"
-                      spacing={0.5}
-                      sx={{ position: 'absolute', top: 8, right: 8 }}
-                    >
-                      <Tooltip title={t('common.edit')}>
-                        <IconButton
-                          size="small"
-                          onClick={() => openTechEdit(tech)}
-                          sx={{ bgcolor: 'background.paper', boxShadow: 1 }}
-                        >
-                          <Iconify icon="solar:pen-bold" width={16} />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title={t('common.delete')}>
-                        <IconButton
-                          size="small"
-                          color="error"
-                          onClick={() => setTechDeleteId(tech.id)}
-                          sx={{ bgcolor: 'background.paper', boxShadow: 1 }}
-                        >
-                          <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                        </IconButton>
-                      </Tooltip>
-                    </Stack>
-                  </Box>
-                </Grid>
-              ))}
-            </Grid>
+            <Typography variant="caption" color="text.secondary" sx={{ mb: 1.5, display: 'block' }}>
+              {t('common.drag_hint')}
+            </Typography>
+            <Spa2SortableGrid
+              items={techs.map((tech) => ({ ...tech, id: String(tech.id) }))}
+              onReorder={reorderTechs}
+            >
+              <Grid container spacing={2}>
+                {techs.map((tech) => (
+                  <Grid key={tech.id} xs={12} sm={6} md={4}>
+                    <Spa2SortableItem id={String(tech.id)}>
+                      {(sortable) => (
+                        <Box sx={{ position: 'relative' }}>
+                          <TechPreviewCard form={tech} />
+                          <Stack
+                            direction="row"
+                            spacing={0.5}
+                            sx={{ position: 'absolute', top: 8, right: 8 }}
+                          >
+                            <Spa2DragHandle
+                              sortable={sortable}
+                              sx={{ bgcolor: 'background.paper', boxShadow: 1 }}
+                            />
+                            <Tooltip title={t('common.edit')}>
+                              <IconButton
+                                size="small"
+                                onClick={() => openTechEdit(tech)}
+                                sx={{ bgcolor: 'background.paper', boxShadow: 1 }}
+                              >
+                                <Iconify icon="solar:pen-bold" width={16} />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title={t('common.delete')}>
+                              <IconButton
+                                size="small"
+                                color="error"
+                                onClick={() => setTechDeleteId(tech.id)}
+                                sx={{ bgcolor: 'background.paper', boxShadow: 1 }}
+                              >
+                                <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </Box>
+                      )}
+                    </Spa2SortableItem>
+                  </Grid>
+                ))}
+              </Grid>
+            </Spa2SortableGrid>
           </Box>
         </Card>
       )}
@@ -1077,41 +1101,57 @@ export function Spa2BeforeAfterManageView() {
             </Button>
           </Stack>
           <Box sx={{ p: 2, pt: 0 }}>
-            <Grid container spacing={2}>
-              {experts.map((e) => (
-                <Grid key={e.id} xs={12} sm={6} md={3}>
-                  <Box sx={{ position: 'relative' }}>
-                    <TeamPreviewCard form={e} />
-                    <Stack
-                      direction="row"
-                      justifyContent="center"
-                      spacing={0.5}
-                      sx={{ position: 'absolute', top: 8, right: 8 }}
-                    >
-                      <Tooltip title={t('common.edit')}>
-                        <IconButton
-                          size="small"
-                          onClick={() => openExpertEdit(e)}
-                          sx={{ bgcolor: 'background.paper', boxShadow: 1 }}
-                        >
-                          <Iconify icon="solar:pen-bold" width={16} />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title={t('common.delete')}>
-                        <IconButton
-                          size="small"
-                          color="error"
-                          onClick={() => setExpertDeleteId(e.id)}
-                          sx={{ bgcolor: 'background.paper', boxShadow: 1 }}
-                        >
-                          <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                        </IconButton>
-                      </Tooltip>
-                    </Stack>
-                  </Box>
-                </Grid>
-              ))}
-            </Grid>
+            <Typography variant="caption" color="text.secondary" sx={{ mb: 1.5, display: 'block' }}>
+              {t('common.drag_hint')}
+            </Typography>
+            <Spa2SortableGrid
+              items={experts.map((e) => ({ ...e, id: String(e.id) }))}
+              onReorder={reorderExperts}
+            >
+              <Grid container spacing={2}>
+                {experts.map((e) => (
+                  <Grid key={e.id} xs={12} sm={6} md={3}>
+                    <Spa2SortableItem id={String(e.id)}>
+                      {(sortable) => (
+                        <Box sx={{ position: 'relative' }}>
+                          <TeamPreviewCard form={e} />
+                          <Stack
+                            direction="row"
+                            justifyContent="center"
+                            spacing={0.5}
+                            sx={{ position: 'absolute', top: 8, right: 8 }}
+                          >
+                            <Spa2DragHandle
+                              sortable={sortable}
+                              sx={{ bgcolor: 'background.paper', boxShadow: 1 }}
+                            />
+                            <Tooltip title={t('common.edit')}>
+                              <IconButton
+                                size="small"
+                                onClick={() => openExpertEdit(e)}
+                                sx={{ bgcolor: 'background.paper', boxShadow: 1 }}
+                              >
+                                <Iconify icon="solar:pen-bold" width={16} />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title={t('common.delete')}>
+                              <IconButton
+                                size="small"
+                                color="error"
+                                onClick={() => setExpertDeleteId(e.id)}
+                                sx={{ bgcolor: 'background.paper', boxShadow: 1 }}
+                              >
+                                <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </Box>
+                      )}
+                    </Spa2SortableItem>
+                  </Grid>
+                ))}
+              </Grid>
+            </Spa2SortableGrid>
           </Box>
         </Card>
       )}

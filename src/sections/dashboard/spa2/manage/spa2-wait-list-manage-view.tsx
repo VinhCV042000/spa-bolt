@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -8,17 +8,26 @@ import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Tabs from '@mui/material/Tabs';
 import Alert from '@mui/material/Alert';
+import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
+import TableRow from '@mui/material/TableRow';
 import Grid from '@mui/material/Unstable_Grid2';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import InputAdornment from '@mui/material/InputAdornment';
+import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 
@@ -27,7 +36,10 @@ import { uuidv4 } from 'src/utils/uuidv4';
 import { useTranslate } from 'src/locales';
 
 import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { useTable } from 'src/components/table/use-table';
 import { ConfirmDialog } from 'src/components/custom-dialog';
+import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
 
 import { Spa2WaitlistPageView } from 'src/sections/spa2/view/spa2-content-pages9';
 import {
@@ -38,10 +50,14 @@ import {
   spa2WaitlistSlots,
   spa2WaitlistBanner,
   type Spa2WaitlistSlot,
+  SPA2_WAITLIST_ENTRIES,
+  type Spa2WaitlistEntry,
   type Spa2WaitlistBanner,
+  type Spa2WaitlistEntryStatus,
 } from 'src/sections/spa2/spa2-pages-data';
 
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2ListAnalytic } from './spa2-list-analytic';
 import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
@@ -65,6 +81,27 @@ const EMPTY_SLOT: Omit<Spa2WaitlistSlot, 'id'> = {
   date: '',
   time: '',
   waiting: 0,
+};
+
+type WaitlistEntryStatusFilter = Spa2WaitlistEntryStatus | 'all';
+
+const ENTRY_STATUS_OPTIONS: Spa2WaitlistEntryStatus[] = ['waiting', 'notified', 'booked', 'expired'];
+
+const ENTRY_STATUS_LABEL: Record<Spa2WaitlistEntryStatus, string> = {
+  waiting: 'Đang chờ',
+  notified: 'Đã thông báo',
+  booked: 'Đã đặt lịch',
+  expired: 'Hết hạn',
+};
+
+const ENTRY_STATUS_COLOR: Record<
+  Spa2WaitlistEntryStatus,
+  'info' | 'warning' | 'success' | 'error'
+> = {
+  waiting: 'info',
+  notified: 'warning',
+  booked: 'success',
+  expired: 'error',
 };
 
 function SectionCard({
@@ -206,6 +243,36 @@ function SlotPreviewCard({ slot }: { slot: Omit<Spa2WaitlistSlot, 'id'> }) {
   );
 }
 
+// KPI tile used at the top of the "entries" tab.
+function StatCard({ icon, label, value }: { icon: string; label: string; value: string | number }) {
+  return (
+    <Card sx={{ p: 2, borderRadius: 2.5, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+      <Box
+        sx={{
+          width: 40,
+          height: 40,
+          borderRadius: 2,
+          bgcolor: SPA2_CREAM_DARK,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0,
+        }}
+      >
+        <Iconify icon={icon} width={20} sx={{ color: SPA2_TEAL }} />
+      </Box>
+      <Box>
+        <Typography variant="h6" sx={{ color: SPA2_INK, lineHeight: 1.2 }}>
+          {value}
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          {label}
+        </Typography>
+      </Box>
+    </Card>
+  );
+}
+
 // ----------------------------------------------------------------------
 
 export function Spa2WaitListManageView() {
@@ -215,11 +282,49 @@ export function Spa2WaitListManageView() {
   const [slots, setSlots] = useState<Spa2WaitlistSlot[]>(() =>
     spa2WaitlistSlots.map((item) => ({ ...item }))
   );
+  const [entries, setEntries] = useState<Spa2WaitlistEntry[]>(() =>
+    SPA2_WAITLIST_ENTRIES.map((item) => ({ ...item }))
+  );
 
   const [dirty, setDirty] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
-  const [tab, setTab] = useState<'banner' | 'slots' | 'preview'>('banner');
+  const [tab, setTab] = useState<'banner' | 'slots' | 'entries' | 'preview'>('banner');
   const markDirty = () => setDirty(true);
+
+  // ---- Danh sách người chờ (entries) ----
+  const [entrySearch, setEntrySearch] = useState('');
+  const [entryStatusFilter, setEntryStatusFilter] = useState<WaitlistEntryStatusFilter>('all');
+  const [entrySlotFilter, setEntrySlotFilter] = useState('all');
+  const entryTable = useTable({ defaultRowsPerPage: 5 });
+
+  const slotById = useMemo(() => new Map(slots.map((item) => [item.id, item])), [slots]);
+
+  const filteredEntries = entries.filter((e) => {
+    const q = entrySearch.trim().toLowerCase();
+    const matchSearch =
+      !q || e.customerName.toLowerCase().includes(q) || e.phone.includes(entrySearch.trim());
+    const matchStatus = entryStatusFilter === 'all' || e.status === entryStatusFilter;
+    const matchSlot = entrySlotFilter === 'all' || e.slotId === entrySlotFilter;
+    return matchSearch && matchStatus && matchSlot;
+  });
+
+  const entryCounts = {
+    all: entries.length,
+    waiting: entries.filter((e) => e.status === 'waiting').length,
+    notified: entries.filter((e) => e.status === 'notified').length,
+    booked: entries.filter((e) => e.status === 'booked').length,
+    expired: entries.filter((e) => e.status === 'expired').length,
+  };
+
+  const entryConversionRate =
+    entryCounts.booked + entryCounts.expired
+      ? Math.round((entryCounts.booked / (entryCounts.booked + entryCounts.expired)) * 100)
+      : null;
+
+  const handleSetEntryStatus = (id: string, status: Spa2WaitlistEntryStatus) => {
+    setEntries((prev) => prev.map((e) => (e.id === id ? { ...e, status } : e)));
+    markDirty();
+  };
 
   // ---- Banner ----
   const updateBanner = (key: keyof Spa2WaitlistBanner, value: string) => {
@@ -277,6 +382,7 @@ export function Spa2WaitListManageView() {
   const handleReset = () => {
     setBanner({ ...spa2WaitlistBanner });
     setSlots(spa2WaitlistSlots.map((item) => ({ ...item })));
+    setEntries(SPA2_WAITLIST_ENTRIES.map((item) => ({ ...item })));
     setDirty(false);
   };
 
@@ -366,6 +472,12 @@ export function Spa2WaitListManageView() {
           value="slots"
           label={t('wait_list.tab_slots')}
           icon={<Iconify icon="solar:clock-circle-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
+          value="entries"
+          label={t('wait_list.tab_entries')}
+          icon={<Iconify icon="solar:users-group-rounded-bold-duotone" width={20} />}
           iconPosition="start"
         />
         <Tab
@@ -488,6 +600,317 @@ export function Spa2WaitListManageView() {
             </Stack>
           </Spa2SortableGrid>
         </SectionCard>
+      )}
+
+      {/* Danh sách người chờ (entries) */}
+      {tab === 'entries' && (
+        <Stack spacing={2.5}>
+          <Grid container spacing={2}>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:users-group-rounded-bold"
+                label="Tổng người chờ"
+                value={entryCounts.all}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:bell-bold"
+                label="Đang chờ"
+                value={entryCounts.waiting}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:check-circle-bold"
+                label="Đã đặt lịch"
+                value={entryCounts.booked}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:graph-up-bold"
+                label="Tỷ lệ chuyển đổi"
+                value={entryConversionRate === null ? '—' : `${entryConversionRate}%`}
+              />
+            </Grid>
+          </Grid>
+
+          <Card sx={{ p: 3, borderRadius: 3 }}>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              sx={{ mb: 2 }}
+              flexWrap="wrap"
+              useFlexGap
+              gap={1}
+            >
+              <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                {t('wait_list.tab_entries')}
+              </Typography>
+              <TextField
+                select
+                size="small"
+                value={entrySlotFilter}
+                onChange={(e) => {
+                  setEntrySlotFilter(e.target.value);
+                  entryTable.onResetPage();
+                }}
+                sx={{ minWidth: 240 }}
+              >
+                <MenuItem value="all">Tất cả khung giờ</MenuItem>
+                {slots.map((slot) => (
+                  <MenuItem key={slot.id} value={slot.id}>
+                    {slot.service} · {slot.date} {slot.time}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Stack>
+
+            <Card sx={{ bgcolor: SPA2_TEAL_DARK, mb: 2.5 }}>
+              <Scrollbar sx={{ minHeight: 108 }}>
+                <Stack
+                  spacing={1}
+                  direction="row"
+                  divider={
+                    <Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />
+                  }
+                  sx={{ py: 2, px: 1 }}
+                >
+                  <Spa2ListAnalytic
+                    title="Tất cả"
+                    total={entryCounts.all}
+                    percent={100}
+                    icon="solar:users-group-rounded-bold-duotone"
+                    color={SPA2_TEAL}
+                    unitLabel="người"
+                    active={entryStatusFilter === 'all'}
+                    onClick={() => {
+                      setEntryStatusFilter('all');
+                      entryTable.onResetPage();
+                    }}
+                  />
+                  <Spa2ListAnalytic
+                    title={ENTRY_STATUS_LABEL.waiting}
+                    total={entryCounts.waiting}
+                    percent={entryCounts.all ? (entryCounts.waiting / entryCounts.all) * 100 : 0}
+                    icon="solar:bell-bold-duotone"
+                    color="#0C447C"
+                    unitLabel="người"
+                    active={entryStatusFilter === 'waiting'}
+                    onClick={() => {
+                      setEntryStatusFilter('waiting');
+                      entryTable.onResetPage();
+                    }}
+                  />
+                  <Spa2ListAnalytic
+                    title={ENTRY_STATUS_LABEL.notified}
+                    total={entryCounts.notified}
+                    percent={entryCounts.all ? (entryCounts.notified / entryCounts.all) * 100 : 0}
+                    icon="solar:phone-calling-bold-duotone"
+                    color="#FFAB00"
+                    unitLabel="người"
+                    active={entryStatusFilter === 'notified'}
+                    onClick={() => {
+                      setEntryStatusFilter('notified');
+                      entryTable.onResetPage();
+                    }}
+                  />
+                  <Spa2ListAnalytic
+                    title={ENTRY_STATUS_LABEL.booked}
+                    total={entryCounts.booked}
+                    percent={entryCounts.all ? (entryCounts.booked / entryCounts.all) * 100 : 0}
+                    icon="solar:check-circle-bold-duotone"
+                    color="#22C55E"
+                    unitLabel="người"
+                    active={entryStatusFilter === 'booked'}
+                    onClick={() => {
+                      setEntryStatusFilter('booked');
+                      entryTable.onResetPage();
+                    }}
+                  />
+                  <Spa2ListAnalytic
+                    title={ENTRY_STATUS_LABEL.expired}
+                    total={entryCounts.expired}
+                    percent={entryCounts.all ? (entryCounts.expired / entryCounts.all) * 100 : 0}
+                    icon="solar:close-circle-bold-duotone"
+                    color="#637381"
+                    unitLabel="người"
+                    active={entryStatusFilter === 'expired'}
+                    onClick={() => {
+                      setEntryStatusFilter('expired');
+                      entryTable.onResetPage();
+                    }}
+                  />
+                </Stack>
+              </Scrollbar>
+            </Card>
+
+            <TextField
+              placeholder="Tìm theo tên khách hoặc số điện thoại..."
+              value={entrySearch}
+              onChange={(e) => {
+                setEntrySearch(e.target.value);
+                entryTable.onResetPage();
+              }}
+              size="small"
+              fullWidth
+              sx={{ mb: 2 }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+
+            <Tabs
+              value={entryStatusFilter}
+              onChange={(_, v: WaitlistEntryStatusFilter) => {
+                setEntryStatusFilter(v);
+                entryTable.onResetPage();
+              }}
+              variant="scrollable"
+              sx={{
+                mb: 2,
+                '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+                '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
+              }}
+            >
+              <Tab value="all" label={`Tất cả (${entryCounts.all})`} />
+              {ENTRY_STATUS_OPTIONS.map((status) => (
+                <Tab
+                  key={status}
+                  value={status}
+                  label={`${ENTRY_STATUS_LABEL[status]} (${entryCounts[status]})`}
+                />
+              ))}
+            </Tabs>
+
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Khách hàng</TableCell>
+                    <TableCell>Khung giờ chờ</TableCell>
+                    <TableCell align="center">Vị trí xếp hàng</TableCell>
+                    <TableCell>Ngày tham gia</TableCell>
+                    <TableCell>Trạng thái</TableCell>
+                    <TableCell align="right">Thao tác</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {filteredEntries
+                    .slice(
+                      entryTable.page * entryTable.rowsPerPage,
+                      entryTable.page * entryTable.rowsPerPage + entryTable.rowsPerPage
+                    )
+                    .map((item) => {
+                      const slot = slotById.get(item.slotId);
+                      return (
+                        <TableRow key={item.id} hover>
+                          <TableCell>
+                            <Stack>
+                              <Typography variant="subtitle2" sx={{ color: SPA2_TEAL_DARK }}>
+                                {item.customerName}
+                              </Typography>
+                              <Typography variant="caption" color="text.secondary">
+                                {item.phone}
+                              </Typography>
+                            </Stack>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2">{slot?.service ?? item.slotId}</Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              {slot ? `${slot.date} · ${slot.time}` : '—'}
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Chip size="small" label={`#${item.position}`} />
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2">{item.joinedAt}</Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Chip
+                              size="small"
+                              label={ENTRY_STATUS_LABEL[item.status]}
+                              color={ENTRY_STATUS_COLOR[item.status]}
+                              variant="soft"
+                            />
+                          </TableCell>
+                          <TableCell align="right">
+                            <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
+                              {item.status === 'waiting' && (
+                                <>
+                                  <Tooltip title="Đánh dấu đã thông báo">
+                                    <IconButton
+                                      size="small"
+                                      sx={{ color: SPA2_TEAL_DARK }}
+                                      onClick={() => handleSetEntryStatus(item.id, 'notified')}
+                                    >
+                                      <Iconify icon="solar:bell-bold" />
+                                    </IconButton>
+                                  </Tooltip>
+                                  <Tooltip title="Đánh dấu hết hạn">
+                                    <IconButton
+                                      size="small"
+                                      color="error"
+                                      onClick={() => handleSetEntryStatus(item.id, 'expired')}
+                                    >
+                                      <Iconify icon="solar:close-circle-bold" />
+                                    </IconButton>
+                                  </Tooltip>
+                                </>
+                              )}
+                              {item.status === 'notified' && (
+                                <>
+                                  <Tooltip title="Đánh dấu đã đặt lịch">
+                                    <IconButton
+                                      size="small"
+                                      color="success"
+                                      onClick={() => handleSetEntryStatus(item.id, 'booked')}
+                                    >
+                                      <Iconify icon="solar:check-circle-bold" />
+                                    </IconButton>
+                                  </Tooltip>
+                                  <Tooltip title="Đánh dấu hết hạn">
+                                    <IconButton
+                                      size="small"
+                                      color="error"
+                                      onClick={() => handleSetEntryStatus(item.id, 'expired')}
+                                    >
+                                      <Iconify icon="solar:close-circle-bold" />
+                                    </IconButton>
+                                  </Tooltip>
+                                </>
+                              )}
+                            </Stack>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  {filteredEntries.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={6} align="center" sx={{ py: 6, color: 'text.disabled' }}>
+                        Không có dữ liệu
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePaginationCustom
+              count={filteredEntries.length}
+              page={entryTable.page}
+              rowsPerPage={entryTable.rowsPerPage}
+              onPageChange={entryTable.onChangePage}
+              onRowsPerPageChange={entryTable.onChangeRowsPerPage}
+            />
+          </Card>
+        </Stack>
       )}
 
       {/* Full page preview */}

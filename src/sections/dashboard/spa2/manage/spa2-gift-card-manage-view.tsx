@@ -69,6 +69,7 @@ import {
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
 import { Spa2ListAnalytic } from './spa2-list-analytic';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages2.tsx's
@@ -323,6 +324,11 @@ export function Spa2GiftCardManageView() {
   const confirmDeleteReason = () => {
     setReasons((prev) => prev.filter((r) => r.id !== reasonDeleteId));
     setReasonDeleteId(null);
+    markDirty();
+  };
+
+  const reorderReasons = (next: Spa2GiftCardReason[]) => {
+    setReasons(next);
     markDirty();
   };
 
@@ -687,35 +693,58 @@ export function Spa2GiftCardManageView() {
               {t('gift_card.add_reason_btn')}
             </Button>
           </Stack>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ mb: 1.5, display: 'block' }}
+          >
+            {t('common.drag_hint')}
+          </Typography>
           <Grid container spacing={2}>
-            {reasons.map((item) => (
-              <Grid key={item.id} xs={12} sm={6} md={3}>
-                <Box sx={{ position: 'relative' }}>
-                  <ReasonPreviewCard icon={item.icon} title={item.title} desc={item.desc} />
-                  <Stack
-                    direction="row"
-                    spacing={0.5}
-                    sx={{ position: 'absolute', top: 8, right: 8 }}
-                  >
-                    <IconButton
-                      size="small"
-                      onClick={() => openEditReason(item)}
-                      sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                    >
-                      <Iconify icon="solar:pen-bold" width={14} />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      color="error"
-                      onClick={() => setReasonDeleteId(item.id)}
-                      sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                    >
-                      <Iconify icon="solar:trash-bin-trash-bold" width={14} />
-                    </IconButton>
-                  </Stack>
-                </Box>
-              </Grid>
-            ))}
+            <Spa2SortableGrid items={reasons} onReorder={reorderReasons}>
+              {reasons.map((item) => (
+                <Grid key={item.id} xs={12} sm={6} md={3}>
+                  <Spa2SortableItem id={item.id}>
+                    {(sortable) => (
+                      <Box sx={{ position: 'relative' }}>
+                        <ReasonPreviewCard icon={item.icon} title={item.title} desc={item.desc} />
+                        <Spa2DragHandle
+                          sortable={sortable}
+                          sx={{
+                            position: 'absolute',
+                            top: 8,
+                            left: 8,
+                            bgcolor: 'common.white',
+                            boxShadow: 1,
+                          }}
+                        />
+                        <Stack
+                          direction="row"
+                          spacing={0.5}
+                          sx={{ position: 'absolute', top: 8, right: 8 }}
+                        >
+                          <IconButton
+                            size="small"
+                            onClick={() => openEditReason(item)}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          >
+                            <Iconify icon="solar:pen-bold" width={14} />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => setReasonDeleteId(item.id)}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          >
+                            <Iconify icon="solar:trash-bin-trash-bold" width={14} />
+                          </IconButton>
+                        </Stack>
+                      </Box>
+                    )}
+                  </Spa2SortableItem>
+                </Grid>
+              ))}
+            </Spa2SortableGrid>
             {reasons.length === 0 && (
               <Grid xs={12}>
                 <Typography

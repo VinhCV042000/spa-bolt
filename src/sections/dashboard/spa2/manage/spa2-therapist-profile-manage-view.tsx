@@ -13,6 +13,8 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Unstable_Grid2';
 import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
@@ -22,6 +24,7 @@ import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
 
@@ -32,8 +35,14 @@ import { bgBlur, varAlpha } from 'src/theme/styles';
 import {
   spa2Therapists,
   type Spa2Therapist,
+  SPA2_THERAPIST_REVIEWS,
+  SPA2_THERAPIST_BOOKINGS,
+  type Spa2TherapistReview,
+  type Spa2TherapistBooking,
   spa2TherapistProfileBanner,
   type Spa2TherapistProfileBanner,
+  type Spa2TherapistReviewStatus,
+  type Spa2TherapistBookingStatus,
 } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
@@ -144,6 +153,36 @@ function PreviewFrame({ children }: { children: ReactNode }) {
     >
       {children}
     </Box>
+  );
+}
+
+// KPI tile used on the "bookings" and "reviews" tabs.
+function StatCard({ icon, label, value }: { icon: string; label: string; value: string | number }) {
+  return (
+    <Card sx={{ p: 2, borderRadius: 2.5, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+      <Box
+        sx={{
+          width: 40,
+          height: 40,
+          borderRadius: 2,
+          bgcolor: SPA2_CREAM_DARK,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0,
+        }}
+      >
+        <Iconify icon={icon} width={20} sx={{ color: SPA2_TEAL }} />
+      </Box>
+      <Box>
+        <Typography variant="h6" sx={{ color: SPA2_INK, lineHeight: 1.2 }}>
+          {value}
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          {label}
+        </Typography>
+      </Box>
+    </Card>
   );
 }
 
@@ -400,7 +439,9 @@ export function Spa2TherapistProfileManageView() {
   }));
   const [dirty, setDirty] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
-  const [tab, setTab] = useState<'banner' | 'therapists' | 'preview'>('banner');
+  const [tab, setTab] = useState<'banner' | 'therapists' | 'bookings' | 'reviews' | 'preview'>(
+    'banner'
+  );
   const markDirty = () => setDirty(true);
 
   // ---- Banner ----
@@ -511,6 +552,105 @@ export function Spa2TherapistProfileManageView() {
     });
   };
 
+  // ---- Đặt lịch với chuyên gia (bookings) ----
+  const [bookings, setBookings] = useState<Spa2TherapistBooking[]>(() =>
+    SPA2_THERAPIST_BOOKINGS.map((item) => ({ ...item }))
+  );
+  const [bookingSearch, setBookingSearch] = useState('');
+  const [bookingStatusFilter, setBookingStatusFilter] = useState<
+    Spa2TherapistBookingStatus | 'all'
+  >('all');
+  const [viewBooking, setViewBooking] = useState<Spa2TherapistBooking | null>(null);
+
+  const BOOKING_STATUS_META: Record<
+    Spa2TherapistBookingStatus,
+    { label: string; color: 'warning' | 'info' | 'success' | 'error' }
+  > = {
+    pending: { label: t('therapist_profile.bookings_status_pending'), color: 'warning' },
+    confirmed: { label: t('therapist_profile.bookings_status_confirmed'), color: 'info' },
+    completed: { label: t('therapist_profile.bookings_status_completed'), color: 'success' },
+    cancelled: { label: t('therapist_profile.bookings_status_cancelled'), color: 'error' },
+  };
+
+  const filteredBookings = bookings.filter((item) => {
+    const q = bookingSearch.trim().toLowerCase();
+    const matchSearch =
+      !q ||
+      item.customerName.toLowerCase().includes(q) ||
+      item.therapistName.toLowerCase().includes(q) ||
+      item.phone.includes(bookingSearch.trim());
+    const matchStatus = bookingStatusFilter === 'all' || item.status === bookingStatusFilter;
+    return matchSearch && matchStatus;
+  });
+
+  const bookingCounts = {
+    all: bookings.length,
+    pending: bookings.filter((item) => item.status === 'pending').length,
+    confirmed: bookings.filter((item) => item.status === 'confirmed').length,
+    completed: bookings.filter((item) => item.status === 'completed').length,
+    cancelled: bookings.filter((item) => item.status === 'cancelled').length,
+  };
+
+  const setBookingStatus = (id: number, status: Spa2TherapistBookingStatus) => {
+    setBookings((prev) => prev.map((item) => (item.id === id ? { ...item, status } : item)));
+    setViewBooking((prev) => (prev?.id === id ? { ...prev, status } : prev));
+    markDirty();
+  };
+
+  // ---- Quản lý bình luận (reviews moderation) ----
+  const [reviews, setReviews] = useState<Spa2TherapistReview[]>(() =>
+    SPA2_THERAPIST_REVIEWS.map((item) => ({ ...item }))
+  );
+  const [reviewSearch, setReviewSearch] = useState('');
+  const [reviewStatusFilter, setReviewStatusFilter] = useState<Spa2TherapistReviewStatus | 'all'>(
+    'all'
+  );
+  const [viewReview, setViewReview] = useState<Spa2TherapistReview | null>(null);
+  const [deleteReviewId, setDeleteReviewId] = useState<number | null>(null);
+
+  const REVIEW_STATUS_META: Record<
+    Spa2TherapistReviewStatus,
+    { label: string; color: 'success' | 'warning' | 'default' }
+  > = {
+    published: { label: t('therapist_profile.reviews_status_published'), color: 'success' },
+    pending: { label: t('therapist_profile.reviews_status_pending'), color: 'warning' },
+    hidden: { label: t('therapist_profile.reviews_status_hidden'), color: 'default' },
+  };
+
+  const filteredReviews = reviews.filter((item) => {
+    const q = reviewSearch.trim().toLowerCase();
+    const matchSearch =
+      !q ||
+      item.customerName.toLowerCase().includes(q) ||
+      item.therapistName.toLowerCase().includes(q);
+    const matchStatus = reviewStatusFilter === 'all' || item.status === reviewStatusFilter;
+    return matchSearch && matchStatus;
+  });
+
+  const reviewCounts = {
+    all: reviews.length,
+    published: reviews.filter((item) => item.status === 'published').length,
+    pending: reviews.filter((item) => item.status === 'pending').length,
+    hidden: reviews.filter((item) => item.status === 'hidden').length,
+  };
+
+  const reviewAverage = reviews.length
+    ? reviews.reduce((sum, item) => sum + item.rating, 0) / reviews.length
+    : 0;
+
+  const setReviewStatus = (id: number, status: Spa2TherapistReviewStatus) => {
+    setReviews((prev) => prev.map((item) => (item.id === id ? { ...item, status } : item)));
+    setViewReview((prev) => (prev?.id === id ? { ...prev, status } : prev));
+    markDirty();
+  };
+
+  const confirmDeleteReview = () => {
+    setReviews((prev) => prev.filter((item) => item.id !== deleteReviewId));
+    setViewReview((prev) => (prev?.id === deleteReviewId ? null : prev));
+    setDeleteReviewId(null);
+    markDirty();
+  };
+
   const handleSave = () => {
     setSavedAt(new Date());
     setDirty(false);
@@ -528,6 +668,8 @@ export function Spa2TherapistProfileManageView() {
         slots: [...item.slots],
       }))
     );
+    setBookings(SPA2_THERAPIST_BOOKINGS.map((item) => ({ ...item })));
+    setReviews(SPA2_THERAPIST_REVIEWS.map((item) => ({ ...item })));
     setDirty(false);
   };
 
@@ -614,6 +756,18 @@ export function Spa2TherapistProfileManageView() {
           value="therapists"
           label={t('therapist_profile.therapists_section')}
           icon={<Iconify icon="solar:users-group-rounded-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
+          value="bookings"
+          label={t('therapist_profile.bookings_section')}
+          icon={<Iconify icon="solar:calendar-mark-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
+          value="reviews"
+          label={t('therapist_profile.reviews_section')}
+          icon={<Iconify icon="solar:chat-round-dots-bold-duotone" width={20} />}
           iconPosition="start"
         />
         <Tab
@@ -731,6 +885,316 @@ export function Spa2TherapistProfileManageView() {
             </Grid>
           </Spa2SortableGrid>
         </Card>
+      )}
+
+      {/* Đặt lịch với chuyên gia (bookings management) */}
+      {tab === 'bookings' && (
+        <Stack spacing={2.5}>
+          <Grid container spacing={2}>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:calendar-mark-bold-duotone"
+                label={t('therapist_profile.bookings_stat_total')}
+                value={bookingCounts.all}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:bell-bold-duotone"
+                label={t('therapist_profile.bookings_stat_pending')}
+                value={bookingCounts.pending}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:check-circle-bold-duotone"
+                label={t('therapist_profile.bookings_stat_confirmed')}
+                value={bookingCounts.confirmed}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:diploma-bold-duotone"
+                label={t('therapist_profile.bookings_stat_completed')}
+                value={bookingCounts.completed}
+              />
+            </Grid>
+          </Grid>
+
+          <Card sx={{ p: 3, borderRadius: 3 }}>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              flexWrap="wrap"
+              useFlexGap
+              gap={1.5}
+              sx={{ mb: 2 }}
+            >
+              <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                {t('therapist_profile.bookings_section')}
+              </Typography>
+              <TextField
+                placeholder={t('therapist_profile.bookings_search_placeholder')}
+                value={bookingSearch}
+                onChange={(e) => setBookingSearch(e.target.value)}
+                size="small"
+                sx={{ minWidth: 260 }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Stack>
+
+            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap gap={1} sx={{ mb: 2.5 }}>
+              {(['all', 'pending', 'confirmed', 'completed', 'cancelled'] as const).map((s) => (
+                <Chip
+                  key={s}
+                  label={`${s === 'all' ? t('common.all') : BOOKING_STATUS_META[s].label} (${bookingCounts[s]})`}
+                  variant={bookingStatusFilter === s ? 'filled' : 'outlined'}
+                  color={s === 'all' ? 'default' : BOOKING_STATUS_META[s].color}
+                  onClick={() => setBookingStatusFilter(s)}
+                  sx={{ cursor: 'pointer' }}
+                />
+              ))}
+            </Stack>
+
+            <Stack spacing={1.5}>
+              {filteredBookings.map((item) => (
+                <Stack
+                  key={item.id}
+                  direction={{ xs: 'column', sm: 'row' }}
+                  spacing={1.5}
+                  alignItems={{ xs: 'flex-start', sm: 'center' }}
+                  sx={{ p: 2, borderRadius: 2, border: `1px solid ${SPA2_CREAM_DARK}` }}
+                >
+                  <Box sx={{ flex: 1, minWidth: 0 }}>
+                    <Typography variant="subtitle2">{item.customerName}</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {item.phone} · {item.service}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ minWidth: 170 }}>
+                    <Typography variant="body2">{item.therapistName}</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {item.date} · {item.time}
+                    </Typography>
+                  </Box>
+                  <Chip
+                    size="small"
+                    label={BOOKING_STATUS_META[item.status].label}
+                    color={BOOKING_STATUS_META[item.status].color}
+                    variant="soft"
+                  />
+                  <Stack direction="row" spacing={0.5}>
+                    {item.status === 'pending' && (
+                      <>
+                        <Tooltip title={t('therapist_profile.bookings_action_confirm')}>
+                          <IconButton
+                            size="small"
+                            sx={{ color: SPA2_TEAL_DARK }}
+                            onClick={() => setBookingStatus(item.id, 'confirmed')}
+                          >
+                            <Iconify icon="solar:check-circle-bold" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title={t('therapist_profile.bookings_action_cancel')}>
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => setBookingStatus(item.id, 'cancelled')}
+                          >
+                            <Iconify icon="solar:close-circle-bold" />
+                          </IconButton>
+                        </Tooltip>
+                      </>
+                    )}
+                    {item.status === 'confirmed' && (
+                      <>
+                        <Tooltip title={t('therapist_profile.bookings_action_complete')}>
+                          <IconButton
+                            size="small"
+                            color="success"
+                            onClick={() => setBookingStatus(item.id, 'completed')}
+                          >
+                            <Iconify icon="solar:diploma-bold" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title={t('therapist_profile.bookings_action_cancel')}>
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => setBookingStatus(item.id, 'cancelled')}
+                          >
+                            <Iconify icon="solar:close-circle-bold" />
+                          </IconButton>
+                        </Tooltip>
+                      </>
+                    )}
+                    <Tooltip title={t('therapist_profile.bookings_view_detail')}>
+                      <IconButton size="small" onClick={() => setViewBooking(item)}>
+                        <Iconify icon="solar:eye-bold" />
+                      </IconButton>
+                    </Tooltip>
+                  </Stack>
+                </Stack>
+              ))}
+              {filteredBookings.length === 0 && (
+                <Box sx={{ textAlign: 'center', py: 5, color: 'text.secondary' }}>
+                  <Iconify icon="solar:calendar-mark-linear" width={40} sx={{ mb: 1 }} />
+                  <Typography>{t('therapist_profile.bookings_empty')}</Typography>
+                </Box>
+              )}
+            </Stack>
+          </Card>
+        </Stack>
+      )}
+
+      {/* Quản lý bình luận (reviews moderation) */}
+      {tab === 'reviews' && (
+        <Stack spacing={2.5}>
+          <Grid container spacing={2}>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:chat-round-dots-bold-duotone"
+                label={t('therapist_profile.reviews_stat_total')}
+                value={reviewCounts.all}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:star-bold-duotone"
+                label={t('therapist_profile.reviews_stat_average')}
+                value={reviewAverage.toFixed(1)}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:check-circle-bold-duotone"
+                label={t('therapist_profile.reviews_stat_published')}
+                value={reviewCounts.published}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:bell-bold-duotone"
+                label={t('therapist_profile.reviews_stat_pending')}
+                value={reviewCounts.pending}
+              />
+            </Grid>
+          </Grid>
+
+          <Card sx={{ p: 3, borderRadius: 3 }}>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              flexWrap="wrap"
+              useFlexGap
+              gap={1.5}
+              sx={{ mb: 2 }}
+            >
+              <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                {t('therapist_profile.reviews_section')}
+              </Typography>
+              <TextField
+                placeholder={t('therapist_profile.reviews_search_placeholder')}
+                value={reviewSearch}
+                onChange={(e) => setReviewSearch(e.target.value)}
+                size="small"
+                sx={{ minWidth: 260 }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Stack>
+
+            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap gap={1} sx={{ mb: 2.5 }}>
+              {(['all', 'published', 'pending', 'hidden'] as const).map((s) => (
+                <Chip
+                  key={s}
+                  label={`${s === 'all' ? t('common.all') : REVIEW_STATUS_META[s].label} (${reviewCounts[s]})`}
+                  variant={reviewStatusFilter === s ? 'filled' : 'outlined'}
+                  color={s === 'all' ? 'default' : REVIEW_STATUS_META[s].color}
+                  onClick={() => setReviewStatusFilter(s)}
+                  sx={{ cursor: 'pointer' }}
+                />
+              ))}
+            </Stack>
+
+            <Stack spacing={0}>
+              {filteredReviews.map((item) => (
+                <Stack
+                  key={item.id}
+                  direction="row"
+                  spacing={2}
+                  alignItems="center"
+                  onClick={() => setViewReview(item)}
+                  sx={{
+                    p: 1.5,
+                    borderRadius: 2,
+                    cursor: 'pointer',
+                    border: `1px solid ${SPA2_CREAM_DARK}`,
+                    mb: 1.5,
+                    '&:hover': { bgcolor: 'action.hover' },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: 44,
+                      height: 44,
+                      borderRadius: '50%',
+                      bgcolor: SPA2_CREAM,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Iconify icon="solar:user-bold" width={22} sx={{ color: SPA2_TEAL }} />
+                  </Box>
+                  <Box sx={{ flex: 1, minWidth: 0 }}>
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <Typography variant="subtitle2">{item.customerName}</Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        → {item.therapistName}
+                      </Typography>
+                    </Stack>
+                    <Rating value={item.rating} readOnly size="small" sx={{ my: 0.25 }} />
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      noWrap
+                      sx={{ display: 'block' }}
+                    >
+                      {item.comment}
+                    </Typography>
+                  </Box>
+                  <Chip
+                    size="small"
+                    label={REVIEW_STATUS_META[item.status].label}
+                    color={REVIEW_STATUS_META[item.status].color}
+                    variant="soft"
+                  />
+                </Stack>
+              ))}
+              {filteredReviews.length === 0 && (
+                <Box sx={{ textAlign: 'center', py: 5, color: 'text.secondary' }}>
+                  <Iconify icon="solar:chat-round-dots-linear" width={40} sx={{ mb: 1 }} />
+                  <Typography>{t('therapist_profile.reviews_empty')}</Typography>
+                </Box>
+              )}
+            </Stack>
+          </Card>
+        </Stack>
       )}
 
       {/* Full page preview */}
@@ -948,6 +1412,161 @@ export function Spa2TherapistProfileManageView() {
         content={t('common.confirm_delete')}
         action={
           <Button variant="contained" color="error" onClick={confirmDeleteTherapist}>
+            {t('common.yes_delete')}
+          </Button>
+        }
+      />
+
+      {/* Booking detail dialog */}
+      <Dialog open={!!viewBooking} onClose={() => setViewBooking(null)} maxWidth="sm" fullWidth>
+        {viewBooking && (
+          <>
+            <DialogTitle>{t('therapist_profile.bookings_detail_title')}</DialogTitle>
+            <DialogContent dividers>
+              <Stack spacing={2} sx={{ pt: 0.5 }}>
+                <TextField
+                  label={t('therapist_profile.bookings_col_customer')}
+                  value={viewBooking.customerName}
+                  fullWidth
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    label={t('therapist_profile.bookings_col_phone')}
+                    value={viewBooking.phone}
+                    fullWidth
+                    size="small"
+                    InputProps={{ readOnly: true }}
+                  />
+                  <TextField
+                    label={t('therapist_profile.bookings_col_therapist')}
+                    value={viewBooking.therapistName}
+                    fullWidth
+                    size="small"
+                    InputProps={{ readOnly: true }}
+                  />
+                </Stack>
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    label={t('therapist_profile.bookings_col_service')}
+                    value={viewBooking.service}
+                    fullWidth
+                    size="small"
+                    InputProps={{ readOnly: true }}
+                  />
+                  <TextField
+                    label={t('therapist_profile.bookings_col_datetime')}
+                    value={`${viewBooking.date} · ${viewBooking.time}`}
+                    fullWidth
+                    size="small"
+                    InputProps={{ readOnly: true }}
+                  />
+                </Stack>
+                <TextField
+                  label={t('therapist_profile.bookings_detail_note')}
+                  value={viewBooking.note || '—'}
+                  fullWidth
+                  multiline
+                  minRows={2}
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+                <TextField
+                  select
+                  label={t('therapist_profile.bookings_col_status')}
+                  value={viewBooking.status}
+                  size="small"
+                  fullWidth
+                  onChange={(e) =>
+                    setBookingStatus(viewBooking.id, e.target.value as Spa2TherapistBookingStatus)
+                  }
+                >
+                  {(['pending', 'confirmed', 'completed', 'cancelled'] as const).map((s) => (
+                    <MenuItem key={s} value={s}>
+                      {BOOKING_STATUS_META[s].label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Stack>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setViewBooking(null)}>{t('common.close')}</Button>
+            </DialogActions>
+          </>
+        )}
+      </Dialog>
+
+      {/* Review detail dialog + moderation actions */}
+      <Dialog open={!!viewReview} onClose={() => setViewReview(null)} maxWidth="xs" fullWidth>
+        {viewReview && (
+          <>
+            <DialogTitle>{t('therapist_profile.reviews_detail_title')}</DialogTitle>
+            <DialogContent dividers>
+              <Stack spacing={2}>
+                <Box>
+                  <Typography variant="caption" color="text.secondary">
+                    {t('therapist_profile.bookings_col_status')}:
+                  </Typography>
+                  <Box sx={{ mt: 0.5 }}>
+                    <Chip
+                      size="small"
+                      label={REVIEW_STATUS_META[viewReview.status].label}
+                      color={REVIEW_STATUS_META[viewReview.status].color}
+                      variant="soft"
+                    />
+                  </Box>
+                </Box>
+                <Divider />
+                <Box>
+                  <Typography variant="subtitle1">{viewReview.customerName}</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {viewReview.therapistName}
+                  </Typography>
+                  <Rating value={viewReview.rating} readOnly size="small" sx={{ mt: 0.5 }} />
+                </Box>
+                <Box>
+                  <Typography variant="caption" color="text.secondary">
+                    {t('therapist_profile.reviews_col_comment')}:
+                  </Typography>
+                  <Typography variant="body2">{viewReview.comment}</Typography>
+                </Box>
+                <Typography variant="caption" color="text.secondary">
+                  {viewReview.date}
+                </Typography>
+              </Stack>
+            </DialogContent>
+            <DialogActions>
+              <Button color="error" onClick={() => setDeleteReviewId(viewReview.id)}>
+                {t('common.delete')}
+              </Button>
+              {viewReview.status !== 'hidden' && (
+                <Button onClick={() => setReviewStatus(viewReview.id, 'hidden')}>
+                  {t('therapist_profile.reviews_action_hide')}
+                </Button>
+              )}
+              {viewReview.status !== 'published' && (
+                <Button
+                  variant="contained"
+                  onClick={() => setReviewStatus(viewReview.id, 'published')}
+                  sx={{ bgcolor: SPA2_TEAL, '&:hover': { bgcolor: SPA2_TEAL_DARK } }}
+                >
+                  {t('therapist_profile.reviews_action_publish')}
+                </Button>
+              )}
+              <Button onClick={() => setViewReview(null)}>{t('common.close')}</Button>
+            </DialogActions>
+          </>
+        )}
+      </Dialog>
+
+      <ConfirmDialog
+        open={!!deleteReviewId}
+        onClose={() => setDeleteReviewId(null)}
+        title={t('therapist_profile.reviews_delete_title')}
+        content={t('therapist_profile.reviews_delete_content')}
+        action={
+          <Button variant="contained" color="error" onClick={confirmDeleteReview}>
             {t('common.yes_delete')}
           </Button>
         }

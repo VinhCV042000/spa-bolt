@@ -1,23 +1,31 @@
 import type { ReactNode } from 'react';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Tabs from '@mui/material/Tabs';
+import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
+import TableRow from '@mui/material/TableRow';
 import Grid from '@mui/material/Unstable_Grid2';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import InputAdornment from '@mui/material/InputAdornment';
+import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 
@@ -32,11 +40,17 @@ import {
   type Spa2GroupService,
   spa2GroupBookingBanner,
   type Spa2GroupOccasion,
+  SPA2_GROUP_BOOKING_REQUESTS,
   type Spa2GroupBookingBanner,
+  type Spa2GroupBookingRequest,
+  type Spa2GroupBookingRequestStatus,
 } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { useTable } from 'src/components/table/use-table';
 import { ConfirmDialog } from 'src/components/custom-dialog';
+import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
 
 import { Spa2GroupBookingPageView } from 'src/sections/spa2/view/spa2-content-pages8';
 import {
@@ -48,6 +62,7 @@ import {
 } from 'src/sections/spa2/spa2-pages-data';
 
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2ListAnalytic } from './spa2-list-analytic';
 import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
@@ -82,6 +97,32 @@ const EMPTY_OCCASION: Omit<Spa2GroupOccasion, 'id'> = {
 const EMPTY_SERVICE: Omit<Spa2GroupService, 'id'> = {
   name: '',
   price: 0,
+};
+
+type GroupRequestStatusFilter = Spa2GroupBookingRequestStatus | 'all';
+
+const REQUEST_STATUS_OPTIONS: Spa2GroupBookingRequestStatus[] = [
+  'pending',
+  'confirmed',
+  'completed',
+  'cancelled',
+];
+
+const REQUEST_STATUS_LABEL: Record<Spa2GroupBookingRequestStatus, string> = {
+  pending: 'Chờ xử lý',
+  confirmed: 'Đã xác nhận',
+  completed: 'Đã hoàn tất',
+  cancelled: 'Đã huỷ',
+};
+
+const REQUEST_STATUS_COLOR: Record<
+  Spa2GroupBookingRequestStatus,
+  'info' | 'warning' | 'success' | 'error'
+> = {
+  pending: 'info',
+  confirmed: 'warning',
+  completed: 'success',
+  cancelled: 'error',
 };
 
 function SectionCard({
@@ -254,6 +295,36 @@ function ServicePreviewCard({ service }: { service: Omit<Spa2GroupService, 'id'>
   );
 }
 
+// KPI tile used at the top of the "requests" tab.
+function StatCard({ icon, label, value }: { icon: string; label: string; value: string | number }) {
+  return (
+    <Card sx={{ p: 2, borderRadius: 2.5, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+      <Box
+        sx={{
+          width: 40,
+          height: 40,
+          borderRadius: 2,
+          bgcolor: SPA2_CREAM_DARK,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0,
+        }}
+      >
+        <Iconify icon={icon} width={20} sx={{ color: SPA2_TEAL }} />
+      </Box>
+      <Box>
+        <Typography variant="h6" sx={{ color: SPA2_INK, lineHeight: 1.2 }}>
+          {value}
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          {label}
+        </Typography>
+      </Box>
+    </Card>
+  );
+}
+
 // ----------------------------------------------------------------------
 
 export function Spa2GroupBookingManageView() {
@@ -271,13 +342,67 @@ export function Spa2GroupBookingManageView() {
   const [services, setServices] = useState<Spa2GroupService[]>(() =>
     spa2GroupServices.map((item) => ({ ...item }))
   );
+  const [requests, setRequests] = useState<Spa2GroupBookingRequest[]>(() =>
+    SPA2_GROUP_BOOKING_REQUESTS.map((item) => ({ ...item }))
+  );
 
   const [dirty, setDirty] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
-  const [tab, setTab] = useState<'banner' | 'tiers' | 'occasions' | 'services' | 'preview'>(
-    'banner'
-  );
+  const [tab, setTab] = useState<
+    'banner' | 'tiers' | 'occasions' | 'services' | 'requests' | 'preview'
+  >('banner');
   const markDirty = () => setDirty(true);
+
+  // ---- Group booking requests (Quản lý đặt lịch nhóm) ----
+  const [requestSearch, setRequestSearch] = useState('');
+  const [requestStatusFilter, setRequestStatusFilter] = useState<GroupRequestStatusFilter>('all');
+  const requestTable = useTable({ defaultRowsPerPage: 5 });
+
+  const tierLabelById = useMemo(
+    () => new Map(tiers.map((item) => [item.id, item.label])),
+    [tiers]
+  );
+  const occasionNameById = useMemo(
+    () => new Map(occasions.map((item) => [item.id, item.name])),
+    [occasions]
+  );
+
+  const filteredRequests = requests.filter((r) => {
+    const q = requestSearch.trim().toLowerCase();
+    const matchSearch =
+      !q || r.contactName.toLowerCase().includes(q) || r.phone.includes(requestSearch.trim());
+    const matchStatus = requestStatusFilter === 'all' || r.status === requestStatusFilter;
+    return matchSearch && matchStatus;
+  });
+
+  const requestCounts = {
+    all: requests.length,
+    pending: requests.filter((r) => r.status === 'pending').length,
+    confirmed: requests.filter((r) => r.status === 'confirmed').length,
+    completed: requests.filter((r) => r.status === 'completed').length,
+    cancelled: requests.filter((r) => r.status === 'cancelled').length,
+  };
+
+  const totalGroupGuests = useMemo(
+    () => requests.reduce((sum, r) => sum + r.groupSize, 0),
+    [requests]
+  );
+
+  const requestCompletionRate =
+    requestCounts.completed + requestCounts.cancelled
+      ? Math.round(
+          (requestCounts.completed / (requestCounts.completed + requestCounts.cancelled)) * 100
+        )
+      : null;
+
+  const requestCancellationRate = requestCounts.all
+    ? Math.round((requestCounts.cancelled / requestCounts.all) * 100)
+    : null;
+
+  const handleSetRequestStatus = (id: string, status: Spa2GroupBookingRequestStatus) => {
+    setRequests((prev) => prev.map((r) => (r.id === id ? { ...r, status } : r)));
+    markDirty();
+  };
 
   // ---- Banner ----
   const updateBanner = (key: 'eyebrow' | 'title' | 'subtitle', value: string) => {
@@ -420,6 +545,7 @@ export function Spa2GroupBookingManageView() {
     setTiers(spa2GroupTiers.map((item) => ({ ...item })));
     setOccasions(spa2GroupOccasions.map((item) => ({ ...item })));
     setServices(spa2GroupServices.map((item) => ({ ...item })));
+    setRequests(SPA2_GROUP_BOOKING_REQUESTS.map((item) => ({ ...item })));
     setDirty(false);
   };
 
@@ -521,6 +647,12 @@ export function Spa2GroupBookingManageView() {
           value="services"
           label={t('group_booking.services_section')}
           icon={<Iconify icon="solar:spa-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
+          value="requests"
+          label={t('group_booking.requests_section')}
+          icon={<Iconify icon="solar:clipboard-list-bold-duotone" width={20} />}
           iconPosition="start"
         />
         <Tab
@@ -772,6 +904,307 @@ export function Spa2GroupBookingManageView() {
             </Grid>
           </Spa2SortableGrid>
         </SectionCard>
+      )}
+
+      {/* Quản lý đặt lịch nhóm (requests) */}
+      {tab === 'requests' && (
+        <Stack spacing={2.5}>
+          <Grid container spacing={2}>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:clipboard-list-bold"
+                label="Tổng yêu cầu"
+                value={requestCounts.all}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:users-group-rounded-bold"
+                label="Tổng số khách"
+                value={totalGroupGuests}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:check-circle-bold"
+                label="Tỷ lệ hoàn tất"
+                value={requestCompletionRate === null ? '—' : `${requestCompletionRate}%`}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:close-circle-bold"
+                label="Tỷ lệ huỷ"
+                value={requestCancellationRate === null ? '—' : `${requestCancellationRate}%`}
+              />
+            </Grid>
+          </Grid>
+
+          <Card sx={{ p: 3, borderRadius: 3 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 2 }}>
+              {t('group_booking.requests_section')}
+            </Typography>
+
+            <Card sx={{ bgcolor: SPA2_TEAL_DARK, mb: 2.5 }}>
+              <Scrollbar sx={{ minHeight: 108 }}>
+                <Stack
+                  spacing={1}
+                  direction="row"
+                  divider={
+                    <Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />
+                  }
+                  sx={{ py: 2, px: 1 }}
+                >
+                  <Spa2ListAnalytic
+                    title="Tất cả"
+                    total={requestCounts.all}
+                    percent={100}
+                    icon="solar:clipboard-list-bold-duotone"
+                    color={SPA2_TEAL}
+                    unitLabel="yêu cầu"
+                    active={requestStatusFilter === 'all'}
+                    onClick={() => {
+                      setRequestStatusFilter('all');
+                      requestTable.onResetPage();
+                    }}
+                  />
+                  <Spa2ListAnalytic
+                    title={REQUEST_STATUS_LABEL.pending}
+                    total={requestCounts.pending}
+                    percent={
+                      requestCounts.all ? (requestCounts.pending / requestCounts.all) * 100 : 0
+                    }
+                    icon="solar:bell-bold-duotone"
+                    color="#0C447C"
+                    unitLabel="yêu cầu"
+                    active={requestStatusFilter === 'pending'}
+                    onClick={() => {
+                      setRequestStatusFilter('pending');
+                      requestTable.onResetPage();
+                    }}
+                  />
+                  <Spa2ListAnalytic
+                    title={REQUEST_STATUS_LABEL.confirmed}
+                    total={requestCounts.confirmed}
+                    percent={
+                      requestCounts.all ? (requestCounts.confirmed / requestCounts.all) * 100 : 0
+                    }
+                    icon="solar:phone-calling-bold-duotone"
+                    color="#FFAB00"
+                    unitLabel="yêu cầu"
+                    active={requestStatusFilter === 'confirmed'}
+                    onClick={() => {
+                      setRequestStatusFilter('confirmed');
+                      requestTable.onResetPage();
+                    }}
+                  />
+                  <Spa2ListAnalytic
+                    title={REQUEST_STATUS_LABEL.completed}
+                    total={requestCounts.completed}
+                    percent={
+                      requestCounts.all ? (requestCounts.completed / requestCounts.all) * 100 : 0
+                    }
+                    icon="solar:check-circle-bold-duotone"
+                    color="#22C55E"
+                    unitLabel="yêu cầu"
+                    active={requestStatusFilter === 'completed'}
+                    onClick={() => {
+                      setRequestStatusFilter('completed');
+                      requestTable.onResetPage();
+                    }}
+                  />
+                  <Spa2ListAnalytic
+                    title={REQUEST_STATUS_LABEL.cancelled}
+                    total={requestCounts.cancelled}
+                    percent={
+                      requestCounts.all ? (requestCounts.cancelled / requestCounts.all) * 100 : 0
+                    }
+                    icon="solar:close-circle-bold-duotone"
+                    color="#637381"
+                    unitLabel="yêu cầu"
+                    active={requestStatusFilter === 'cancelled'}
+                    onClick={() => {
+                      setRequestStatusFilter('cancelled');
+                      requestTable.onResetPage();
+                    }}
+                  />
+                </Stack>
+              </Scrollbar>
+            </Card>
+
+            <TextField
+              placeholder="Tìm theo tên liên hệ hoặc số điện thoại..."
+              value={requestSearch}
+              onChange={(e) => {
+                setRequestSearch(e.target.value);
+                requestTable.onResetPage();
+              }}
+              size="small"
+              fullWidth
+              sx={{ mb: 2 }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+
+            <Tabs
+              value={requestStatusFilter}
+              onChange={(_, v: GroupRequestStatusFilter) => {
+                setRequestStatusFilter(v);
+                requestTable.onResetPage();
+              }}
+              variant="scrollable"
+              sx={{
+                mb: 2,
+                '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+                '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
+              }}
+            >
+              <Tab value="all" label={`Tất cả (${requestCounts.all})`} />
+              {REQUEST_STATUS_OPTIONS.map((status) => (
+                <Tab
+                  key={status}
+                  value={status}
+                  label={`${REQUEST_STATUS_LABEL[status]} (${requestCounts[status]})`}
+                />
+              ))}
+            </Tabs>
+
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Người liên hệ</TableCell>
+                    <TableCell>Quy mô nhóm</TableCell>
+                    <TableCell>Dịp</TableCell>
+                    <TableCell>Ngày & giờ mong muốn</TableCell>
+                    <TableCell>Ngày tạo</TableCell>
+                    <TableCell>Trạng thái</TableCell>
+                    <TableCell align="right">Thao tác</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {filteredRequests
+                    .slice(
+                      requestTable.page * requestTable.rowsPerPage,
+                      requestTable.page * requestTable.rowsPerPage + requestTable.rowsPerPage
+                    )
+                    .map((item) => (
+                      <TableRow key={item.id} hover>
+                        <TableCell>
+                          <Stack>
+                            <Typography variant="subtitle2" sx={{ color: SPA2_TEAL_DARK }}>
+                              {item.contactName}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              {item.phone}
+                            </Typography>
+                          </Stack>
+                        </TableCell>
+                        <TableCell>
+                          <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
+                            <Typography variant="body2">{item.groupSize} người</Typography>
+                            <Chip
+                              size="small"
+                              label={tierLabelById.get(item.tierId) ?? item.tierId}
+                              sx={{ bgcolor: 'background.neutral', fontSize: 11 }}
+                            />
+                          </Stack>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2">
+                            {occasionNameById.get(item.occasionId) ?? item.occasionId}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2">
+                            {item.date} · {item.time}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2">{item.createdAt}</Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Chip
+                            size="small"
+                            label={REQUEST_STATUS_LABEL[item.status]}
+                            color={REQUEST_STATUS_COLOR[item.status]}
+                            variant="soft"
+                          />
+                        </TableCell>
+                        <TableCell align="right">
+                          <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
+                            {item.status === 'pending' && (
+                              <>
+                                <Tooltip title="Xác nhận yêu cầu">
+                                  <IconButton
+                                    size="small"
+                                    sx={{ color: SPA2_TEAL_DARK }}
+                                    onClick={() => handleSetRequestStatus(item.id, 'confirmed')}
+                                  >
+                                    <Iconify icon="solar:check-circle-bold" />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Huỷ yêu cầu">
+                                  <IconButton
+                                    size="small"
+                                    color="error"
+                                    onClick={() => handleSetRequestStatus(item.id, 'cancelled')}
+                                  >
+                                    <Iconify icon="solar:close-circle-bold" />
+                                  </IconButton>
+                                </Tooltip>
+                              </>
+                            )}
+                            {item.status === 'confirmed' && (
+                              <>
+                                <Tooltip title="Đánh dấu đã hoàn tất">
+                                  <IconButton
+                                    size="small"
+                                    color="success"
+                                    onClick={() => handleSetRequestStatus(item.id, 'completed')}
+                                  >
+                                    <Iconify icon="solar:diploma-bold" />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Huỷ yêu cầu">
+                                  <IconButton
+                                    size="small"
+                                    color="error"
+                                    onClick={() => handleSetRequestStatus(item.id, 'cancelled')}
+                                  >
+                                    <Iconify icon="solar:close-circle-bold" />
+                                  </IconButton>
+                                </Tooltip>
+                              </>
+                            )}
+                          </Stack>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  {filteredRequests.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={7} align="center" sx={{ py: 6, color: 'text.disabled' }}>
+                        Không có dữ liệu
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePaginationCustom
+              count={filteredRequests.length}
+              page={requestTable.page}
+              rowsPerPage={requestTable.rowsPerPage}
+              onPageChange={requestTable.onChangePage}
+              onRowsPerPageChange={requestTable.onChangeRowsPerPage}
+            />
+          </Card>
+        </Stack>
       )}
 
       {/* Full page preview */}

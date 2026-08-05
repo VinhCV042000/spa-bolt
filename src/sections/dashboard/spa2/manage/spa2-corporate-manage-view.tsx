@@ -57,6 +57,7 @@ import {
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages2.tsx's
@@ -308,6 +309,10 @@ export function Spa2CorporateManageView() {
     setBenefitDeleteId(null);
     markDirty();
   };
+  const reorderBenefits = (next: Spa2CorporateBenefit[]) => {
+    setBenefits(next);
+    markDirty();
+  };
   // ---- Plans ----
   const [plans, setPlans] = useState<Spa2CorporatePlan[]>(() =>
     spa2CorporatePlans.map((p) => ({ ...p, perks: [...p.perks] }))
@@ -360,6 +365,10 @@ export function Spa2CorporateManageView() {
     setPlanDeleteId(null);
     markDirty();
   };
+  const reorderPlans = (next: Spa2CorporatePlan[]) => {
+    setPlans(next);
+    markDirty();
+  };
 
   // ---- Service channels ----
   const [channels, setChannels] = useState<Spa2CorporateServiceChannel[]>(() =>
@@ -393,6 +402,12 @@ export function Spa2CorporateManageView() {
   };
   const updateChannelLabel = (channelIdx: number, value: string) => {
     setChannels((prev) => prev.map((c, ci) => (ci === channelIdx ? { ...c, label: value } : c)));
+    markDirty();
+  };
+  const reorderChannelItems = (channelIdx: number, next: { id: string; value: string }[]) => {
+    setChannels((prev) =>
+      prev.map((c, ci) => (ci === channelIdx ? { ...c, items: next.map((x) => x.value) } : c))
+    );
     markDirty();
   };
 
@@ -593,36 +608,55 @@ export function Spa2CorporateManageView() {
               {t('corporate.add_benefit_btn')}
             </Button>
           </Stack>
-          <Grid container spacing={2}>
-            {benefits.map((item) => (
-              <Grid key={item.id} xs={12} sm={6} md={3}>
-                <Box sx={{ position: 'relative' }}>
-                  <BenefitPreviewCard icon={item.icon} title={item.title} desc={item.desc} />
-                  <Stack
-                    direction="row"
-                    spacing={0.5}
-                    sx={{ position: 'absolute', top: 8, right: 8 }}
-                  >
-                    <IconButton
-                      size="small"
-                      onClick={() => openEditBenefit(item)}
-                      sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                    >
-                      <Iconify icon="solar:pen-bold" width={14} />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      color="error"
-                      onClick={() => setBenefitDeleteId(item.id)}
-                      sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                    >
-                      <Iconify icon="solar:trash-bin-trash-bold" width={14} />
-                    </IconButton>
-                  </Stack>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
+          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1.5 }}>
+            {t('common.drag_hint')}
+          </Typography>
+          <Spa2SortableGrid items={benefits} onReorder={reorderBenefits}>
+            <Grid container spacing={2}>
+              {benefits.map((item) => (
+                <Grid key={item.id} xs={12} sm={6} md={3}>
+                  <Spa2SortableItem id={item.id}>
+                    {(sortable) => (
+                      <Box sx={{ position: 'relative' }}>
+                        <BenefitPreviewCard icon={item.icon} title={item.title} desc={item.desc} />
+                        <Stack
+                          direction="row"
+                          spacing={0.5}
+                          sx={{ position: 'absolute', top: 8, left: 8 }}
+                        >
+                          <Spa2DragHandle
+                            sortable={sortable}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          />
+                        </Stack>
+                        <Stack
+                          direction="row"
+                          spacing={0.5}
+                          sx={{ position: 'absolute', top: 8, right: 8 }}
+                        >
+                          <IconButton
+                            size="small"
+                            onClick={() => openEditBenefit(item)}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          >
+                            <Iconify icon="solar:pen-bold" width={14} />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => setBenefitDeleteId(item.id)}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          >
+                            <Iconify icon="solar:trash-bin-trash-bold" width={14} />
+                          </IconButton>
+                        </Stack>
+                      </Box>
+                    )}
+                  </Spa2SortableItem>
+                </Grid>
+              ))}
+            </Grid>
+          </Spa2SortableGrid>
         </Card>
       )}
 
@@ -647,36 +681,55 @@ export function Spa2CorporateManageView() {
               {t('corporate.add_plan_btn')}
             </Button>
           </Stack>
-          <Grid container spacing={2}>
-            {plans.map((item) => (
-              <Grid key={item.id} xs={12} md={4}>
-                <Box sx={{ position: 'relative' }}>
-                  <PlanPreviewCard {...item} />
-                  <Stack
-                    direction="row"
-                    spacing={0.5}
-                    sx={{ position: 'absolute', top: 8, right: 8 }}
-                  >
-                    <IconButton
-                      size="small"
-                      onClick={() => openEditPlan(item)}
-                      sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                    >
-                      <Iconify icon="solar:pen-bold" width={14} />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      color="error"
-                      onClick={() => setPlanDeleteId(item.id)}
-                      sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                    >
-                      <Iconify icon="solar:trash-bin-trash-bold" width={14} />
-                    </IconButton>
-                  </Stack>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
+          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1.5 }}>
+            {t('common.drag_hint')}
+          </Typography>
+          <Spa2SortableGrid items={plans} onReorder={reorderPlans}>
+            <Grid container spacing={2}>
+              {plans.map((item) => (
+                <Grid key={item.id} xs={12} md={4}>
+                  <Spa2SortableItem id={item.id}>
+                    {(sortable) => (
+                      <Box sx={{ position: 'relative' }}>
+                        <PlanPreviewCard {...item} />
+                        <Stack
+                          direction="row"
+                          spacing={0.5}
+                          sx={{ position: 'absolute', top: 8, left: 8 }}
+                        >
+                          <Spa2DragHandle
+                            sortable={sortable}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          />
+                        </Stack>
+                        <Stack
+                          direction="row"
+                          spacing={0.5}
+                          sx={{ position: 'absolute', top: 8, right: 8 }}
+                        >
+                          <IconButton
+                            size="small"
+                            onClick={() => openEditPlan(item)}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          >
+                            <Iconify icon="solar:pen-bold" width={14} />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => setPlanDeleteId(item.id)}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          >
+                            <Iconify icon="solar:trash-bin-trash-bold" width={14} />
+                          </IconButton>
+                        </Stack>
+                      </Box>
+                    )}
+                  </Spa2SortableItem>
+                </Grid>
+              ))}
+            </Grid>
+          </Spa2SortableGrid>
         </Card>
       )}
 
@@ -704,27 +757,43 @@ export function Spa2CorporateManageView() {
                 onChange={(e) => updateChannelLabel(channelTab, e.target.value)}
                 sx={{ maxWidth: 320 }}
               />
-              <Stack spacing={1.5}>
-                {channels[channelTab].items.map((item, itemIdx) => (
-                  // eslint-disable-next-line react/no-array-index-key
-                  <Stack key={itemIdx} direction="row" spacing={1} alignItems="center">
-                    <Iconify icon="solar:check-circle-bold" sx={{ color: SPA2_TEAL }} />
-                    <TextField
-                      size="small"
-                      fullWidth
-                      value={item}
-                      onChange={(e) => updateChannelItem(channelTab, itemIdx, e.target.value)}
-                    />
-                    <IconButton
-                      size="small"
-                      color="error"
-                      onClick={() => removeChannelItem(channelTab, itemIdx)}
-                    >
-                      <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                    </IconButton>
-                  </Stack>
-                ))}
-              </Stack>
+              <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                {t('common.drag_hint')}
+              </Typography>
+              <Spa2SortableGrid
+                items={channels[channelTab].items.map((item, itemIdx) => ({
+                  id: String(itemIdx),
+                  value: item,
+                }))}
+                onReorder={(next) => reorderChannelItems(channelTab, next)}
+              >
+                <Stack spacing={1.5}>
+                  {channels[channelTab].items.map((item, itemIdx) => (
+                    // eslint-disable-next-line react/no-array-index-key
+                    <Spa2SortableItem key={itemIdx} id={String(itemIdx)}>
+                      {(sortable) => (
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          <Spa2DragHandle sortable={sortable} />
+                          <Iconify icon="solar:check-circle-bold" sx={{ color: SPA2_TEAL }} />
+                          <TextField
+                            size="small"
+                            fullWidth
+                            value={item}
+                            onChange={(e) => updateChannelItem(channelTab, itemIdx, e.target.value)}
+                          />
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => removeChannelItem(channelTab, itemIdx)}
+                          >
+                            <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                          </IconButton>
+                        </Stack>
+                      )}
+                    </Spa2SortableItem>
+                  ))}
+                </Stack>
+              </Spa2SortableGrid>
               <Button
                 size="small"
                 startIcon={<Iconify icon="mingcute:add-line" />}

@@ -44,6 +44,7 @@ import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
 import { Spa2ListAnalytic } from './spa2-list-analytic';
 import { Spa2SimpleImageField } from './spa2-simple-image-field';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Manages every block the public /spa2/gallery page (Spa2GalleryPageView)
@@ -58,6 +59,12 @@ interface GalleryImage {
   url: string;
   caption: string;
 }
+
+// Spa2SortableGrid/Spa2SortableItem key their drag state off a string `id`,
+// while GalleryImage.id is a plain incrementing number — this view-only type
+// carries the string form through the drag session without touching the
+// underlying state shape.
+type SortableGalleryImage = Omit<GalleryImage, 'id'> & { id: string };
 
 function PreviewFrame({ children }: { children: React.ReactNode }) {
   return (
@@ -216,6 +223,24 @@ export function Spa2GalleryManageView() {
     setDeleteId(null);
     setDirty(true);
   }, [deleteId]);
+
+  const reorderItems = useCallback(
+    (next: SortableGalleryImage[]) => {
+      const reordered: GalleryImage[] = next.map((item) => ({ ...item, id: Number(item.id) }));
+      if (captionFilter === 'all') {
+        setItems(reordered);
+      } else {
+        // Filtered view: splice the reordered subset back into its original
+        // slots within the full list so photos outside the current filter
+        // keep their relative position.
+        const queue = [...reordered];
+        const nextIds = new Set(reordered.map((r) => r.id));
+        setItems((prev) => prev.map((x) => (nextIds.has(x.id) ? queue.shift()! : x)));
+      }
+      setDirty(true);
+    },
+    [captionFilter]
+  );
 
   const captionedCount = items.filter((x) => !isAutoCaption(x)).length;
   const uncaptionedCount = items.length - captionedCount;
@@ -444,72 +469,91 @@ export function Spa2GalleryManageView() {
               </Button>
             </Stack>
 
-            <Grid container spacing={2}>
-              {filteredItems.map((item) => (
-                <Grid key={item.id} xs={12} sm={6} md={4} lg={3}>
-                  <Card sx={{ position: 'relative', '&:hover .actions': { opacity: 1 } }}>
-                    <CardMedia
-                      component="img"
-                      height={160}
-                      image={item.url}
-                      alt={item.caption}
-                      sx={{ objectFit: 'cover', cursor: 'pointer' }}
-                      onClick={() => setViewUrl(item.url)}
-                    />
-                    <Box
-                      className="actions"
-                      sx={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: 160,
-                        bgcolor: 'rgba(0,0,0,0.4)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: 1,
-                        opacity: 0,
-                        transition: 'opacity 0.2s',
-                      }}
-                    >
-                      <Tooltip title={t('common.view')}>
-                        <IconButton
-                          sx={{ bgcolor: 'white', '&:hover': { bgcolor: 'white' } }}
-                          size="small"
-                          onClick={() => setViewUrl(item.url)}
-                        >
-                          <Iconify icon="solar:eye-bold" />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title={t('common.edit')}>
-                        <IconButton
-                          sx={{ bgcolor: 'white', '&:hover': { bgcolor: 'white' } }}
-                          size="small"
-                          onClick={() => openEdit(item)}
-                        >
-                          <Iconify icon="solar:pen-bold" />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title={t('common.delete')}>
-                        <IconButton
-                          sx={{ bgcolor: 'white', '&:hover': { bgcolor: 'white' } }}
-                          size="small"
-                          onClick={() => setDeleteId(item.id)}
-                        >
-                          <Iconify icon="solar:trash-bin-trash-bold" color="error.main" />
-                        </IconButton>
-                      </Tooltip>
-                    </Box>
-                    <Box sx={{ p: 1 }}>
-                      <Typography variant="caption" color="text.secondary" noWrap>
-                        {item.caption}
-                      </Typography>
-                    </Box>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
+            <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1.5, display: 'block' }}>
+              {t('gallery.drag_hint')}
+            </Typography>
+
+            <Spa2SortableGrid
+              items={filteredItems.map((item) => ({ ...item, id: String(item.id) }))}
+              onReorder={reorderItems}
+            >
+              <Grid container spacing={2}>
+                {filteredItems.map((item) => (
+                  <Grid key={item.id} xs={12} sm={6} md={4} lg={3}>
+                    <Spa2SortableItem id={String(item.id)}>
+                      {(sortable) => (
+                        <Card sx={{ position: 'relative', '&:hover .actions': { opacity: 1 } }}>
+                          <CardMedia
+                            component="img"
+                            height={160}
+                            image={item.url}
+                            alt={item.caption}
+                            sx={{ objectFit: 'cover', cursor: 'pointer' }}
+                            onClick={() => setViewUrl(item.url)}
+                          />
+                          <Box
+                            className="actions"
+                            sx={{
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              height: 160,
+                              bgcolor: 'rgba(0,0,0,0.4)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: 1,
+                              opacity: 0,
+                              transition: 'opacity 0.2s',
+                            }}
+                          >
+                            <Tooltip title={t('gallery.drag_hint')}>
+                              <Spa2DragHandle
+                                sortable={sortable}
+                                sx={{ bgcolor: 'white', '&:hover': { bgcolor: 'white' } }}
+                              />
+                            </Tooltip>
+                            <Tooltip title={t('common.view')}>
+                              <IconButton
+                                sx={{ bgcolor: 'white', '&:hover': { bgcolor: 'white' } }}
+                                size="small"
+                                onClick={() => setViewUrl(item.url)}
+                              >
+                                <Iconify icon="solar:eye-bold" />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title={t('common.edit')}>
+                              <IconButton
+                                sx={{ bgcolor: 'white', '&:hover': { bgcolor: 'white' } }}
+                                size="small"
+                                onClick={() => openEdit(item)}
+                              >
+                                <Iconify icon="solar:pen-bold" />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title={t('common.delete')}>
+                              <IconButton
+                                sx={{ bgcolor: 'white', '&:hover': { bgcolor: 'white' } }}
+                                size="small"
+                                onClick={() => setDeleteId(item.id)}
+                              >
+                                <Iconify icon="solar:trash-bin-trash-bold" color="error.main" />
+                              </IconButton>
+                            </Tooltip>
+                          </Box>
+                          <Box sx={{ p: 1 }}>
+                            <Typography variant="caption" color="text.secondary" noWrap>
+                              {item.caption}
+                            </Typography>
+                          </Box>
+                        </Card>
+                      )}
+                    </Spa2SortableItem>
+                  </Grid>
+                ))}
+              </Grid>
+            </Spa2SortableGrid>
           </Card>
         </Stack>
       )}

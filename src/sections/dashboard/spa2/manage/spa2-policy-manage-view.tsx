@@ -65,6 +65,7 @@ import {
 
 import { Spa2ManageShell } from './spa2-manage-shell';
 import { Spa2ListAnalytic } from './spa2-list-analytic';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Manages every block the public /spa2/policy page (Spa2PolicyPageView) renders:
@@ -502,6 +503,9 @@ export function Spa2PolicyManageView() {
       cards: (content[articleId].cards ?? []).filter((_, i) => i !== idx),
     });
   };
+  const reorderCards = (articleId: string, next: (Spa2PolicyCard & { id: string })[]) => {
+    updateContent(articleId, { cards: next.map(({ id, ...rest }) => rest) });
+  };
 
   const updateTableRow = (
     articleId: string,
@@ -526,6 +530,9 @@ export function Spa2PolicyManageView() {
       tableRows: (content[articleId].tableRows ?? []).filter((_, i) => i !== idx),
     });
   };
+  const reorderTableRows = (articleId: string, next: (Spa2PolicyTableRow & { id: string })[]) => {
+    updateContent(articleId, { tableRows: next.map(({ id, ...rest }) => rest) });
+  };
 
   const updateTimelineStep = (
     articleId: string,
@@ -546,6 +553,12 @@ export function Spa2PolicyManageView() {
     updateContent(articleId, {
       timelineSteps: (content[articleId].timelineSteps ?? []).filter((_, i) => i !== idx),
     });
+  };
+  const reorderTimelineSteps = (
+    articleId: string,
+    next: (Spa2PolicyTimelineStep & { id: string })[]
+  ) => {
+    updateContent(articleId, { timelineSteps: next.map(({ id, ...rest }) => rest) });
   };
 
   const updateTier = (
@@ -571,6 +584,9 @@ export function Spa2PolicyManageView() {
       tiers: (content[articleId].tiers ?? []).filter((_, i) => i !== idx),
     });
   };
+  const reorderTiers = (articleId: string, next: (Spa2PolicyTier & { id: string })[]) => {
+    updateContent(articleId, { tiers: next.map(({ id, ...rest }) => rest) });
+  };
 
   const updateListItem = (articleId: string, idx: number, value: string) => {
     const listItems = (content[articleId].listItems ?? []).map((it, i) => (i === idx ? value : it));
@@ -583,6 +599,9 @@ export function Spa2PolicyManageView() {
     updateContent(articleId, {
       listItems: (content[articleId].listItems ?? []).filter((_, i) => i !== idx),
     });
+  };
+  const reorderListItems = (articleId: string, next: { id: string; value: string }[]) => {
+    updateContent(articleId, { listItems: next.map((x) => x.value) });
   };
 
   const updateTierPerk = (articleId: string, tierIdx: number, perkIdx: number, value: string) => {
@@ -626,6 +645,9 @@ export function Spa2PolicyManageView() {
     updateContent(articleId, {
       certChips: (content[articleId].certChips ?? []).filter((_, i) => i !== idx),
     });
+  };
+  const reorderCertChips = (articleId: string, next: (Spa2PolicyCertChip & { id: string })[]) => {
+    updateContent(articleId, { certChips: next.map(({ id, ...rest }) => rest) });
   };
 
   const updateAlertSeverity = (articleId: string, severity: Spa2PolicyAlert['severity']) => {
@@ -1046,49 +1068,66 @@ export function Spa2PolicyManageView() {
                       {t('policy.cards_section')}
                     </Typography>
                     <Stack spacing={1.5}>
-                      {data.cards.map((c, idx) => (
-                        <Card key={idx} sx={{ p: 2, borderRadius: 2, bgcolor: SPA2_CREAM }}>
-                          <Stack spacing={1.5}>
-                            <Stack direction="row" spacing={1.5}>
-                              <TextField
-                                label={t('policy.card_icon')}
-                                value={c.icon}
-                                onChange={(e) =>
-                                  updateCard(article.id, idx, 'icon', e.target.value)
-                                }
-                                size="small"
-                                sx={{ width: '35%' }}
-                              />
-                              <TextField
-                                label={t('policy.card_title')}
-                                value={c.title}
-                                onChange={(e) =>
-                                  updateCard(article.id, idx, 'title', e.target.value)
-                                }
-                                size="small"
-                                fullWidth
-                              />
-                              <Tooltip title={t('common.delete')}>
-                                <IconButton
-                                  size="small"
-                                  onClick={() => removeCard(article.id, idx)}
-                                >
-                                  <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                                </IconButton>
-                              </Tooltip>
-                            </Stack>
-                            <TextField
-                              label={t('policy.card_desc')}
-                              value={c.desc}
-                              onChange={(e) => updateCard(article.id, idx, 'desc', e.target.value)}
-                              size="small"
-                              fullWidth
-                              multiline
-                              minRows={2}
-                            />
-                          </Stack>
-                        </Card>
-                      ))}
+                      <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                        {t('common.drag_hint')}
+                      </Typography>
+                      <Spa2SortableGrid
+                        items={data.cards.map((c, idx) => ({ ...c, id: String(idx) }))}
+                        onReorder={(next) => reorderCards(article.id, next)}
+                      >
+                        <Stack spacing={1.5}>
+                          {data.cards.map((c, idx) => (
+                            <Spa2SortableItem key={idx} id={String(idx)}>
+                              {(sortable) => (
+                                <Card sx={{ p: 2, borderRadius: 2, bgcolor: SPA2_CREAM }}>
+                                  <Stack spacing={1.5}>
+                                    <Stack direction="row" spacing={1.5} alignItems="center">
+                                      <Spa2DragHandle sortable={sortable} />
+                                      <TextField
+                                        label={t('policy.card_icon')}
+                                        value={c.icon}
+                                        onChange={(e) =>
+                                          updateCard(article.id, idx, 'icon', e.target.value)
+                                        }
+                                        size="small"
+                                        sx={{ width: '35%' }}
+                                      />
+                                      <TextField
+                                        label={t('policy.card_title')}
+                                        value={c.title}
+                                        onChange={(e) =>
+                                          updateCard(article.id, idx, 'title', e.target.value)
+                                        }
+                                        size="small"
+                                        fullWidth
+                                      />
+                                      <Tooltip title={t('common.delete')}>
+                                        <IconButton
+                                          size="small"
+                                          onClick={() => removeCard(article.id, idx)}
+                                        >
+                                          <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                                        </IconButton>
+                                      </Tooltip>
+                                    </Stack>
+                                    <TextField
+                                      label={t('policy.card_desc')}
+                                      value={c.desc}
+                                      onChange={(e) =>
+                                        updateCard(article.id, idx, 'desc', e.target.value)
+                                      }
+                                      size="small"
+                                      fullWidth
+                                      multiline
+                                      minRows={2}
+                                    />
+                                  </Stack>
+                                </Card>
+                              )}
+                            </Spa2SortableItem>
+                          ))}
+                        </Stack>
+                      </Spa2SortableGrid>
                       <Button
                         size="small"
                         startIcon={<Iconify icon="mingcute:add-line" />}
@@ -1107,60 +1146,75 @@ export function Spa2PolicyManageView() {
                       {t('policy.table_section')}
                     </Typography>
                     <Stack spacing={1.5}>
-                      {data.tableRows.map((row, idx) => (
-                        <Card key={idx} sx={{ p: 2, borderRadius: 2, bgcolor: SPA2_CREAM }}>
-                          <Stack spacing={1.5}>
-                            <Stack direction="row" spacing={1.5}>
-                              <TextField
-                                label={t('policy.col_time')}
-                                value={row.time}
-                                onChange={(e) =>
-                                  updateTableRow(article.id, idx, 'time', e.target.value)
-                                }
-                                size="small"
-                                fullWidth
-                              />
-                              <TextField
-                                label={t('policy.col_fee')}
-                                value={row.fee}
-                                onChange={(e) =>
-                                  updateTableRow(article.id, idx, 'fee', e.target.value)
-                                }
-                                size="small"
-                                fullWidth
-                              />
-                            </Stack>
-                            <Stack direction="row" spacing={1.5}>
-                              <TextField
-                                label={t('policy.col_refund')}
-                                value={row.refund}
-                                onChange={(e) =>
-                                  updateTableRow(article.id, idx, 'refund', e.target.value)
-                                }
-                                size="small"
-                                fullWidth
-                              />
-                              <TextField
-                                label={t('policy.col_change')}
-                                value={row.change}
-                                onChange={(e) =>
-                                  updateTableRow(article.id, idx, 'change', e.target.value)
-                                }
-                                size="small"
-                                fullWidth
-                              />
-                              <Tooltip title={t('common.delete')}>
-                                <IconButton
-                                  size="small"
-                                  onClick={() => removeTableRow(article.id, idx)}
-                                >
-                                  <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                                </IconButton>
-                              </Tooltip>
-                            </Stack>
-                          </Stack>
-                        </Card>
-                      ))}
+                      <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                        {t('common.drag_hint')}
+                      </Typography>
+                      <Spa2SortableGrid
+                        items={data.tableRows.map((row, idx) => ({ ...row, id: String(idx) }))}
+                        onReorder={(next) => reorderTableRows(article.id, next)}
+                      >
+                        <Stack spacing={1.5}>
+                          {data.tableRows.map((row, idx) => (
+                            <Spa2SortableItem key={idx} id={String(idx)}>
+                              {(sortable) => (
+                                <Card sx={{ p: 2, borderRadius: 2, bgcolor: SPA2_CREAM }}>
+                                  <Stack spacing={1.5}>
+                                    <Stack direction="row" spacing={1.5} alignItems="center">
+                                      <Spa2DragHandle sortable={sortable} />
+                                      <TextField
+                                        label={t('policy.col_time')}
+                                        value={row.time}
+                                        onChange={(e) =>
+                                          updateTableRow(article.id, idx, 'time', e.target.value)
+                                        }
+                                        size="small"
+                                        fullWidth
+                                      />
+                                      <TextField
+                                        label={t('policy.col_fee')}
+                                        value={row.fee}
+                                        onChange={(e) =>
+                                          updateTableRow(article.id, idx, 'fee', e.target.value)
+                                        }
+                                        size="small"
+                                        fullWidth
+                                      />
+                                    </Stack>
+                                    <Stack direction="row" spacing={1.5}>
+                                      <TextField
+                                        label={t('policy.col_refund')}
+                                        value={row.refund}
+                                        onChange={(e) =>
+                                          updateTableRow(article.id, idx, 'refund', e.target.value)
+                                        }
+                                        size="small"
+                                        fullWidth
+                                      />
+                                      <TextField
+                                        label={t('policy.col_change')}
+                                        value={row.change}
+                                        onChange={(e) =>
+                                          updateTableRow(article.id, idx, 'change', e.target.value)
+                                        }
+                                        size="small"
+                                        fullWidth
+                                      />
+                                      <Tooltip title={t('common.delete')}>
+                                        <IconButton
+                                          size="small"
+                                          onClick={() => removeTableRow(article.id, idx)}
+                                        >
+                                          <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                                        </IconButton>
+                                      </Tooltip>
+                                    </Stack>
+                                  </Stack>
+                                </Card>
+                              )}
+                            </Spa2SortableItem>
+                          ))}
+                        </Stack>
+                      </Spa2SortableGrid>
                       <Button
                         size="small"
                         startIcon={<Iconify icon="mingcute:add-line" />}
@@ -1179,42 +1233,57 @@ export function Spa2PolicyManageView() {
                       {t('policy.timeline_section')}
                     </Typography>
                     <Stack spacing={1.5}>
-                      {data.timelineSteps.map((s, idx) => (
-                        <Card key={idx} sx={{ p: 2, borderRadius: 2, bgcolor: SPA2_CREAM }}>
-                          <Stack spacing={1.5}>
-                            <Stack direction="row" spacing={1.5}>
-                              <TextField
-                                label={t('policy.step_title')}
-                                value={s.title}
-                                onChange={(e) =>
-                                  updateTimelineStep(article.id, idx, 'title', e.target.value)
-                                }
-                                size="small"
-                                fullWidth
-                              />
-                              <Tooltip title={t('common.delete')}>
-                                <IconButton
-                                  size="small"
-                                  onClick={() => removeTimelineStep(article.id, idx)}
-                                >
-                                  <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                                </IconButton>
-                              </Tooltip>
-                            </Stack>
-                            <TextField
-                              label={t('policy.step_desc')}
-                              value={s.desc}
-                              onChange={(e) =>
-                                updateTimelineStep(article.id, idx, 'desc', e.target.value)
-                              }
-                              size="small"
-                              fullWidth
-                              multiline
-                              minRows={2}
-                            />
-                          </Stack>
-                        </Card>
-                      ))}
+                      <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                        {t('common.drag_hint')}
+                      </Typography>
+                      <Spa2SortableGrid
+                        items={data.timelineSteps.map((s, idx) => ({ ...s, id: String(idx) }))}
+                        onReorder={(next) => reorderTimelineSteps(article.id, next)}
+                      >
+                        <Stack spacing={1.5}>
+                          {data.timelineSteps.map((s, idx) => (
+                            <Spa2SortableItem key={idx} id={String(idx)}>
+                              {(sortable) => (
+                                <Card sx={{ p: 2, borderRadius: 2, bgcolor: SPA2_CREAM }}>
+                                  <Stack spacing={1.5}>
+                                    <Stack direction="row" spacing={1.5} alignItems="center">
+                                      <Spa2DragHandle sortable={sortable} />
+                                      <TextField
+                                        label={t('policy.step_title')}
+                                        value={s.title}
+                                        onChange={(e) =>
+                                          updateTimelineStep(article.id, idx, 'title', e.target.value)
+                                        }
+                                        size="small"
+                                        fullWidth
+                                      />
+                                      <Tooltip title={t('common.delete')}>
+                                        <IconButton
+                                          size="small"
+                                          onClick={() => removeTimelineStep(article.id, idx)}
+                                        >
+                                          <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                                        </IconButton>
+                                      </Tooltip>
+                                    </Stack>
+                                    <TextField
+                                      label={t('policy.step_desc')}
+                                      value={s.desc}
+                                      onChange={(e) =>
+                                        updateTimelineStep(article.id, idx, 'desc', e.target.value)
+                                      }
+                                      size="small"
+                                      fullWidth
+                                      multiline
+                                      minRows={2}
+                                    />
+                                  </Stack>
+                                </Card>
+                              )}
+                            </Spa2SortableItem>
+                          ))}
+                        </Stack>
+                      </Spa2SortableGrid>
                       <Button
                         size="small"
                         startIcon={<Iconify icon="mingcute:add-line" />}
@@ -1233,90 +1302,105 @@ export function Spa2PolicyManageView() {
                       {t('policy.tiers_section')}
                     </Typography>
                     <Stack spacing={1.5}>
-                      {data.tiers.map((tier, idx) => (
-                        <Card key={idx} sx={{ p: 2, borderRadius: 2, bgcolor: SPA2_CREAM }}>
-                          <Stack spacing={1.5}>
-                            <Stack direction="row" spacing={1.5}>
-                              <TextField
-                                label={t('policy.tier_label')}
-                                value={tier.label}
-                                onChange={(e) =>
-                                  updateTier(article.id, idx, 'label', e.target.value)
-                                }
-                                size="small"
-                                fullWidth
-                              />
-                              <TextField
-                                label={t('policy.tier_color')}
-                                value={tier.color}
-                                onChange={(e) =>
-                                  updateTier(article.id, idx, 'color', e.target.value)
-                                }
-                                size="small"
-                                sx={{ width: '25%' }}
-                              />
-                              <TextField
-                                label={t('policy.tier_text_color')}
-                                value={tier.textColor}
-                                onChange={(e) =>
-                                  updateTier(article.id, idx, 'textColor', e.target.value)
-                                }
-                                size="small"
-                                sx={{ width: '25%' }}
-                              />
-                              <Tooltip title={t('common.delete')}>
-                                <IconButton
-                                  size="small"
-                                  onClick={() => removeTier(article.id, idx)}
-                                >
-                                  <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                                </IconButton>
-                              </Tooltip>
-                            </Stack>
-                            <Stack spacing={1}>
-                              <Typography variant="caption" color="text.secondary">
-                                {t('policy.tier_perks')}
-                              </Typography>
-                              {tier.perks.map((perk, perkIdx) => (
-                                <Stack
-                                  key={perkIdx}
-                                  direction="row"
-                                  spacing={1}
-                                  alignItems="center"
-                                >
-                                  <Iconify
-                                    icon="solar:check-circle-bold"
-                                    width={16}
-                                    sx={{ color: SPA2_TEAL, flexShrink: 0 }}
-                                  />
-                                  <TextField
-                                    value={perk}
-                                    onChange={(e) =>
-                                      updateTierPerk(article.id, idx, perkIdx, e.target.value)
-                                    }
-                                    size="small"
-                                    fullWidth
-                                  />
-                                  <IconButton
-                                    size="small"
-                                    onClick={() => removeTierPerk(article.id, idx, perkIdx)}
-                                  >
-                                    <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                                  </IconButton>
-                                </Stack>
-                              ))}
-                              <Button
-                                size="small"
-                                startIcon={<Iconify icon="mingcute:add-line" />}
-                                onClick={() => addTierPerk(article.id, idx)}
-                                sx={{ alignSelf: 'flex-start' }}
-                              >
-                                {t('policy.add_perk')}
-                              </Button>
-                            </Stack>
-                          </Stack>
-                        </Card>
-                      ))}
+                      <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                        {t('common.drag_hint')}
+                      </Typography>
+                      <Spa2SortableGrid
+                        items={data.tiers.map((tier, idx) => ({ ...tier, id: String(idx) }))}
+                        onReorder={(next) => reorderTiers(article.id, next)}
+                      >
+                        <Stack spacing={1.5}>
+                          {data.tiers.map((tier, idx) => (
+                            <Spa2SortableItem key={idx} id={String(idx)}>
+                              {(sortable) => (
+                                <Card sx={{ p: 2, borderRadius: 2, bgcolor: SPA2_CREAM }}>
+                                  <Stack spacing={1.5}>
+                                    <Stack direction="row" spacing={1.5} alignItems="center">
+                                      <Spa2DragHandle sortable={sortable} />
+                                      <TextField
+                                        label={t('policy.tier_label')}
+                                        value={tier.label}
+                                        onChange={(e) =>
+                                          updateTier(article.id, idx, 'label', e.target.value)
+                                        }
+                                        size="small"
+                                        fullWidth
+                                      />
+                                      <TextField
+                                        label={t('policy.tier_color')}
+                                        value={tier.color}
+                                        onChange={(e) =>
+                                          updateTier(article.id, idx, 'color', e.target.value)
+                                        }
+                                        size="small"
+                                        sx={{ width: '25%' }}
+                                      />
+                                      <TextField
+                                        label={t('policy.tier_text_color')}
+                                        value={tier.textColor}
+                                        onChange={(e) =>
+                                          updateTier(article.id, idx, 'textColor', e.target.value)
+                                        }
+                                        size="small"
+                                        sx={{ width: '25%' }}
+                                      />
+                                      <Tooltip title={t('common.delete')}>
+                                        <IconButton
+                                          size="small"
+                                          onClick={() => removeTier(article.id, idx)}
+                                        >
+                                          <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                                        </IconButton>
+                                      </Tooltip>
+                                    </Stack>
+                                    <Stack spacing={1}>
+                                      <Typography variant="caption" color="text.secondary">
+                                        {t('policy.tier_perks')}
+                                      </Typography>
+                                      {tier.perks.map((perk, perkIdx) => (
+                                        <Stack
+                                          key={perkIdx}
+                                          direction="row"
+                                          spacing={1}
+                                          alignItems="center"
+                                        >
+                                          <Iconify
+                                            icon="solar:check-circle-bold"
+                                            width={16}
+                                            sx={{ color: SPA2_TEAL, flexShrink: 0 }}
+                                          />
+                                          <TextField
+                                            value={perk}
+                                            onChange={(e) =>
+                                              updateTierPerk(article.id, idx, perkIdx, e.target.value)
+                                            }
+                                            size="small"
+                                            fullWidth
+                                          />
+                                          <IconButton
+                                            size="small"
+                                            onClick={() => removeTierPerk(article.id, idx, perkIdx)}
+                                          >
+                                            <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                                          </IconButton>
+                                        </Stack>
+                                      ))}
+                                      <Button
+                                        size="small"
+                                        startIcon={<Iconify icon="mingcute:add-line" />}
+                                        onClick={() => addTierPerk(article.id, idx)}
+                                        sx={{ alignSelf: 'flex-start' }}
+                                      >
+                                        {t('policy.add_perk')}
+                                      </Button>
+                                    </Stack>
+                                  </Stack>
+                                </Card>
+                              )}
+                            </Spa2SortableItem>
+                          ))}
+                        </Stack>
+                      </Spa2SortableGrid>
                       <Button
                         size="small"
                         startIcon={<Iconify icon="mingcute:add-line" />}
@@ -1335,25 +1419,43 @@ export function Spa2PolicyManageView() {
                       {t('policy.list_items_section')}
                     </Typography>
                     <Stack spacing={1.5}>
-                      {data.listItems.map((item, idx) => (
-                        <Stack key={idx} direction="row" spacing={1} alignItems="flex-start">
-                          <Iconify
-                            icon="solar:check-circle-bold"
-                            width={16}
-                            sx={{ color: SPA2_TEAL, flexShrink: 0, mt: 1 }}
-                          />
-                          <TextField
-                            value={item}
-                            onChange={(e) => updateListItem(article.id, idx, e.target.value)}
-                            size="small"
-                            fullWidth
-                            multiline
-                          />
-                          <IconButton size="small" onClick={() => removeListItem(article.id, idx)}>
-                            <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                          </IconButton>
+                      <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                        {t('common.drag_hint')}
+                      </Typography>
+                      <Spa2SortableGrid
+                        items={data.listItems.map((item, idx) => ({ id: String(idx), value: item }))}
+                        onReorder={(next) => reorderListItems(article.id, next)}
+                      >
+                        <Stack spacing={1.5}>
+                          {data.listItems.map((item, idx) => (
+                            <Spa2SortableItem key={idx} id={String(idx)}>
+                              {(sortable) => (
+                                <Stack direction="row" spacing={1} alignItems="flex-start">
+                                  <Spa2DragHandle sortable={sortable} sx={{ mt: 0.5 }} />
+                                  <Iconify
+                                    icon="solar:check-circle-bold"
+                                    width={16}
+                                    sx={{ color: SPA2_TEAL, flexShrink: 0, mt: 1 }}
+                                  />
+                                  <TextField
+                                    value={item}
+                                    onChange={(e) => updateListItem(article.id, idx, e.target.value)}
+                                    size="small"
+                                    fullWidth
+                                    multiline
+                                  />
+                                  <IconButton
+                                    size="small"
+                                    onClick={() => removeListItem(article.id, idx)}
+                                  >
+                                    <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                                  </IconButton>
+                                </Stack>
+                              )}
+                            </Spa2SortableItem>
+                          ))}
                         </Stack>
-                      ))}
+                      </Spa2SortableGrid>
                       <Button
                         size="small"
                         startIcon={<Iconify icon="mingcute:add-line" />}
@@ -1372,36 +1474,51 @@ export function Spa2PolicyManageView() {
                       {t('policy.certs_section')}
                     </Typography>
                     <Stack spacing={1.5}>
-                      {data.certChips.map((c, idx) => (
-                        <Stack key={idx} direction="row" spacing={1.5}>
-                          <TextField
-                            label={t('policy.cert_label')}
-                            value={c.label}
-                            onChange={(e) =>
-                              updateCertChip(article.id, idx, 'label', e.target.value)
-                            }
-                            size="small"
-                            fullWidth
-                          />
-                          <TextField
-                            label={t('policy.cert_icon')}
-                            value={c.icon}
-                            onChange={(e) =>
-                              updateCertChip(article.id, idx, 'icon', e.target.value)
-                            }
-                            size="small"
-                            fullWidth
-                          />
-                          <Tooltip title={t('common.delete')}>
-                            <IconButton
-                              size="small"
-                              onClick={() => removeCertChip(article.id, idx)}
-                            >
-                              <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                            </IconButton>
-                          </Tooltip>
+                      <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                        {t('common.drag_hint')}
+                      </Typography>
+                      <Spa2SortableGrid
+                        items={data.certChips.map((c, idx) => ({ ...c, id: String(idx) }))}
+                        onReorder={(next) => reorderCertChips(article.id, next)}
+                      >
+                        <Stack spacing={1.5}>
+                          {data.certChips.map((c, idx) => (
+                            <Spa2SortableItem key={idx} id={String(idx)}>
+                              {(sortable) => (
+                                <Stack direction="row" spacing={1.5} alignItems="center">
+                                  <Spa2DragHandle sortable={sortable} />
+                                  <TextField
+                                    label={t('policy.cert_label')}
+                                    value={c.label}
+                                    onChange={(e) =>
+                                      updateCertChip(article.id, idx, 'label', e.target.value)
+                                    }
+                                    size="small"
+                                    fullWidth
+                                  />
+                                  <TextField
+                                    label={t('policy.cert_icon')}
+                                    value={c.icon}
+                                    onChange={(e) =>
+                                      updateCertChip(article.id, idx, 'icon', e.target.value)
+                                    }
+                                    size="small"
+                                    fullWidth
+                                  />
+                                  <Tooltip title={t('common.delete')}>
+                                    <IconButton
+                                      size="small"
+                                      onClick={() => removeCertChip(article.id, idx)}
+                                    >
+                                      <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                                    </IconButton>
+                                  </Tooltip>
+                                </Stack>
+                              )}
+                            </Spa2SortableItem>
+                          ))}
                         </Stack>
-                      ))}
+                      </Spa2SortableGrid>
                       <Button
                         size="small"
                         startIcon={<Iconify icon="mingcute:add-line" />}

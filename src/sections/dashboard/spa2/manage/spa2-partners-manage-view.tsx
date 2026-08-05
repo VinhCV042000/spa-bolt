@@ -59,6 +59,7 @@ import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
 import { Spa2ListAnalytic } from './spa2-list-analytic';
 import { Spa2SimpleImageField } from './spa2-simple-image-field';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Manages every block the public /spa2/partners page (Spa2PartnersPageView)
@@ -72,6 +73,14 @@ type Partner = (typeof spa2PartnerProfiles)[number] & { id: number };
 type PartnerCategory = (typeof spa2PartnerCategories)[number];
 type Collaboration = (typeof spa2Collaborations)[number] & { id: number };
 type QualityCert = (typeof spa2QualityCerts)[number] & { id: number };
+
+// Sortable-grid item shapes: Spa2SortableGrid requires a string `id`, so
+// categories (already string-keyed) just gain one, while collabs/certs
+// (numeric-id state) swap their numeric id for a string version and convert
+// back on reorder.
+type SortableCategory = PartnerCategory & { id: string };
+type SortableCollaboration = Omit<Collaboration, 'id'> & { id: string };
+type SortableQualityCert = Omit<QualityCert, 'id'> & { id: string };
 
 const EMPTY_PARTNER_FORM: Omit<Partner, 'id'> = {
   name: '',
@@ -364,6 +373,10 @@ export function Spa2PartnersManageView() {
     setCatDeleteKey(null);
     setDirty(true);
   }, [catDeleteKey, categories]);
+  const handleCategoriesReorder = useCallback((next: SortableCategory[]) => {
+    setCategories(next.map(({ id, ...rest }) => rest));
+    setDirty(true);
+  }, []);
 
   // ---- Collaborations (spa2Collaborations) ----
   const [collabs, setCollabs] = useState<Collaboration[]>(() =>
@@ -399,6 +412,10 @@ export function Spa2PartnersManageView() {
     setCollabDeleteId(null);
     setDirty(true);
   }, [collabDeleteId]);
+  const handleCollabsReorder = useCallback((next: SortableCollaboration[]) => {
+    setCollabs(next.map((c) => ({ ...c, id: Number(c.id) })));
+    setDirty(true);
+  }, []);
 
   // ---- Certifications (spa2QualityCerts) ----
   const [certs, setCerts] = useState<QualityCert[]>(() =>
@@ -434,6 +451,10 @@ export function Spa2PartnersManageView() {
     setCertDeleteId(null);
     setDirty(true);
   }, [certDeleteId]);
+  const handleCertsReorder = useCallback((next: SortableQualityCert[]) => {
+    setCerts(next.map((c) => ({ ...c, id: Number(c.id) })));
+    setDirty(true);
+  }, []);
 
   // ---- Stats ----
   const stats = useMemo(() => {
@@ -820,42 +841,67 @@ export function Spa2PartnersManageView() {
             </Button>
           </Stack>
           <Box sx={{ p: 2, pt: 0 }}>
+            <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1, display: 'block' }}>
+              {t('partners.drag_hint')}
+            </Typography>
             <Grid container spacing={2}>
-              {stats.byCategory.map((cat) => (
-                <Grid key={cat.key} xs={12} sm={6} md={3} sx={{ display: 'flex' }}>
-                  <Box sx={{ width: '100%', position: 'relative' }}>
-                    <CategoryPreviewCard label={cat.label} icon={cat.icon} count={cat.count} />
-                    <Stack
-                      direction="row"
-                      spacing={0.5}
-                      sx={{
-                        position: 'absolute',
-                        top: 8,
-                        right: 8,
-                        bgcolor: 'common.white',
-                        borderRadius: 2,
-                        boxShadow: 2,
-                      }}
-                    >
-                      <Tooltip title={t('common.edit')}>
-                        <IconButton size="small" onClick={() => openCatEdit(cat)}>
-                          <Iconify icon="solar:pen-bold" width={16} />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title={t('common.delete')}>
-                        <IconButton
-                          size="small"
-                          color="error"
-                          onClick={() => setCatDeleteKey(cat.key)}
-                        >
-                          <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                        </IconButton>
-                      </Tooltip>
-                    </Stack>
-                  </Box>
-                </Grid>
-              ))}
-              {stats.byCategory.length === 0 && (
+              <Spa2SortableGrid
+                items={categories.map((cat) => ({ ...cat, id: cat.key }))}
+                onReorder={handleCategoriesReorder}
+              >
+                {categories.map((cat) => {
+                  const count = items.filter((p) => p.category === cat.key).length;
+                  return (
+                    <Grid key={cat.key} xs={12} sm={6} md={3} sx={{ display: 'flex' }}>
+                      <Spa2SortableItem id={cat.key}>
+                        {(sortable) => (
+                          <Box sx={{ width: '100%', position: 'relative' }}>
+                            <CategoryPreviewCard label={cat.label} icon={cat.icon} count={count} />
+                            <Spa2DragHandle
+                              sortable={sortable}
+                              sx={{
+                                position: 'absolute',
+                                top: 8,
+                                left: 8,
+                                bgcolor: 'common.white',
+                                boxShadow: 2,
+                              }}
+                            />
+                            <Stack
+                              direction="row"
+                              spacing={0.5}
+                              sx={{
+                                position: 'absolute',
+                                top: 8,
+                                right: 8,
+                                bgcolor: 'common.white',
+                                borderRadius: 2,
+                                boxShadow: 2,
+                              }}
+                            >
+                              <Tooltip title={t('common.edit')}>
+                                <IconButton size="small" onClick={() => openCatEdit(cat)}>
+                                  <Iconify icon="solar:pen-bold" width={16} />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title={t('common.delete')}>
+                                <IconButton
+                                  size="small"
+                                  color="error"
+                                  onClick={() => setCatDeleteKey(cat.key)}
+                                >
+                                  <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                                </IconButton>
+                              </Tooltip>
+                            </Stack>
+                          </Box>
+                        )}
+                      </Spa2SortableItem>
+                    </Grid>
+                  );
+                })}
+              </Spa2SortableGrid>
+              {categories.length === 0 && (
                 <Grid xs={12}>
                   <Typography variant="body2" color="text.secondary">
                     {t('common.no_data')}
@@ -881,47 +927,67 @@ export function Spa2PartnersManageView() {
             </Button>
           </Stack>
           <Box sx={{ p: 2, pt: 0 }}>
+            <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1, display: 'block' }}>
+              {t('partners.drag_hint')}
+            </Typography>
             <Grid container spacing={2}>
-              {collabs.map((c) => (
-                <Grid key={c.id} xs={12} sm={6} md={4}>
-                  <Card sx={{ borderRadius: 3, overflow: 'hidden' }}>
-                    <Box
-                      sx={{
-                        height: 140,
-                        backgroundImage: `url(${c.image})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        bgcolor: SPA2_CREAM,
-                      }}
-                    />
-                    <Box sx={{ p: 2 }}>
-                      <Chip size="small" label={c.year} sx={{ mb: 1 }} />
-                      <Typography variant="subtitle2" noWrap>
-                        {c.title}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        Cùng {c.partner}
-                      </Typography>
-                      <Stack direction="row" justifyContent="flex-end" spacing={0.5} sx={{ mt: 1 }}>
-                        <Tooltip title={t('common.edit')}>
-                          <IconButton size="small" onClick={() => openCollabEdit(c)}>
-                            <Iconify icon="solar:pen-bold" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title={t('common.delete')}>
-                          <IconButton
-                            size="small"
-                            color="error"
-                            onClick={() => setCollabDeleteId(c.id)}
-                          >
-                            <Iconify icon="solar:trash-bin-trash-bold" />
-                          </IconButton>
-                        </Tooltip>
-                      </Stack>
-                    </Box>
-                  </Card>
-                </Grid>
-              ))}
+              <Spa2SortableGrid
+                items={collabs.map((c) => ({ ...c, id: String(c.id) }))}
+                onReorder={handleCollabsReorder}
+              >
+                {collabs.map((c) => (
+                  <Grid key={c.id} xs={12} sm={6} md={4}>
+                    <Spa2SortableItem id={String(c.id)}>
+                      {(sortable) => (
+                        <Card sx={{ borderRadius: 3, overflow: 'hidden' }}>
+                          <Box
+                            sx={{
+                              height: 140,
+                              backgroundImage: `url(${c.image})`,
+                              backgroundSize: 'cover',
+                              backgroundPosition: 'center',
+                              bgcolor: SPA2_CREAM,
+                            }}
+                          />
+                          <Box sx={{ p: 2 }}>
+                            <Chip size="small" label={c.year} sx={{ mb: 1 }} />
+                            <Typography variant="subtitle2" noWrap>
+                              {c.title}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              Cùng {c.partner}
+                            </Typography>
+                            <Stack
+                              direction="row"
+                              alignItems="center"
+                              justifyContent="space-between"
+                              sx={{ mt: 1 }}
+                            >
+                              <Spa2DragHandle sortable={sortable} />
+                              <Stack direction="row" spacing={0.5}>
+                                <Tooltip title={t('common.edit')}>
+                                  <IconButton size="small" onClick={() => openCollabEdit(c)}>
+                                    <Iconify icon="solar:pen-bold" />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip title={t('common.delete')}>
+                                  <IconButton
+                                    size="small"
+                                    color="error"
+                                    onClick={() => setCollabDeleteId(c.id)}
+                                  >
+                                    <Iconify icon="solar:trash-bin-trash-bold" />
+                                  </IconButton>
+                                </Tooltip>
+                              </Stack>
+                            </Stack>
+                          </Box>
+                        </Card>
+                      )}
+                    </Spa2SortableItem>
+                  </Grid>
+                ))}
+              </Spa2SortableGrid>
             </Grid>
           </Box>
         </Card>
@@ -941,41 +1007,63 @@ export function Spa2PartnersManageView() {
             </Button>
           </Stack>
           <Box sx={{ p: 2, pt: 0 }}>
+            <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1, display: 'block' }}>
+              {t('partners.drag_hint')}
+            </Typography>
             <Grid container spacing={2}>
-              {certs.map((c) => (
-                <Grid key={c.id} xs={12} sm={6} md={3} sx={{ display: 'flex' }}>
-                  <Box sx={{ width: '100%', position: 'relative' }}>
-                    <CertPreviewCard name={c.name} icon={c.icon} desc={c.desc} />
-                    <Stack
-                      direction="row"
-                      spacing={0.5}
-                      sx={{
-                        position: 'absolute',
-                        top: 8,
-                        right: 8,
-                        bgcolor: 'common.white',
-                        borderRadius: 2,
-                        boxShadow: 2,
-                      }}
-                    >
-                      <Tooltip title={t('common.edit')}>
-                        <IconButton size="small" onClick={() => openCertEdit(c)}>
-                          <Iconify icon="solar:pen-bold" width={16} />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title={t('common.delete')}>
-                        <IconButton
-                          size="small"
-                          color="error"
-                          onClick={() => setCertDeleteId(c.id)}
-                        >
-                          <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                        </IconButton>
-                      </Tooltip>
-                    </Stack>
-                  </Box>
-                </Grid>
-              ))}
+              <Spa2SortableGrid
+                items={certs.map((c) => ({ ...c, id: String(c.id) }))}
+                onReorder={handleCertsReorder}
+              >
+                {certs.map((c) => (
+                  <Grid key={c.id} xs={12} sm={6} md={3} sx={{ display: 'flex' }}>
+                    <Spa2SortableItem id={String(c.id)}>
+                      {(sortable) => (
+                        <Box sx={{ width: '100%', position: 'relative' }}>
+                          <CertPreviewCard name={c.name} icon={c.icon} desc={c.desc} />
+                          <Spa2DragHandle
+                            sortable={sortable}
+                            sx={{
+                              position: 'absolute',
+                              top: 8,
+                              left: 8,
+                              bgcolor: 'common.white',
+                              boxShadow: 2,
+                            }}
+                          />
+                          <Stack
+                            direction="row"
+                            spacing={0.5}
+                            sx={{
+                              position: 'absolute',
+                              top: 8,
+                              right: 8,
+                              bgcolor: 'common.white',
+                              borderRadius: 2,
+                              boxShadow: 2,
+                            }}
+                          >
+                            <Tooltip title={t('common.edit')}>
+                              <IconButton size="small" onClick={() => openCertEdit(c)}>
+                                <Iconify icon="solar:pen-bold" width={16} />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title={t('common.delete')}>
+                              <IconButton
+                                size="small"
+                                color="error"
+                                onClick={() => setCertDeleteId(c.id)}
+                              >
+                                <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </Box>
+                      )}
+                    </Spa2SortableItem>
+                  </Grid>
+                ))}
+              </Spa2SortableGrid>
               {certs.length === 0 && (
                 <Grid xs={12}>
                   <Typography variant="body2" color="text.secondary">

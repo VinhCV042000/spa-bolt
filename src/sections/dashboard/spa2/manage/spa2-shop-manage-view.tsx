@@ -53,6 +53,7 @@ import {
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
 import { Spa2SimpleImageField } from './spa2-simple-image-field';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages2.tsx's
@@ -222,6 +223,14 @@ export function Spa2ShopManageView() {
     setCategories((prev) => prev.filter((_, i) => i !== idx));
     markDirty();
   };
+  const reorderCategories = (next: (Spa2ShopCategory & { id: string })[]) => {
+    const cleaned = next.map(({ id, ...rest }) => rest);
+    setCategories((prev) => {
+      const allEntry = prev.find((c) => c.value === 'all');
+      return allEntry ? [allEntry, ...cleaned] : cleaned;
+    });
+    markDirty();
+  };
 
   // ---- Products ----
   const [products, setProducts] = useState<Spa2ShopProduct[]>(() =>
@@ -270,6 +279,19 @@ export function Spa2ShopManageView() {
   const confirmDeleteProduct = () => {
     setProducts((prev) => prev.filter((p) => p.id !== productDeleteId));
     setProductDeleteId(null);
+    markDirty();
+  };
+  const reorderProducts = (next: Spa2ShopProduct[]) => {
+    if (productFilter === 'all') {
+      setProducts(next);
+    } else {
+      // Filtered view: splice the reordered subset back into its original
+      // slots within the full list so products outside the current filter
+      // keep their relative position.
+      const queue = [...next];
+      const nextIds = new Set(next.map((p) => p.id));
+      setProducts((prev) => prev.map((p) => (nextIds.has(p.id) ? queue.shift()! : p)));
+    }
     markDirty();
   };
 
@@ -455,27 +477,74 @@ export function Spa2ShopManageView() {
             </Button>
           </Stack>
           <Stack spacing={1.5}>
-            {categories.map((c, idx) => (
-              <Stack key={c.value} direction="row" spacing={1.5} alignItems="center">
-                <Chip
-                  size="small"
-                  label={c.value === 'all' ? t('shop.category_all_locked') : c.value}
-                  sx={{ bgcolor: SPA2_CREAM, minWidth: 100 }}
-                />
-                <TextField
-                  size="small"
-                  fullWidth
-                  label={t('shop.form_category_label')}
-                  value={c.label}
-                  onChange={(e) => updateCategory(idx, { label: e.target.value })}
-                />
-                {c.value !== 'all' && (
-                  <IconButton size="small" color="error" onClick={() => removeCategory(idx)}>
-                    <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                  </IconButton>
-                )}
+            {categories
+              .filter((c) => c.value === 'all')
+              .map((c) => (
+                <Stack key={c.value} direction="row" spacing={1.5} alignItems="center">
+                  <Chip
+                    size="small"
+                    label={t('shop.category_all_locked')}
+                    sx={{ bgcolor: SPA2_CREAM, minWidth: 100 }}
+                  />
+                  <TextField
+                    size="small"
+                    fullWidth
+                    label={t('shop.form_category_label')}
+                    value={c.label}
+                    onChange={(e) =>
+                      updateCategory(
+                        categories.findIndex((cat) => cat.value === c.value),
+                        { label: e.target.value }
+                      )
+                    }
+                  />
+                </Stack>
+              ))}
+            <Typography variant="caption" color="text.secondary">
+              {t('common.drag_hint')}
+            </Typography>
+            <Spa2SortableGrid
+              items={realCategories.map((c) => ({ ...c, id: c.value }))}
+              onReorder={reorderCategories}
+            >
+              <Stack spacing={1.5}>
+                {realCategories.map((c) => (
+                  <Spa2SortableItem key={c.value} id={c.value}>
+                    {(sortable) => (
+                      <Stack direction="row" spacing={1.5} alignItems="center">
+                        <Spa2DragHandle sortable={sortable} />
+                        <Chip
+                          size="small"
+                          label={c.value}
+                          sx={{ bgcolor: SPA2_CREAM, minWidth: 100 }}
+                        />
+                        <TextField
+                          size="small"
+                          fullWidth
+                          label={t('shop.form_category_label')}
+                          value={c.label}
+                          onChange={(e) =>
+                            updateCategory(
+                              categories.findIndex((cat) => cat.value === c.value),
+                              { label: e.target.value }
+                            )
+                          }
+                        />
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() =>
+                            removeCategory(categories.findIndex((cat) => cat.value === c.value))
+                          }
+                        >
+                          <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                        </IconButton>
+                      </Stack>
+                    )}
+                  </Spa2SortableItem>
+                ))}
               </Stack>
-            ))}
+            </Spa2SortableGrid>
           </Stack>
         </Card>
       )}
@@ -524,47 +593,64 @@ export function Spa2ShopManageView() {
               </Button>
             </Stack>
           </Stack>
-          <Grid container spacing={2}>
-            {filteredProducts.map((item) => (
-              <Grid key={item.id} xs={12} sm={6} md={3}>
-                <Box sx={{ position: 'relative' }}>
-                  <ProductPreviewCard {...item} />
-                  <Stack
-                    direction="row"
-                    spacing={0.5}
-                    sx={{ position: 'absolute', top: 8, right: 8 }}
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ mb: 1.5, display: 'block' }}
+          >
+            {t('common.drag_hint')}
+          </Typography>
+          <Spa2SortableGrid items={filteredProducts} onReorder={reorderProducts}>
+            <Grid container spacing={2}>
+              {filteredProducts.map((item) => (
+                <Grid key={item.id} xs={12} sm={6} md={3}>
+                  <Spa2SortableItem id={item.id}>
+                    {(sortable) => (
+                      <Box sx={{ position: 'relative' }}>
+                        <ProductPreviewCard {...item} />
+                        <Stack
+                          direction="row"
+                          spacing={0.5}
+                          sx={{ position: 'absolute', top: 8, right: 8 }}
+                        >
+                          <Spa2DragHandle
+                            sortable={sortable}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          />
+                          <IconButton
+                            size="small"
+                            onClick={() => openEditProduct(item)}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          >
+                            <Iconify icon="solar:pen-bold" width={14} />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => setProductDeleteId(item.id)}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          >
+                            <Iconify icon="solar:trash-bin-trash-bold" width={14} />
+                          </IconButton>
+                        </Stack>
+                      </Box>
+                    )}
+                  </Spa2SortableItem>
+                </Grid>
+              ))}
+              {filteredProducts.length === 0 && (
+                <Grid xs={12}>
+                  <Typography
+                    variant="body2"
+                    color="text.disabled"
+                    sx={{ py: 3, textAlign: 'center' }}
                   >
-                    <IconButton
-                      size="small"
-                      onClick={() => openEditProduct(item)}
-                      sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                    >
-                      <Iconify icon="solar:pen-bold" width={14} />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      color="error"
-                      onClick={() => setProductDeleteId(item.id)}
-                      sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                    >
-                      <Iconify icon="solar:trash-bin-trash-bold" width={14} />
-                    </IconButton>
-                  </Stack>
-                </Box>
-              </Grid>
-            ))}
-            {filteredProducts.length === 0 && (
-              <Grid xs={12}>
-                <Typography
-                  variant="body2"
-                  color="text.disabled"
-                  sx={{ py: 3, textAlign: 'center' }}
-                >
-                  {t('shop.no_products')}
-                </Typography>
-              </Grid>
-            )}
-          </Grid>
+                    {t('shop.no_products')}
+                  </Typography>
+                </Grid>
+              )}
+            </Grid>
+          </Spa2SortableGrid>
         </Card>
       )}
 

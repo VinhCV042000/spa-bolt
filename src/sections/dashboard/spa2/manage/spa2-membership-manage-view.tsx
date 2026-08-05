@@ -72,6 +72,7 @@ import {
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
 import { Spa2ListAnalytic } from './spa2-list-analytic';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages2.tsx's
@@ -449,6 +450,11 @@ export function Spa2MembershipManageView() {
     markDirty();
   };
 
+  const handleReorderTiers = (next: Spa2MembershipTier[]) => {
+    setTiers(next);
+    markDirty();
+  };
+
   const tierStats = useMemo(
     () => ({
       total: tiers.length,
@@ -802,36 +808,49 @@ export function Spa2MembershipManageView() {
                 {t('membership.add_tier_btn')}
               </Button>
             </Stack>
-            <Grid container spacing={2.5}>
-              {tiers.map((item) => (
-                <Grid key={item.id} xs={12} md={4}>
-                  <Box sx={{ position: 'relative' }}>
-                    <TierPreviewCard {...item} />
-                    <Stack
-                      direction="row"
-                      spacing={0.5}
-                      sx={{ position: 'absolute', top: item.hot ? 40 : 8, right: 8 }}
-                    >
-                      <IconButton
-                        size="small"
-                        onClick={() => openEditTier(item)}
-                        sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                      >
-                        <Iconify icon="solar:pen-bold" width={16} />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        color="error"
-                        onClick={() => setTierDeleteId(item.id)}
-                        sx={{ bgcolor: 'common.white', boxShadow: 1 }}
-                      >
-                        <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                      </IconButton>
-                    </Stack>
-                  </Box>
-                </Grid>
-              ))}
-            </Grid>
+            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1.5 }}>
+              {t('common.drag_hint')}
+            </Typography>
+            <Spa2SortableGrid items={tiers} onReorder={handleReorderTiers}>
+              <Grid container spacing={2.5}>
+                {tiers.map((item) => (
+                  <Grid key={item.id} xs={12} md={4}>
+                    <Spa2SortableItem id={item.id}>
+                      {(sortable) => (
+                        <Box sx={{ position: 'relative' }}>
+                          <TierPreviewCard {...item} />
+                          <Stack
+                            direction="row"
+                            spacing={0.5}
+                            sx={{ position: 'absolute', top: item.hot ? 40 : 8, right: 8 }}
+                          >
+                            <Spa2DragHandle
+                              sortable={sortable}
+                              sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                            />
+                            <IconButton
+                              size="small"
+                              onClick={() => openEditTier(item)}
+                              sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                            >
+                              <Iconify icon="solar:pen-bold" width={16} />
+                            </IconButton>
+                            <IconButton
+                              size="small"
+                              color="error"
+                              onClick={() => setTierDeleteId(item.id)}
+                              sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                            >
+                              <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                            </IconButton>
+                          </Stack>
+                        </Box>
+                      )}
+                    </Spa2SortableItem>
+                  </Grid>
+                ))}
+              </Grid>
+            </Spa2SortableGrid>
           </Card>
 
           <Card sx={{ p: 3, borderRadius: 3 }}>

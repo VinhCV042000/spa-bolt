@@ -1,24 +1,34 @@
 import type { ReactNode } from 'react';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Tabs from '@mui/material/Tabs';
+import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
+import TableRow from '@mui/material/TableRow';
 import Grid from '@mui/material/Unstable_Grid2';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import InputAdornment from '@mui/material/InputAdornment';
+import LinearProgress from '@mui/material/LinearProgress';
+import TableContainer from '@mui/material/TableContainer';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { paths } from 'src/routes/paths';
@@ -37,10 +47,16 @@ import {
   type Spa2FranchiseModel,
   type Spa2FranchiseBanner,
   type Spa2FranchiseBenefit,
+  SPA2_FRANCHISE_APPLICATIONS,
+  type Spa2FranchiseApplication,
+  type Spa2FranchiseApplicationStatus,
 } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { useTable } from 'src/components/table/use-table';
 import { ConfirmDialog } from 'src/components/custom-dialog';
+import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
 
 import { Spa2FranchisePageView } from 'src/sections/spa2/view/spa2-content-pages8';
 import {
@@ -52,6 +68,7 @@ import {
 } from 'src/sections/spa2/spa2-pages-data';
 
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2ListAnalytic } from './spa2-list-analytic';
 import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
@@ -88,6 +105,32 @@ const EMPTY_MODEL: Omit<Spa2FranchiseModel, 'id'> = {
 };
 
 const EMPTY_STEP: Omit<Spa2FranchiseStep, 'id'> = { title: '', desc: '' };
+
+const APPLICATION_STATUS_LABEL: Record<Spa2FranchiseApplicationStatus, string> = {
+  pending: 'Chờ xử lý',
+  contacted: 'Đã liên hệ',
+  approved: 'Đã duyệt',
+  rejected: 'Từ chối',
+};
+
+const APPLICATION_STATUS_COLOR: Record<
+  Spa2FranchiseApplicationStatus,
+  'warning' | 'info' | 'success' | 'error'
+> = {
+  pending: 'warning',
+  contacted: 'info',
+  approved: 'success',
+  rejected: 'error',
+};
+
+const APPLICATION_STATUS_OPTIONS: Spa2FranchiseApplicationStatus[] = [
+  'pending',
+  'contacted',
+  'approved',
+  'rejected',
+];
+
+type ApplicationStatusFilter = Spa2FranchiseApplicationStatus | 'all';
 
 function SectionCard({
   title,
@@ -327,6 +370,44 @@ function StepPreviewCard({ step, index }: { step: Omit<Spa2FranchiseStep, 'id'>;
   );
 }
 
+// KPI tile used on the "application_stats" tab.
+function StatCard({
+  icon,
+  label,
+  value,
+}: {
+  icon: string;
+  label: string;
+  value: string | number;
+}) {
+  return (
+    <Card sx={{ p: 2, borderRadius: 2.5, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+      <Box
+        sx={{
+          width: 40,
+          height: 40,
+          borderRadius: 2,
+          bgcolor: SPA2_CREAM_DARK,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0,
+        }}
+      >
+        <Iconify icon={icon} width={20} sx={{ color: SPA2_TEAL }} />
+      </Box>
+      <Box>
+        <Typography variant="h6" sx={{ color: SPA2_INK, lineHeight: 1.2 }}>
+          {value}
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          {label}
+        </Typography>
+      </Box>
+    </Card>
+  );
+}
+
 // Small in-dialog CRUD list (add/edit/remove rows), matching the water
 // therapy manage view's MiniListField convention - used here for the
 // investment model's perks checklist.
@@ -401,12 +482,22 @@ export function Spa2FranchiseManageView() {
   const [steps, setSteps] = useState<Spa2FranchiseStep[]>(() =>
     spa2FranchiseSteps.map((item) => ({ ...item }))
   );
+  const [applications, setApplications] = useState<Spa2FranchiseApplication[]>(() =>
+    SPA2_FRANCHISE_APPLICATIONS.map((item) => ({ ...item }))
+  );
 
   const [dirty, setDirty] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
-  const [tab, setTab] = useState<'banner' | 'stats' | 'benefits' | 'models' | 'steps' | 'preview'>(
-    'banner'
-  );
+  const [tab, setTab] = useState<
+    | 'banner'
+    | 'stats'
+    | 'benefits'
+    | 'models'
+    | 'steps'
+    | 'applications'
+    | 'application_stats'
+    | 'preview'
+  >('banner');
   const markDirty = () => setDirty(true);
 
   // ---- Banner ----
@@ -581,6 +672,91 @@ export function Spa2FranchiseManageView() {
     markDirty();
   };
 
+  // ---- Đăng ký nhượng quyền (applications) ----
+  const [applicationSearch, setApplicationSearch] = useState('');
+  const [applicationStatusFilter, setApplicationStatusFilter] =
+    useState<ApplicationStatusFilter>('all');
+  const [viewApplication, setViewApplication] = useState<Spa2FranchiseApplication | null>(null);
+  const [deleteApplicationId, setDeleteApplicationId] = useState<string | null>(null);
+  const applicationTable = useTable({ defaultRowsPerPage: 5 });
+
+  const filteredApplications = applications.filter((item) => {
+    const q = applicationSearch.toLowerCase();
+    const matchSearch =
+      !q ||
+      item.name.toLowerCase().includes(q) ||
+      item.email.toLowerCase().includes(q) ||
+      item.city.toLowerCase().includes(q) ||
+      item.phone.includes(applicationSearch);
+    const matchStatus = applicationStatusFilter === 'all' || item.status === applicationStatusFilter;
+    return matchSearch && matchStatus;
+  });
+
+  const handleSetApplicationStatus = (id: string, status: Spa2FranchiseApplicationStatus) => {
+    setApplications((prev) => prev.map((item) => (item.id === id ? { ...item, status } : item)));
+    setViewApplication((prev) => (prev?.id === id ? { ...prev, status } : prev));
+    markDirty();
+  };
+
+  const confirmDeleteApplication = () => {
+    setApplications((prev) => prev.filter((item) => item.id !== deleteApplicationId));
+    setDeleteApplicationId(null);
+    markDirty();
+  };
+
+  const applicationCounts = {
+    all: applications.length,
+    pending: applications.filter((item) => item.status === 'pending').length,
+    contacted: applications.filter((item) => item.status === 'contacted').length,
+    approved: applications.filter((item) => item.status === 'approved').length,
+    rejected: applications.filter((item) => item.status === 'rejected').length,
+  };
+
+  // ---- Thống kê tổng hợp đăng ký nhượng quyền (derived from applications) ----
+  const applicationsThisMonth = useMemo(() => {
+    const now = new Date();
+    const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    return applications.filter((item) => item.submittedAt.startsWith(monthKey)).length;
+  }, [applications]);
+
+  const applicationCityStats = useMemo(() => {
+    const map = new Map<
+      string,
+      {
+        city: string;
+        count: number;
+        pending: number;
+        contacted: number;
+        approved: number;
+        rejected: number;
+      }
+    >();
+    applications.forEach((item) => {
+      const entry = map.get(item.city) ?? {
+        city: item.city,
+        count: 0,
+        pending: 0,
+        contacted: 0,
+        approved: 0,
+        rejected: 0,
+      };
+      entry.count += 1;
+      entry[item.status] += 1;
+      map.set(item.city, entry);
+    });
+    return Array.from(map.values()).sort((a, b) => b.count - a.count);
+  }, [applications]);
+
+  const topRequestedCity = applicationCityStats[0] ?? null;
+
+  const applicationApprovalRate =
+    applicationCounts.approved + applicationCounts.rejected
+      ? Math.round(
+          (applicationCounts.approved / (applicationCounts.approved + applicationCounts.rejected)) *
+            100
+        )
+      : null;
+
   const handleSave = () => {
     setSavedAt(new Date());
     setDirty(false);
@@ -592,6 +768,7 @@ export function Spa2FranchiseManageView() {
     setBenefits(spa2FranchiseBenefits.map((item) => ({ ...item })));
     setModels(spa2FranchiseModels.map((item) => ({ ...item, perks: [...item.perks] })));
     setSteps(spa2FranchiseSteps.map((item) => ({ ...item })));
+    setApplications(SPA2_FRANCHISE_APPLICATIONS.map((item) => ({ ...item })));
     setDirty(false);
   };
 
@@ -699,6 +876,18 @@ export function Spa2FranchiseManageView() {
           value="steps"
           label={t('franchise.steps_section')}
           icon={<Iconify icon="solar:route-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
+          value="applications"
+          label={t('franchise.applications_section')}
+          icon={<Iconify icon="solar:file-text-bold-duotone" width={20} />}
+          iconPosition="start"
+        />
+        <Tab
+          value="application_stats"
+          label={t('franchise.application_stats_section')}
+          icon={<Iconify icon="solar:chart-square-bold-duotone" width={20} />}
           iconPosition="start"
         />
         <Tab
@@ -1018,6 +1207,339 @@ export function Spa2FranchiseManageView() {
         </SectionCard>
       )}
 
+      {/* Đăng ký nhượng quyền (applications submitted by prospective franchisees) */}
+      {tab === 'applications' && (
+        <Card sx={{ p: 3, borderRadius: 3 }}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ mb: 2 }}
+            flexWrap="wrap"
+            useFlexGap
+            gap={1}
+          >
+            <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+              {t('franchise.applications_section')}
+            </Typography>
+          </Stack>
+
+          <TextField
+            placeholder={t('franchise.application_search_placeholder')}
+            value={applicationSearch}
+            onChange={(e) => {
+              setApplicationSearch(e.target.value);
+              applicationTable.onResetPage();
+            }}
+            size="small"
+            fullWidth
+            sx={{ mb: 2 }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <Tabs
+            value={applicationStatusFilter}
+            onChange={(_, v: ApplicationStatusFilter) => {
+              setApplicationStatusFilter(v);
+              applicationTable.onResetPage();
+            }}
+            variant="scrollable"
+            sx={{
+              mb: 2,
+              '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+              '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
+            }}
+          >
+            <Tab value="all" label={`${t('common.all')} (${applicationCounts.all})`} />
+            {APPLICATION_STATUS_OPTIONS.map((status) => (
+              <Tab
+                key={status}
+                value={status}
+                label={`${APPLICATION_STATUS_LABEL[status]} (${applicationCounts[status]})`}
+              />
+            ))}
+          </Tabs>
+
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>{t('franchise.application_col_contact')}</TableCell>
+                  <TableCell>{t('franchise.application_col_city')}</TableCell>
+                  <TableCell>{t('franchise.application_col_budget')}</TableCell>
+                  <TableCell>{t('franchise.application_col_submitted_at')}</TableCell>
+                  <TableCell>{t('franchise.application_col_status')}</TableCell>
+                  <TableCell align="right">{t('common.actions')}</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredApplications
+                  .slice(
+                    applicationTable.page * applicationTable.rowsPerPage,
+                    applicationTable.page * applicationTable.rowsPerPage +
+                      applicationTable.rowsPerPage
+                  )
+                  .map((item) => (
+                    <TableRow key={item.id} hover>
+                      <TableCell>
+                        <Stack>
+                          <Typography variant="subtitle2" sx={{ color: SPA2_TEAL_DARK }}>
+                            {item.name}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {item.phone} · {item.email}
+                          </Typography>
+                        </Stack>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">{item.city}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">{item.budgetRange}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">{item.submittedAt}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          size="small"
+                          label={APPLICATION_STATUS_LABEL[item.status]}
+                          color={APPLICATION_STATUS_COLOR[item.status]}
+                          variant="soft"
+                        />
+                      </TableCell>
+                      <TableCell align="right">
+                        <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
+                          {item.status === 'pending' && (
+                            <Tooltip title={t('franchise.application_action_contact')}>
+                              <IconButton
+                                size="small"
+                                sx={{ color: SPA2_TEAL_DARK }}
+                                onClick={() => handleSetApplicationStatus(item.id, 'contacted')}
+                              >
+                                <Iconify icon="solar:phone-calling-bold" />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                          {(item.status === 'pending' || item.status === 'contacted') && (
+                            <>
+                              <Tooltip title={t('franchise.application_action_approve')}>
+                                <IconButton
+                                  size="small"
+                                  color="success"
+                                  onClick={() => handleSetApplicationStatus(item.id, 'approved')}
+                                >
+                                  <Iconify icon="solar:check-circle-bold" />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title={t('franchise.application_action_reject')}>
+                                <IconButton
+                                  size="small"
+                                  color="error"
+                                  onClick={() => handleSetApplicationStatus(item.id, 'rejected')}
+                                >
+                                  <Iconify icon="solar:close-circle-bold" />
+                                </IconButton>
+                              </Tooltip>
+                            </>
+                          )}
+                          <Tooltip title={t('franchise.application_action_view')}>
+                            <IconButton size="small" onClick={() => setViewApplication(item)}>
+                              <Iconify icon="solar:eye-bold" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title={t('common.delete')}>
+                            <IconButton
+                              size="small"
+                              color="error"
+                              onClick={() => setDeleteApplicationId(item.id)}
+                            >
+                              <Iconify icon="solar:trash-bin-trash-bold" />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                {filteredApplications.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={6} align="center" sx={{ py: 6, color: 'text.disabled' }}>
+                      {t('franchise.no_applications')}
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePaginationCustom
+            count={filteredApplications.length}
+            page={applicationTable.page}
+            rowsPerPage={applicationTable.rowsPerPage}
+            onPageChange={applicationTable.onChangePage}
+            onRowsPerPageChange={applicationTable.onChangeRowsPerPage}
+          />
+        </Card>
+      )}
+
+      {/* Thống kê tổng hợp đăng ký nhượng quyền — derived entirely from the
+          applications data above (NOT the same as the static "stats" tab,
+          which holds fixed investment/company figures). */}
+      {tab === 'application_stats' && (
+        <Stack spacing={2.5}>
+          <Grid container spacing={2}>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:file-text-bold"
+                label={t('franchise.application_stat_total')}
+                value={applicationCounts.all}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:calendar-mark-bold"
+                label={t('franchise.application_stat_this_month')}
+                value={applicationsThisMonth}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:map-point-bold"
+                label={t('franchise.application_stat_top_city')}
+                value={topRequestedCity?.city ?? '—'}
+              />
+            </Grid>
+            <Grid xs={6} md={3}>
+              <StatCard
+                icon="solar:check-circle-bold"
+                label={t('franchise.application_stat_approval_rate')}
+                value={applicationApprovalRate === null ? '—' : `${applicationApprovalRate}%`}
+              />
+            </Grid>
+          </Grid>
+
+          <Card sx={{ bgcolor: SPA2_CREAM_DARK, borderRadius: 3, p: 2 }}>
+            <Typography variant="overline" sx={{ color: 'text.secondary', mb: 1, display: 'block' }}>
+              {t('franchise.application_stat_by_status')}
+            </Typography>
+            <Scrollbar sx={{ maxHeight: 120 }}>
+              <Stack
+                direction="row"
+                divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+                spacing={2}
+                sx={{ py: 1 }}
+              >
+                <Spa2ListAnalytic
+                  icon="solar:file-text-bold-duotone"
+                  title={t('common.all')}
+                  total={applicationCounts.all}
+                  percent={100}
+                  active={applicationStatusFilter === 'all'}
+                  onClick={() => setApplicationStatusFilter('all')}
+                />
+                {APPLICATION_STATUS_OPTIONS.map((status) => (
+                  <Spa2ListAnalytic
+                    key={status}
+                    icon="solar:bell-bold-duotone"
+                    title={APPLICATION_STATUS_LABEL[status]}
+                    total={applicationCounts[status]}
+                    percent={
+                      applicationCounts.all
+                        ? (applicationCounts[status] / applicationCounts.all) * 100
+                        : 0
+                    }
+                    active={applicationStatusFilter === status}
+                    onClick={() => setApplicationStatusFilter(status)}
+                  />
+                ))}
+              </Stack>
+            </Scrollbar>
+          </Card>
+
+          <Card>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>{t('franchise.application_stat_city_col')}</TableCell>
+                    <TableCell align="center">{t('franchise.application_stat_count_col')}</TableCell>
+                    <TableCell align="center">
+                      {t('franchise.application_stat_pending_contacted_col')}
+                    </TableCell>
+                    <TableCell align="center">
+                      {t('franchise.application_stat_approved_rejected_col')}
+                    </TableCell>
+                    <TableCell sx={{ minWidth: 180 }}>
+                      {t('franchise.application_stat_approval_rate_col')}
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {applicationCityStats.map((city) => {
+                    const resolved = city.approved + city.rejected;
+                    const rate = resolved ? Math.round((city.approved / resolved) * 100) : null;
+                    return (
+                      <TableRow key={city.city} hover>
+                        <TableCell>
+                          <Typography variant="body2">{city.city}</Typography>
+                        </TableCell>
+                        <TableCell align="center">{city.count}</TableCell>
+                        <TableCell align="center">
+                          <Chip
+                            size="small"
+                            label={`${city.pending}/${city.contacted}`}
+                            sx={{ bgcolor: 'background.neutral' }}
+                          />
+                        </TableCell>
+                        <TableCell align="center">
+                          <Stack direction="row" spacing={1} justifyContent="center">
+                            <Box component="span" sx={{ fontSize: 13, color: 'success.main' }}>
+                              {city.approved}
+                            </Box>
+                            <Box component="span" sx={{ fontSize: 13, color: 'error.main' }}>
+                              {city.rejected}
+                            </Box>
+                          </Stack>
+                        </TableCell>
+                        <TableCell>
+                          {rate === null ? (
+                            <Typography variant="caption" color="text.disabled">
+                              —
+                            </Typography>
+                          ) : (
+                            <Stack direction="row" spacing={1.5} alignItems="center">
+                              <LinearProgress
+                                variant="determinate"
+                                value={rate}
+                                sx={{
+                                  flex: 1,
+                                  height: 6,
+                                  borderRadius: 3,
+                                  bgcolor: SPA2_CREAM_DARK,
+                                  '& .MuiLinearProgress-bar': { bgcolor: SPA2_TEAL },
+                                }}
+                              />
+                              <Typography variant="caption" sx={{ minWidth: 34, fontWeight: 600 }}>
+                                {rate}%
+                              </Typography>
+                            </Stack>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Card>
+        </Stack>
+      )}
+
       {/* Full page preview */}
       {tab === 'preview' && (
         <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
@@ -1321,6 +1843,115 @@ export function Spa2FranchiseManageView() {
         content={t('franchise.step_delete_content')}
         action={
           <Button variant="contained" color="error" onClick={confirmDeleteStep}>
+            {t('common.yes_delete')}
+          </Button>
+        }
+      />
+
+      {/* Application detail dialog */}
+      <Dialog
+        open={!!viewApplication}
+        onClose={() => setViewApplication(null)}
+        maxWidth="sm"
+        fullWidth
+      >
+        {viewApplication && (
+          <>
+            <DialogTitle sx={{ color: SPA2_TEAL_DARK }}>
+              {t('franchise.application_detail_title')}
+            </DialogTitle>
+            <DialogContent dividers>
+              <Stack spacing={2} sx={{ pt: 0.5 }}>
+                <TextField
+                  label={t('franchise.application_col_contact')}
+                  value={viewApplication.name}
+                  fullWidth
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    label={t('franchise.application_col_phone')}
+                    value={viewApplication.phone}
+                    fullWidth
+                    size="small"
+                    InputProps={{ readOnly: true }}
+                  />
+                  <TextField
+                    label={t('franchise.application_col_email')}
+                    value={viewApplication.email}
+                    fullWidth
+                    size="small"
+                    InputProps={{ readOnly: true }}
+                  />
+                </Stack>
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    label={t('franchise.application_col_city')}
+                    value={viewApplication.city}
+                    fullWidth
+                    size="small"
+                    InputProps={{ readOnly: true }}
+                  />
+                  <TextField
+                    label={t('franchise.application_col_budget')}
+                    value={viewApplication.budgetRange}
+                    fullWidth
+                    size="small"
+                    InputProps={{ readOnly: true }}
+                  />
+                </Stack>
+                <TextField
+                  label={t('franchise.application_col_submitted_at')}
+                  value={viewApplication.submittedAt}
+                  fullWidth
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+                <TextField
+                  label={t('franchise.application_form_message')}
+                  value={viewApplication.message || '—'}
+                  fullWidth
+                  multiline
+                  minRows={2}
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+                <TextField
+                  select
+                  label={t('franchise.application_col_status')}
+                  value={viewApplication.status}
+                  size="small"
+                  fullWidth
+                  onChange={(e) =>
+                    handleSetApplicationStatus(
+                      viewApplication.id,
+                      e.target.value as Spa2FranchiseApplicationStatus
+                    )
+                  }
+                >
+                  {APPLICATION_STATUS_OPTIONS.map((status) => (
+                    <MenuItem key={status} value={status}>
+                      {APPLICATION_STATUS_LABEL[status]}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Stack>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setViewApplication(null)}>{t('common.close')}</Button>
+            </DialogActions>
+          </>
+        )}
+      </Dialog>
+
+      <ConfirmDialog
+        open={!!deleteApplicationId}
+        onClose={() => setDeleteApplicationId(null)}
+        title={t('franchise.application_delete_title')}
+        content={t('franchise.application_delete_content')}
+        action={
+          <Button variant="contained" color="error" onClick={confirmDeleteApplication}>
             {t('common.yes_delete')}
           </Button>
         }

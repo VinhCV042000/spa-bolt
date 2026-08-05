@@ -7354,6 +7354,183 @@ export const spa2Therapists: Spa2Therapist[] = [
   },
 ];
 
+// ---------- Đặt lịch với chuyên gia (admin-only operational data) -------
+
+export type Spa2TherapistBookingStatus = 'pending' | 'confirmed' | 'completed' | 'cancelled';
+
+export type Spa2TherapistBooking = {
+  id: number;
+  therapistId: string;
+  therapistName: string;
+  customerName: string;
+  phone: string;
+  service: string;
+  date: string;
+  time: string;
+  note: string;
+  createdAt: string;
+  status: Spa2TherapistBookingStatus;
+};
+
+export const SPA2_THERAPIST_BOOKINGS: Spa2TherapistBooking[] = [
+  {
+    id: 1,
+    therapistId: 'hong-nhi',
+    therapistName: 'Phạm Hồng Nhi',
+    customerName: 'Đặng Thu Hằng',
+    phone: '0901 222 333',
+    service: 'Facial chuyên sâu',
+    date: '2026-08-10',
+    time: '14:00',
+    note: 'Da nhạy cảm, cần tư vấn kỹ trước buổi trị liệu',
+    createdAt: '2026-08-01',
+    status: 'pending',
+  },
+  {
+    id: 2,
+    therapistId: 'minh-khoi',
+    therapistName: 'Trần Minh Khôi',
+    customerName: 'Bùi Quang Huy',
+    phone: '0912 333 444',
+    service: 'Massage phục hồi',
+    date: '2026-08-09',
+    time: '16:00',
+    note: '',
+    createdAt: '2026-07-30',
+    status: 'confirmed',
+  },
+  {
+    id: 3,
+    therapistId: 'thao-vy',
+    therapistName: 'Nguyễn Thảo Vy',
+    customerName: 'Lý Ngọc Diệp',
+    phone: '0923 444 555',
+    service: 'Detox toàn thân',
+    date: '2026-07-25',
+    time: '10:00',
+    note: 'Khách VIP, ưu tiên phòng yên tĩnh',
+    createdAt: '2026-07-15',
+    status: 'completed',
+  },
+  {
+    id: 4,
+    therapistId: 'hong-nhi',
+    therapistName: 'Phạm Hồng Nhi',
+    customerName: 'Vũ Thanh Trúc',
+    phone: '0934 555 666',
+    service: 'Điều trị mụn',
+    date: '2026-08-05',
+    time: '09:00',
+    note: 'Khách xin dời lịch nhưng không phản hồi lại',
+    createdAt: '2026-07-28',
+    status: 'cancelled',
+  },
+  {
+    id: 5,
+    therapistId: 'minh-khoi',
+    therapistName: 'Trần Minh Khôi',
+    customerName: 'Đỗ Anh Quân',
+    phone: '0945 666 777',
+    service: 'Deep tissue',
+    date: '2026-08-12',
+    time: '15:30',
+    note: 'Đau vai gáy mãn tính do ngồi máy tính nhiều',
+    createdAt: '2026-08-02',
+    status: 'pending',
+  },
+  {
+    id: 6,
+    therapistId: 'thao-vy',
+    therapistName: 'Nguyễn Thảo Vy',
+    customerName: 'Phan Bích Vân',
+    phone: '0956 777 888',
+    service: 'Wellness coaching',
+    date: '2026-08-14',
+    time: '14:00',
+    note: 'Cần tư vấn lộ trình chăm sóc sức khỏe 3 tháng',
+    createdAt: '2026-08-03',
+    status: 'confirmed',
+  },
+];
+
+// ---------- Quản lý bình luận / đánh giá chuyên gia (admin-only operational data)
+
+export type Spa2TherapistReviewStatus = 'published' | 'pending' | 'hidden';
+
+export type Spa2TherapistReview = {
+  id: number;
+  therapistId: string;
+  therapistName: string;
+  customerName: string;
+  rating: number;
+  comment: string;
+  date: string;
+  status: Spa2TherapistReviewStatus;
+};
+
+export const SPA2_THERAPIST_REVIEWS: Spa2TherapistReview[] = [
+  {
+    id: 1,
+    therapistId: 'hong-nhi',
+    therapistName: 'Phạm Hồng Nhi',
+    customerName: 'Ngô Khánh Linh',
+    rating: 5,
+    comment: 'Da mình cải thiện rõ rệt sau 3 buổi facial cùng chị Nhi, rất tận tâm.',
+    date: '2026-07-20',
+    status: 'published',
+  },
+  {
+    id: 2,
+    therapistId: 'minh-khoi',
+    therapistName: 'Trần Minh Khôi',
+    customerName: 'Trịnh Gia Huy',
+    rating: 5,
+    comment: 'Kỹ thuật massage deep tissue tuyệt vời, hết đau lưng sau vài buổi.',
+    date: '2026-07-22',
+    status: 'published',
+  },
+  {
+    id: 3,
+    therapistId: 'thao-vy',
+    therapistName: 'Nguyễn Thảo Vy',
+    customerName: 'Lâm Mỹ Duyên',
+    rating: 4,
+    comment: 'Buổi detox rất thư giãn, chị Thảo Vy tư vấn nhiệt tình.',
+    date: '2026-07-25',
+    status: 'pending',
+  },
+  {
+    id: 4,
+    therapistId: 'hong-nhi',
+    therapistName: 'Phạm Hồng Nhi',
+    customerName: 'Hồ Việt Anh',
+    rating: 3,
+    comment: 'Dịch vụ ổn nhưng phải chờ hơi lâu mới tới lượt.',
+    date: '2026-07-27',
+    status: 'pending',
+  },
+  {
+    id: 5,
+    therapistId: 'minh-khoi',
+    therapistName: 'Trần Minh Khôi',
+    customerName: 'Đặng Hoài Nam',
+    rating: 2,
+    comment: 'Nội dung bình luận không phù hợp, đã được quản trị viên ẩn khỏi trang công khai.',
+    date: '2026-07-28',
+    status: 'hidden',
+  },
+  {
+    id: 6,
+    therapistId: 'thao-vy',
+    therapistName: 'Nguyễn Thảo Vy',
+    customerName: 'Cao Thị Yến',
+    rating: 5,
+    comment: '15 năm kinh nghiệm quả không phải dạng vừa, rất chuyên nghiệp.',
+    date: '2026-07-30',
+    status: 'published',
+  },
+];
+
 // ---------- Sleep Wellness banner + programs + nightly ritual timeline
 
 export type Spa2SleepWellnessBanner = {
@@ -8611,6 +8788,91 @@ export const spa2FranchiseSteps: Spa2FranchiseStep[] = [
   },
 ];
 
+// ---------- Đăng ký nhượng quyền (admin-only operational data) ---------
+
+export type Spa2FranchiseApplicationStatus = 'pending' | 'contacted' | 'approved' | 'rejected';
+
+export type Spa2FranchiseApplication = {
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+  city: string;
+  budgetRange: string;
+  message: string;
+  submittedAt: string;
+  status: Spa2FranchiseApplicationStatus;
+};
+
+export const SPA2_FRANCHISE_APPLICATIONS: Spa2FranchiseApplication[] = [
+  {
+    id: 'fr-app-1',
+    name: 'Nguyễn Thị Hồng Nhung',
+    phone: '0908 123 456',
+    email: 'nhung.nguyen@gmail.com',
+    city: 'TP. Hồ Chí Minh',
+    budgetRange: '1.2 – 1.8 tỷ',
+    message: 'Muốn mở mô hình Compact ở khu Quận 7, đã có mặt bằng sẵn 100m².',
+    submittedAt: '2026-07-02',
+    status: 'approved',
+  },
+  {
+    id: 'fr-app-2',
+    name: 'Trần Văn Đức',
+    phone: '0913 555 678',
+    email: 'duc.tran@gmail.com',
+    city: 'Đà Nẵng',
+    budgetRange: '2.5 – 3.5 tỷ',
+    message: 'Quan tâm mô hình Standard, muốn tư vấn thêm về thời gian hoàn vốn thực tế.',
+    submittedAt: '2026-07-10',
+    status: 'contacted',
+  },
+  {
+    id: 'fr-app-3',
+    name: 'Lê Thị Bích Phượng',
+    phone: '0987 222 333',
+    email: 'phuong.le@gmail.com',
+    city: 'Hà Nội',
+    budgetRange: '5 – 8 tỷ',
+    message: 'Đang tìm mặt bằng 300m² khu Tây Hồ, muốn triển khai mô hình Premium.',
+    submittedAt: '2026-07-15',
+    status: 'pending',
+  },
+  {
+    id: 'fr-app-4',
+    name: 'Phạm Minh Quân',
+    phone: '0932 888 999',
+    email: 'quan.pham@gmail.com',
+    city: 'Cần Thơ',
+    budgetRange: '1.2 – 1.8 tỷ',
+    message: 'Muốn biết chính sách hỗ trợ đào tạo cho khu vực miền Tây.',
+    submittedAt: '2026-07-20',
+    status: 'pending',
+  },
+  {
+    id: 'fr-app-5',
+    name: 'Võ Thị Kim Anh',
+    phone: '0977 444 555',
+    email: 'kimanh.vo@gmail.com',
+    city: 'Bình Dương',
+    budgetRange: '2.5 – 3.5 tỷ',
+    message: 'Từng vận hành spa nhỏ 2 năm, muốn nâng cấp lên chuẩn nhượng quyền Standard.',
+    submittedAt: '2026-06-28',
+    status: 'rejected',
+  },
+  {
+    id: 'fr-app-6',
+    name: 'Hoàng Anh Tuấn',
+    phone: '0966 777 111',
+    email: 'tuan.hoang@gmail.com',
+    city: 'Hải Phòng',
+    budgetRange: '1.2 – 1.8 tỷ',
+    message: 'Cần tư vấn khảo sát địa điểm gần trung tâm thành phố.',
+    submittedAt: '2026-07-24',
+    status: 'contacted',
+  },
+];
+
 // ─── Group Booking (Đặt lịch nhóm) ───────────────────────────────────
 
 export type Spa2GroupBookingBanner = {
@@ -8941,6 +9203,460 @@ export const spa2WaitlistSlots: Spa2WaitlistSlot[] = [
     date: '20/07/2026',
     time: 'Cả ngày',
     waiting: 3,
+  },
+];
+
+// ─── Voucher Check (Kiểm tra voucher) ──────────────────────────────
+
+export type Spa2VoucherCheckBanner = {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+};
+
+export const spa2VoucherCheckBanner: Spa2VoucherCheckBanner = {
+  eyebrow: 'KIỂM TRA VOUCHER',
+  title: 'Tra cứu số dư thẻ quà tặng & voucher',
+  subtitle: 'Nhập mã để kiểm tra số dư, thời hạn và tình trạng hiệu lực của voucher.',
+};
+
+export type Spa2VoucherRecord = {
+  id: string;
+  code: string;
+  balance: number;
+  expiry: string;
+  type: string;
+};
+
+export const spa2VoucherRecords: Spa2VoucherRecord[] = [
+  {
+    id: 'voucher-1',
+    code: 'NSP-A7K92',
+    balance: 500000,
+    expiry: '31/12/2026',
+    type: 'Thẻ quà tặng',
+  },
+  {
+    id: 'voucher-2',
+    code: 'NEW30',
+    balance: 0,
+    expiry: '31/12/2026',
+    type: 'Mã giảm giá 30%',
+  },
+  {
+    id: 'voucher-3',
+    code: 'GIFT500K',
+    balance: 500000,
+    expiry: '15/08/2026',
+    type: 'Thẻ quà tặng',
+  },
+];
+
+export type Spa2VoucherFaq = {
+  id: string;
+  q: string;
+  a: string;
+};
+
+export const spa2VoucherFaqs: Spa2VoucherFaq[] = [
+  {
+    id: 'voucher-faq-1',
+    q: 'Tôi tìm mã voucher ở đâu?',
+    a: 'Mã voucher được gửi qua email/SMS khi bạn nhận thẻ quà tặng, hoặc in trên phiếu voucher vật lý.',
+  },
+  {
+    id: 'voucher-faq-2',
+    q: 'Voucher hết hạn có gia hạn được không?',
+    a: 'Voucher hết hạn không tự động gia hạn. Vui lòng liên hệ hotline trong vòng 30 ngày sau hết hạn để được xem xét từng trường hợp.',
+  },
+  {
+    id: 'voucher-faq-3',
+    q: 'Có thể dùng nhiều voucher cùng lúc không?',
+    a: 'Có thể kết hợp tối đa 2 voucher cho 1 hóa đơn, miễn tổng giá trị không vượt quá 80% hóa đơn.',
+  },
+];
+
+// ─── Accessibility (Tiếp cận & Nhu cầu đặc biệt) ──────────────────────────────
+
+export type Spa2AccessibilityBanner = {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+};
+
+export const spa2AccessibilityBanner: Spa2AccessibilityBanner = {
+  eyebrow: 'TIẾP CẬN CHO MỌI NGƯỜI',
+  title: 'Chăm sóc sức khỏe không rào cản',
+  subtitle:
+    'Nature Spa cam kết mang đến trải nghiệm thư giãn trọn vẹn cho mọi khách hàng, không phân biệt khả năng.',
+};
+
+export type Spa2AccessibilityFeature = {
+  id: string;
+  icon: string;
+  title: string;
+  desc: string;
+};
+
+export const spa2AccessibilityFeatures: Spa2AccessibilityFeature[] = [
+  {
+    id: 'wheelchair-access',
+    icon: 'solar:wheelchair-bold-duotone',
+    title: 'Lối đi cho xe lăn',
+    desc: 'Toàn bộ 4 chi nhánh có lối vào không bậc thềm, thang máy và phòng vệ sinh đạt chuẩn tiếp cận.',
+  },
+  {
+    id: 'hearing-support',
+    icon: 'solar:hearing-bold-duotone',
+    title: 'Hỗ trợ khiếm thính',
+    desc: 'KTV được đào tạo giao tiếp bằng chữ viết và ngôn ngữ ký hiệu cơ bản khi cần thiết.',
+  },
+  {
+    id: 'vision-support',
+    icon: 'solar:eye-closed-bold-duotone',
+    title: 'Hỗ trợ khiếm thị',
+    desc: 'Nhân viên hỗ trợ dẫn đường tận nơi, mô tả chi tiết quy trình trước khi thực hiện.',
+  },
+  {
+    id: 'chronic-condition-adjustment',
+    icon: 'solar:health-bold-duotone',
+    title: 'Điều chỉnh cho bệnh mãn tính',
+    desc: 'Tham vấn với KTV về tiểu đường, cao huyết áp, hoặc các tình trạng sức khỏe đặc biệt trước liệu trình.',
+  },
+  {
+    id: 'adjustable-bed-chair',
+    icon: 'solar:accessibility-bold-duotone',
+    title: 'Giường & ghế điều chỉnh',
+    desc: 'Giường massage có thể điều chỉnh độ cao, ghế hỗ trợ cho khách hạn chế vận động.',
+  },
+  {
+    id: 'free-companion',
+    icon: 'solar:user-heart-bold-duotone',
+    title: 'Người đồng hành miễn phí',
+    desc: 'Người chăm sóc/phiên dịch đi cùng được miễn phí vào khu vực chờ và hỗ trợ trong phòng nếu cần.',
+  },
+];
+
+export type Spa2SpecialNeedsCategory = {
+  id: string;
+  name: string;
+  icon: string;
+  note: string;
+};
+
+export const spa2SpecialNeedsCategories: Spa2SpecialNeedsCategory[] = [
+  {
+    id: 'elderly',
+    name: 'Người cao tuổi',
+    icon: 'solar:user-bold',
+    note: 'Áp lực massage nhẹ nhàng hơn, thời gian nghỉ giữa các bước dài hơn.',
+  },
+  {
+    id: 'mobility-disability',
+    name: 'Khuyết tật vận động',
+    icon: 'solar:wheelchair-bold',
+    note: 'Hỗ trợ di chuyển, giường/ghế điều chỉnh, không gian đủ rộng.',
+  },
+  {
+    id: 'cancer-patient',
+    name: 'Bệnh nhân ung thư (đang/đã điều trị)',
+    icon: 'solar:health-bold',
+    note: 'Liệu trình Oncology-safe, tránh vùng nhạy cảm, tham vấn bác sĩ điều trị.',
+  },
+  {
+    id: 'sensory-disorder',
+    name: 'Rối loạn cảm giác (tự kỷ, ASD)',
+    icon: 'solar:magic-stick-bold',
+    note: 'Không gian yên tĩnh riêng, giảm ánh sáng/mùi hương mạnh, thời gian linh hoạt.',
+  },
+];
+
+export type Spa2AccessibilityChecklistItem = {
+  id: string;
+  label: string;
+};
+
+export const spa2AccessibilityChecklist: Spa2AccessibilityChecklistItem[] = [
+  { id: 'no-step-entrance', label: 'Lối vào không bậc thềm' },
+  { id: 'accessible-restroom', label: 'Phòng vệ sinh đạt chuẩn' },
+  { id: 'elevator-wide-path', label: 'Thang máy / lối đi rộng' },
+];
+
+// ---------- Đặt lịch nhóm — quản lý yêu cầu đặt (admin-only operational data) ----
+
+export type Spa2GroupBookingRequestStatus = 'pending' | 'confirmed' | 'completed' | 'cancelled';
+
+export type Spa2GroupBookingRequest = {
+  id: string;
+  contactName: string;
+  phone: string;
+  groupSize: number;
+  tierId: string;
+  occasionId: string;
+  date: string;
+  time: string;
+  note: string;
+  createdAt: string;
+  status: Spa2GroupBookingRequestStatus;
+};
+
+export const SPA2_GROUP_BOOKING_REQUESTS: Spa2GroupBookingRequest[] = [
+  {
+    id: 'gbr-1',
+    contactName: 'Nguyễn Thu Hằng',
+    phone: '0908 123 456',
+    groupSize: 6,
+    tierId: 'small-group',
+    occasionId: 'friends-reunion',
+    date: '2026-08-10',
+    time: '14:00',
+    note: 'Muốn phòng liền kề cho cả nhóm',
+    createdAt: '2026-08-01',
+    status: 'confirmed',
+  },
+  {
+    id: 'gbr-2',
+    contactName: 'Trần Đức Anh',
+    phone: '0912 345 678',
+    groupSize: 12,
+    tierId: 'medium-group',
+    occasionId: 'team-building',
+    date: '2026-08-15',
+    time: '09:00',
+    note: 'Công ty tổ chức team building quý 3',
+    createdAt: '2026-08-02',
+    status: 'pending',
+  },
+  {
+    id: 'gbr-3',
+    contactName: 'Lê Phương Thảo',
+    phone: '0987 654 321',
+    groupSize: 20,
+    tierId: 'large-group',
+    occasionId: 'company-party',
+    date: '2026-07-30',
+    time: '18:00',
+    note: 'Tiệc cuối năm, cần thêm dịch vụ ăn nhẹ',
+    createdAt: '2026-07-20',
+    status: 'completed',
+  },
+  {
+    id: 'gbr-4',
+    contactName: 'Phạm Gia Bảo',
+    phone: '0934 567 890',
+    groupSize: 8,
+    tierId: 'medium-group',
+    occasionId: 'family-reunion',
+    date: '2026-08-18',
+    time: '10:30',
+    note: '',
+    createdAt: '2026-08-03',
+    status: 'pending',
+  },
+  {
+    id: 'gbr-5',
+    contactName: 'Vũ Ngọc Diệp',
+    phone: '0945 678 901',
+    groupSize: 5,
+    tierId: 'small-group',
+    occasionId: 'friends-reunion',
+    date: '2026-07-25',
+    time: '15:00',
+    note: 'Khách báo huỷ do thay đổi lịch trình',
+    createdAt: '2026-07-15',
+    status: 'cancelled',
+  },
+  {
+    id: 'gbr-6',
+    contactName: 'Đỗ Minh Quân',
+    phone: '0966 789 012',
+    groupSize: 35,
+    tierId: 'corporate-event',
+    occasionId: 'company-party',
+    date: '2026-09-01',
+    time: '17:00',
+    note: 'Sự kiện tri ân khách hàng công ty',
+    createdAt: '2026-08-05',
+    status: 'confirmed',
+  },
+];
+
+// ---------- Danh sách người chờ — quản lý người chờ (admin-only operational data) ----
+
+export type Spa2WaitlistEntryStatus = 'waiting' | 'notified' | 'booked' | 'expired';
+
+export type Spa2WaitlistEntry = {
+  id: string;
+  customerName: string;
+  phone: string;
+  slotId: string;
+  joinedAt: string;
+  position: number;
+  status: Spa2WaitlistEntryStatus;
+};
+
+export const SPA2_WAITLIST_ENTRIES: Spa2WaitlistEntry[] = [
+  {
+    id: 'wle-1',
+    customerName: 'Hoàng Thị Mai',
+    phone: '0901 222 333',
+    slotId: 'slot-1',
+    joinedAt: '2026-07-10',
+    position: 1,
+    status: 'notified',
+  },
+  {
+    id: 'wle-2',
+    customerName: 'Nguyễn Văn Phúc',
+    phone: '0912 333 444',
+    slotId: 'slot-1',
+    joinedAt: '2026-07-11',
+    position: 2,
+    status: 'waiting',
+  },
+  {
+    id: 'wle-3',
+    customerName: 'Trần Kim Ngân',
+    phone: '0923 444 555',
+    slotId: 'slot-2',
+    joinedAt: '2026-07-09',
+    position: 1,
+    status: 'booked',
+  },
+  {
+    id: 'wle-4',
+    customerName: 'Lê Anh Dũng',
+    phone: '0934 555 666',
+    slotId: 'slot-3',
+    joinedAt: '2026-07-12',
+    position: 1,
+    status: 'waiting',
+  },
+  {
+    id: 'wle-5',
+    customerName: 'Phạm Thị Bích',
+    phone: '0945 666 777',
+    slotId: 'slot-3',
+    joinedAt: '2026-07-13',
+    position: 2,
+    status: 'waiting',
+  },
+  {
+    id: 'wle-6',
+    customerName: 'Vũ Quang Huy',
+    phone: '0956 777 888',
+    slotId: 'slot-4',
+    joinedAt: '2026-07-05',
+    position: 1,
+    status: 'expired',
+  },
+];
+
+// ---------- Kids & Teen Spa banner + safety badges + services
+
+export type Spa2KidsSpaBanner = {
+  emoji: string;
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  alertText: string;
+};
+
+export const spa2KidsSpaBanner: Spa2KidsSpaBanner = {
+  emoji: '🌸✨💆',
+  eyebrow: 'SPA DÀNH CHO TRẺ EM & TEEN',
+  title: 'Những khoảnh khắc làm đẹp an toàn & vui vẻ cho bé',
+  subtitle:
+    'Sản phẩm 100% hữu cơ, an toàn cho trẻ — mang đến trải nghiệm spa đầu tiên thật đặc biệt.',
+  alertText: 'Phụ huynh có thể ở lại trong suốt quá trình thực hiện dịch vụ cho con.',
+};
+
+export type Spa2KidsSafetyBadge = {
+  id: string;
+  icon: string;
+  label: string;
+};
+
+export const spa2KidsSafetyBadges: Spa2KidsSafetyBadge[] = [
+  { id: 'kids-badge-1', icon: 'solar:leaf-bold', label: 'pH trung tính' },
+  { id: 'kids-badge-2', icon: 'solar:shield-check-bold', label: 'Không paraben' },
+  { id: 'kids-badge-3', icon: 'solar:drop-bold', label: 'Không cồn' },
+  { id: 'kids-badge-4', icon: 'solar:check-circle-bold', label: 'Bác sĩ nhi chứng nhận' },
+  { id: 'kids-badge-5', icon: 'solar:heart-bold', label: 'An toàn từ 5 tuổi' },
+  { id: 'kids-badge-6', icon: 'solar:star-bold', label: 'Sản phẩm hữu cơ' },
+];
+
+export type Spa2KidsService = {
+  id: string;
+  name: string;
+  ageRange: string;
+  price: number;
+  duration: string;
+  icon: string;
+  desc: string;
+  color: string;
+};
+
+export const spa2KidsServices: Spa2KidsService[] = [
+  {
+    id: 'kids-svc-1',
+    name: 'Mini Facial Cho Bé',
+    ageRange: '8–12 tuổi',
+    price: 390000,
+    duration: '30 phút',
+    icon: 'solar:face-scan-circle-bold-duotone',
+    desc: 'Làm sạch nhẹ nhàng và dưỡng ẩm với sản phẩm 100% thiên nhiên, pH trung tính.',
+    color: '#F48FB1',
+  },
+  {
+    id: 'kids-svc-2',
+    name: 'Teen Skin Clear',
+    ageRange: '13–17 tuổi',
+    price: 590000,
+    duration: '45 phút',
+    icon: 'solar:leaf-bold-duotone',
+    desc: 'Kiểm soát dầu và mụn đầu đen giai đoạn dậy thì — không dùng hóa chất mạnh.',
+    color: '#2E8B7A',
+  },
+  {
+    id: 'kids-svc-3',
+    name: 'Nail Art Cho Bé',
+    ageRange: '6–12 tuổi',
+    price: 290000,
+    duration: '45 phút',
+    icon: 'solar:hand-heart-bold-duotone',
+    desc: 'Làm đẹp móng với sơn không độc hại, an toàn cho trẻ em — màu sắc ngộ nghĩnh.',
+    color: '#EF9F27',
+  },
+  {
+    id: 'kids-svc-4',
+    name: 'Gội Đầu Thư Giãn',
+    ageRange: '5+ tuổi',
+    price: 190000,
+    duration: '30 phút',
+    icon: 'solar:magic-stick-3-bold-duotone',
+    desc: 'Gội đầu với shampoo thảo mộc dành riêng cho trẻ, massage nhẹ nhàng thư giãn.',
+    color: '#7F77DD',
+  },
+  {
+    id: 'kids-svc-5',
+    name: 'Mẹ & Bé Spa Together',
+    ageRange: 'Mọi lứa tuổi',
+    price: 1290000,
+    duration: '90 phút',
+    icon: 'solar:heart-bold-duotone',
+    desc: 'Trải nghiệm spa song song — mẹ làm facial, bé làm nail — kỷ niệm đáng nhớ.',
+    color: '#C2185B',
+  },
+  {
+    id: 'kids-svc-6',
+    name: 'Birthday Princess Party',
+    ageRange: '6–14 tuổi',
+    price: 2490000,
+    duration: '2 giờ (nhóm 4+)',
+    icon: 'solar:gift-bold-duotone',
+    desc: 'Tiệc sinh nhật spa phong cách công chúa — nail, facial nhẹ, makeup và chụp ảnh.',
+    color: '#E91E63',
   },
 ];
 
