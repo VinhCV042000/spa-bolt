@@ -33,6 +33,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { uuidv4 } from 'src/utils/uuidv4';
+
 import { useTranslate } from 'src/locales';
 import { bgBlur, maxLine, varAlpha } from 'src/theme/styles';
 import {
@@ -60,6 +62,7 @@ import {
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Manages the same post list — and the page banner — that
@@ -116,7 +119,13 @@ function PreviewFrame({ children }: { children: ReactNode }) {
   );
 }
 
-type FormShape = Omit<Spa2BlogPost, 'status' | 'tags'> & { tagsInput: string };
+type FormShape = Omit<Spa2BlogPost, 'status' | 'tags'>;
+
+// Row-list editor state for the post's tags — mirrors the `IncludeRow`
+// pattern in spa2-special-occasions-manage-view.tsx (package "includes"
+// editor): a stable synthetic `id` per row so Spa2SortableGrid can track
+// drag order independent of the (editable, possibly duplicate) tag text.
+type TagRow = { id: string; value: string };
 
 const STATUSES: Spa2BlogPost['status'][] = ['Đã đăng', 'Chờ duyệt', 'Bản nháp'];
 const PER_PAGE = 6;
@@ -140,7 +149,6 @@ const emptyForm = (): FormShape => ({
   date: new Date().toLocaleDateString('vi-VN'),
   category: SPA2_BLOG_CATEGORY_NAMES[0] ?? 'Skincare',
   readTime: '5 phút',
-  tagsInput: '',
   content: '',
 });
 
@@ -192,7 +200,14 @@ export function Spa2BlogManageView() {
   const [search, setSearch] = useState('');
   const [statusTab, setStatusTab] = useState<'all' | Spa2BlogPost['status']>('all');
   const [categoryFilter, setCategoryFilter] = useState<'all' | string>('all');
-  const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'title' | 'category'>('newest');
+  // 'manual' preserves the current array order (i.e. lets drag-reorder stick)
+  // — same "no-op sort" convention as `sortBy === 'default'` in
+  // spa2-services-manage-view.tsx, and it's also the default here so the
+  // grid is draggable out of the box. Any other option re-sorts on every
+  // render, so a drag would immediately be undone by that computed order.
+  const [sortBy, setSortBy] = useState<'manual' | 'newest' | 'oldest' | 'title' | 'category'>(
+    'manual'
+  );
   const [page, setPage] = useState(1);
   const [openForm, setOpenForm] = useState(false);
   const [editSlug, setEditSlug] = useState<string | null>(null);
@@ -200,6 +215,7 @@ export function Spa2BlogManageView() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [form, setForm] = useState<FormShape>(emptyForm);
+  const [tagRows, setTagRows] = useState<TagRow[]>([]);
 
   // ---- Banner ----
   const updateBanner = (key: 'eyebrow' | 'title' | 'subtitle', value: string) => {
@@ -255,8 +271,12 @@ export function Spa2BlogManageView() {
         );
         break;
       case 'newest':
-      default:
         arr.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+        break;
+      case 'manual':
+      default:
+        // No sort applied — keeps whatever order drag-reorder (or the
+        // underlying SPA2_POSTS array) left `items`/`filtered` in.
         break;
     }
     return arr;
@@ -306,6 +326,7 @@ export function Spa2BlogManageView() {
 
   const openCreate = () => {
     setForm(emptyForm());
+    setTagRows([]);
     setEditSlug(null);
     setOpenForm(true);
   };
@@ -324,9 +345,9 @@ export function Spa2BlogManageView() {
       date: p.date,
       category: p.category,
       readTime: p.readTime,
-      tagsInput: p.tags.join(', '),
       content: p.content,
     });
+    setTagRows(p.tags.map((tag) => ({ id: uuidv4(), value: tag })));
     setEditSlug(p.slug);
     setOpenForm(true);
   };
@@ -336,15 +357,26 @@ export function Spa2BlogManageView() {
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setForm((prev) => ({ ...prev, [k]: e.target.value }) as FormShape);
 
+  // ---- Tags row-list editor (mirrors packageIncludes in
+  // spa2-special-occasions-manage-view.tsx) ----
+  const addTagRow = () => {
+    setTagRows((prev) => [...prev, { id: uuidv4(), value: '' }]);
+  };
+  const updateTagRow = (id: string, value: string) => {
+    setTagRows((prev) => prev.map((row) => (row.id === id ? { ...row, value } : row)));
+  };
+  const removeTagRow = (id: string) => {
+    setTagRows((prev) => prev.filter((row) => row.id !== id));
+  };
+  const reorderTagRows = (next: TagRow[]) => {
+    setTagRows(next);
+  };
+
   const handleSubmit = useCallback(() => {
     const finalSlug = form.slug || form.title.toLowerCase().replace(/\s+/g, '-').slice(0, 80);
-    const tags = form.tagsInput
-      .split(',')
-      .map((t2) => t2.trim())
-      .filter(Boolean);
-    const { tagsInput: _tagsInput, ...rest2 } = form;
+    const tags = tagRows.map((row) => row.value.trim()).filter(Boolean);
     const next: Spa2BlogPost = {
-      ...rest2,
+      ...form,
       slug: finalSlug,
       tags,
       status: editSlug
@@ -361,7 +393,7 @@ export function Spa2BlogManageView() {
       // Brand-new post: jump straight into the full editor to write real content.
       navigate(paths.dashboard.spa2.blogDetails(next.slug));
     }
-  }, [form, editSlug, items, navigate]);
+  }, [form, tagRows, editSlug, items, navigate]);
 
   const handleDelete = useCallback(() => {
     if (deleteSlug) spa2DeletePost(deleteSlug);
@@ -369,6 +401,21 @@ export function Spa2BlogManageView() {
     setDeleteSlug(null);
     markDirty();
   }, [deleteSlug]);
+
+  // Reorders the post card grid. `next` is the reordered *visible*
+  // (filtered + paginated) subset, aliased with a synthetic `id` (= slug) to
+  // satisfy Spa2SortableGrid's `{ id: string }` constraint since
+  // Spa2BlogPost has no `id` field. Splice it back into the full `items`
+  // array by slug so posts outside the current page/filter/search keep
+  // their slot (same technique as handleReorderServices in
+  // spa2-services-manage-view.tsx / reorderCombos in
+  // spa2-offers-manage-view.tsx), rather than a naive full-array reorder.
+  const handleReorderPosts = useCallback((next: (Spa2BlogPost & { id: string })[]) => {
+    const queue = next.map(({ id, ...rest }) => rest);
+    const nextSlugs = new Set(queue.map((p) => p.slug));
+    setItems((prev) => prev.map((p) => (nextSlugs.has(p.slug) ? queue.shift()! : p)));
+    markDirty();
+  }, []);
 
   const handleApprove = useCallback((slug: string) => {
     setItems((prev) => {
@@ -681,11 +728,14 @@ export function Spa2BlogManageView() {
                     label="Sắp xếp"
                     value={sortBy}
                     onChange={(e) => {
-                      setSortBy(e.target.value as 'newest' | 'oldest' | 'title' | 'category');
+                      setSortBy(
+                        e.target.value as 'manual' | 'newest' | 'oldest' | 'title' | 'category'
+                      );
                       setPage(1);
                     }}
                     sx={{ width: { xs: '100%', sm: 220 } }}
                   >
+                    <MenuItem value="manual">Thứ tự tuỳ chỉnh (kéo-thả)</MenuItem>
                     <MenuItem value="newest">Mới nhất</MenuItem>
                     <MenuItem value="oldest">Cũ nhất</MenuItem>
                     <MenuItem value="title">Tiêu đề (A-Z)</MenuItem>
@@ -768,159 +818,186 @@ export function Spa2BlogManageView() {
           <Grid container spacing={2}>
             {/* Main column */}
             <Grid xs={12} md={8}>
-              <Grid container spacing={2} columns={12}>
-                {paginatedItems.map((p) => (
-                  <Grid key={p.slug} xs={12} sm={6}>
-                    <Card
-                      sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        height: '100%',
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          position: 'relative',
-                        }}
-                      >
-                        <Checkbox
-                          size="small"
-                          checked={selected.has(p.slug)}
-                          onChange={() => toggleSelect(p.slug)}
-                          sx={{
-                            position: 'absolute',
-                            zIndex: 1,
-                            top: 8,
-                            left: 8,
-                            color: 'white',
-                            bgcolor: 'rgba(0,0,0,0.28)',
-                            borderRadius: 1,
-                            '&:hover': { bgcolor: 'rgba(0,0,0,0.4)' },
-                            '&.Mui-checked': { color: SPA2_TEAL },
-                          }}
-                        />
-                        <Chip
-                          size="small"
-                          label={p.status}
-                          color={STATUS_COLOR[p.status]}
-                          variant="filled"
-                          sx={{ position: 'absolute', zIndex: 1, top: 12, right: 12 }}
-                        />
-                        <Image alt={p.title} src={p.cover} ratio="4/3" />
-                      </Box>
-                      <Stack spacing={1.25} sx={{ p: 2.5, flexGrow: 1 }}>
-                        <Chip
-                          size="small"
-                          label={p.category}
-                          sx={{
-                            alignSelf: 'flex-start',
-                            bgcolor: SPA2_CREAM,
-                            color: SPA2_TEAL_DARK,
-                          }}
-                        />
-                        <Link
-                          component={RouterLink}
-                          href={paths.dashboard.spa2.blogDetails(p.slug)}
-                          sx={{
-                            color: SPA2_INK,
-                            textDecoration: 'none',
-                            '&:hover': { color: SPA2_TEAL },
-                          }}
-                        >
-                          <Typography
-                            variant="subtitle1"
-                            sx={{ ...maxLine({ line: 2 }), lineHeight: 1.4, minHeight: 44 }}
+              <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1, display: 'block' }}>
+                Kéo thả để sắp xếp lại thứ tự hiển thị bài viết
+                {sortBy !== 'manual' && ' (chỉ áp dụng khi "Sắp xếp" đang ở "Thứ tự tuỳ chỉnh")'}.
+              </Typography>
+              <Spa2SortableGrid
+                items={paginatedItems.map((p) => ({ ...p, id: p.slug }))}
+                onReorder={handleReorderPosts}
+              >
+                <Grid container spacing={2} columns={12}>
+                  {paginatedItems.map((p) => (
+                    <Grid key={p.slug} xs={12} sm={6}>
+                      <Spa2SortableItem id={p.slug}>
+                        {(sortable) => (
+                          <Card
+                            sx={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              height: '100%',
+                            }}
                           >
-                            {p.title}
-                          </Typography>
-                        </Link>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{ ...maxLine({ line: 2 }), minHeight: 40 }}
-                        >
-                          {p.excerpt}
-                        </Typography>
-                        <Typography variant="caption" color="text.disabled">
-                          {p.author} · {p.date} · {p.readTime}
-                        </Typography>
-                        <Divider sx={{ mt: 'auto' }} />
-                        <Stack direction="row" justifyContent="space-between" alignItems="center">
-                          <Stack direction="row" spacing={0.5}>
-                            {p.status !== 'Đã đăng' ? (
-                              <Tooltip title="Duyệt & đăng">
-                                <IconButton size="small" onClick={() => handleApprove(p.slug)}>
-                                  <Iconify icon="solar:check-circle-bold" color="success.main" />
-                                </IconButton>
-                              </Tooltip>
-                            ) : (
-                              <Tooltip title="Chuyển về nháp">
-                                <IconButton size="small" onClick={() => handleToDraft(p.slug)}>
-                                  <Iconify icon="solar:eye-closed-bold" color="warning.main" />
-                                </IconButton>
-                              </Tooltip>
-                            )}
-                            <Tooltip title="Xem public">
-                              <IconButton
+                            <Box
+                              sx={{
+                                position: 'relative',
+                              }}
+                            >
+                              <Checkbox
                                 size="small"
-                                component={RouterLink}
-                                href={paths.spa2.blogDetails(p.slug)}
-                                target="_blank"
-                              >
-                                <Iconify icon="solar:eye-bold" />
-                              </IconButton>
-                            </Tooltip>
-                          </Stack>
-                          <Stack direction="row" spacing={0.5}>
-                            <Tooltip title="Sửa nhanh (thông tin)">
-                              <IconButton size="small" onClick={() => openEdit(p)}>
-                                <Iconify icon="solar:pen-bold" />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Soạn nội dung đầy đủ">
-                              <IconButton
+                                checked={selected.has(p.slug)}
+                                onChange={() => toggleSelect(p.slug)}
+                                sx={{
+                                  position: 'absolute',
+                                  zIndex: 1,
+                                  top: 8,
+                                  left: 8,
+                                  color: 'white',
+                                  bgcolor: 'rgba(0,0,0,0.28)',
+                                  borderRadius: 1,
+                                  '&:hover': { bgcolor: 'rgba(0,0,0,0.4)' },
+                                  '&.Mui-checked': { color: SPA2_TEAL },
+                                }}
+                              />
+                              <Chip
                                 size="small"
+                                label={p.status}
+                                color={STATUS_COLOR[p.status]}
+                                variant="filled"
+                                sx={{ position: 'absolute', zIndex: 1, top: 12, right: 12 }}
+                              />
+                              <Image alt={p.title} src={p.cover} ratio="4/3" />
+                            </Box>
+                            <Stack spacing={1.25} sx={{ p: 2.5, flexGrow: 1 }}>
+                              <Chip
+                                size="small"
+                                label={p.category}
+                                sx={{
+                                  alignSelf: 'flex-start',
+                                  bgcolor: SPA2_CREAM,
+                                  color: SPA2_TEAL_DARK,
+                                }}
+                              />
+                              <Link
                                 component={RouterLink}
                                 href={paths.dashboard.spa2.blogDetails(p.slug)}
-                                sx={{ color: SPA2_TEAL }}
+                                sx={{
+                                  color: SPA2_INK,
+                                  textDecoration: 'none',
+                                  '&:hover': { color: SPA2_TEAL },
+                                }}
                               >
-                                <Iconify icon="solar:pen-new-square-bold" />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Xoá">
-                              <IconButton
-                                size="small"
-                                color="error"
-                                onClick={() => setDeleteSlug(p.slug)}
+                                <Typography
+                                  variant="subtitle1"
+                                  sx={{ ...maxLine({ line: 2 }), lineHeight: 1.4, minHeight: 44 }}
+                                >
+                                  {p.title}
+                                </Typography>
+                              </Link>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                sx={{ ...maxLine({ line: 2 }), minHeight: 40 }}
                               >
-                                <Iconify icon="solar:trash-bin-trash-bold" />
-                              </IconButton>
-                            </Tooltip>
-                          </Stack>
-                        </Stack>
-                      </Stack>
-                    </Card>
-                  </Grid>
-                ))}
+                                {p.excerpt}
+                              </Typography>
+                              <Typography variant="caption" color="text.disabled">
+                                {p.author} · {p.date} · {p.readTime}
+                              </Typography>
+                              <Divider sx={{ mt: 'auto' }} />
+                              <Stack
+                                direction="row"
+                                justifyContent="space-between"
+                                alignItems="center"
+                              >
+                                <Stack direction="row" spacing={0.5}>
+                                  <Spa2DragHandle sortable={sortable} />
+                                  {p.status !== 'Đã đăng' ? (
+                                    <Tooltip title="Duyệt & đăng">
+                                      <IconButton
+                                        size="small"
+                                        onClick={() => handleApprove(p.slug)}
+                                      >
+                                        <Iconify
+                                          icon="solar:check-circle-bold"
+                                          color="success.main"
+                                        />
+                                      </IconButton>
+                                    </Tooltip>
+                                  ) : (
+                                    <Tooltip title="Chuyển về nháp">
+                                      <IconButton size="small" onClick={() => handleToDraft(p.slug)}>
+                                        <Iconify
+                                          icon="solar:eye-closed-bold"
+                                          color="warning.main"
+                                        />
+                                      </IconButton>
+                                    </Tooltip>
+                                  )}
+                                  <Tooltip title="Xem public">
+                                    <IconButton
+                                      size="small"
+                                      component={RouterLink}
+                                      href={paths.spa2.blogDetails(p.slug)}
+                                      target="_blank"
+                                    >
+                                      <Iconify icon="solar:eye-bold" />
+                                    </IconButton>
+                                  </Tooltip>
+                                </Stack>
+                                <Stack direction="row" spacing={0.5}>
+                                  <Tooltip title="Sửa nhanh (thông tin)">
+                                    <IconButton size="small" onClick={() => openEdit(p)}>
+                                      <Iconify icon="solar:pen-bold" />
+                                    </IconButton>
+                                  </Tooltip>
+                                  <Tooltip title="Soạn nội dung đầy đủ">
+                                    <IconButton
+                                      size="small"
+                                      component={RouterLink}
+                                      href={paths.dashboard.spa2.blogDetails(p.slug)}
+                                      sx={{ color: SPA2_TEAL }}
+                                    >
+                                      <Iconify icon="solar:pen-new-square-bold" />
+                                    </IconButton>
+                                  </Tooltip>
+                                  <Tooltip title="Xoá">
+                                    <IconButton
+                                      size="small"
+                                      color="error"
+                                      onClick={() => setDeleteSlug(p.slug)}
+                                    >
+                                      <Iconify icon="solar:trash-bin-trash-bold" />
+                                    </IconButton>
+                                  </Tooltip>
+                                </Stack>
+                              </Stack>
+                            </Stack>
+                          </Card>
+                        )}
+                      </Spa2SortableItem>
+                    </Grid>
+                  ))}
 
-                {filtered.length === 0 && (
-                  <Grid xs={12}>
-                    <Card sx={{ p: 6, textAlign: 'center', borderRadius: 3 }}>
-                      <Iconify
-                        icon="solar:notebook-bold-duotone"
-                        width={48}
-                        sx={{ color: SPA2_TEAL, mb: 1 }}
-                      />
-                      <Typography variant="h6" sx={{ color: SPA2_INK }}>
-                        Không tìm thấy bài viết
-                      </Typography>
-                      <Typography color="text.secondary" variant="body2">
-                        Thử đổi từ khoá hoặc tạo bài viết mới.
-                      </Typography>
-                    </Card>
-                  </Grid>
-                )}
-              </Grid>
+                  {filtered.length === 0 && (
+                    <Grid xs={12}>
+                      <Card sx={{ p: 6, textAlign: 'center', borderRadius: 3 }}>
+                        <Iconify
+                          icon="solar:notebook-bold-duotone"
+                          width={48}
+                          sx={{ color: SPA2_TEAL, mb: 1 }}
+                        />
+                        <Typography variant="h6" sx={{ color: SPA2_INK }}>
+                          Không tìm thấy bài viết
+                        </Typography>
+                        <Typography color="text.secondary" variant="body2">
+                          Thử đổi từ khoá hoặc tạo bài viết mới.
+                        </Typography>
+                      </Card>
+                    </Grid>
+                  )}
+                </Grid>
+              </Spa2SortableGrid>
 
               {pageCount > 1 && (
                 <Stack alignItems="center" sx={{ mt: 4 }}>
@@ -1337,14 +1414,57 @@ export function Spa2BlogManageView() {
                   height={160}
                   helperText="Kéo thả ảnh, dán URL, hoặc tải ảnh từ máy — kéo trên ảnh để chọn điểm lấy nét."
                 />
-                <TextField
-                  label="Tags"
-                  size="small"
-                  value={form.tagsInput}
-                  onChange={handleField('tagsInput')}
-                  fullWidth
-                  helperText="Cách nhau bởi dấu phẩy, ví dụ: skincare, mùa lạnh"
-                />
+                <Box>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    sx={{ mb: 1 }}
+                  >
+                    <Typography variant="caption" color="text.secondary">
+                      Tags
+                    </Typography>
+                    <Button
+                      size="small"
+                      startIcon={<Iconify icon="mingcute:add-line" width={16} />}
+                      onClick={addTagRow}
+                    >
+                      Thêm tag
+                    </Button>
+                  </Stack>
+                  {tagRows.length === 0 && (
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                      Chưa có tag nào — nhấn &quot;Thêm tag&quot; để bắt đầu.
+                    </Typography>
+                  )}
+                  <Spa2SortableGrid items={tagRows} onReorder={reorderTagRows}>
+                    <Stack spacing={1}>
+                      {tagRows.map((row) => (
+                        <Spa2SortableItem key={row.id} id={row.id}>
+                          {(sortable) => (
+                            <Stack direction="row" spacing={1} alignItems="center">
+                              <Spa2DragHandle sortable={sortable} />
+                              <TextField
+                                fullWidth
+                                size="small"
+                                value={row.value}
+                                onChange={(e) => updateTagRow(row.id, e.target.value)}
+                                placeholder="VD: skincare, mùa lạnh"
+                              />
+                              <IconButton
+                                size="small"
+                                color="error"
+                                onClick={() => removeTagRow(row.id)}
+                              >
+                                <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                              </IconButton>
+                            </Stack>
+                          )}
+                        </Spa2SortableItem>
+                      ))}
+                    </Stack>
+                  </Spa2SortableGrid>
+                </Box>
                 <TextField
                   label="Slug (để trống sẽ tự tạo)"
                   size="small"

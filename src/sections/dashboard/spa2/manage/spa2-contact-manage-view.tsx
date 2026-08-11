@@ -62,6 +62,7 @@ import {
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2ListAnalytic } from './spa2-list-analytic';
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages.tsx's
 // Spa2ContactPageView renders on the public /spa2/contact page: the page
@@ -567,74 +568,74 @@ export function Spa2ContactManageView() {
 
           {/* KPI */}
           <Scrollbar sx={{ minHeight: 108 }}>
-            <Stack spacing={2} direction="row" sx={{ py: 2, px: 1 }}>
-              {[
-                {
-                  key: 'all',
-                  label: 'Tất cả',
-                  value: submissionCounts.all,
-                  icon: 'solar:chat-round-dots-bold-duotone',
-                },
-                {
-                  key: 'new',
-                  label: SUBMISSION_STATUS_LABEL.new,
-                  value: submissionCounts.new,
-                  icon: 'solar:bell-bing-bold-duotone',
-                },
-                {
-                  key: 'replied',
-                  label: SUBMISSION_STATUS_LABEL.replied,
-                  value: submissionCounts.replied,
-                  icon: 'solar:check-circle-bold-duotone',
-                },
-                {
-                  key: 'closed',
-                  label: SUBMISSION_STATUS_LABEL.closed,
-                  value: submissionCounts.closed,
-                  icon: 'solar:close-circle-bold-duotone',
-                },
-              ].map((k) => (
-                <Card
-                  onClick={() => {
-                    setSubmissionStatusFilter(k.key as SubmissionStatusFilter);
-                    submissionsTable.onResetPage();
-                  }}
-                  sx={{
-                    p: 2,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 1.5,
-                    width: 1,
-                    minWidth: 180,
-                    bgcolor: submissionStatusFilter === k.key ? `${SPA2_TEAL}12` : SPA2_CREAM,
-                    transition: 'all .2s',
-                    '&:hover': { borderColor: SPA2_TEAL },
-                  }}
-                >
-                  <Box
-                    sx={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: 1.5,
-                      bgcolor: `${SPA2_TEAL}18`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <Iconify icon={k.icon} width={22} sx={{ color: SPA2_TEAL_DARK }} />
-                  </Box>
-                  <Box>
-                    <Typography variant="h6" sx={{ color: SPA2_TEAL_DARK, lineHeight: 1 }}>
-                      {k.value}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      {k.label}
-                    </Typography>
-                  </Box>
-                </Card>
-              ))}
+            <Stack
+              direction="row"
+              spacing={1}
+              divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+              sx={{ py: 2, px: 2.5 }}
+            >
+              <Spa2ListAnalytic
+                title="Tất cả"
+                total={submissionCounts.all}
+                percent={100}
+                icon="solar:chat-round-dots-bold-duotone"
+                color={SPA2_TEAL}
+                unitLabel="liên hệ"
+                active={submissionStatusFilter === 'all'}
+                onClick={() => {
+                  setSubmissionStatusFilter('all');
+                  submissionsTable.onResetPage();
+                }}
+              />
+              <Spa2ListAnalytic
+                title={SUBMISSION_STATUS_LABEL.new}
+                total={submissionCounts.new}
+                percent={
+                  submissionCounts.all ? (submissionCounts.new / submissionCounts.all) * 100 : 0
+                }
+                icon="solar:bell-bing-bold-duotone"
+                color="#0C447C"
+                unitLabel="liên hệ"
+                active={submissionStatusFilter === 'new'}
+                onClick={() => {
+                  setSubmissionStatusFilter('new');
+                  submissionsTable.onResetPage();
+                }}
+              />
+              <Spa2ListAnalytic
+                title={SUBMISSION_STATUS_LABEL.replied}
+                total={submissionCounts.replied}
+                percent={
+                  submissionCounts.all
+                    ? (submissionCounts.replied / submissionCounts.all) * 100
+                    : 0
+                }
+                icon="solar:check-circle-bold-duotone"
+                color="#2E7D32"
+                unitLabel="liên hệ"
+                active={submissionStatusFilter === 'replied'}
+                onClick={() => {
+                  setSubmissionStatusFilter('replied');
+                  submissionsTable.onResetPage();
+                }}
+              />
+              <Spa2ListAnalytic
+                title={SUBMISSION_STATUS_LABEL.closed}
+                total={submissionCounts.closed}
+                percent={
+                  submissionCounts.all
+                    ? (submissionCounts.closed / submissionCounts.all) * 100
+                    : 0
+                }
+                icon="solar:close-circle-bold-duotone"
+                color="#637381"
+                unitLabel="liên hệ"
+                active={submissionStatusFilter === 'closed'}
+                onClick={() => {
+                  setSubmissionStatusFilter('closed');
+                  submissionsTable.onResetPage();
+                }}
+              />
             </Stack>
           </Scrollbar>
 

@@ -27,6 +27,7 @@ import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import InputAdornment from '@mui/material/InputAdornment';
 import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
@@ -44,7 +45,10 @@ import {
 } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { useTable } from 'src/components/table/use-table';
 import { ConfirmDialog } from 'src/components/custom-dialog';
+import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
 
 import {
   Spa2ContentPageHero4,
@@ -64,6 +68,7 @@ import {
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2ListAnalytic } from './spa2-list-analytic';
 import { Spa2SimpleImageField } from './spa2-simple-image-field';
 import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
@@ -102,14 +107,13 @@ const BOOKING_STATUS_OPTIONS: Spa2ConsultationBookingStatus[] = [
   'Đã huỷ',
 ];
 
-const BOOKING_STATUS_COLOR: Record<
-  Spa2ConsultationBookingStatus,
-  'info' | 'warning' | 'success' | 'error'
-> = {
-  Mới: 'info',
-  'Đang xử lý': 'warning',
-  'Hoàn tất': 'success',
-  'Đã huỷ': 'error',
+type BookingStatusFilter = 'all' | Spa2ConsultationBookingStatus;
+
+const BOOKING_STATUS_META: Record<Spa2ConsultationBookingStatus, { icon: string; color: string }> = {
+  Mới: { icon: 'solar:bell-bold-duotone', color: '#2E90FA' },
+  'Đang xử lý': { icon: 'solar:phone-calling-bold-duotone', color: '#F79009' },
+  'Hoàn tất': { icon: 'solar:check-circle-bold-duotone', color: '#12B76A' },
+  'Đã huỷ': { icon: 'solar:close-circle-bold-duotone', color: '#F04438' },
 };
 
 function SectionCard({
@@ -465,10 +469,29 @@ export function Spa2ConsultationManageView() {
   );
   const [bookingViewId, setBookingViewId] = useState<string | null>(null);
   const viewBooking = bookings.find((b) => b.id === bookingViewId) ?? null;
+  const [bookingSearch, setBookingSearch] = useState('');
+  const [bookingStatusFilter, setBookingStatusFilter] = useState<BookingStatusFilter>('all');
+  const bookingTable = useTable({ defaultRowsPerPage: 5 });
 
   const handleSetBookingStatus = (id: string, status: Spa2ConsultationBookingStatus) => {
     setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, status } : b)));
     markDirty();
+  };
+
+  const filteredBookings = bookings.filter((b) => {
+    const q = bookingSearch.trim().toLowerCase();
+    const matchSearch =
+      !q || b.customerName.toLowerCase().includes(q) || b.phone.includes(bookingSearch.trim());
+    const matchStatus = bookingStatusFilter === 'all' || b.status === bookingStatusFilter;
+    return matchSearch && matchStatus;
+  });
+
+  const bookingCounts: Record<BookingStatusFilter, number> = {
+    all: bookings.length,
+    Mới: bookings.filter((b) => b.status === 'Mới').length,
+    'Đang xử lý': bookings.filter((b) => b.status === 'Đang xử lý').length,
+    'Hoàn tất': bookings.filter((b) => b.status === 'Hoàn tất').length,
+    'Đã huỷ': bookings.filter((b) => b.status === 'Đã huỷ').length,
   };
 
   const handleSave = () => {
@@ -709,31 +732,104 @@ export function Spa2ConsultationManageView() {
 
       {/* Bookings */}
       {tab === 'bookings' && (
-        <Card sx={{ p: 3, borderRadius: 3 }}>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            flexWrap="wrap"
-            rowGap={1}
-            sx={{ mb: 2 }}
-          >
-            <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-              {t('consultation.bookings_section', 'Lịch đặt tư vấn')}
-            </Typography>
-            <Stack direction="row" spacing={1} flexWrap="wrap" rowGap={1}>
-              <Chip size="small" variant="soft" label={`${t('common.all')}: ${bookings.length}`} />
-              {BOOKING_STATUS_OPTIONS.map((s) => (
-                <Chip
-                  key={s}
-                  size="small"
-                  variant="soft"
-                  color={BOOKING_STATUS_COLOR[s]}
-                  label={`${s}: ${bookings.filter((b) => b.status === s).length}`}
+        <Card>
+          <Box sx={{ p: 2.5, borderBottom: `1px solid ${SPA2_TEAL_LIGHT}22` }}>
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <Iconify
+                icon="solar:calendar-mark-bold-duotone"
+                width={22}
+                sx={{ color: SPA2_TEAL }}
+              />
+              <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                {t('consultation.bookings_section', 'Lịch đặt tư vấn')}
+              </Typography>
+            </Stack>
+          </Box>
+
+          {/* Thống kê */}
+          <Scrollbar sx={{ minHeight: 108 }}>
+            <Stack
+              direction="row"
+              divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+              sx={{ py: 2, px: 1 }}
+            >
+              <Spa2ListAnalytic
+                title={t('common.all')}
+                total={bookingCounts.all}
+                percent={100}
+                icon="solar:calendar-mark-bold-duotone"
+                color={SPA2_TEAL}
+                unitLabel={t('consultation.booking_unit', 'lịch hẹn')}
+                active={bookingStatusFilter === 'all'}
+                onClick={() => {
+                  setBookingStatusFilter('all');
+                  bookingTable.onResetPage();
+                }}
+              />
+              {BOOKING_STATUS_OPTIONS.map((status) => (
+                <Spa2ListAnalytic
+                  key={status}
+                  title={status}
+                  total={bookingCounts[status]}
+                  percent={
+                    bookingCounts.all ? (bookingCounts[status] / bookingCounts.all) * 100 : 0
+                  }
+                  icon={BOOKING_STATUS_META[status].icon}
+                  color={BOOKING_STATUS_META[status].color}
+                  unitLabel={t('consultation.booking_unit', 'lịch hẹn')}
+                  active={bookingStatusFilter === status}
+                  onClick={() => {
+                    setBookingStatusFilter(status);
+                    bookingTable.onResetPage();
+                  }}
                 />
               ))}
             </Stack>
+          </Scrollbar>
+
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ px: 2.5, pb: 2 }}>
+            <TextField
+              placeholder={t(
+                'consultation.booking_search_placeholder',
+                'Tìm theo tên hoặc số điện thoại...'
+              )}
+              value={bookingSearch}
+              onChange={(e) => {
+                setBookingSearch(e.target.value);
+                bookingTable.onResetPage();
+              }}
+              size="small"
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
           </Stack>
+
+          <Box sx={{ px: 2.5 }}>
+            <Tabs
+              value={bookingStatusFilter}
+              onChange={(_, v: BookingStatusFilter) => {
+                setBookingStatusFilter(v);
+                bookingTable.onResetPage();
+              }}
+              variant="scrollable"
+              sx={{
+                '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
+                '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
+              }}
+            >
+              <Tab value="all" label={`${t('common.all')} (${bookingCounts.all})`} />
+              {BOOKING_STATUS_OPTIONS.map((status) => (
+                <Tab key={status} value={status} label={`${status} (${bookingCounts[status]})`} />
+              ))}
+            </Tabs>
+          </Box>
+
           <TableContainer>
             <Table>
               <TableHead>
@@ -747,83 +843,88 @@ export function Spa2ConsultationManageView() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {bookings.map((b) => {
-                  const consultant = consultants.find((c) => c.id === b.consultantId);
-                  return (
-                    <TableRow
-                      key={b.id}
-                      hover
-                      sx={{ cursor: 'pointer' }}
-                      onClick={() => setBookingViewId(b.id)}
-                    >
-                      <TableCell>
-                        <Stack>
-                          <Typography variant="subtitle2" sx={{ color: SPA2_TEAL_DARK }}>
-                            {b.customerName}
-                          </Typography>
+                {filteredBookings
+                  .slice(
+                    bookingTable.page * bookingTable.rowsPerPage,
+                    bookingTable.page * bookingTable.rowsPerPage + bookingTable.rowsPerPage
+                  )
+                  .map((b) => {
+                    const consultant = consultants.find((c) => c.id === b.consultantId);
+                    return (
+                      <TableRow
+                        key={b.id}
+                        hover
+                        sx={{ cursor: 'pointer' }}
+                        onClick={() => setBookingViewId(b.id)}
+                      >
+                        <TableCell>
+                          <Stack>
+                            <Typography variant="subtitle2" sx={{ color: SPA2_TEAL_DARK }}>
+                              {b.customerName}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              {b.phone}
+                            </Typography>
+                          </Stack>
+                        </TableCell>
+                        <TableCell>{consultant?.name ?? '—'}</TableCell>
+                        <TableCell>
+                          <Chip
+                            size="small"
+                            variant="soft"
+                            color={b.mode === 'online' ? 'info' : 'default'}
+                            icon={
+                              <Iconify
+                                icon={
+                                  b.mode === 'online'
+                                    ? 'solar:video-camera-bold'
+                                    : 'solar:map-point-bold'
+                                }
+                                width={14}
+                              />
+                            }
+                            label={
+                              b.mode === 'online'
+                                ? t('consultation.mode_online', 'Online')
+                                : t('consultation.mode_offline', 'Tại spa')
+                            }
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2">{b.date}</Typography>
                           <Typography variant="caption" color="text.secondary">
-                            {b.phone}
+                            {b.slot}
                           </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>{consultant?.name ?? '—'}</TableCell>
-                      <TableCell>
-                        <Chip
-                          size="small"
-                          variant="soft"
-                          color={b.mode === 'online' ? 'info' : 'default'}
-                          icon={
-                            <Iconify
-                              icon={
-                                b.mode === 'online'
-                                  ? 'solar:video-camera-bold'
-                                  : 'solar:map-point-bold'
-                              }
-                              width={14}
-                            />
-                          }
-                          label={
-                            b.mode === 'online'
-                              ? t('consultation.mode_online', 'Online')
-                              : t('consultation.mode_offline', 'Tại spa')
-                          }
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2">{b.date}</Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {b.slot}
-                        </Typography>
-                      </TableCell>
-                      <TableCell onClick={(e) => e.stopPropagation()}>
-                        <TextField
-                          select
-                          size="small"
-                          value={b.status}
-                          onChange={(e) =>
-                            handleSetBookingStatus(
-                              b.id,
-                              e.target.value as Spa2ConsultationBookingStatus
-                            )
-                          }
-                          sx={{ minWidth: 150 }}
-                        >
-                          {BOOKING_STATUS_OPTIONS.map((s) => (
-                            <MenuItem key={s} value={s}>
-                              {s}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                      </TableCell>
-                      <TableCell align="right">
-                        <IconButton size="small" onClick={() => setBookingViewId(b.id)}>
-                          <Iconify icon="solar:eye-bold" width={18} />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-                {bookings.length === 0 && (
+                        </TableCell>
+                        <TableCell onClick={(e) => e.stopPropagation()}>
+                          <TextField
+                            select
+                            size="small"
+                            value={b.status}
+                            onChange={(e) =>
+                              handleSetBookingStatus(
+                                b.id,
+                                e.target.value as Spa2ConsultationBookingStatus
+                              )
+                            }
+                            sx={{ minWidth: 150 }}
+                          >
+                            {BOOKING_STATUS_OPTIONS.map((s) => (
+                              <MenuItem key={s} value={s}>
+                                {s}
+                              </MenuItem>
+                            ))}
+                          </TextField>
+                        </TableCell>
+                        <TableCell align="right">
+                          <IconButton size="small" onClick={() => setBookingViewId(b.id)}>
+                            <Iconify icon="solar:eye-bold" width={18} />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                {filteredBookings.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={6} align="center" sx={{ py: 6, color: 'text.disabled' }}>
                       {t('common.no_data')}
@@ -833,6 +934,13 @@ export function Spa2ConsultationManageView() {
               </TableBody>
             </Table>
           </TableContainer>
+          <TablePaginationCustom
+            count={filteredBookings.length}
+            page={bookingTable.page}
+            rowsPerPage={bookingTable.rowsPerPage}
+            onPageChange={bookingTable.onChangePage}
+            onRowsPerPageChange={bookingTable.onChangeRowsPerPage}
+          />
         </Card>
       )}
 

@@ -7,19 +7,13 @@ import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Tabs from '@mui/material/Tabs';
-import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import TableRow from '@mui/material/TableRow';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -27,7 +21,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import InputAdornment from '@mui/material/InputAdornment';
-import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 
@@ -46,6 +39,7 @@ import { SPA2_INK , SPA2_TEAL, SPA2_CREAM, spa2Promotions, SPA2_TEAL_DARK } from
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Manages every block the public /spa2/promotions page (Spa2PromotionsPageView)
@@ -262,6 +256,19 @@ export function Spa2PromotionsManageView() {
     setItems((p) => p.map((x) => (x.id === id ? { ...x, active: !x.active } : x)));
   }, []);
 
+  // `Spa2SortableGrid` requires a string `id`; promotions use numeric ids, so
+  // the list is re-tagged with a string id going in and cast back to number
+  // coming out. When `search` narrows the visible list, only the filtered
+  // subset is reordered — the splice-back below keeps items outside the
+  // filter pinned to their original slot (same approach as the loyalty
+  // rewards / spa-etiquette manage views).
+  const handleReorderItems = useCallback((next: (Omit<Promotion, 'id'> & { id: string })[]) => {
+    const queue = next.map((item) => ({ ...item, id: Number(item.id) }));
+    const queueIds = new Set(queue.map((item) => item.id));
+    setItems((prev) => prev.map((item) => (queueIds.has(item.id) ? queue.shift()! : item)));
+    setDirty(true);
+  }, []);
+
   return (
     <Spa2ManageShell
       title={t('promotions.page_title')}
@@ -470,8 +477,16 @@ export function Spa2PromotionsManageView() {
 
       {/* Danh sách khuyến mãi */}
       {tab === 'list' && (
-        <Card>
-          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 2 }}>
+        <Card sx={{ p: 3, borderRadius: 3 }}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ mb: 3 }}
+            flexWrap="wrap"
+            useFlexGap
+            gap={1.5}
+          >
             <TextField
               placeholder={t('promotions.search_placeholder')}
               value={search}
@@ -496,70 +511,85 @@ export function Spa2PromotionsManageView() {
             </Button>
           </Stack>
 
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>{t('promotions.col_campaign')}</TableCell>
-                  <TableCell>{t('promotions.col_period')}</TableCell>
-                  <TableCell>{t('promotions.col_price_save')}</TableCell>
-                  <TableCell>{t('common.status')}</TableCell>
-                  <TableCell align="right">{t('common.actions')}</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
+          {filtered.length === 0 ? (
+            <Typography variant="body2" color="text.secondary" sx={{ py: 6, textAlign: 'center' }}>
+              {t('common.no_data')}
+            </Typography>
+          ) : (
+            <Spa2SortableGrid
+              items={filtered.map((item) => ({ ...item, id: String(item.id) }))}
+              onReorder={handleReorderItems}
+            >
+              <Stack spacing={2.5}>
                 {filtered.map((item) => (
-                  <TableRow key={item.id} hover>
-                    <TableCell>
-                      <Stack direction="row" spacing={1.5} alignItems="center">
-                        <Avatar src={item.image} variant="rounded" sx={{ width: 56, height: 40 }} />
-                        <Typography variant="subtitle2">{item.title}</Typography>
-                      </Stack>
-                    </TableCell>
-                    <TableCell>{item.period}</TableCell>
-                    <TableCell>
-                      <Typography variant="body2" fontWeight={600}>
-                        {item.price}
-                      </Typography>
-                      <Typography variant="caption" color="success.main">
-                        {item.save}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        size="small"
-                        label={item.active ? t('promotions.status_running') : t('promotions.status_paused')}
-                        color={item.active ? 'success' : 'default'}
-                        variant="soft"
-                      />
-                    </TableCell>
-                    <TableCell align="right">
-                      <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
-                        <Tooltip title={item.active ? t('common.disable') : t('common.enable')}>
-                          <IconButton size="small" onClick={() => handleToggle(item.id)}>
-                            <Iconify
-                              icon={item.active ? 'solar:pause-bold' : 'solar:play-bold'}
-                              color={item.active ? 'warning.main' : 'success.main'}
-                            />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title={t('common.edit')}>
-                          <IconButton size="small" onClick={() => openEdit(item)}>
-                            <Iconify icon="solar:pen-bold" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title={t('common.delete')}>
-                          <IconButton size="small" color="error" onClick={() => setDeleteId(item.id)}>
-                            <Iconify icon="solar:trash-bin-trash-bold" />
-                          </IconButton>
-                        </Tooltip>
-                      </Stack>
-                    </TableCell>
-                  </TableRow>
+                  <Spa2SortableItem key={item.id} id={String(item.id)}>
+                    {(sortable) => (
+                      <Box sx={{ position: 'relative' }}>
+                        <PromotionPreviewCard form={item} />
+                        <Stack
+                          direction="row"
+                          spacing={0.75}
+                          alignItems="center"
+                          sx={{ position: 'absolute', top: 12, left: 12 }}
+                        >
+                          <Spa2DragHandle
+                            sortable={sortable}
+                            sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                          />
+                          <Chip
+                            size="small"
+                            label={
+                              item.active ? t('promotions.status_running') : t('promotions.status_paused')
+                            }
+                            color={item.active ? 'success' : 'default'}
+                            variant="soft"
+                          />
+                        </Stack>
+                        <Stack
+                          direction="row"
+                          spacing={0.5}
+                          sx={{ position: 'absolute', top: 12, right: 12 }}
+                        >
+                          <Tooltip title={item.active ? t('common.disable') : t('common.enable')}>
+                            <IconButton
+                              size="small"
+                              onClick={() => handleToggle(item.id)}
+                              sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                            >
+                              <Iconify
+                                icon={item.active ? 'solar:pause-bold' : 'solar:play-bold'}
+                                width={16}
+                                color={item.active ? 'warning.main' : 'success.main'}
+                              />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title={t('common.edit')}>
+                            <IconButton
+                              size="small"
+                              onClick={() => openEdit(item)}
+                              sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                            >
+                              <Iconify icon="solar:pen-bold" width={16} />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title={t('common.delete')}>
+                            <IconButton
+                              size="small"
+                              color="error"
+                              onClick={() => setDeleteId(item.id)}
+                              sx={{ bgcolor: 'common.white', boxShadow: 1 }}
+                            >
+                              <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </Box>
+                    )}
+                  </Spa2SortableItem>
                 ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+              </Stack>
+            </Spa2SortableGrid>
+          )}
         </Card>
       )}
 

@@ -27,6 +27,7 @@ import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import InputAdornment from '@mui/material/InputAdornment';
 import TableContainer from '@mui/material/TableContainer';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
@@ -48,7 +49,9 @@ import {
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { useTable } from 'src/components/table/use-table';
 import { ConfirmDialog } from 'src/components/custom-dialog';
+import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
 
 import { SPA2_TEAL, SPA2_TEAL_DARK, SPA2_CREAM_DARK } from 'src/sections/spa2/spa2-pages-data';
 import {
@@ -271,6 +274,10 @@ export function Spa2AppointmentManageView() {
   const [historyStatusFilter, setHistoryStatusFilter] = useState<Spa2AppointmentStatus | 'all'>(
     'all'
   );
+  const [upcomingSearch, setUpcomingSearch] = useState('');
+  const [historySearch, setHistorySearch] = useState('');
+  const upcomingTable = useTable({ defaultRowsPerPage: 5 });
+  const historyTable = useTable({ defaultRowsPerPage: 5 });
 
   const upcomingCounts = useMemo(
     () => ({
@@ -299,20 +306,36 @@ export function Spa2AppointmentManageView() {
       : 0;
   }, [history]);
 
-  const filteredUpcoming = useMemo(
-    () =>
+  const filteredUpcoming = useMemo(() => {
+    const byStatus =
       upcomingStatusFilter === 'all'
         ? upcoming
-        : upcoming.filter((x) => x.status === upcomingStatusFilter),
-    [upcoming, upcomingStatusFilter]
-  );
-  const filteredHistory = useMemo(
-    () =>
+        : upcoming.filter((x) => x.status === upcomingStatusFilter);
+    const q = upcomingSearch.trim().toLowerCase();
+    return q
+      ? byStatus.filter(
+          (x) =>
+            x.service.toLowerCase().includes(q) ||
+            x.branch.toLowerCase().includes(q) ||
+            x.ktv.toLowerCase().includes(q)
+        )
+      : byStatus;
+  }, [upcoming, upcomingStatusFilter, upcomingSearch]);
+  const filteredHistory = useMemo(() => {
+    const byStatus =
       historyStatusFilter === 'all'
         ? history
-        : history.filter((x) => x.status === historyStatusFilter),
-    [history, historyStatusFilter]
-  );
+        : history.filter((x) => x.status === historyStatusFilter);
+    const q = historySearch.trim().toLowerCase();
+    return q
+      ? byStatus.filter(
+          (x) =>
+            x.service.toLowerCase().includes(q) ||
+            x.branch.toLowerCase().includes(q) ||
+            x.ktv.toLowerCase().includes(q)
+        )
+      : byStatus;
+  }, [history, historyStatusFilter, historySearch]);
 
   const handleChange =
     (field: 'service' | 'branch' | 'ktv' | 'price' | 'rating') =>
@@ -386,7 +409,14 @@ export function Spa2AppointmentManageView() {
     const counts = list === 'upcoming' ? upcomingCounts : historyCounts;
     const statusFilter = list === 'upcoming' ? upcomingStatusFilter : historyStatusFilter;
     const setStatusFilter = list === 'upcoming' ? setUpcomingStatusFilter : setHistoryStatusFilter;
+    const search = list === 'upcoming' ? upcomingSearch : historySearch;
+    const setSearch = list === 'upcoming' ? setUpcomingSearch : setHistorySearch;
+    const table = list === 'upcoming' ? upcomingTable : historyTable;
     const columnCount = list === 'history' ? 8 : 7;
+    const paginatedRows = rows.slice(
+      table.page * table.rowsPerPage,
+      table.page * table.rowsPerPage + table.rowsPerPage
+    );
 
     return (
       <Card>
@@ -422,7 +452,10 @@ export function Spa2AppointmentManageView() {
               color={SPA2_TEAL}
               unitLabel="lịch hẹn"
               active={statusFilter === 'all'}
-              onClick={() => setStatusFilter('all')}
+              onClick={() => {
+                setStatusFilter('all');
+                table.onResetPage();
+              }}
             />
             {STATUS_OPTIONS.map((s) => (
               <Spa2ListAnalytic
@@ -434,7 +467,10 @@ export function Spa2AppointmentManageView() {
                 color={APPOINTMENT_KPI_META[s].color}
                 unitLabel="lịch hẹn"
                 active={statusFilter === s}
-                onClick={() => setStatusFilter(s)}
+                onClick={() => {
+                  setStatusFilter(s);
+                  table.onResetPage();
+                }}
               />
             ))}
             {list === 'history' && (
@@ -453,6 +489,27 @@ export function Spa2AppointmentManageView() {
           </Stack>
         </Scrollbar>
 
+        {/* Search */}
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ px: 2.5, pb: 2 }}>
+          <TextField
+            placeholder="Tìm theo dịch vụ, chi nhánh hoặc KTV..."
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              table.onResetPage();
+            }}
+            size="small"
+            fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Stack>
+
         <TableContainer>
           <Table>
             <TableHead>
@@ -468,7 +525,7 @@ export function Spa2AppointmentManageView() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((item) => {
+              {paginatedRows.map((item) => {
                 const status = STATUS_CONFIG[item.status];
                 const nextStatus = NEXT_APPOINTMENT_STATUS[item.status];
                 const advanceMeta = nextStatus ? APPOINTMENT_ADVANCE_META[item.status] : undefined;
@@ -550,6 +607,13 @@ export function Spa2AppointmentManageView() {
             </TableBody>
           </Table>
         </TableContainer>
+        <TablePaginationCustom
+          count={rows.length}
+          page={table.page}
+          rowsPerPage={table.rowsPerPage}
+          onPageChange={table.onChangePage}
+          onRowsPerPageChange={table.onChangeRowsPerPage}
+        />
       </Card>
     );
   };

@@ -103,7 +103,7 @@ export function Spa2Services({ sx, ...other }: BoxProps) {
         <Stack alignItems="center" sx={{ mt: 6 }}>
           <Button
             component={RouterLink}
-            href={paths.spa.services}
+            href={paths.spa2.services}
             size="large"
             endIcon={<Iconify icon="solar:arrow-right-linear" />}
             sx={{

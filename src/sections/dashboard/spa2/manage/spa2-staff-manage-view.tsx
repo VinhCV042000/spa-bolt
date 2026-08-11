@@ -1,3 +1,11 @@
+// NOTE: this view is NOT wired to any route/path/nav entry, and intentionally so —
+// it duplicates `spa2Team` management that `spa2-about-manage-view.tsx`'s "Đội ngũ
+// chuyên gia" tab already covers with the current best-practice UI (Spa2ManageShell,
+// drag-reorder via Spa2SortableGrid, image field, live preview card). Wiring this
+// older/inferior view into the nav would create two competing editors for the same
+// data. Kept in the tree for reference only; prefer editing the about-manage-view
+// team tab instead. Safe to delete in a future cleanup pass.
+
 import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';

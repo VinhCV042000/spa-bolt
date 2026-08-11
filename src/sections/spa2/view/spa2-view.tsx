@@ -9,6 +9,7 @@ import { Spa2Gallery } from 'src/sections/spa2/spa2-gallery';
 import { Spa2Contact } from 'src/sections/spa2/spa2-contact';
 import { Spa2Services } from 'src/sections/spa2/spa2-services';
 import { Spa2Packages } from 'src/sections/spa2/spa2-packages';
+import { Spa2ExploreMore } from 'src/sections/spa2/spa2-explore-more';
 import { Spa2Testimonials } from 'src/sections/spa2/spa2-testimonials';
 
 // ----------------------------------------------------------------------
@@ -32,6 +33,7 @@ export function Spa2View() {
         <Spa2About />
         <Spa2Services />
         <Spa2Packages />
+        <Spa2ExploreMore />
         <Spa2Gallery />
         <Spa2Testimonials />
         <Spa2Contact />

@@ -80,10 +80,11 @@ const EMPTY_PACKAGE_FORM = {
   duration: '',
   price: 0,
   image: '',
-  includesInput: '',
   tag: '',
   hot: false,
 };
+
+type IncludeRow = { id: string; value: string };
 
 const EMPTY_ADDON_FORM = {
   name: '',
@@ -259,6 +260,7 @@ export function Spa2WellnessPackageManageView() {
     spa2WellnessPackages.map((p) => ({ ...p }))
   );
   const [packageForm, setPackageForm] = useState(EMPTY_PACKAGE_FORM);
+  const [packageIncludes, setPackageIncludes] = useState<IncludeRow[]>([]);
   const [packageDialog, setPackageDialog] = useState(false);
   const [packageEditId, setPackageEditId] = useState<string | null>(null);
   const [packageDeleteId, setPackageDeleteId] = useState<string | null>(null);
@@ -266,6 +268,7 @@ export function Spa2WellnessPackageManageView() {
 
   const openCreatePackage = () => {
     setPackageForm(EMPTY_PACKAGE_FORM);
+    setPackageIncludes([]);
     setPackageEditId(null);
     setPackageDialog(true);
   };
@@ -276,22 +279,27 @@ export function Spa2WellnessPackageManageView() {
       duration: item.duration,
       price: item.price,
       image: item.image,
-      includesInput: item.includes.join(', '),
       tag: item.tag,
       hot: item.hot,
     });
+    setPackageIncludes(item.includes.map((inc) => ({ id: uuidv4(), value: inc })));
     setPackageEditId(item.id);
     setPackageDialog(true);
   };
 
-  const packageIncludesList = useMemo(
-    () =>
-      packageForm.includesInput
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean),
-    [packageForm.includesInput]
-  );
+  const addPackageInclude = () => {
+    setPackageIncludes((prev) => [...prev, { id: uuidv4(), value: '' }]);
+  };
+  const updatePackageInclude = (id: string, value: string) => {
+    setPackageIncludes((prev) => prev.map((row) => (row.id === id ? { ...row, value } : row)));
+  };
+  const removePackageInclude = (id: string) => {
+    setPackageIncludes((prev) => prev.filter((row) => row.id !== id));
+  };
+  const reorderPackageIncludes = (next: IncludeRow[]) => {
+    setPackageIncludes(next);
+  };
+  const packageIncludesPreview = packageIncludes.map((row) => row.value.trim()).filter(Boolean);
 
   const submitPackage = () => {
     const next = {
@@ -299,7 +307,7 @@ export function Spa2WellnessPackageManageView() {
       duration: packageForm.duration,
       price: Number(packageForm.price),
       image: packageForm.image,
-      includes: packageIncludesList,
+      includes: packageIncludesPreview,
       tag: packageForm.tag,
       hot: packageForm.hot,
     };
@@ -806,16 +814,57 @@ export function Spa2WellnessPackageManageView() {
                   onChange={(url) => setPackageForm((p) => ({ ...p, image: url }))}
                   height={160}
                 />
-                <TextField
-                  label={t('wellness_package.form_includes')}
-                  helperText={t('common.comma_hint')}
-                  fullWidth
-                  multiline
-                  minRows={2}
-                  size="small"
-                  value={packageForm.includesInput}
-                  onChange={(e) => setPackageForm((p) => ({ ...p, includesInput: e.target.value }))}
-                />
+                <Box>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    sx={{ mb: 1 }}
+                  >
+                    <Typography variant="caption" color="text.secondary">
+                      {t('wellness_package.form_includes')}
+                    </Typography>
+                    <Button
+                      size="small"
+                      startIcon={<Iconify icon="mingcute:add-line" width={16} />}
+                      onClick={addPackageInclude}
+                    >
+                      Thêm mục
+                    </Button>
+                  </Stack>
+                  {packageIncludes.length === 0 && (
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                      Chưa có mục nào — nhấn &quot;Thêm mục&quot; để bắt đầu.
+                    </Typography>
+                  )}
+                  <Spa2SortableGrid items={packageIncludes} onReorder={reorderPackageIncludes}>
+                    <Stack spacing={1}>
+                      {packageIncludes.map((row) => (
+                        <Spa2SortableItem key={row.id} id={row.id}>
+                          {(sortable) => (
+                            <Stack direction="row" spacing={1} alignItems="center">
+                              <Spa2DragHandle sortable={sortable} />
+                              <TextField
+                                fullWidth
+                                size="small"
+                                value={row.value}
+                                onChange={(e) => updatePackageInclude(row.id, e.target.value)}
+                                placeholder="VD: Miễn phí 1 lần đổi lịch"
+                              />
+                              <IconButton
+                                size="small"
+                                color="error"
+                                onClick={() => removePackageInclude(row.id)}
+                              >
+                                <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                              </IconButton>
+                            </Stack>
+                          )}
+                        </Spa2SortableItem>
+                      ))}
+                    </Stack>
+                  </Spa2SortableGrid>
+                </Box>
                 <FormControlLabel
                   control={
                     <Switch
@@ -837,7 +886,7 @@ export function Spa2WellnessPackageManageView() {
                   duration={packageForm.duration}
                   price={Number(packageForm.price)}
                   image={packageForm.image}
-                  includes={packageIncludesList}
+                  includes={packageIncludesPreview}
                   tag={packageForm.tag}
                   hot={packageForm.hot}
                 />

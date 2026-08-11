@@ -122,7 +122,7 @@ export function Spa2Packages({ sx, ...other }: BoxProps) {
 
                         <Button
                           component={RouterLink}
-                          href={paths.spa.booking}
+                          href={paths.spa2.booking}
                           fullWidth
                           size="large"
                           sx={{

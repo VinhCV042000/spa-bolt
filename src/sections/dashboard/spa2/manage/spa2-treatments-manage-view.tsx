@@ -73,13 +73,14 @@ type ProcessStep = (typeof spa2TreatmentProcess)[number] & { id: string };
 
 const withId = <T extends object>(item: T): T & { id: string } => ({ id: uuidv4(), ...item });
 
+type IncludeRow = { id: string; value: string };
+
 const EMPTY_FORM = {
   name: '',
   sessions: 8,
   duration: '2 tháng',
   price: 0,
   target: '',
-  includes: '',
 };
 
 function formatVNDShort(value: number) {
@@ -295,6 +296,7 @@ export function Spa2TreatmentsManageView() {
   const [editId, setEditId] = useState<number | null>(null);
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [form, setForm] = useState(EMPTY_FORM);
+  const [formIncludes, setFormIncludes] = useState<IncludeRow[]>([]);
 
   const filtered = items.filter((item) => {
     const matchSearch = item.name.toLowerCase().includes(search.toLowerCase());
@@ -314,6 +316,7 @@ export function Spa2TreatmentsManageView() {
 
   const openCreate = () => {
     setForm(EMPTY_FORM);
+    setFormIncludes([]);
     setEditId(null);
     setOpenForm(true);
   };
@@ -325,11 +328,25 @@ export function Spa2TreatmentsManageView() {
       duration: item.duration,
       price: item.price,
       target: item.target,
-      includes: item.includes.join(', '),
     });
+    setFormIncludes(item.includes.map((inc) => ({ id: uuidv4(), value: inc })));
     setEditId(item.id);
     setOpenForm(true);
   };
+
+  const addFormInclude = () => {
+    setFormIncludes((prev) => [...prev, { id: uuidv4(), value: '' }]);
+  };
+  const updateFormInclude = (id: string, value: string) => {
+    setFormIncludes((prev) => prev.map((row) => (row.id === id ? { ...row, value } : row)));
+  };
+  const removeFormInclude = (id: string) => {
+    setFormIncludes((prev) => prev.filter((row) => row.id !== id));
+  };
+  const reorderFormIncludes = (next: IncludeRow[]) => {
+    setFormIncludes(next);
+  };
+  const formIncludesPreview = formIncludes.map((row) => row.value.trim()).filter(Boolean);
 
   const handleSubmit = useCallback(() => {
     const next = {
@@ -338,10 +355,7 @@ export function Spa2TreatmentsManageView() {
       duration: form.duration,
       price: Number(form.price),
       target: form.target,
-      includes: form.includes
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean),
+      includes: formIncludesPreview,
     };
     if (editId !== null) {
       setItems((p) => p.map((x) => (x.id === editId ? { ...x, ...next } : x)));
@@ -351,7 +365,7 @@ export function Spa2TreatmentsManageView() {
     }
     setOpenForm(false);
     setDirty(true);
-  }, [form, editId, items]);
+  }, [form, formIncludesPreview, editId, items]);
 
   const handleDelete = useCallback(() => {
     setItems((p) => p.filter((x) => x.id !== deleteId));
@@ -413,10 +427,7 @@ export function Spa2TreatmentsManageView() {
     sessions: Number(form.sessions),
     duration: form.duration,
     price: Number(form.price),
-    includes: form.includes
-      .split(',')
-      .map((s) => s.trim())
-      .filter(Boolean),
+    includes: formIncludesPreview,
   };
 
   return (
@@ -977,14 +988,57 @@ export function Spa2TreatmentsManageView() {
                   onChange={handleChange('price')}
                   fullWidth
                 />
-                <TextField
-                  label={t('treatments.form_includes')}
-                  value={form.includes}
-                  onChange={handleChange('includes')}
-                  fullWidth
-                  multiline
-                  rows={2}
-                />
+                <Box>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    sx={{ mb: 1 }}
+                  >
+                    <Typography variant="caption" color="text.secondary">
+                      Bao gồm
+                    </Typography>
+                    <Button
+                      size="small"
+                      startIcon={<Iconify icon="mingcute:add-line" width={16} />}
+                      onClick={addFormInclude}
+                    >
+                      Thêm mục
+                    </Button>
+                  </Stack>
+                  {formIncludes.length === 0 && (
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                      Chưa có mục nào — nhấn &quot;Thêm mục&quot; để bắt đầu.
+                    </Typography>
+                  )}
+                  <Spa2SortableGrid items={formIncludes} onReorder={reorderFormIncludes}>
+                    <Stack spacing={1}>
+                      {formIncludes.map((row) => (
+                        <Spa2SortableItem key={row.id} id={row.id}>
+                          {(sortable) => (
+                            <Stack direction="row" spacing={1} alignItems="center">
+                              <Spa2DragHandle sortable={sortable} />
+                              <TextField
+                                fullWidth
+                                size="small"
+                                value={row.value}
+                                onChange={(e) => updateFormInclude(row.id, e.target.value)}
+                                placeholder="VD: Tư vấn chuyên gia da liễu"
+                              />
+                              <IconButton
+                                size="small"
+                                color="error"
+                                onClick={() => removeFormInclude(row.id)}
+                              >
+                                <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                              </IconButton>
+                            </Stack>
+                          )}
+                        </Spa2SortableItem>
+                      ))}
+                    </Stack>
+                  </Spa2SortableGrid>
+                </Box>
               </Stack>
             </Grid>
             <Grid xs={12} md={6}>

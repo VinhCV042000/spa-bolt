@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
+import Link from '@mui/material/Link';
 import Tabs from '@mui/material/Tabs';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
@@ -2627,6 +2628,41 @@ export function Spa2AffiliatePageView({
         </Container>
       </Box>
 
+      {/* Cross-promo: Loyalty Rewards */}
+      <Box sx={{ py: { xs: 4, md: 6 } }}>
+        <Container maxWidth="sm">
+          <SoftCard
+            sx={{
+              textAlign: 'center',
+              border: `1.5px dashed ${SPA2_TEAL}`,
+              bgcolor: SPA2_CREAM,
+            }}
+          >
+            <Iconify icon="solar:gift-bold" width={32} sx={{ color: SPA2_TEAL, mb: 1.5 }} />
+            <Typography sx={{ fontWeight: 600, color: SPA2_INK, mb: 0.5 }}>
+              Là khách hàng thân thiết?
+            </Typography>
+            <Typography sx={{ color: 'text.secondary', fontSize: 14, mb: 2 }}>
+              Xem chương trình tích điểm Loyalty Rewards và đổi ngay các phần thưởng hấp dẫn.
+            </Typography>
+            <Button
+              component={RouterLink}
+              href={paths.spa2.loyaltyRewards}
+              endIcon={<Iconify icon="solar:arrow-right-linear" width={16} />}
+              sx={{
+                borderRadius: 99,
+                px: 3,
+                bgcolor: SPA2_TEAL,
+                color: 'white',
+                '&:hover': { bgcolor: SPA2_TEAL_DARK },
+              }}
+            >
+              Xem chương trình Loyalty Rewards
+            </Button>
+          </SoftCard>
+        </Container>
+      </Box>
+
       <GradientCta
         title="Bắt đầu kiếm tiền cùng Nature Spa"
         sub="Không cần vốn, không cần kinh nghiệm — chỉ cần đam mê."
@@ -2731,6 +2767,27 @@ export function Spa2SpaFinderPageView({
               </Grid>
             </Grid>
           </SoftCard>
+
+          {/* Header row + link to full therapist profiles */}
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            alignItems={{ xs: 'flex-start', sm: 'center' }}
+            justifyContent="space-between"
+            spacing={1}
+            sx={{ mb: 3 }}
+          >
+            <Typography sx={{ fontSize: 14, color: 'text.secondary' }}>
+              {filtered.length} chuyên viên phù hợp với bộ lọc của bạn
+            </Typography>
+            <Button
+              component={RouterLink}
+              href={paths.spa2.therapistProfile}
+              endIcon={<Iconify icon="solar:arrow-right-linear" width={16} />}
+              sx={{ color: SPA2_TEAL_DARK, fontSize: 13.5 }}
+            >
+              Xem đầy đủ hồ sơ chuyên viên
+            </Button>
+          </Stack>
 
           {/* Map + list */}
           <Grid container spacing={4}>
@@ -3001,8 +3058,26 @@ export function Spa2SpaMenuPageView({
                 </InputAdornment>
               ) : null,
             }}
-            sx={{ mb: 4, maxWidth: 480 }}
+            sx={{ mb: 2, maxWidth: 480 }}
           />
+
+          <Link
+            component={RouterLink}
+            href={paths.spa2.services}
+            underline="hover"
+            sx={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 0.5,
+              mb: 4,
+              fontSize: 13.5,
+              fontWeight: 600,
+              color: SPA2_TEAL_DARK,
+            }}
+          >
+            Xem chi tiết & đặt lịch từng dịch vụ
+            <Iconify icon="solar:arrow-right-linear" width={16} />
+          </Link>
 
           {search ? (
             /* Search results */

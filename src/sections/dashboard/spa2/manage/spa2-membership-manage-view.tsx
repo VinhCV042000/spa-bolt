@@ -96,10 +96,10 @@ const EMPTY_TIER_FORM = {
   color: '#2E8B7A',
   accent: '#F5F5F5',
   desc: '',
-  perksInput: '',
-  notIncludedInput: '',
   hot: false,
 };
+
+type TierListRow = { id: string; value: string };
 
 const EMPTY_SIGNUP_FORM: {
   customer: string;
@@ -385,9 +385,13 @@ export function Spa2MembershipManageView() {
   const [tierDialog, setTierDialog] = useState(false);
   const [tierEditId, setTierEditId] = useState<string | null>(null);
   const [tierDeleteId, setTierDeleteId] = useState<string | null>(null);
+  const [perkRows, setPerkRows] = useState<TierListRow[]>([]);
+  const [notIncludedRows, setNotIncludedRows] = useState<TierListRow[]>([]);
 
   const openCreateTier = () => {
     setTierForm(EMPTY_TIER_FORM);
+    setPerkRows([]);
+    setNotIncludedRows([]);
     setTierEditId(null);
     setTierDialog(true);
   };
@@ -399,29 +403,33 @@ export function Spa2MembershipManageView() {
       color: item.color,
       accent: item.accent,
       desc: item.desc,
-      perksInput: item.perks.join(', '),
-      notIncludedInput: item.notIncluded.join(', '),
       hot: item.hot,
     });
+    setPerkRows(item.perks.map((p) => ({ id: uuidv4(), value: p })));
+    setNotIncludedRows(item.notIncluded.map((p) => ({ id: uuidv4(), value: p })));
     setTierEditId(item.id);
     setTierDialog(true);
   };
 
+  const addPerkRow = () => setPerkRows((prev) => [...prev, { id: uuidv4(), value: '' }]);
+  const updatePerkRow = (id: string, value: string) =>
+    setPerkRows((prev) => prev.map((row) => (row.id === id ? { ...row, value } : row)));
+  const removePerkRow = (id: string) => setPerkRows((prev) => prev.filter((row) => row.id !== id));
+
+  const addNotIncludedRow = () =>
+    setNotIncludedRows((prev) => [...prev, { id: uuidv4(), value: '' }]);
+  const updateNotIncludedRow = (id: string, value: string) =>
+    setNotIncludedRows((prev) => prev.map((row) => (row.id === id ? { ...row, value } : row)));
+  const removeNotIncludedRow = (id: string) =>
+    setNotIncludedRows((prev) => prev.filter((row) => row.id !== id));
+
   const tierPerksList = useMemo(
-    () =>
-      tierForm.perksInput
-        .split(',')
-        .map((p) => p.trim())
-        .filter(Boolean),
-    [tierForm.perksInput]
+    () => perkRows.map((row) => row.value.trim()).filter(Boolean),
+    [perkRows]
   );
   const tierNotIncludedList = useMemo(
-    () =>
-      tierForm.notIncludedInput
-        .split(',')
-        .map((p) => p.trim())
-        .filter(Boolean),
-    [tierForm.notIncludedInput]
+    () => notIncludedRows.map((row) => row.value.trim()).filter(Boolean),
+    [notIncludedRows]
   );
 
   const submitTier = () => {
@@ -1190,26 +1198,110 @@ export function Spa2MembershipManageView() {
                   value={tierForm.desc}
                   onChange={(e) => setTierForm((p) => ({ ...p, desc: e.target.value }))}
                 />
-                <TextField
-                  label={t('membership.form_perks')}
-                  helperText={t('common.comma_hint')}
-                  fullWidth
-                  multiline
-                  minRows={2}
-                  size="small"
-                  value={tierForm.perksInput}
-                  onChange={(e) => setTierForm((p) => ({ ...p, perksInput: e.target.value }))}
-                />
-                <TextField
-                  label={t('membership.form_not_included')}
-                  helperText={t('common.comma_hint')}
-                  fullWidth
-                  multiline
-                  minRows={2}
-                  size="small"
-                  value={tierForm.notIncludedInput}
-                  onChange={(e) => setTierForm((p) => ({ ...p, notIncludedInput: e.target.value }))}
-                />
+                <Box>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    sx={{ mb: 1 }}
+                  >
+                    <Stack direction="row" alignItems="center" spacing={0.75}>
+                      <Iconify
+                        icon="solar:check-circle-bold"
+                        width={16}
+                        sx={{ color: SPA2_TEAL }}
+                      />
+                      <Typography variant="caption" color="text.secondary">
+                        Quyền lợi
+                      </Typography>
+                    </Stack>
+                    <Button
+                      size="small"
+                      startIcon={<Iconify icon="mingcute:add-line" width={16} />}
+                      onClick={addPerkRow}
+                    >
+                      {t('membership.add_row_btn')}
+                    </Button>
+                  </Stack>
+                  {perkRows.length === 0 && (
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                      Chưa có quyền lợi nào — nhấn &quot;{t('membership.add_row_btn')}&quot; để bắt
+                      đầu.
+                    </Typography>
+                  )}
+                  <Stack spacing={1}>
+                    {perkRows.map((row) => (
+                      <Stack key={row.id} direction="row" spacing={1} alignItems="center">
+                        <TextField
+                          fullWidth
+                          size="small"
+                          value={row.value}
+                          onChange={(e) => updatePerkRow(row.id, e.target.value)}
+                          placeholder="VD: Miễn phí 1 buổi massage/tháng"
+                        />
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => removePerkRow(row.id)}
+                        >
+                          <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                        </IconButton>
+                      </Stack>
+                    ))}
+                  </Stack>
+                </Box>
+                <Box>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    sx={{ mb: 1 }}
+                  >
+                    <Stack direction="row" alignItems="center" spacing={0.75}>
+                      <Iconify
+                        icon="solar:close-circle-bold"
+                        width={16}
+                        sx={{ color: 'text.disabled' }}
+                      />
+                      <Typography variant="caption" color="text.secondary">
+                        Không bao gồm
+                      </Typography>
+                    </Stack>
+                    <Button
+                      size="small"
+                      startIcon={<Iconify icon="mingcute:add-line" width={16} />}
+                      onClick={addNotIncludedRow}
+                    >
+                      {t('membership.add_row_btn')}
+                    </Button>
+                  </Stack>
+                  {notIncludedRows.length === 0 && (
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                      Chưa có mục không bao gồm nào — nhấn &quot;{t('membership.add_row_btn')}&quot;
+                      để bắt đầu.
+                    </Typography>
+                  )}
+                  <Stack spacing={1}>
+                    {notIncludedRows.map((row) => (
+                      <Stack key={row.id} direction="row" spacing={1} alignItems="center">
+                        <TextField
+                          fullWidth
+                          size="small"
+                          value={row.value}
+                          onChange={(e) => updateNotIncludedRow(row.id, e.target.value)}
+                          placeholder="VD: Sử dụng phòng VIP"
+                        />
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => removeNotIncludedRow(row.id)}
+                        >
+                          <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                        </IconButton>
+                      </Stack>
+                    ))}
+                  </Stack>
+                </Box>
                 <FormControlLabel
                   control={
                     <Switch

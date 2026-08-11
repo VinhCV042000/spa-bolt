@@ -53,7 +53,7 @@ export function Spa2Contact({ sx, ...other }: BoxProps) {
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
               <Button
                 component={RouterLink}
-                href={paths.spa.booking}
+                href={paths.spa2.booking}
                 size="large"
                 startIcon={<Iconify icon="solar:calendar-bold-duotone" />}
                 sx={{
@@ -69,7 +69,7 @@ export function Spa2Contact({ sx, ...other }: BoxProps) {
 
               <Button
                 component={RouterLink}
-                href={paths.spa.contact}
+                href={paths.spa2.contact}
                 size="large"
                 startIcon={<Iconify icon="solar:phone-bold-duotone" />}
                 sx={{

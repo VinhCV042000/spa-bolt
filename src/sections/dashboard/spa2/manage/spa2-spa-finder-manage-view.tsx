@@ -28,6 +28,7 @@ import DialogContent from '@mui/material/DialogContent';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
 
 import { uuidv4 } from 'src/utils/uuidv4';
 
@@ -74,9 +75,13 @@ const EMPTY_THERAPIST_FORM = {
   reviews: 0,
   exp: '',
   available: true,
-  specialties: '',
   nextSlot: '',
 };
+
+// Mirrors the package-includes row editor from
+// spa2-special-occasions-manage-view.tsx: each row carries a stable client
+// id (for React keys + drag-reorder) alongside the editable text value.
+type SpecialtyRow = { id: string; value: string };
 
 function PreviewFrame({ children }: { children: React.ReactNode }) {
   return (
@@ -228,9 +233,11 @@ export function Spa2SpaFinderManageView() {
   const [editId, setEditId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [form, setForm] = useState(EMPTY_THERAPIST_FORM);
+  const [specialtyRows, setSpecialtyRows] = useState<SpecialtyRow[]>([]);
 
   const openCreate = () => {
     setForm(EMPTY_THERAPIST_FORM);
+    setSpecialtyRows([]);
     setEditId(null);
     setOpenForm(true);
   };
@@ -244,13 +251,26 @@ export function Spa2SpaFinderManageView() {
       reviews: item.reviews,
       exp: item.exp,
       available: item.available,
-      specialties: item.specialties.join(', '),
       nextSlot: item.nextSlot,
     });
+    setSpecialtyRows(item.specialties.map((value) => ({ id: uuidv4(), value })));
     setEditId(item.id);
     setOpenForm(true);
   };
+  const addSpecialtyRow = () => {
+    setSpecialtyRows((prev) => [...prev, { id: uuidv4(), value: '' }]);
+  };
+  const updateSpecialtyRow = (id: string, value: string) => {
+    setSpecialtyRows((prev) => prev.map((row) => (row.id === id ? { ...row, value } : row)));
+  };
+  const removeSpecialtyRow = (id: string) => {
+    setSpecialtyRows((prev) => prev.filter((row) => row.id !== id));
+  };
+  const reorderSpecialtyRows = (next: SpecialtyRow[]) => {
+    setSpecialtyRows(next);
+  };
   const handleSubmit = useCallback(() => {
+    const specialties = specialtyRows.map((row) => row.value.trim()).filter(Boolean);
     const next = {
       name: form.name,
       role: form.role,
@@ -260,10 +280,7 @@ export function Spa2SpaFinderManageView() {
       reviews: form.reviews,
       exp: form.exp,
       available: form.available,
-      specialties: form.specialties
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean),
+      specialties,
       nextSlot: form.nextSlot,
     };
     if (editId !== null) {
@@ -273,7 +290,7 @@ export function Spa2SpaFinderManageView() {
     }
     setOpenForm(false);
     setDirty(true);
-  }, [form, editId]);
+  }, [form, specialtyRows, editId]);
   const handleDelete = useCallback(() => {
     setTherapists((p) => p.filter((x) => x.id !== deleteId));
     setDeleteId(null);
@@ -531,6 +548,26 @@ export function Spa2SpaFinderManageView() {
                             <Chip key={s} label={s} size="small" sx={{ fontSize: 11, height: 20 }} />
                           ))}
                         </Stack>
+                        {item.profileId && (
+                          <Tooltip title={`Hồ sơ đầy đủ của ${item.name} trong danh sách Chuyên viên`}>
+                            <Button
+                              component={RouterLink}
+                              href={paths.dashboard.spa2.therapistProfile}
+                              size="small"
+                              startIcon={<Iconify icon="solar:user-id-bold-duotone" width={14} />}
+                              sx={{
+                                mt: 1,
+                                display: 'block',
+                                color: SPA2_TEAL_DARK,
+                                p: 0,
+                                minWidth: 0,
+                                '&:hover': { bgcolor: 'transparent' },
+                              }}
+                            >
+                              Xem hồ sơ đầy đủ
+                            </Button>
+                          </Tooltip>
+                        )}
                       </Card>
                     )}
                   </Spa2SortableItem>
@@ -632,13 +669,57 @@ export function Spa2SpaFinderManageView() {
                 fullWidth
               />
             </Stack>
-            <TextField
-              label={t('spaFinder.therapist_form_specialties')}
-              value={form.specialties}
-              onChange={(e) => setForm((p) => ({ ...p, specialties: e.target.value }))}
-              fullWidth
-              helperText={t('common.comma_hint')}
-            />
+            <Box>
+              <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
+                sx={{ mb: 1 }}
+              >
+                <Typography variant="caption" color="text.secondary">
+                  {t('spaFinder.therapist_form_specialties')}
+                </Typography>
+                <Button
+                  size="small"
+                  startIcon={<Iconify icon="mingcute:add-line" width={16} />}
+                  onClick={addSpecialtyRow}
+                >
+                  Thêm mục
+                </Button>
+              </Stack>
+              {specialtyRows.length === 0 && (
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                  Chưa có mục nào — nhấn &quot;Thêm mục&quot; để bắt đầu.
+                </Typography>
+              )}
+              <Spa2SortableGrid items={specialtyRows} onReorder={reorderSpecialtyRows}>
+                <Stack spacing={1}>
+                  {specialtyRows.map((row) => (
+                    <Spa2SortableItem key={row.id} id={row.id}>
+                      {(sortable) => (
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          <Spa2DragHandle sortable={sortable} />
+                          <TextField
+                            fullWidth
+                            size="small"
+                            value={row.value}
+                            onChange={(e) => updateSpecialtyRow(row.id, e.target.value)}
+                            placeholder="VD: Facial, Massage, Chống lão hóa..."
+                          />
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => removeSpecialtyRow(row.id)}
+                          >
+                            <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                          </IconButton>
+                        </Stack>
+                      )}
+                    </Spa2SortableItem>
+                  ))}
+                </Stack>
+              </Spa2SortableGrid>
+            </Box>
             <FormControlLabel
               control={
                 <Switch

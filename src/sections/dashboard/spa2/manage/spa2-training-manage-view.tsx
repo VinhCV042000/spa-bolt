@@ -58,6 +58,7 @@ import {
 
 import { Editor } from 'src/components/editor';
 import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
 import { useTable } from 'src/components/table/use-table';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
@@ -80,6 +81,7 @@ import {
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2ListAnalytic } from './spa2-list-analytic';
 import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // ----------------------------------------------------------------------
@@ -173,14 +175,15 @@ const EMPTY_PROGRAM: Omit<ProgramItem, 'id'> = {
 
 const EMPTY_ROADMAP: Omit<RoadmapItem, 'id'> = { stage: '', duration: '', desc: '' };
 
-const EMPTY_INSTRUCTOR: Omit<InstructorItem, 'id'> = {
+type CertRow = { id: string; value: string };
+
+const EMPTY_INSTRUCTOR: Omit<InstructorItem, 'id' | 'certs'> = {
   name: '',
   image: '',
   imageFocalX: 50,
   imageFocalY: 50,
   imageZoom: 100,
   experience: '',
-  certs: [],
 };
 
 const EMPTY_GRADUATE: Omit<GraduateItem, 'id'> = {
@@ -432,13 +435,11 @@ function ProgramPreviewCard({ form }: { form: Omit<ProgramItem, 'id'> }) {
 
 function InstructorPreviewCard({
   form,
+  certs,
 }: {
-  form: Omit<InstructorItem, 'id'> & { certsInput: string };
+  form: Omit<InstructorItem, 'id' | 'certs'>;
+  certs: string[];
 }) {
-  const certs = form.certsInput
-    .split(',')
-    .map((c) => c.trim())
-    .filter(Boolean);
   return (
     <Spa2SoftCard sx={{ textAlign: 'center' }}>
       <Avatar
@@ -568,9 +569,9 @@ export function Spa2TrainingManageView() {
   // ---- Instructor dialog state ----
   const [instructorDialog, setInstructorDialog] = useState(false);
   const [instructorEditId, setInstructorEditId] = useState<string | null>(null);
-  const [instructorForm, setInstructorForm] = useState<
-    Omit<InstructorItem, 'id'> & { certsInput: string }
-  >({ ...EMPTY_INSTRUCTOR, certsInput: '' });
+  const [instructorForm, setInstructorForm] =
+    useState<Omit<InstructorItem, 'id' | 'certs'>>(EMPTY_INSTRUCTOR);
+  const [instructorCerts, setInstructorCerts] = useState<CertRow[]>([]);
   const [instructorDeleteId, setInstructorDeleteId] = useState<string | null>(null);
 
   // ---- Graduate dialog state ----
@@ -672,7 +673,8 @@ export function Spa2TrainingManageView() {
 
   // ---- Instructor CRUD ----
   const openCreateInstructor = () => {
-    setInstructorForm({ ...EMPTY_INSTRUCTOR, certsInput: '' });
+    setInstructorForm(EMPTY_INSTRUCTOR);
+    setInstructorCerts([]);
     setInstructorEditId(null);
     setInstructorDialog(true);
   };
@@ -684,17 +686,25 @@ export function Spa2TrainingManageView() {
       imageFocalY: item.imageFocalY,
       imageZoom: item.imageZoom,
       experience: item.experience,
-      certs: item.certs,
-      certsInput: item.certs.join(', '),
     });
+    setInstructorCerts(item.certs.map((c) => ({ id: uuidv4(), value: c })));
     setInstructorEditId(item.id);
     setInstructorDialog(true);
   };
+  const addInstructorCert = () => {
+    setInstructorCerts((prev) => [...prev, { id: uuidv4(), value: '' }]);
+  };
+  const updateInstructorCert = (id: string, value: string) => {
+    setInstructorCerts((prev) => prev.map((row) => (row.id === id ? { ...row, value } : row)));
+  };
+  const removeInstructorCert = (id: string) => {
+    setInstructorCerts((prev) => prev.filter((row) => row.id !== id));
+  };
+  const reorderInstructorCerts = (next: CertRow[]) => {
+    setInstructorCerts(next);
+  };
+  const instructorCertsPreview = instructorCerts.map((row) => row.value.trim()).filter(Boolean);
   const submitInstructor = () => {
-    const certs = instructorForm.certsInput
-      .split(',')
-      .map((c) => c.trim())
-      .filter(Boolean);
     const next = {
       name: instructorForm.name,
       image: instructorForm.image,
@@ -702,7 +712,7 @@ export function Spa2TrainingManageView() {
       imageFocalY: instructorForm.imageFocalY,
       imageZoom: instructorForm.imageZoom,
       experience: instructorForm.experience,
-      certs,
+      certs: instructorCertsPreview,
     };
     if (instructorEditId) {
       setInstructors((prev) =>
@@ -1438,82 +1448,96 @@ export function Spa2TrainingManageView() {
             </Stack>
           </Box>
 
-          {/* KPI */}
-          <Grid container spacing={2} sx={{ p: 2.5 }}>
-            {[
-              {
-                key: 'all',
-                label: 'Tất cả',
-                value: registrationCounts.all,
-                icon: 'solar:clipboard-list-bold-duotone',
-              },
-              {
-                key: 'new',
-                label: REGISTRATION_STATUS_LABEL.new,
-                value: registrationCounts.new,
-                icon: 'solar:bell-bold-duotone',
-              },
-              {
-                key: 'contacted',
-                label: REGISTRATION_STATUS_LABEL.contacted,
-                value: registrationCounts.contacted,
-                icon: 'solar:phone-calling-bold-duotone',
-              },
-              {
-                key: 'enrolled',
-                label: REGISTRATION_STATUS_LABEL.enrolled,
-                value: registrationCounts.enrolled,
-                icon: 'solar:diploma-bold-duotone',
-              },
-              {
-                key: 'cancelled',
-                label: REGISTRATION_STATUS_LABEL.cancelled,
-                value: registrationCounts.cancelled,
-                icon: 'solar:close-circle-bold-duotone',
-              },
-            ].map((k) => (
-              <Grid key={k.key} xs={6} md={2.4}>
-                <Card
-                  onClick={() => {
-                    setRegistrationStatusFilter(k.key as RegistrationStatusFilter);
-                    registrationTable.onResetPage();
-                  }}
-                  sx={{
-                    p: 2,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 1.5,
-                    bgcolor: registrationStatusFilter === k.key ? `${SPA2_TEAL}12` : SPA2_CREAM,
-                    transition: 'all .2s',
-                    '&:hover': { borderColor: SPA2_TEAL },
-                  }}
-                >
-                  <Box
-                    sx={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: 1.5,
-                      bgcolor: `${SPA2_TEAL}18`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <Iconify icon={k.icon} width={22} sx={{ color: SPA2_TEAL_DARK }} />
-                  </Box>
-                  <Box>
-                    <Typography variant="h6" sx={{ color: SPA2_TEAL_DARK, lineHeight: 1 }}>
-                      {k.value}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      {k.label}
-                    </Typography>
-                  </Box>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
+          {/* Thống kê */}
+          <Scrollbar sx={{ minHeight: 108 }}>
+            <Stack
+              direction="row"
+              divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+              sx={{ py: 2, px: 1 }}
+            >
+              <Spa2ListAnalytic
+                title="Tất cả"
+                total={registrationCounts.all}
+                percent={100}
+                icon="solar:clipboard-list-bold-duotone"
+                color={SPA2_TEAL}
+                unitLabel="đăng ký"
+                active={registrationStatusFilter === 'all'}
+                onClick={() => {
+                  setRegistrationStatusFilter('all');
+                  registrationTable.onResetPage();
+                }}
+              />
+              <Spa2ListAnalytic
+                title={REGISTRATION_STATUS_LABEL.new}
+                total={registrationCounts.new}
+                percent={
+                  registrationCounts.all
+                    ? (registrationCounts.new / registrationCounts.all) * 100
+                    : 0
+                }
+                icon="solar:bell-bold-duotone"
+                color="#2E90FA"
+                unitLabel="đăng ký"
+                active={registrationStatusFilter === 'new'}
+                onClick={() => {
+                  setRegistrationStatusFilter('new');
+                  registrationTable.onResetPage();
+                }}
+              />
+              <Spa2ListAnalytic
+                title={REGISTRATION_STATUS_LABEL.contacted}
+                total={registrationCounts.contacted}
+                percent={
+                  registrationCounts.all
+                    ? (registrationCounts.contacted / registrationCounts.all) * 100
+                    : 0
+                }
+                icon="solar:phone-calling-bold-duotone"
+                color="#F79009"
+                unitLabel="đăng ký"
+                active={registrationStatusFilter === 'contacted'}
+                onClick={() => {
+                  setRegistrationStatusFilter('contacted');
+                  registrationTable.onResetPage();
+                }}
+              />
+              <Spa2ListAnalytic
+                title={REGISTRATION_STATUS_LABEL.enrolled}
+                total={registrationCounts.enrolled}
+                percent={
+                  registrationCounts.all
+                    ? (registrationCounts.enrolled / registrationCounts.all) * 100
+                    : 0
+                }
+                icon="solar:diploma-bold-duotone"
+                color="#12B76A"
+                unitLabel="đăng ký"
+                active={registrationStatusFilter === 'enrolled'}
+                onClick={() => {
+                  setRegistrationStatusFilter('enrolled');
+                  registrationTable.onResetPage();
+                }}
+              />
+              <Spa2ListAnalytic
+                title={REGISTRATION_STATUS_LABEL.cancelled}
+                total={registrationCounts.cancelled}
+                percent={
+                  registrationCounts.all
+                    ? (registrationCounts.cancelled / registrationCounts.all) * 100
+                    : 0
+                }
+                icon="solar:close-circle-bold-duotone"
+                color="#F04438"
+                unitLabel="đăng ký"
+                active={registrationStatusFilter === 'cancelled'}
+                onClick={() => {
+                  setRegistrationStatusFilter('cancelled');
+                  registrationTable.onResetPage();
+                }}
+              />
+            </Stack>
+          </Scrollbar>
 
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ px: 2.5, pb: 2 }}>
             <TextField
@@ -1599,7 +1623,14 @@ export function Spa2TrainingManageView() {
                         </Stack>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body2">{item.programName}</Typography>
+                        <Stack direction="row" spacing={0.75} alignItems="center">
+                          <Typography variant="body2">{item.programName}</Typography>
+                          <Chip
+                            size="small"
+                            label={item.programId}
+                            sx={{ bgcolor: SPA2_CREAM_DARK }}
+                          />
+                        </Stack>
                       </TableCell>
                       <TableCell>
                         <Typography variant="body2">{item.createdAt}</Typography>
@@ -1760,7 +1791,7 @@ export function Spa2TrainingManageView() {
               <Grid container spacing={3}>
                 {instructors.map((ins) => (
                   <Grid key={ins.id} xs={12} sm={6} md={4}>
-                    <InstructorPreviewCard form={{ ...ins, certsInput: ins.certs.join(', ') }} />
+                    <InstructorPreviewCard form={ins} certs={ins.certs} />
                   </Grid>
                 ))}
               </Grid>
@@ -1974,13 +2005,57 @@ export function Spa2TrainingManageView() {
                     sx={{ maxHeight: 160 }}
                   />
                 </Box>
-                <TextField
-                  label="Chứng chỉ"
-                  value={instructorForm.certsInput}
-                  onChange={(e) => setInstructorForm((p) => ({ ...p, certsInput: e.target.value }))}
-                  fullWidth
-                  helperText="Cách nhau bởi dấu phẩy, ví dụ: CIDESCO, CIBTAC"
-                />
+                <Box>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    sx={{ mb: 1 }}
+                  >
+                    <Typography variant="caption" color="text.secondary">
+                      Chứng chỉ
+                    </Typography>
+                    <Button
+                      size="small"
+                      startIcon={<Iconify icon="mingcute:add-line" width={16} />}
+                      onClick={addInstructorCert}
+                    >
+                      Thêm chứng chỉ
+                    </Button>
+                  </Stack>
+                  {instructorCerts.length === 0 && (
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                      Chưa có chứng chỉ nào — nhấn &quot;Thêm chứng chỉ&quot; để bắt đầu.
+                    </Typography>
+                  )}
+                  <Spa2SortableGrid items={instructorCerts} onReorder={reorderInstructorCerts}>
+                    <Stack spacing={1}>
+                      {instructorCerts.map((row) => (
+                        <Spa2SortableItem key={row.id} id={row.id}>
+                          {(sortable) => (
+                            <Stack direction="row" spacing={1} alignItems="center">
+                              <Spa2DragHandle sortable={sortable} />
+                              <TextField
+                                fullWidth
+                                size="small"
+                                value={row.value}
+                                onChange={(e) => updateInstructorCert(row.id, e.target.value)}
+                                placeholder="VD: CIDESCO"
+                              />
+                              <IconButton
+                                size="small"
+                                color="error"
+                                onClick={() => removeInstructorCert(row.id)}
+                              >
+                                <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                              </IconButton>
+                            </Stack>
+                          )}
+                        </Spa2SortableItem>
+                      ))}
+                    </Stack>
+                  </Spa2SortableGrid>
+                </Box>
               </Stack>
             </Grid>
             <Grid xs={12} md={6}>
@@ -1991,7 +2066,7 @@ export function Spa2TrainingManageView() {
                 Xem trước
               </Typography>
               <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
-                <InstructorPreviewCard form={instructorForm} />
+                <InstructorPreviewCard form={instructorForm} certs={instructorCertsPreview} />
               </Box>
             </Grid>
           </Grid>
@@ -2147,7 +2222,10 @@ export function Spa2TrainingManageView() {
                 ['Họ tên', viewRegistration.name],
                 ['Số điện thoại', viewRegistration.phone],
                 ['Email', viewRegistration.email],
-                ['Chương trình', viewRegistration.programName],
+                [
+                  'Chương trình',
+                  `${viewRegistration.programName} (${viewRegistration.programId})`,
+                ],
                 ['Ngày đăng ký', viewRegistration.createdAt],
                 ['Ghi chú', viewRegistration.note || '–'],
               ].map(([label, value]) => (

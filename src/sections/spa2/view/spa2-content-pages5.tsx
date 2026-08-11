@@ -1014,6 +1014,25 @@ export function Spa2TherapistProfilePageView({
             ))}
           </Stack>
 
+          {/* Cross-promo: Spa Finder */}
+          <Stack alignItems="center" sx={{ mb: 6 }}>
+            <Button
+              component={RouterLink}
+              href={paths.spa2.spaFinder}
+              startIcon={<Iconify icon="solar:map-point-search-bold" width={16} />}
+              sx={{
+                borderRadius: 99,
+                px: 2.5,
+                color: SPA2_TEAL_DARK,
+                border: `1.5px solid ${SPA2_CREAM_DARK}`,
+                fontSize: 13.5,
+                '&:hover': { borderColor: SPA2_TEAL },
+              }}
+            >
+              Tìm chuyên viên theo khu vực & lịch trống
+            </Button>
+          </Stack>
+
           {/* Profile detail */}
           <Grid container spacing={5}>
             <Grid xs={12} md={4}>

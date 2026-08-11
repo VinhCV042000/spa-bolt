@@ -2111,6 +2111,41 @@ export function Spa2LoyaltyRewardsPageView({
         </Container>
       </Box>
 
+      {/* Cross-promo: Affiliate */}
+      <Box sx={{ py: { xs: 4, md: 6 } }}>
+        <Container maxWidth="sm">
+          <SoftCard
+            sx={{
+              textAlign: 'center',
+              border: `1.5px dashed ${SPA2_TEAL}`,
+              bgcolor: SPA2_CREAM,
+            }}
+          >
+            <Iconify icon="solar:users-group-rounded-bold" width={32} sx={{ color: SPA2_TEAL, mb: 1.5 }} />
+            <Typography sx={{ fontWeight: 600, color: SPA2_INK, mb: 0.5 }}>
+              Bạn muốn kinh doanh cùng chúng tôi?
+            </Typography>
+            <Typography sx={{ color: 'text.secondary', fontSize: 14, mb: 2 }}>
+              Tìm hiểu chương trình Affiliate và bắt đầu kiếm hoa hồng khi giới thiệu khách hàng.
+            </Typography>
+            <Button
+              component={RouterLink}
+              href={paths.spa2.affiliate}
+              endIcon={<Iconify icon="solar:arrow-right-linear" width={16} />}
+              sx={{
+                borderRadius: 99,
+                px: 3,
+                bgcolor: SPA2_TEAL,
+                color: 'white',
+                '&:hover': { bgcolor: SPA2_TEAL_DARK },
+              }}
+            >
+              Tìm hiểu chương trình Affiliate
+            </Button>
+          </SoftCard>
+        </Container>
+      </Box>
+
       {/* Redeem dialog */}
       <Dialog
         open={!!redeeming}

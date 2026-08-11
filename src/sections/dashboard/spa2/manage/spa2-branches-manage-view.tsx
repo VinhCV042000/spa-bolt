@@ -52,6 +52,7 @@ import {
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Manages every block the public /spa2/branches page (Spa2BranchesPageView)
@@ -60,6 +61,11 @@ import { Spa2ManageShell } from './spa2-manage-shell';
 // ─────────────────────────────────────────────────────────────────────────────
 
 type Branch = (typeof spa2Branches)[number] & { id: number };
+
+// Spa2SortableGrid requires a string `id`; branches use a numeric id like
+// most manage views, so swap it for a string version here and convert back
+// on reorder (see spa2-partners-manage-view.tsx for the same pattern).
+type SortableBranch = Omit<Branch, 'id'> & { id: string };
 
 const EMPTY_FORM: Omit<Branch, 'id'> = {
   city: '',
@@ -287,6 +293,11 @@ export function Spa2BranchesManageView() {
     setDeleteId(null);
     setDirty(true);
   }, [deleteId]);
+
+  const reorderItems = useCallback((next: SortableBranch[]) => {
+    setItems(next.map((b) => ({ ...b, id: Number(b.id) })));
+    setDirty(true);
+  }, []);
 
   return (
     <Spa2ManageShell
@@ -548,13 +559,34 @@ export function Spa2BranchesManageView() {
                   Chưa có chi nhánh nào.
                 </Typography>
               ) : (
-                <Grid container spacing={3}>
-                  {items.map((b) => (
-                    <Grid key={b.id} xs={12} sm={6} md={6}>
-                      <BranchPreviewCard form={b} />
-                    </Grid>
-                  ))}
-                </Grid>
+                <Spa2SortableGrid
+                  items={items.map((b) => ({ ...b, id: String(b.id) }))}
+                  onReorder={reorderItems}
+                >
+                  <Grid container spacing={3}>
+                    {items.map((b) => (
+                      <Grid key={b.id} xs={12} sm={6} md={6}>
+                        <Spa2SortableItem id={String(b.id)}>
+                          {(sortable) => (
+                            <Box sx={{ position: 'relative' }}>
+                              <BranchPreviewCard form={b} />
+                              <Spa2DragHandle
+                                sortable={sortable}
+                                sx={{
+                                  position: 'absolute',
+                                  top: 12,
+                                  left: 12,
+                                  bgcolor: 'common.white',
+                                  boxShadow: 1,
+                                }}
+                              />
+                            </Box>
+                          )}
+                        </Spa2SortableItem>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Spa2SortableGrid>
               )}
             </Container>
           </Box>

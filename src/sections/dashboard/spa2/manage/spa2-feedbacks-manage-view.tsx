@@ -38,7 +38,10 @@ import { useTranslate } from 'src/locales';
 import { spa2VideoReviews, spa2FeedbackBanner } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { useTable } from 'src/components/table/use-table';
 import { ConfirmDialog } from 'src/components/custom-dialog';
+import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
 
 import { SPA2_INK , SPA2_TEAL, SPA2_CREAM, spa2Feedbacks, SPA2_TEAL_DARK } from 'src/sections/spa2/spa2-pages-data';
 import {
@@ -50,6 +53,7 @@ import {
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2ListAnalytic } from './spa2-list-analytic';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Manages the banner + moderation queue behind the public /spa2/feedback page
@@ -206,6 +210,7 @@ export function Spa2FeedbacksManageView() {
   const [filterStatus, setFilterStatus] = useState<FeedbackStatus | 'all'>('all');
   const [viewItem, setViewItem] = useState<Feedback | null>(null);
   const [deleteId, setDeleteId] = useState<number | null>(null);
+  const table = useTable({ defaultRowsPerPage: 5 });
 
   const filtered = items.filter((f) => {
     const matchSearch =
@@ -478,6 +483,69 @@ export function Spa2FeedbacksManageView() {
       {/* Danh sách đánh giá */}
       {tab === 'list' && (
         <Card>
+          {/* Thống kê */}
+          <Scrollbar sx={{ minHeight: 108 }}>
+            <Stack
+              spacing={1}
+              direction="row"
+              divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+              sx={{ py: 2, px: 1 }}
+            >
+              <Spa2ListAnalytic
+                title={t('common.all')}
+                total={counts.all}
+                percent={100}
+                icon="solar:chat-round-line-bold-duotone"
+                color={SPA2_TEAL}
+                unitLabel="đánh giá"
+                active={filterStatus === 'all'}
+                onClick={() => {
+                  setFilterStatus('all');
+                  table.onResetPage();
+                }}
+              />
+              <Spa2ListAnalytic
+                title={statusLabel('pending')}
+                total={counts.pending}
+                percent={counts.all ? (counts.pending / counts.all) * 100 : 0}
+                icon="solar:clock-circle-bold-duotone"
+                color="#F79009"
+                unitLabel="đánh giá"
+                active={filterStatus === 'pending'}
+                onClick={() => {
+                  setFilterStatus('pending');
+                  table.onResetPage();
+                }}
+              />
+              <Spa2ListAnalytic
+                title={statusLabel('approved')}
+                total={counts.approved}
+                percent={counts.all ? (counts.approved / counts.all) * 100 : 0}
+                icon="solar:check-circle-bold-duotone"
+                color="#12B76A"
+                unitLabel="đánh giá"
+                active={filterStatus === 'approved'}
+                onClick={() => {
+                  setFilterStatus('approved');
+                  table.onResetPage();
+                }}
+              />
+              <Spa2ListAnalytic
+                title={statusLabel('rejected')}
+                total={counts.rejected}
+                percent={counts.all ? (counts.rejected / counts.all) * 100 : 0}
+                icon="solar:close-circle-bold-duotone"
+                color="#F04438"
+                unitLabel="đánh giá"
+                active={filterStatus === 'rejected'}
+                onClick={() => {
+                  setFilterStatus('rejected');
+                  table.onResetPage();
+                }}
+              />
+            </Stack>
+          </Scrollbar>
+
           <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ p: 2, pb: 0 }}>
             {(['all', 'pending', 'approved', 'rejected'] as const).map((s) => (
               <Chip
@@ -485,7 +553,10 @@ export function Spa2FeedbacksManageView() {
                 label={`${s === 'all' ? t('common.all') : statusLabel(s)} (${counts[s]})`}
                 variant={filterStatus === s ? 'filled' : 'outlined'}
                 color={s === 'all' ? 'default' : STATUS_COLOR[s]}
-                onClick={() => setFilterStatus(s)}
+                onClick={() => {
+                  setFilterStatus(s);
+                  table.onResetPage();
+                }}
                 sx={{ cursor: 'pointer' }}
               />
             ))}
@@ -495,7 +566,10 @@ export function Spa2FeedbacksManageView() {
             <TextField
               placeholder={t('feedbacks.search_placeholder')}
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                table.onResetPage();
+              }}
               size="small"
               sx={{ width: 280 }}
               InputProps={{
@@ -521,7 +595,12 @@ export function Spa2FeedbacksManageView() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filtered.map((item) => (
+                {filtered
+                  .slice(
+                    table.page * table.rowsPerPage,
+                    table.page * table.rowsPerPage + table.rowsPerPage
+                  )
+                  .map((item) => (
                   <TableRow key={item.id} hover>
                     <TableCell>
                       <Stack direction="row" spacing={1.5} alignItems="center">
@@ -607,6 +686,13 @@ export function Spa2FeedbacksManageView() {
               </TableBody>
             </Table>
           </TableContainer>
+          <TablePaginationCustom
+            count={filtered.length}
+            page={table.page}
+            rowsPerPage={table.rowsPerPage}
+            onPageChange={table.onChangePage}
+            onRowsPerPageChange={table.onChangeRowsPerPage}
+          />
         </Card>
       )}
 

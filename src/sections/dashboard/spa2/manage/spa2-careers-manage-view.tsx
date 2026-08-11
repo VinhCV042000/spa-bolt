@@ -59,6 +59,7 @@ import {
 import { Upload } from 'src/components/upload';
 import { Editor } from 'src/components/editor';
 import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
 import { useTable } from 'src/components/table/use-table';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
@@ -80,6 +81,7 @@ import {
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2ListAnalytic } from './spa2-list-analytic';
 import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // ----------------------------------------------------------------------
@@ -95,6 +97,7 @@ type ReasonItem = { id: string; icon: string; text: string };
 type ProcessItem = { id: string; step: string; desc: string };
 type GalleryItem = { id: string; image: Spa2AdjustableImage };
 type VideoItem = { id: string } & Spa2WorkplaceVideo;
+type BenefitRow = { id: string; value: string };
 
 const JOB_TYPES = ['Toàn thời gian', 'Bán thời gian', 'Linh hoạt', 'Remote'];
 
@@ -104,7 +107,6 @@ const EMPTY_FORM = {
   location: '',
   type: 'Toàn thời gian',
   salary: '',
-  benefits: '',
   description: '',
 };
 
@@ -139,6 +141,14 @@ const APPLICATION_STATUS_OPTIONS: Spa2CareerApplicationStatus[] = [
   'hired',
   'rejected',
 ];
+
+const APPLICATION_STATUS_ICON: Record<Spa2CareerApplicationStatus, string> = {
+  new: 'solar:bell-bing-bold-duotone',
+  reviewing: 'solar:hourglass-bold-duotone',
+  interview: 'solar:users-group-two-rounded-bold-duotone',
+  hired: 'solar:check-circle-bold-duotone',
+  rejected: 'solar:close-circle-bold-duotone',
+};
 
 type ApplicationStatusFilter = Spa2CareerApplicationStatus | 'all';
 
@@ -501,17 +511,28 @@ export function Spa2CareersManageView() {
     (field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setForm((p) => ({ ...p, [field]: e.target.value }));
 
-  const formBenefits = useMemo(
-    () =>
-      form.benefits
-        .split(',')
-        .map((b) => b.trim())
-        .filter(Boolean),
-    [form.benefits]
+  // ---- Job listing benefits/perks (add/edit/delete row list) ----
+  const [formBenefits, setFormBenefits] = useState<BenefitRow[]>([]);
+  const addFormBenefit = () => {
+    setFormBenefits((prev) => [...prev, { id: uuidv4(), value: '' }]);
+  };
+  const updateFormBenefit = (id: string, value: string) => {
+    setFormBenefits((prev) => prev.map((row) => (row.id === id ? { ...row, value } : row)));
+  };
+  const removeFormBenefit = (id: string) => {
+    setFormBenefits((prev) => prev.filter((row) => row.id !== id));
+  };
+  const reorderFormBenefits = (next: BenefitRow[]) => {
+    setFormBenefits(next);
+  };
+  const formBenefitsPreview = useMemo(
+    () => formBenefits.map((row) => row.value.trim()).filter(Boolean),
+    [formBenefits]
   );
 
   const openCreate = () => {
     setForm(EMPTY_FORM);
+    setFormBenefits([]);
     setEditId(null);
     setOpenForm(true);
   };
@@ -523,7 +544,7 @@ export function Spa2CareersManageView() {
       location: form.location,
       type: form.type,
       salary: form.salary,
-      benefits: formBenefits,
+      benefits: formBenefitsPreview,
       description: form.description,
     };
     if (editId !== null) {
@@ -542,7 +563,7 @@ export function Spa2CareersManageView() {
     }
     setOpenForm(false);
     markDirty();
-  }, [form, formBenefits, editId, items]);
+  }, [form, formBenefitsPreview, editId, items]);
 
   const handleDelete = useCallback(() => {
     setItems((p) => p.filter((x) => x.id !== deleteId));
@@ -1437,88 +1458,56 @@ export function Spa2CareersManageView() {
             </Stack>
           </Box>
 
-          {/* KPI cards */}
-          <Grid container spacing={2} sx={{ p: 2.5 }}>
-            {[
-              {
-                key: 'all',
-                label: t('common.all'),
-                value: applicationCounts.all,
-                icon: 'solar:document-text-bold-duotone',
-              },
-              {
-                key: 'new',
-                label: APPLICATION_STATUS_LABEL.new,
-                value: applicationCounts.new,
-                icon: 'solar:bell-bing-bold-duotone',
-              },
-              {
-                key: 'reviewing',
-                label: APPLICATION_STATUS_LABEL.reviewing,
-                value: applicationCounts.reviewing,
-                icon: 'solar:hourglass-bold-duotone',
-              },
-              {
-                key: 'interview',
-                label: APPLICATION_STATUS_LABEL.interview,
-                value: applicationCounts.interview,
-                icon: 'solar:users-group-two-rounded-bold-duotone',
-              },
-              {
-                key: 'hired',
-                label: APPLICATION_STATUS_LABEL.hired,
-                value: applicationCounts.hired,
-                icon: 'solar:check-circle-bold-duotone',
-              },
-              {
-                key: 'rejected',
-                label: APPLICATION_STATUS_LABEL.rejected,
-                value: applicationCounts.rejected,
-                icon: 'solar:close-circle-bold-duotone',
-              },
-            ].map((k) => (
-              <Grid key={k.key} xs={6} sm={4} md={2}>
-                <Card
-                  onClick={() => {
-                    setApplicationStatusFilter(k.key as ApplicationStatusFilter);
-                    applicationTable.onResetPage();
-                  }}
-                  sx={{
-                    p: 2,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 1.5,
-                    bgcolor: applicationStatusFilter === k.key ? `${SPA2_TEAL}12` : SPA2_CREAM,
-                    transition: 'all .2s',
-                    '&:hover': { borderColor: SPA2_TEAL },
-                  }}
+          {/* Thống kê hồ sơ theo trạng thái - bấm vào từng vòng tròn để lọc,
+              đồng bộ với Tabs bên dưới (cùng quy ước Card + Scrollbar + Stack +
+              Divider nét đứt dùng ở spa2-offers-manage-view / spa2-services-manage-view) */}
+          <Box sx={{ p: 2.5 }}>
+            <Card sx={{ bgcolor: SPA2_CREAM }}>
+              <Scrollbar sx={{ minHeight: 108 }}>
+                <Stack
+                  direction="row"
+                  divider={
+                    <Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />
+                  }
+                  sx={{ py: 2, px: 1 }}
                 >
-                  <Box
-                    sx={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: 1.5,
-                      bgcolor: `${SPA2_TEAL}18`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
+                  <Spa2ListAnalytic
+                    title={t('common.all')}
+                    total={applicationCounts.all}
+                    percent={100}
+                    icon="solar:document-text-bold-duotone"
+                    color={SPA2_TEAL}
+                    unitLabel="hồ sơ"
+                    active={applicationStatusFilter === 'all'}
+                    onClick={() => {
+                      setApplicationStatusFilter('all');
+                      applicationTable.onResetPage();
                     }}
-                  >
-                    <Iconify icon={k.icon} width={22} sx={{ color: SPA2_TEAL_DARK }} />
-                  </Box>
-                  <Box>
-                    <Typography variant="h6" sx={{ color: SPA2_TEAL_DARK, lineHeight: 1 }}>
-                      {k.value}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      {k.label}
-                    </Typography>
-                  </Box>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
+                  />
+                  {APPLICATION_STATUS_OPTIONS.map((s) => (
+                    <Spa2ListAnalytic
+                      key={s}
+                      title={APPLICATION_STATUS_LABEL[s]}
+                      total={applicationCounts[s]}
+                      percent={
+                        applicationCounts.all
+                          ? (applicationCounts[s] / applicationCounts.all) * 100
+                          : 0
+                      }
+                      icon={APPLICATION_STATUS_ICON[s]}
+                      color={theme.vars.palette[APPLICATION_STATUS_COLOR[s]].main}
+                      unitLabel="hồ sơ"
+                      active={applicationStatusFilter === s}
+                      onClick={() => {
+                        setApplicationStatusFilter(s);
+                        applicationTable.onResetPage();
+                      }}
+                    />
+                  ))}
+                </Stack>
+              </Scrollbar>
+            </Card>
+          </Box>
 
           <Box sx={{ p: 2.5, pt: 0 }}>
             <TextField
@@ -1751,15 +1740,57 @@ export function Spa2CareersManageView() {
                   onChange={handleChange('salary')}
                   fullWidth
                 />
-                <TextField
-                  label={t('careers.form_benefits')}
-                  value={form.benefits}
-                  onChange={handleChange('benefits')}
-                  fullWidth
-                  multiline
-                  rows={2}
-                  helperText={t('common.comma_hint')}
-                />
+                <Box>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    sx={{ mb: 1 }}
+                  >
+                    <Typography variant="caption" color="text.secondary">
+                      {t('careers.form_benefits')}
+                    </Typography>
+                    <Button
+                      size="small"
+                      startIcon={<Iconify icon="mingcute:add-line" width={16} />}
+                      onClick={addFormBenefit}
+                    >
+                      Thêm mục
+                    </Button>
+                  </Stack>
+                  {formBenefits.length === 0 && (
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                      Chưa có mục nào — nhấn &quot;Thêm mục&quot; để bắt đầu.
+                    </Typography>
+                  )}
+                  <Spa2SortableGrid items={formBenefits} onReorder={reorderFormBenefits}>
+                    <Stack spacing={1}>
+                      {formBenefits.map((row) => (
+                        <Spa2SortableItem key={row.id} id={row.id}>
+                          {(sortable) => (
+                            <Stack direction="row" spacing={1} alignItems="center">
+                              <Spa2DragHandle sortable={sortable} />
+                              <TextField
+                                fullWidth
+                                size="small"
+                                value={row.value}
+                                onChange={(e) => updateFormBenefit(row.id, e.target.value)}
+                                placeholder="VD: Bảo hiểm sức khoẻ"
+                              />
+                              <IconButton
+                                size="small"
+                                color="error"
+                                onClick={() => removeFormBenefit(row.id)}
+                              >
+                                <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                              </IconButton>
+                            </Stack>
+                          )}
+                        </Spa2SortableItem>
+                      ))}
+                    </Stack>
+                  </Spa2SortableGrid>
+                </Box>
                 <Stack spacing={1}>
                   <Typography variant="body2" sx={{ color: SPA2_INK, fontWeight: 600 }}>
                     {t('careers.form_description')}
@@ -1821,7 +1852,7 @@ export function Spa2CareersManageView() {
                           </Stack>
                         </Stack>
                         <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mt: 1 }}>
-                          {formBenefits.map((b) => (
+                          {formBenefitsPreview.map((b) => (
                             <Chip
                               key={b}
                               size="small"

@@ -39,6 +39,7 @@ import { useTranslate } from 'src/locales';
 import { bgBlur, varAlpha } from 'src/theme/styles';
 import {
   spa2Offers,
+  SPA2_SERVICES,
   spa2ComboOffers,
   spa2OffersBanner,
   type Spa2ComboStatus,
@@ -75,6 +76,7 @@ import {
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
 import { Spa2ListAnalytic } from './spa2-list-analytic';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages.tsx's
@@ -123,15 +125,15 @@ const isExpiringSoon = (value: string) => {
 
 type ComboFilter = 'all' | string;
 
+type ComboRow = { id: string; value: string };
+
 const EMPTY_COMBO_FORM = {
   name: '',
   category: SPA2_COMBO_CATEGORIES[0],
   status: 'Đang bán' as Spa2ComboStatus,
-  servicesInput: '',
   originalPrice: 0,
   salePrice: 0,
   image: '',
-  perksInput: '',
 };
 
 const COMBO_STATUS_OPTIONS: Spa2ComboStatus[] = ['Đang bán', 'Tạm dừng', 'Ngừng bán'];
@@ -514,6 +516,8 @@ export function Spa2OffersManageView() {
     spa2ComboOffers.map((c) => withId({ ...c }))
   );
   const [comboForm, setComboForm] = useState(EMPTY_COMBO_FORM);
+  const [comboServiceRows, setComboServiceRows] = useState<ComboRow[]>([]);
+  const [comboPerkRows, setComboPerkRows] = useState<ComboRow[]>([]);
   const [comboDialog, setComboDialog] = useState(false);
   const [comboEditId, setComboEditId] = useState<string | null>(null);
   const [comboDeleteId, setComboDeleteId] = useState<string | null>(null);
@@ -523,6 +527,8 @@ export function Spa2OffersManageView() {
 
   const openCreateCombo = () => {
     setComboForm(EMPTY_COMBO_FORM);
+    setComboServiceRows([]);
+    setComboPerkRows([]);
     setComboEditId(null);
     setComboDialog(true);
   };
@@ -532,32 +538,48 @@ export function Spa2OffersManageView() {
       name: c.name,
       category: c.category,
       status: c.status,
-      servicesInput: c.services.join(', '),
       originalPrice: c.originalPrice,
       salePrice: c.salePrice,
       image: c.image,
-      perksInput: c.perks.join(', '),
     });
+    setComboServiceRows(c.services.map((s) => ({ id: uuidv4(), value: s })));
+    setComboPerkRows(c.perks.map((p) => ({ id: uuidv4(), value: p })));
     setComboEditId(c.id);
     setComboDialog(true);
   };
 
-  const comboServicesList = useMemo(
-    () =>
-      comboForm.servicesInput
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean),
-    [comboForm.servicesInput]
-  );
-  const comboPerksList = useMemo(
-    () =>
-      comboForm.perksInput
-        .split(',')
-        .map((p) => p.trim())
-        .filter(Boolean),
-    [comboForm.perksInput]
-  );
+  // ---- Combo services rows: select-from-catalog so `services` always
+  // references a real SPA2_SERVICES name (keeps the mock data + public combo
+  // cards in sync with the actual service catalog). ----
+  const addComboServiceRow = () => {
+    setComboServiceRows((prev) => [...prev, { id: uuidv4(), value: SPA2_SERVICES[0]?.name ?? '' }]);
+  };
+  const updateComboServiceRow = (id: string, value: string) => {
+    setComboServiceRows((prev) => prev.map((row) => (row.id === id ? { ...row, value } : row)));
+  };
+  const removeComboServiceRow = (id: string) => {
+    setComboServiceRows((prev) => prev.filter((row) => row.id !== id));
+  };
+  const reorderComboServiceRows = (next: ComboRow[]) => {
+    setComboServiceRows(next);
+  };
+
+  // ---- Combo perks rows: free-text, no catalog to pick from. ----
+  const addComboPerkRow = () => {
+    setComboPerkRows((prev) => [...prev, { id: uuidv4(), value: '' }]);
+  };
+  const updateComboPerkRow = (id: string, value: string) => {
+    setComboPerkRows((prev) => prev.map((row) => (row.id === id ? { ...row, value } : row)));
+  };
+  const removeComboPerkRow = (id: string) => {
+    setComboPerkRows((prev) => prev.filter((row) => row.id !== id));
+  };
+  const reorderComboPerkRows = (next: ComboRow[]) => {
+    setComboPerkRows(next);
+  };
+
+  const comboServicesPreview = comboServiceRows.map((row) => row.value.trim()).filter(Boolean);
+  const comboPerksPreview = comboPerkRows.map((row) => row.value.trim()).filter(Boolean);
 
   const submitCombo = () => {
     const next = {
@@ -565,11 +587,11 @@ export function Spa2OffersManageView() {
       slug: comboForm.name.toLowerCase().replace(/\s+/g, '-'),
       category: comboForm.category,
       status: comboForm.status,
-      services: comboServicesList,
+      services: comboServicesPreview,
       originalPrice: Number(comboForm.originalPrice),
       salePrice: Number(comboForm.salePrice),
       image: comboForm.image,
-      perks: comboPerksList,
+      perks: comboPerksPreview,
     };
     if (comboEditId) {
       setCombos((prev) => prev.map((c) => (c.id === comboEditId ? { ...c, ...next } : c)));
@@ -596,6 +618,23 @@ export function Spa2OffersManageView() {
       }),
     [combos, comboSearch, comboCategoryFilter, comboStatusFilter]
   );
+
+  const isCombosFiltered =
+    comboSearch !== '' || comboCategoryFilter !== 'all' || comboStatusFilter !== 'all';
+
+  const reorderCombos = (next: ComboItem[]) => {
+    if (!isCombosFiltered) {
+      setCombos(next);
+    } else {
+      // Filtered/searched view: splice the reordered subset back into its
+      // original slots within the full list so combos outside the current
+      // filter/search keep their relative position.
+      const queue = [...next];
+      const nextIds = new Set(next.map((c) => c.id));
+      setCombos((prev) => prev.map((c) => (nextIds.has(c.id) ? queue.shift()! : c)));
+    }
+    markDirty();
+  };
 
   const comboCategoryCounts = useMemo(
     () =>
@@ -1269,54 +1308,70 @@ export function Spa2OffersManageView() {
             />
           </Stack>
 
-          <Grid container spacing={2.5}>
-            {filteredCombos.map((c) => (
-              <Grid key={c.id} xs={12} sm={6} md={4} sx={{ display: 'flex' }}>
-                <Box sx={{ width: '100%', position: 'relative' }}>
-                  <ComboPreviewCard
-                    name={c.name}
-                    services={c.services}
-                    originalPrice={c.originalPrice}
-                    salePrice={c.salePrice}
-                    image={c.image}
-                    perks={c.perks}
-                    category={c.category}
-                    status={c.status}
-                  />
-                  <Stack
-                    direction="row"
-                    spacing={0.5}
-                    sx={{
-                      position: 'absolute',
-                      bottom: 12,
-                      left: 12,
-                      bgcolor: 'common.white',
-                      borderRadius: 2,
-                      boxShadow: 2,
-                    }}
-                  >
-                    <Tooltip title={t('common.edit')}>
-                      <IconButton size="small" onClick={() => openEditCombo(c)}>
-                        <Iconify icon="solar:pen-bold" />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title={t('common.delete')}>
-                      <IconButton size="small" color="error" onClick={() => setComboDeleteId(c.id)}>
-                        <Iconify icon="solar:trash-bin-trash-bold" />
-                      </IconButton>
-                    </Tooltip>
-                  </Stack>
-                </Box>
-              </Grid>
-            ))}
-            {filteredCombos.length === 0 && (
-              <Grid xs={12}>
-                <Typography variant="body2" color="text.secondary">
-                  {t('common.no_data')}
-                </Typography>
-              </Grid>
-            )}
-          </Grid>
+          {isCombosFiltered && filteredCombos.length > 0 && (
+            <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1, display: 'block' }}>
+              Đang lọc/tìm kiếm — thứ tự kéo-thả vẫn áp dụng vào danh sách đầy đủ.
+            </Typography>
+          )}
+          <Spa2SortableGrid items={filteredCombos} onReorder={reorderCombos}>
+            <Grid container spacing={2.5}>
+              {filteredCombos.map((c) => (
+                <Grid key={c.id} xs={12} sm={6} md={4} sx={{ display: 'flex' }}>
+                  <Spa2SortableItem id={c.id}>
+                    {(sortable) => (
+                      <Box sx={{ width: '100%', position: 'relative' }}>
+                        <ComboPreviewCard
+                          name={c.name}
+                          services={c.services}
+                          originalPrice={c.originalPrice}
+                          salePrice={c.salePrice}
+                          image={c.image}
+                          perks={c.perks}
+                          category={c.category}
+                          status={c.status}
+                        />
+                        <Stack
+                          direction="row"
+                          spacing={0.5}
+                          sx={{
+                            position: 'absolute',
+                            bottom: 12,
+                            left: 12,
+                            bgcolor: 'common.white',
+                            borderRadius: 2,
+                            boxShadow: 2,
+                          }}
+                        >
+                          <Spa2DragHandle sortable={sortable} />
+                          <Tooltip title={t('common.edit')}>
+                            <IconButton size="small" onClick={() => openEditCombo(c)}>
+                              <Iconify icon="solar:pen-bold" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title={t('common.delete')}>
+                            <IconButton
+                              size="small"
+                              color="error"
+                              onClick={() => setComboDeleteId(c.id)}
+                            >
+                              <Iconify icon="solar:trash-bin-trash-bold" />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </Box>
+                    )}
+                  </Spa2SortableItem>
+                </Grid>
+              ))}
+              {filteredCombos.length === 0 && (
+                <Grid xs={12}>
+                  <Typography variant="body2" color="text.secondary">
+                    {t('common.no_data')}
+                  </Typography>
+                </Grid>
+              )}
+            </Grid>
+          </Spa2SortableGrid>
         </SectionCard>
       )}
 
@@ -2002,15 +2057,63 @@ export function Spa2OffersManageView() {
                     ))}
                   </TextField>
                 </Stack>
-                <TextField
-                  label={t('offers.combo_services')}
-                  value={comboForm.servicesInput}
-                  onChange={(e) => setComboForm((p) => ({ ...p, servicesInput: e.target.value }))}
-                  fullWidth
-                  multiline
-                  rows={2}
-                  helperText={t('common.comma_hint')}
-                />
+                <Box>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    sx={{ mb: 1 }}
+                  >
+                    <Typography variant="caption" color="text.secondary">
+                      {t('offers.combo_services')}
+                    </Typography>
+                    <Button
+                      size="small"
+                      startIcon={<Iconify icon="mingcute:add-line" width={16} />}
+                      onClick={addComboServiceRow}
+                    >
+                      Thêm dịch vụ
+                    </Button>
+                  </Stack>
+                  {comboServiceRows.length === 0 && (
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                      Chưa có dịch vụ nào — nhấn &quot;Thêm dịch vụ&quot; để bắt đầu.
+                    </Typography>
+                  )}
+                  <Spa2SortableGrid items={comboServiceRows} onReorder={reorderComboServiceRows}>
+                    <Stack spacing={1}>
+                      {comboServiceRows.map((row) => (
+                        <Spa2SortableItem key={row.id} id={row.id}>
+                          {(sortable) => (
+                            <Stack direction="row" spacing={1} alignItems="center">
+                              <Spa2DragHandle sortable={sortable} />
+                              <TextField
+                                select
+                                fullWidth
+                                size="small"
+                                value={row.value}
+                                onChange={(e) => updateComboServiceRow(row.id, e.target.value)}
+                              >
+                                {SPA2_SERVICES.map((s) => (
+                                  <MenuItem key={s.slug} value={s.name}>
+                                    {s.name}
+                                  </MenuItem>
+                                ))}
+                              </TextField>
+                              <IconButton
+                                size="small"
+                                color="error"
+                                onClick={() => removeComboServiceRow(row.id)}
+                              >
+                                <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                              </IconButton>
+                            </Stack>
+                          )}
+                        </Spa2SortableItem>
+                      ))}
+                    </Stack>
+                  </Spa2SortableGrid>
+                </Box>
                 <Stack direction="row" spacing={2}>
                   <TextField
                     label={t('offers.combo_original_price')}
@@ -2037,15 +2140,57 @@ export function Spa2OffersManageView() {
                   onChange={(e) => setComboForm((p) => ({ ...p, image: e.target.value }))}
                   fullWidth
                 />
-                <TextField
-                  label={t('offers.combo_perks')}
-                  value={comboForm.perksInput}
-                  onChange={(e) => setComboForm((p) => ({ ...p, perksInput: e.target.value }))}
-                  fullWidth
-                  multiline
-                  rows={2}
-                  helperText={t('common.comma_hint')}
-                />
+                <Box>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    sx={{ mb: 1 }}
+                  >
+                    <Typography variant="caption" color="text.secondary">
+                      {t('offers.combo_perks')}
+                    </Typography>
+                    <Button
+                      size="small"
+                      startIcon={<Iconify icon="mingcute:add-line" width={16} />}
+                      onClick={addComboPerkRow}
+                    >
+                      Thêm ưu đãi
+                    </Button>
+                  </Stack>
+                  {comboPerkRows.length === 0 && (
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                      Chưa có ưu đãi kèm nào — nhấn &quot;Thêm ưu đãi&quot; để bắt đầu.
+                    </Typography>
+                  )}
+                  <Spa2SortableGrid items={comboPerkRows} onReorder={reorderComboPerkRows}>
+                    <Stack spacing={1}>
+                      {comboPerkRows.map((row) => (
+                        <Spa2SortableItem key={row.id} id={row.id}>
+                          {(sortable) => (
+                            <Stack direction="row" spacing={1} alignItems="center">
+                              <Spa2DragHandle sortable={sortable} />
+                              <TextField
+                                fullWidth
+                                size="small"
+                                value={row.value}
+                                onChange={(e) => updateComboPerkRow(row.id, e.target.value)}
+                                placeholder="VD: Tặng trà thảo mộc"
+                              />
+                              <IconButton
+                                size="small"
+                                color="error"
+                                onClick={() => removeComboPerkRow(row.id)}
+                              >
+                                <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                              </IconButton>
+                            </Stack>
+                          )}
+                        </Spa2SortableItem>
+                      ))}
+                    </Stack>
+                  </Spa2SortableGrid>
+                </Box>
               </Stack>
             </Grid>
             <Grid xs={12} md={6}>
@@ -2058,11 +2203,11 @@ export function Spa2OffersManageView() {
               <Box sx={{ bgcolor: SPA2_CREAM, borderRadius: 3, p: 2 }}>
                 <ComboPreviewCard
                   name={comboForm.name}
-                  services={comboServicesList}
+                  services={comboServicesPreview}
                   originalPrice={comboForm.originalPrice}
                   salePrice={comboForm.salePrice}
                   image={comboForm.image}
-                  perks={comboPerksList}
+                  perks={comboPerksPreview}
                   category={comboForm.category}
                   status={comboForm.status}
                 />

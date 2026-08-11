@@ -1830,7 +1830,7 @@ export const spa2ComboOffers = [
     name: 'Combo Thanh Xuân',
     category: 'Trẻ hoá',
     status: 'Đang bán' as Spa2ComboStatus,
-    services: ['Facial Organic', 'Massage Thảo Dược', 'Body Scrub'],
+    services: ['Facial Organic', 'Massage Thảo Dược', 'Body Scrub & Wrap'],
     originalPrice: 2570000,
     salePrice: 1890000,
     image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=900&q=80',
@@ -1841,7 +1841,7 @@ export const spa2ComboOffers = [
     name: 'Combo Đôi Lứa',
     category: 'Cặp đôi',
     status: 'Đang bán' as Spa2ComboStatus,
-    services: ['Spa Đôi', 'Aromatherapy', 'Body Wrap'],
+    services: ['Spa Đôi', 'Aromatherapy', 'Body Scrub & Wrap'],
     originalPrice: 3570000,
     salePrice: 2790000,
     image: 'https://plus.unsplash.com/premium_photo-1661574718355-82659c0c74cc?w=900&q=80',
@@ -1852,7 +1852,7 @@ export const spa2ComboOffers = [
     name: 'Combo Detox Toàn Diện',
     category: 'Thải độc',
     status: 'Tạm dừng' as Spa2ComboStatus,
-    services: ['Detox 3 ngày', 'Massage Thảo Dược', 'Tư vấn dinh dưỡng'],
+    services: ['Detox & Thanh Lọc', 'Massage Thảo Dược', 'Aromatherapy'],
     originalPrice: 5970000,
     salePrice: 4290000,
     image: 'https://images.unsplash.com/photo-1596178060671-7a80dc8059ea?w=900&q=80',
@@ -1863,6 +1863,7 @@ export const spa2ComboOffers = [
 // ---------- Training -------------------------------------------------
 
 export interface Spa2TrainingProgram {
+  id: string;
   name: string;
   duration: string;
   level: string;
@@ -1919,6 +1920,7 @@ export const spa2TrainingMissionImage: Spa2AdjustableImage = {
 
 export const spa2TrainingPrograms: Spa2TrainingProgram[] = [
   {
+    id: 'massage-tri-lieu-co-ban',
     name: 'Khóa Massage Trị Liệu Cơ Bản',
     duration: '4 tuần',
     level: 'Người mới',
@@ -1926,6 +1928,7 @@ export const spa2TrainingPrograms: Spa2TrainingProgram[] = [
     outcome: 'Chứng chỉ nội bộ, sẵn sàng đi làm tại các spa.',
   },
   {
+    id: 'facial-chuyen-sau',
     name: 'Khóa Facial Chuyên Sâu',
     duration: '6 tuần',
     level: 'Trung cấp',
@@ -1933,6 +1936,7 @@ export const spa2TrainingPrograms: Spa2TrainingProgram[] = [
     outcome: 'Thành thạo 12 quy trình facial chuẩn quốc tế.',
   },
   {
+    id: 'quan-ly-spa',
     name: 'Khóa Quản Lý Spa',
     duration: '8 tuần',
     level: 'Nâng cao',
@@ -2606,6 +2610,7 @@ export type Spa2TrainingRegistration = {
   name: string;
   phone: string;
   email: string;
+  programId: string;
   programName: string;
   note: string;
   createdAt: string;
@@ -2618,6 +2623,7 @@ export const SPA2_TRAINING_REGISTRATIONS: Spa2TrainingRegistration[] = [
     name: 'Đặng Thị Mai',
     phone: '0901 111 222',
     email: 'mai.dang@gmail.com',
+    programId: 'massage-tri-lieu-co-ban',
     programName: 'Khóa Massage Trị Liệu Cơ Bản',
     note: 'Muốn học buổi tối',
     createdAt: '2026-07-05',
@@ -2628,6 +2634,7 @@ export const SPA2_TRAINING_REGISTRATIONS: Spa2TrainingRegistration[] = [
     name: 'Vũ Hoàng Long',
     phone: '0912 222 333',
     email: 'long.vu@gmail.com',
+    programId: 'facial-chuyen-sau',
     programName: 'Khóa Facial Chuyên Sâu',
     note: 'Đã có kinh nghiệm 1 năm',
     createdAt: '2026-07-06',
@@ -2638,6 +2645,7 @@ export const SPA2_TRAINING_REGISTRATIONS: Spa2TrainingRegistration[] = [
     name: 'Trịnh Yến Nhi',
     phone: '0923 333 444',
     email: 'nhi.trinh@gmail.com',
+    programId: 'massage-tri-lieu-co-ban',
     programName: 'Khóa Massage Trị Liệu Cơ Bản',
     note: '',
     createdAt: '2026-07-07',
@@ -2648,6 +2656,7 @@ export const SPA2_TRAINING_REGISTRATIONS: Spa2TrainingRegistration[] = [
     name: 'Bùi Quốc Huy',
     phone: '0934 444 555',
     email: 'huy.bui@gmail.com',
+    programId: 'facial-chuyen-sau',
     programName: 'Khóa Facial Chuyên Sâu',
     note: 'Xin dời lịch khai giảng',
     createdAt: '2026-07-01',
@@ -5952,6 +5961,10 @@ export type Spa2SpaFinderTherapist = {
   available: boolean;
   specialties: string[];
   nextSlot: string;
+  // Liên kết sang hồ sơ đầy đủ trong spa2Therapists[] (trang "Chuyên viên") khi
+  // đây là cùng một người — giữ 2 mảng đồng bộ (tên/rating/reviews/exp/branch).
+  // Không phải mọi KTV trong spa-finder đều có hồ sơ đầy đủ, nên field này optional.
+  profileId?: string;
 };
 
 export const spa2SpaFinderTherapists: Spa2SpaFinderTherapist[] = [
@@ -5967,6 +5980,7 @@ export const spa2SpaFinderTherapists: Spa2SpaFinderTherapist[] = [
     available: true,
     specialties: ['Facial', 'Lão hóa', 'Mụn'],
     nextSlot: '09:00 hôm nay',
+    profileId: 'hong-nhi',
   },
   {
     id: 'sf2',
@@ -5980,19 +5994,21 @@ export const spa2SpaFinderTherapists: Spa2SpaFinderTherapist[] = [
     available: true,
     specialties: ['Massage', 'Detox', 'Body'],
     nextSlot: '14:30 hôm nay',
+    profileId: 'minh-khoi',
   },
   {
     id: 'sf3',
-    name: 'Nguyễn Bích Ngọc',
+    name: 'Nguyễn Thảo Vy',
     role: 'Wellness Expert',
     avatar: 'https://i.pravatar.cc/200?img=47',
     branch: 'Biển Mỹ Khê, Đà Nẵng',
     rating: 5.0,
     reviews: 189,
-    exp: '6 năm',
+    exp: '15 năm',
     available: false,
     specialties: ['Yoga', 'Thiền', 'Aromatherapy'],
     nextSlot: 'Sáng mai',
+    profileId: 'thao-vy',
   },
   {
     id: 'sf4',
@@ -6231,6 +6247,11 @@ export type Spa2Ingredient = {
   description: string;
   benefits: string[];
   safety: Spa2IngredientSafety;
+  // Tên liệu trình cụ thể có dùng thành phần này. Đây là danh mục liệu trình chi
+  // tiết hơn 6 dịch vụ gốc trong SPA2_SERVICES (ví dụ "Anti-Aging Facial", "Eye
+  // Zone Treatment") nên không phải lúc nào cũng khớp 1:1 với SPA2_SERVICES.name —
+  // chỉ những tên trùng/khớp với SPA2_SERVICES mới nên dùng đúng chính tả gốc
+  // (đã chuẩn hoá "Massage Thảo Dược"/"Body Scrub & Wrap" ở các mục liên quan).
   usedIn: string[];
 };
 
@@ -6257,7 +6278,7 @@ export const spa2Ingredients: Spa2Ingredient[] = [
       'Hoạt chất chống viêm, kháng khuẩn mạnh mẽ từ củ nghệ Hưng Yên. Làm sáng da, mờ thâm tự nhiên.',
     benefits: ['Chống viêm', 'Sáng da', 'Kháng khuẩn'],
     safety: 'safe',
-    usedIn: ['Herbal Massage', 'Body Scrub'],
+    usedIn: ['Massage Thảo Dược', 'Body Scrub & Wrap'],
   },
   {
     id: 'ing3',
@@ -6341,7 +6362,7 @@ export const spa2Ingredients: Spa2Ingredient[] = [
       'Axit từ trái cây (lactic, glycolic, malic) tẩy tế bào chết nhẹ nhàng, thúc đẩy turnover da.',
     benefits: ['Tẩy tế bào chết', 'Sáng đều màu', 'Tăng hấp thu'],
     safety: 'caution',
-    usedIn: ['Body Scrub', 'Brightening Facial'],
+    usedIn: ['Body Scrub & Wrap', 'Brightening Facial'],
   },
   {
     id: 'ing10',

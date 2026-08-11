@@ -63,6 +63,7 @@ import {
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
 import { Spa2ListAnalytic } from './spa2-list-analytic';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // -----------------------------------------------------------------------------
 // Manages every block src/sections/spa2/view/spa2-content-pages4.tsx's
@@ -174,7 +175,10 @@ export function Spa2PackageBuilderManageView() {
     setDirty(false);
   };
 
-  const sortedTiers = [...tiers].sort((a, b) => a.minServices - b.minServices);
+  const handleReorderTiers = useCallback((next: DiscountTier[]) => {
+    setTiers(next);
+    setDirty(true);
+  }, []);
 
   // ---- Đơn đặt combo (orders) ----
   const [orderSearch, setOrderSearch] = useState('');
@@ -420,8 +424,8 @@ export function Spa2PackageBuilderManageView() {
 
       {/* Discount tiers */}
       {tab === 'tiers' && (
-        <Card>
-          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 2 }}>
+        <Card sx={{ p: 3, borderRadius: 3 }}>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
               {t('package_builder.tiers_section')} ({tiers.length})
             </Typography>
@@ -434,52 +438,73 @@ export function Spa2PackageBuilderManageView() {
               {t('package_builder.tier_add_btn')}
             </Button>
           </Stack>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>{t('package_builder.col_min_services')}</TableCell>
-                  <TableCell>{t('package_builder.col_discount_percent')}</TableCell>
-                  <TableCell align="right">{t('common.actions')}</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {sortedTiers.map((tier) => (
-                  <TableRow key={tier.id} hover>
-                    <TableCell>
-                      <Chip
-                        size="small"
-                        label={`${tier.minServices}+`}
-                        color="primary"
-                        variant="soft"
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="subtitle2">{tier.discountPercent}%</Typography>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
-                        <Tooltip title={t('common.edit')}>
-                          <IconButton size="small" onClick={() => openEdit(tier)}>
-                            <Iconify icon="solar:pen-bold" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title={t('common.delete')}>
-                          <IconButton
+          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1.5 }}>
+            {t('common.drag_hint')}
+          </Typography>
+          <Spa2SortableGrid items={tiers} onReorder={handleReorderTiers}>
+            <Grid container spacing={2}>
+              {tiers.map((tier) => (
+                <Grid key={tier.id} xs={12} sm={6} md={4}>
+                  <Spa2SortableItem id={tier.id}>
+                    {(sortable) => (
+                      <Card
+                        variant="outlined"
+                        sx={{ p: 2.5, borderRadius: 2, position: 'relative' }}
+                      >
+                        <Stack
+                          direction="row"
+                          spacing={0.5}
+                          sx={{ position: 'absolute', top: 8, right: 8 }}
+                        >
+                          <Spa2DragHandle sortable={sortable} />
+                          <Tooltip title={t('common.edit')}>
+                            <IconButton size="small" onClick={() => openEdit(tier)}>
+                              <Iconify icon="solar:pen-bold" width={16} />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title={t('common.delete')}>
+                            <IconButton
+                              size="small"
+                              color="error"
+                              onClick={() => setDeleteId(tier.id)}
+                            >
+                              <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                        <Stack spacing={0.5} sx={{ pr: 12 }}>
+                          <Chip
                             size="small"
-                            color="error"
-                            onClick={() => setDeleteId(tier.id)}
+                            label={`${tier.minServices}+`}
+                            color="primary"
+                            variant="soft"
+                            sx={{ width: 'fit-content' }}
+                          />
+                          <Typography variant="caption" color="text.secondary">
+                            {t('package_builder.col_min_services')}
+                          </Typography>
+                          <Typography
+                            variant="h5"
+                            sx={{ color: SPA2_TEAL_DARK, fontWeight: 700, pt: 0.5 }}
                           >
-                            <Iconify icon="solar:trash-bin-trash-bold" />
-                          </IconButton>
-                        </Tooltip>
-                      </Stack>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                            {tier.discountPercent}%
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {t('package_builder.col_discount_percent')}
+                          </Typography>
+                        </Stack>
+                      </Card>
+                    )}
+                  </Spa2SortableItem>
+                </Grid>
+              ))}
+            </Grid>
+          </Spa2SortableGrid>
+          {tiers.length === 0 && (
+            <Typography variant="body2" color="text.disabled" sx={{ py: 4, textAlign: 'center' }}>
+              {t('common.no_data')}
+            </Typography>
+          )}
         </Card>
       )}
 

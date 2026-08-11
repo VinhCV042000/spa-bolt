@@ -34,6 +34,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { paths } from 'src/routes/paths';
 
+import { uuidv4 } from 'src/utils/uuidv4';
 import { fCurrency } from 'src/utils/format-number';
 
 import { useTranslate } from 'src/locales';
@@ -73,6 +74,7 @@ import {
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
+import { Spa2ListAnalytic } from './spa2-list-analytic';
 import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -94,6 +96,8 @@ type PackageItem = {
   perks: string[];
 };
 
+type PerkRow = { id: string; value: string };
+
 const slugify = (s: string) =>
   s
     .toLowerCase()
@@ -103,12 +107,11 @@ const slugify = (s: string) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '') || `goi-${Date.now()}`;
 
-const EMPTY_PACKAGE: Omit<PackageItem, 'id' | 'slug'> = {
+const EMPTY_PACKAGE_FORM: Omit<PackageItem, 'id' | 'slug' | 'perks'> = {
   name: '',
   price: 0,
   sessions: 1,
   hot: false,
-  perks: [],
 };
 
 const STATUS_COLOR: Record<Spa2BookingStatus, 'warning' | 'success' | 'error' | 'default'> = {
@@ -224,20 +227,16 @@ export function Spa2BookingsManageView() {
   // ---- Packages CRUD ----
   const [packageDialog, setPackageDialog] = useState(false);
   const [packageEditId, setPackageEditId] = useState<string | null>(null);
-  const [packageForm, setPackageForm] = useState<
-    Omit<PackageItem, 'id' | 'slug'> & {
-      perksInput: string;
-    }
-  >({ ...EMPTY_PACKAGE, perksInput: '' });
+  const [packageForm, setPackageForm] =
+    useState<Omit<PackageItem, 'id' | 'slug' | 'perks'>>(EMPTY_PACKAGE_FORM);
+  const [packagePerks, setPackagePerks] = useState<PerkRow[]>([]);
   const [packageDeleteId, setPackageDeleteId] = useState<string | null>(null);
-  // Same parsing rule as submitPackage - keeps the live preview in sync with what gets saved.
-  const packageFormPerks = packageForm.perksInput
-    .split(',')
-    .map((x) => x.trim())
-    .filter(Boolean);
+  // Same flattening rule as submitPackage - keeps the live preview in sync with what gets saved.
+  const packageFormPerks = packagePerks.map((row) => row.value.trim()).filter(Boolean);
 
   const openCreatePackage = () => {
-    setPackageForm({ ...EMPTY_PACKAGE, perksInput: '' });
+    setPackageForm(EMPTY_PACKAGE_FORM);
+    setPackagePerks([]);
     setPackageEditId(null);
     setPackageDialog(true);
   };
@@ -247,17 +246,22 @@ export function Spa2BookingsManageView() {
       price: p.price,
       sessions: p.sessions,
       hot: p.hot,
-      perks: p.perks,
-      perksInput: p.perks.join(', '),
     });
+    setPackagePerks(p.perks.map((perk) => ({ id: uuidv4(), value: perk })));
     setPackageEditId(p.id);
     setPackageDialog(true);
   };
+  const addPackagePerk = () => {
+    setPackagePerks((prev) => [...prev, { id: uuidv4(), value: '' }]);
+  };
+  const updatePackagePerk = (id: string, value: string) => {
+    setPackagePerks((prev) => prev.map((row) => (row.id === id ? { ...row, value } : row)));
+  };
+  const removePackagePerk = (id: string) => {
+    setPackagePerks((prev) => prev.filter((row) => row.id !== id));
+  };
   const submitPackage = () => {
-    const perks = packageForm.perksInput
-      .split(',')
-      .map((x) => x.trim())
-      .filter(Boolean);
+    const perks = packageFormPerks;
     if (packageEditId) {
       setPackages((prev) =>
         prev.map((p) =>
@@ -643,84 +647,95 @@ export function Spa2BookingsManageView() {
             </Stack>
           </Box>
 
-          {/* KPI */}
-          <Scrollbar sx={{ mb: 1, minHeight: 108 }}>
-            <Stack spacing={2} direction="row" sx={{ py: 2, px: 1 }}>
-              {[
-                {
-                  key: 'all',
-                  label: t('common.all'),
-                  value: counts.all,
-                  icon: 'solar:calendar-bold-duotone',
-                },
-                {
-                  key: 'pending',
-                  label: statusLabel('pending'),
-                  value: counts.pending,
-                  icon: 'solar:hourglass-bold-duotone',
-                },
-                {
-                  key: 'confirmed',
-                  label: statusLabel('confirmed'),
-                  value: counts.confirmed,
-                  icon: 'solar:check-circle-bold-duotone',
-                },
-                {
-                  key: 'completed',
-                  label: statusLabel('completed'),
-                  value: counts.completed,
-                  icon: 'solar:diploma-bold-duotone',
-                },
-                {
-                  key: 'cancelled',
-                  label: statusLabel('cancelled'),
-                  value: counts.cancelled,
-                  icon: 'solar:close-circle-bold-duotone',
-                },
-              ].map((k) => (
-                <Card
+          {/* KPI - dùng Spa2ListAnalytic (2 vòng CircularProgress lồng nhau), bấm để lọc bảng bên dưới */}
+          <Card sx={{ mx: 2.5, mb: 2, bgcolor: SPA2_CREAM }}>
+            <Typography
+              variant="caption"
+              sx={{
+                px: 2.5,
+                pt: 2,
+                display: 'block',
+                color: 'text.secondary',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+              }}
+            >
+              Theo trạng thái
+            </Typography>
+            <Scrollbar sx={{ minHeight: 108 }}>
+              <Stack
+                direction="row"
+                divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+                sx={{ py: 2, px: 1 }}
+              >
+                <Spa2ListAnalytic
+                  title={t('common.all')}
+                  total={counts.all}
+                  percent={100}
+                  icon="solar:calendar-bold-duotone"
+                  color={SPA2_TEAL}
+                  unitLabel="lượt đặt"
+                  active={filterStatus === 'all'}
                   onClick={() => {
-                    setFilterStatus(k.key as StatusFilter);
+                    setFilterStatus('all');
                     table.onResetPage();
                   }}
-                  sx={{
-                    p: 2,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 1.5,
-                    width: 1,
-                    minWidth: 180,
-                    bgcolor: filterStatus === k.key ? `${SPA2_TEAL}12` : SPA2_CREAM,
-                    transition: 'all .2s',
-                    '&:hover': { borderColor: SPA2_TEAL },
+                />
+                <Spa2ListAnalytic
+                  title={statusLabel('pending')}
+                  total={counts.pending}
+                  percent={counts.all ? (counts.pending / counts.all) * 100 : 0}
+                  icon="solar:hourglass-bold-duotone"
+                  color={theme.vars.palette.warning.main}
+                  unitLabel="lượt đặt"
+                  active={filterStatus === 'pending'}
+                  onClick={() => {
+                    setFilterStatus('pending');
+                    table.onResetPage();
                   }}
-                >
-                  <Box
-                    sx={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: 1.5,
-                      bgcolor: `${SPA2_TEAL}18`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <Iconify icon={k.icon} width={22} sx={{ color: SPA2_TEAL_DARK }} />
-                  </Box>
-                  <Box>
-                    <Typography variant="h6" sx={{ color: SPA2_TEAL_DARK, lineHeight: 1 }}>
-                      {k.value}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      {k.label}
-                    </Typography>
-                  </Box>
-                </Card>
-              ))}
-            </Stack>
-          </Scrollbar>
+                />
+                <Spa2ListAnalytic
+                  title={statusLabel('confirmed')}
+                  total={counts.confirmed}
+                  percent={counts.all ? (counts.confirmed / counts.all) * 100 : 0}
+                  icon="solar:check-circle-bold-duotone"
+                  color={theme.vars.palette.success.main}
+                  unitLabel="lượt đặt"
+                  active={filterStatus === 'confirmed'}
+                  onClick={() => {
+                    setFilterStatus('confirmed');
+                    table.onResetPage();
+                  }}
+                />
+                <Spa2ListAnalytic
+                  title={statusLabel('completed')}
+                  total={counts.completed}
+                  percent={counts.all ? (counts.completed / counts.all) * 100 : 0}
+                  icon="solar:diploma-bold-duotone"
+                  color={theme.vars.palette.text.secondary}
+                  unitLabel="lượt đặt"
+                  active={filterStatus === 'completed'}
+                  onClick={() => {
+                    setFilterStatus('completed');
+                    table.onResetPage();
+                  }}
+                />
+                <Spa2ListAnalytic
+                  title={statusLabel('cancelled')}
+                  total={counts.cancelled}
+                  percent={counts.all ? (counts.cancelled / counts.all) * 100 : 0}
+                  icon="solar:close-circle-bold-duotone"
+                  color={theme.vars.palette.error.main}
+                  unitLabel="lượt đặt"
+                  active={filterStatus === 'cancelled'}
+                  onClick={() => {
+                    setFilterStatus('cancelled');
+                    table.onResetPage();
+                  }}
+                />
+              </Stack>
+            </Scrollbar>
+          </Card>
 
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ px: 2.5, pb: 2 }}>
             <TextField
@@ -1147,14 +1162,50 @@ export function Spa2BookingsManageView() {
                     fullWidth
                   />
                 </Stack>
-                <TextField
-                  label={t('bookings.packages_perks')}
-                  value={packageForm.perksInput}
-                  onChange={(e) => setPackageForm((p) => ({ ...p, perksInput: e.target.value }))}
-                  fullWidth
-                  multiline
-                  rows={3}
-                />
+                <Box>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    sx={{ mb: 1 }}
+                  >
+                    <Typography variant="caption" color="text.secondary">
+                      {t('bookings.packages_perks')}
+                    </Typography>
+                    <Button
+                      size="small"
+                      startIcon={<Iconify icon="mingcute:add-line" width={16} />}
+                      onClick={addPackagePerk}
+                    >
+                      Thêm mục
+                    </Button>
+                  </Stack>
+                  {packagePerks.length === 0 && (
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                      Chưa có mục nào — nhấn &quot;Thêm mục&quot; để bắt đầu.
+                    </Typography>
+                  )}
+                  <Stack spacing={1}>
+                    {packagePerks.map((row) => (
+                      <Stack key={row.id} direction="row" spacing={1} alignItems="center">
+                        <TextField
+                          fullWidth
+                          size="small"
+                          value={row.value}
+                          onChange={(e) => updatePackagePerk(row.id, e.target.value)}
+                          placeholder="VD: Miễn phí đồ uống thảo mộc"
+                        />
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => removePackagePerk(row.id)}
+                        >
+                          <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                        </IconButton>
+                      </Stack>
+                    ))}
+                  </Stack>
+                </Box>
                 <FormControlLabel
                   control={
                     <Switch

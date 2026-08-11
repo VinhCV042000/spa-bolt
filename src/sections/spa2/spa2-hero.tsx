@@ -108,7 +108,7 @@ export function Spa2Hero({ sx, ...other }: BoxProps) {
               >
                 <Button
                   component={RouterLink}
-                  href={paths.spa.booking}
+                  href={paths.spa2.booking}
                   size="large"
                   startIcon={<Iconify icon="solar:calendar-bold-duotone" />}
                   sx={{
@@ -124,7 +124,7 @@ export function Spa2Hero({ sx, ...other }: BoxProps) {
 
                 <Button
                   component={RouterLink}
-                  href={paths.spa.services}
+                  href={paths.spa2.services}
                   size="large"
                   sx={{
                     px: 4,

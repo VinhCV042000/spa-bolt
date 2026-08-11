@@ -748,6 +748,24 @@ export function Spa2ServicesPageView() {
 
       <Box sx={{ py: { xs: 8, md: 12 } }}>
         <Container>
+          <Link
+            component={RouterLink}
+            href={paths.spa2.spaMenu}
+            underline="hover"
+            sx={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 0.5,
+              mb: 3,
+              fontSize: 13.5,
+              fontWeight: 600,
+              color: SPA2_TEAL_DARK,
+            }}
+          >
+            Xem menu giá đầy đủ theo hạng mục
+            <Iconify icon="solar:arrow-right-linear" width={16} />
+          </Link>
+
           {/* Bộ lọc */}
           <Spa2SoftCard sx={{ mb: 5 }}>
             <Grid container spacing={2} alignItems="center">
@@ -874,6 +892,62 @@ export function Spa2ServicesPageView() {
           )}
         </Container>
       </Box>
+
+      {/* Liệu trình chuyên biệt khác */}
+      <Box sx={{ pb: { xs: 8, md: 12 } }}>
+        <Container>
+          <Spa2SectionTitle
+            eyebrow="Khám phá thêm"
+            title="Liệu trình chuyên biệt khác"
+            subtitle="Bên cạnh dịch vụ tiêu chuẩn, spa2 còn có các liệu trình chuyên biệt được thiết kế riêng cho từng nhu cầu."
+          />
+          <Grid container spacing={2}>
+            {[
+              { label: 'Spa cho nam', icon: 'solar:user-bold', href: paths.spa2.menSpa },
+              { label: 'Spa cho bé', icon: 'solar:smile-circle-bold', href: paths.spa2.kidsSpa },
+              {
+                label: 'Tóc & làm đẹp',
+                icon: 'solar:magic-stick-3-bold',
+                href: paths.spa2.hairBeauty,
+              },
+              { label: 'Chống lão hóa', icon: 'solar:leaf-bold', href: paths.spa2.antiAging },
+              { label: 'Spa cho mẹ bầu', icon: 'solar:heart-bold', href: paths.spa2.prenatalSpa },
+              {
+                label: 'Trị liệu giấc ngủ',
+                icon: 'solar:moon-stars-bold',
+                href: paths.spa2.sleepWellness,
+              },
+            ].map((item) => (
+              <Grid key={item.href} xs={6} sm={4} md={2}>
+                <Card
+                  component={RouterLink}
+                  href={item.href}
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: 1,
+                    p: 2.5,
+                    borderRadius: 3,
+                    textAlign: 'center',
+                    textDecoration: 'none',
+                    border: `1px solid ${SPA2_CREAM_DARK}`,
+                    boxShadow: 'none',
+                    transition: 'all 0.2s',
+                    '&:hover': { borderColor: SPA2_TEAL, bgcolor: SPA2_CREAM },
+                  }}
+                >
+                  <Iconify icon={item.icon} width={28} sx={{ color: SPA2_TEAL }} />
+                  <Typography sx={{ fontSize: 13.5, fontWeight: 600, color: SPA2_INK }}>
+                    {item.label}
+                  </Typography>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </Box>
+
       <Spa2Cta />
     </Spa2PageShell>
   );

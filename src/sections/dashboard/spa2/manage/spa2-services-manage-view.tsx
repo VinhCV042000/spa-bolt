@@ -34,6 +34,8 @@ import TableContainer from '@mui/material/TableContainer';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { uuidv4 } from 'src/utils/uuidv4';
+
 import { useTranslate } from 'src/locales';
 import { bgBlur, varAlpha } from 'src/theme/styles';
 import {
@@ -68,6 +70,7 @@ import {
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
 import { Spa2ListAnalytic } from './spa2-list-analytic';
+import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sortable-grid';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Manages every block src/sections/spa2/view/spa2-content-pages.tsx's
@@ -145,6 +148,11 @@ const EMPTY_FORM: Spa2ServiceItem = {
 // editing UX without changing the persisted Spa2ServiceItem shape.
 type ImageAdjust = Pick<Spa2AdjustableImage, 'focalX' | 'focalY' | 'zoom'>;
 const DEFAULT_IMAGE_ADJUST: ImageAdjust = { focalX: 50, focalY: 50, zoom: 100 };
+
+// Local row state for the "Lợi ích" (benefits) row-list editor in the add
+// dialog — flattened to Spa2ServiceItem.benefits (string[]) on submit, same
+// pattern as the package-includes editor in spa2-special-occasions-manage-view.
+type BenefitRow = { id: string; value: string };
 
 function SectionCard({
   title,
@@ -287,7 +295,7 @@ export function Spa2ServicesManageView() {
   const [editSlug, setEditSlug] = useState<string | null>(null);
   const [deleteSlug, setDeleteSlug] = useState<string | null>(null);
   const [form, setForm] = useState<Spa2ServiceItem>(EMPTY_FORM);
-  const [benefitsText, setBenefitsText] = useState('');
+  const [benefitRows, setBenefitRows] = useState<BenefitRow[]>([]);
   const [imageAdjust, setImageAdjust] = useState<ImageAdjust>(DEFAULT_IMAGE_ADJUST);
 
   const [dirty, setDirty] = useState(false);
@@ -374,7 +382,7 @@ export function Spa2ServicesManageView() {
 
   const openCreate = useCallback(() => {
     setForm(EMPTY_FORM);
-    setBenefitsText('');
+    setBenefitRows([]);
     setImageAdjust(DEFAULT_IMAGE_ADJUST);
     setEditSlug(null);
     setOpenForm(true);
@@ -385,13 +393,24 @@ export function Spa2ServicesManageView() {
     setImageAdjust({ focalX: img.focalX, focalY: img.focalY, zoom: img.zoom });
   }, []);
 
+  // ---- Lợi ích dịch vụ (benefits row-list editor) ----
+  const addBenefitRow = useCallback(() => {
+    setBenefitRows((prev) => [...prev, { id: uuidv4(), value: '' }]);
+  }, []);
+  const updateBenefitRow = useCallback((id: string, value: string) => {
+    setBenefitRows((prev) => prev.map((row) => (row.id === id ? { ...row, value } : row)));
+  }, []);
+  const removeBenefitRow = useCallback((id: string) => {
+    setBenefitRows((prev) => prev.filter((row) => row.id !== id));
+  }, []);
+  const reorderBenefitRows = useCallback((next: BenefitRow[]) => {
+    setBenefitRows(next);
+  }, []);
+
   const handleSubmit = useCallback(() => {
-    const benefits = benefitsText
-      .split(',')
-      .map((b) => b.trim())
-      .filter(Boolean);
+    const benefits = benefitRows.map((row) => row.value.trim()).filter(Boolean);
     const slug = form.slug || form.name.toLowerCase().replace(/\s+/g, '-');
-    const newItem: Spa2ServiceItem = { ...form, slug, benefits };
+    const newItem: Spa2ServiceItem = { ...form, slug, benefits, id: form.id || uuidv4() };
     if (editSlug) {
       setItems((p) => p.map((s) => (s.slug === editSlug ? newItem : s)));
     } else {
@@ -399,7 +418,7 @@ export function Spa2ServicesManageView() {
     }
     setOpenForm(false);
     markDirty();
-  }, [form, editSlug, benefitsText]);
+  }, [form, editSlug, benefitRows]);
 
   const handleDelete = useCallback(() => {
     setItems((p) => p.filter((s) => s.slug !== deleteSlug));
@@ -415,6 +434,17 @@ export function Spa2ServicesManageView() {
           : s
       )
     );
+    markDirty();
+  }, []);
+
+  // Reorders the main services card grid. `next` is the reordered *visible*
+  // (filtered + paginated) subset — splice it back into the full `items`
+  // array by id so services outside the current page/filter keep their slot
+  // (same technique as reorderRewards in spa2-loyalty-rewards-manage-view).
+  const handleReorderServices = useCallback((next: Spa2ServiceItem[]) => {
+    const queue = [...next];
+    const nextIds = new Set(next.map((s) => s.id));
+    setItems((prev) => prev.map((s) => (nextIds.has(s.id) ? queue.shift()! : s)));
     markDirty();
   }, []);
 
@@ -847,132 +877,166 @@ export function Spa2ServicesManageView() {
           </Stack>
 
           {/* Service cards grid (matches public view, uniform sizing) */}
-          <Grid container spacing={2}>
-            {paginated.map((item) => (
-              <Grid key={item.slug} xs={12} sm={6} md={4} sx={{ display: 'flex' }}>
-                <Card
-                  sx={{
-                    p: 0,
-                    overflow: 'hidden',
-                    borderRadius: 4,
-                    bgcolor: 'common.white',
-                    border: `1px solid ${SPA2_CREAM_DARK}`,
-                    boxShadow: '0 10px 30px rgba(31,42,40,0.05)',
-                    width: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    transition: 'all .25s',
-                    '&:hover': {
-                      transform: 'translateY(-4px)',
-                      boxShadow: '0 20px 40px rgba(46,139,122,0.15)',
-                      borderColor: SPA2_TEAL_LIGHT,
-                    },
-                  }}
-                >
-                  <Box sx={{ position: 'relative' }}>
-                    <Box
-                      sx={{
-                        height: 220,
-                        backgroundImage: `url(${item.image})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                      }}
-                    />
-                    <Chip
-                      label={
-                        CATEGORIES.find((c) => c.value === item.category)?.label ?? item.category
-                      }
-                      size="small"
-                      sx={{
-                        position: 'absolute',
-                        top: 12,
-                        left: 12,
-                        bgcolor: 'rgba(255,255,255,0.9)',
-                        color: SPA2_TEAL_DARK,
-                        fontWeight: 600,
-                      }}
-                    />
-                    <Chip
-                      label={item.status}
-                      size="small"
-                      color={STATUS_COLOR[item.status]}
-                      sx={{ position: 'absolute', top: 12, right: 12 }}
-                    />
-                  </Box>
-
-                  <Box sx={{ p: 3, display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-                    <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 1.5 }}>
-                      <Iconify icon={item.icon} sx={{ color: SPA2_TEAL }} width={28} />
-                      <Typography variant="h6" sx={{ color: SPA2_INK }}>
-                        {item.name}
-                      </Typography>
-                    </Stack>
-                    <Typography sx={{ color: 'text.secondary', mb: 2, minHeight: 44, flexGrow: 1 }}>
-                      {item.short}
-                    </Typography>
-                    <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
-                      <Chip
-                        size="small"
-                        label={item.duration}
-                        sx={{ bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
-                      />
-                      <Chip
-                        size="small"
-                        label={formatVND(item.price)}
-                        sx={{ bgcolor: SPA2_TEAL, color: 'white' }}
-                      />
-                    </Stack>
-
-                    <Stack direction="row" spacing={1} justifyContent="space-between">
-                      <Button
-                        component={RouterLink}
-                        href={paths.dashboard.spa2.serviceDetails(item.slug)}
-                        size="small"
-                        startIcon={<Iconify icon="solar:pen-bold" />}
-                        sx={{ color: SPA2_TEAL_DARK, p: 0, '&:hover': { bgcolor: 'transparent' } }}
-                      >
-                        Chỉnh sửa
-                      </Button>
-                      <Stack direction="row" spacing={0.5}>
-                        <Tooltip title={item.status === 'Đang hiển thị' ? 'Ẩn' : 'Hiện'}>
-                          <IconButton size="small" onClick={() => handleToggle(item.slug)}>
-                            <Iconify
-                              icon={
-                                item.status === 'Đang hiển thị'
-                                  ? 'solar:eye-closed-bold'
-                                  : 'solar:eye-bold'
-                              }
-                              color={
-                                item.status === 'Đang hiển thị' ? 'warning.main' : 'success.main'
-                              }
+          <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1, display: 'block' }}>
+            Kéo thả để sắp xếp lại thứ tự hiển thị dịch vụ
+            {sortBy !== 'default' && ' (chỉ áp dụng khi "Sắp xếp" đang ở "Mặc định")'}.
+          </Typography>
+          <Spa2SortableGrid items={paginated} onReorder={handleReorderServices}>
+            <Grid container spacing={2}>
+              {paginated.map((item) => (
+                <Grid key={item.id} xs={12} sm={6} md={4} sx={{ display: 'flex' }}>
+                  {/* Extra wrapper Box (with `& > div` sizing override) keeps the
+                      Spa2SortableItem drag wrapper from collapsing to its content
+                      width/height instead of filling this Grid item, so cards stay
+                      full-width and equal-height exactly as before drag support. */}
+                  <Box sx={{ width: '100%', '& > div': { width: '100%', height: '100%' } }}>
+                    <Spa2SortableItem id={item.id}>
+                      {(sortable) => (
+                        <Card
+                          sx={{
+                            p: 0,
+                            overflow: 'hidden',
+                            borderRadius: 4,
+                            bgcolor: 'common.white',
+                            border: `1px solid ${SPA2_CREAM_DARK}`,
+                            boxShadow: '0 10px 30px rgba(31,42,40,0.05)',
+                            width: '100%',
+                            height: '100%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            transition: 'all .25s',
+                            '&:hover': {
+                              transform: 'translateY(-4px)',
+                              boxShadow: '0 20px 40px rgba(46,139,122,0.15)',
+                              borderColor: SPA2_TEAL_LIGHT,
+                            },
+                          }}
+                        >
+                          <Box sx={{ position: 'relative' }}>
+                            <Box
+                              sx={{
+                                height: 220,
+                                backgroundImage: `url(${item.image})`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                              }}
                             />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title={t('common.delete')}>
-                          <IconButton
-                            size="small"
-                            color="error"
-                            onClick={() => setDeleteSlug(item.slug)}
-                          >
-                            <Iconify icon="solar:trash-bin-trash-bold" />
-                          </IconButton>
-                        </Tooltip>
-                      </Stack>
-                    </Stack>
-                  </Box>
-                </Card>
-              </Grid>
-            ))}
+                            <Chip
+                              label={
+                                CATEGORIES.find((c) => c.value === item.category)?.label ??
+                                item.category
+                              }
+                              size="small"
+                              sx={{
+                                position: 'absolute',
+                                top: 12,
+                                left: 12,
+                                bgcolor: 'rgba(255,255,255,0.9)',
+                                color: SPA2_TEAL_DARK,
+                                fontWeight: 600,
+                              }}
+                            />
+                            <Chip
+                              label={item.status}
+                              size="small"
+                              color={STATUS_COLOR[item.status]}
+                              sx={{ position: 'absolute', top: 12, right: 12 }}
+                            />
+                          </Box>
 
-            {filtered.length === 0 && (
-              <Grid xs={12}>
-                <Box sx={{ textAlign: 'center', color: 'text.secondary', py: 10 }}>
-                  <Iconify icon="solar:leaf-linear" width={48} sx={{ color: SPA2_SAGE, mb: 2 }} />
-                  <Typography>{t('common.no_data')}</Typography>
-                </Box>
-              </Grid>
-            )}
-          </Grid>
+                          <Box
+                            sx={{ p: 3, display: 'flex', flexDirection: 'column', flexGrow: 1 }}
+                          >
+                            <Stack
+                              direction="row"
+                              alignItems="center"
+                              spacing={1.5}
+                              sx={{ mb: 1.5 }}
+                            >
+                              <Iconify icon={item.icon} sx={{ color: SPA2_TEAL }} width={28} />
+                              <Typography variant="h6" sx={{ color: SPA2_INK }}>
+                                {item.name}
+                              </Typography>
+                            </Stack>
+                            <Typography
+                              sx={{ color: 'text.secondary', mb: 2, minHeight: 44, flexGrow: 1 }}
+                            >
+                              {item.short}
+                            </Typography>
+                            <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+                              <Chip
+                                size="small"
+                                label={item.duration}
+                                sx={{ bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
+                              />
+                              <Chip
+                                size="small"
+                                label={formatVND(item.price)}
+                                sx={{ bgcolor: SPA2_TEAL, color: 'white' }}
+                              />
+                            </Stack>
+
+                            <Stack direction="row" spacing={1} justifyContent="space-between">
+                              <Button
+                                component={RouterLink}
+                                href={paths.dashboard.spa2.serviceDetails(item.slug)}
+                                size="small"
+                                startIcon={<Iconify icon="solar:pen-bold" />}
+                                sx={{
+                                  color: SPA2_TEAL_DARK,
+                                  p: 0,
+                                  '&:hover': { bgcolor: 'transparent' },
+                                }}
+                              >
+                                Chỉnh sửa
+                              </Button>
+                              <Stack direction="row" spacing={0.5} alignItems="center">
+                                <Spa2DragHandle sortable={sortable} />
+                                <Tooltip title={item.status === 'Đang hiển thị' ? 'Ẩn' : 'Hiện'}>
+                                  <IconButton size="small" onClick={() => handleToggle(item.slug)}>
+                                    <Iconify
+                                      icon={
+                                        item.status === 'Đang hiển thị'
+                                          ? 'solar:eye-closed-bold'
+                                          : 'solar:eye-bold'
+                                      }
+                                      color={
+                                        item.status === 'Đang hiển thị'
+                                          ? 'warning.main'
+                                          : 'success.main'
+                                      }
+                                    />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip title={t('common.delete')}>
+                                  <IconButton
+                                    size="small"
+                                    color="error"
+                                    onClick={() => setDeleteSlug(item.slug)}
+                                  >
+                                    <Iconify icon="solar:trash-bin-trash-bold" />
+                                  </IconButton>
+                                </Tooltip>
+                              </Stack>
+                            </Stack>
+                          </Box>
+                        </Card>
+                      )}
+                    </Spa2SortableItem>
+                  </Box>
+                </Grid>
+              ))}
+
+              {filtered.length === 0 && (
+                <Grid xs={12}>
+                  <Box sx={{ textAlign: 'center', color: 'text.secondary', py: 10 }}>
+                    <Iconify icon="solar:leaf-linear" width={48} sx={{ color: SPA2_SAGE, mb: 2 }} />
+                    <Typography>{t('common.no_data')}</Typography>
+                  </Box>
+                </Grid>
+              )}
+            </Grid>
+          </Spa2SortableGrid>
 
           {pageCount > 1 && (
             <Stack alignItems="center" sx={{ mt: 4 }}>
@@ -1429,14 +1493,57 @@ export function Spa2ServicesManageView() {
                   onChange={handleChange('icon')}
                   fullWidth
                 />
-                <TextField
-                  label={t('services.form_benefits')}
-                  value={benefitsText}
-                  onChange={(e) => setBenefitsText(e.target.value)}
-                  fullWidth
-                  multiline
-                  rows={2}
-                />
+                <Box>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    sx={{ mb: 1 }}
+                  >
+                    <Typography variant="caption" color="text.secondary">
+                      Lợi ích dịch vụ
+                    </Typography>
+                    <Button
+                      size="small"
+                      startIcon={<Iconify icon="mingcute:add-line" width={16} />}
+                      onClick={addBenefitRow}
+                    >
+                      Thêm mục
+                    </Button>
+                  </Stack>
+                  {benefitRows.length === 0 && (
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                      Chưa có mục nào — nhấn &quot;Thêm mục&quot; để bắt đầu.
+                    </Typography>
+                  )}
+                  <Spa2SortableGrid items={benefitRows} onReorder={reorderBenefitRows}>
+                    <Stack spacing={1}>
+                      {benefitRows.map((row) => (
+                        <Spa2SortableItem key={row.id} id={row.id}>
+                          {(sortable) => (
+                            <Stack direction="row" spacing={1} alignItems="center">
+                              <Spa2DragHandle sortable={sortable} />
+                              <TextField
+                                fullWidth
+                                size="small"
+                                value={row.value}
+                                onChange={(e) => updateBenefitRow(row.id, e.target.value)}
+                                placeholder="VD: Giảm căng cơ"
+                              />
+                              <IconButton
+                                size="small"
+                                color="error"
+                                onClick={() => removeBenefitRow(row.id)}
+                              >
+                                <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                              </IconButton>
+                            </Stack>
+                          )}
+                        </Spa2SortableItem>
+                      ))}
+                    </Stack>
+                  </Spa2SortableGrid>
+                </Box>
               </Stack>
             </Grid>
             <Grid xs={12} md={6}>

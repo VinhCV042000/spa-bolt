@@ -56,6 +56,14 @@ import { Spa2ManageShell } from './spa2-manage-shell';
 // Shared CRUD view for the 8 spa2 "content pages". Mirrors the /manage/services
 // experience (banner editor + status-tabbed list + add/edit dialog + delete
 // confirm + toggle publish) but generalised over services / packages / faqs.
+//
+// NOTE: `Spa2ContentPageKey` (src/_mock/_spa2/content-pages.ts) is currently
+// `never` and `SPA2_CONTENT_PAGES` is `{}` — every content type that once used
+// this generic view has since been migrated to a dedicated bespoke manage view
+// (same pattern as the now-empty `SPA2_MANAGE_CONFIGS` in spa2-manage-configs.ts).
+// There is nothing left for this view to render, so it is intentionally NOT wired
+// to any route/path/nav entry. Kept for reference only; safe to delete in a future
+// cleanup pass.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const formatVND = (n: number) => `${new Intl.NumberFormat('vi-VN').format(n)}đ`;

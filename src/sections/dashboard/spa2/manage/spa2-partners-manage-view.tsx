@@ -36,7 +36,9 @@ import { spa2PartnersBanner } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { useTable } from 'src/components/table/use-table';
 import { ConfirmDialog } from 'src/components/custom-dialog';
+import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
 
 import {
   Spa2PageHero,
@@ -284,6 +286,7 @@ export function Spa2PartnersManageView() {
   );
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<'all' | string>('all');
+  const table = useTable({ defaultRowsPerPage: 5 });
   const [openForm, setOpenForm] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
   const [deleteId, setDeleteId] = useState<number | null>(null);
@@ -697,7 +700,10 @@ export function Spa2PartnersManageView() {
                   color={SPA2_TEAL}
                   unitLabel={t('partners.unit_label')}
                   active={categoryFilter === 'all'}
-                  onClick={() => setCategoryFilter('all')}
+                  onClick={() => {
+                    setCategoryFilter('all');
+                    table.onResetPage();
+                  }}
                 />
                 {stats.byCategory.map((c) => (
                   <Spa2ListAnalytic
@@ -709,7 +715,10 @@ export function Spa2PartnersManageView() {
                     color={SPA2_TEAL_DARK}
                     unitLabel={t('partners.unit_label')}
                     active={categoryFilter === c.key}
-                    onClick={() => setCategoryFilter(c.key)}
+                    onClick={() => {
+                      setCategoryFilter(c.key);
+                      table.onResetPage();
+                    }}
                   />
                 ))}
               </Stack>
@@ -722,7 +731,10 @@ export function Spa2PartnersManageView() {
               <TextField
                 placeholder={t('partners.search_placeholder')}
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  table.onResetPage();
+                }}
                 size="small"
                 sx={{ width: 280 }}
                 InputProps={{
@@ -756,70 +768,83 @@ export function Spa2PartnersManageView() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {filtered.map((item) => (
-                    <TableRow key={item.id} hover>
-                      <TableCell>
-                        <Stack direction="row" spacing={1.5} alignItems="center">
-                          <Box
-                            sx={{
-                              width: 40,
-                              height: 40,
-                              borderRadius: '50%',
-                              bgcolor: 'primary.lighter',
-                              color: 'primary.main',
-                              fontWeight: 700,
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                            }}
-                          >
-                            {item.logo}
-                          </Box>
-                          <Box>
-                            <Typography variant="subtitle2">{item.name}</Typography>
-                            <Typography
-                              variant="caption"
-                              color="text.secondary"
-                              noWrap
-                              sx={{ maxWidth: 180, display: 'block' }}
+                  {filtered
+                    .slice(
+                      table.page * table.rowsPerPage,
+                      table.page * table.rowsPerPage + table.rowsPerPage
+                    )
+                    .map((item) => (
+                      <TableRow key={item.id} hover>
+                        <TableCell>
+                          <Stack direction="row" spacing={1.5} alignItems="center">
+                            <Box
+                              sx={{
+                                width: 40,
+                                height: 40,
+                                borderRadius: '50%',
+                                bgcolor: 'primary.lighter',
+                                color: 'primary.main',
+                                fontWeight: 700,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                              }}
                             >
-                              {item.desc}
-                            </Typography>
-                          </Box>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Chip size="small" label={item.country} />
-                      </TableCell>
-                      <TableCell>
-                        {categories.find((c) => c.key === item.category)?.label ?? item.category}
-                      </TableCell>
-                      <TableCell>{item.specialty}</TableCell>
-                      <TableCell>{item.since}</TableCell>
-                      <TableCell>{item.expert}</TableCell>
-                      <TableCell align="right">
-                        <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
-                          <Tooltip title={t('common.edit')}>
-                            <IconButton size="small" onClick={() => openEdit(item)}>
-                              <Iconify icon="solar:pen-bold" />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title={t('common.delete')}>
-                            <IconButton
-                              size="small"
-                              color="error"
-                              onClick={() => setDeleteId(item.id)}
-                            >
-                              <Iconify icon="solar:trash-bin-trash-bold" />
-                            </IconButton>
-                          </Tooltip>
-                        </Stack>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                              {item.logo}
+                            </Box>
+                            <Box>
+                              <Typography variant="subtitle2">{item.name}</Typography>
+                              <Typography
+                                variant="caption"
+                                color="text.secondary"
+                                noWrap
+                                sx={{ maxWidth: 180, display: 'block' }}
+                              >
+                                {item.desc}
+                              </Typography>
+                            </Box>
+                          </Stack>
+                        </TableCell>
+                        <TableCell>
+                          <Chip size="small" label={item.country} />
+                        </TableCell>
+                        <TableCell>
+                          {categories.find((c) => c.key === item.category)?.label ??
+                            item.category}
+                        </TableCell>
+                        <TableCell>{item.specialty}</TableCell>
+                        <TableCell>{item.since}</TableCell>
+                        <TableCell>{item.expert}</TableCell>
+                        <TableCell align="right">
+                          <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
+                            <Tooltip title={t('common.edit')}>
+                              <IconButton size="small" onClick={() => openEdit(item)}>
+                                <Iconify icon="solar:pen-bold" />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title={t('common.delete')}>
+                              <IconButton
+                                size="small"
+                                color="error"
+                                onClick={() => setDeleteId(item.id)}
+                              >
+                                <Iconify icon="solar:trash-bin-trash-bold" />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
               </Table>
             </TableContainer>
+            <TablePaginationCustom
+              count={filtered.length}
+              page={table.page}
+              rowsPerPage={table.rowsPerPage}
+              onPageChange={table.onChangePage}
+              onRowsPerPageChange={table.onChangeRowsPerPage}
+            />
           </Card>
         </Stack>
       )}
