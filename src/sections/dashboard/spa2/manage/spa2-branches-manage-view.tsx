@@ -12,10 +12,8 @@ import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -40,7 +38,7 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import {
   Spa2PageHero,
   Spa2SoftCard,
-  Spa2SectionTitle,
+  Spa2BranchesPageView,
 } from 'src/sections/spa2/view/spa2-content-pages';
 import {
   SPA2_INK,
@@ -139,83 +137,6 @@ function BranchPreviewCard({ form }: { form: Omit<Branch, 'id'> }) {
   );
 }
 
-// Mirrors the "Chọn khu vực" city selector + map embed section on the public
-// page exactly, fed by whatever branch list is currently in dashboard state.
-function BranchLocatorPreview({ branches }: { branches: Branch[] }) {
-  const [activeCity, setActiveCity] = useState<string>(branches[0]?.city ?? '');
-  const activeBranch = branches.find((b) => b.city === activeCity) ?? branches[0];
-
-  if (!activeBranch) {
-    return (
-      <Typography variant="body2" color="text.secondary">
-        Chưa có chi nhánh nào.
-      </Typography>
-    );
-  }
-
-  return (
-    <Grid container spacing={4}>
-      <Grid xs={12} md={4}>
-        <Spa2SoftCard sx={{ p: 0, overflow: 'hidden' }}>
-          <Typography sx={{ p: 2.5, pb: 0, color: SPA2_INK, fontWeight: 600 }}>
-            Chọn khu vực
-          </Typography>
-          <Stack divider={<Divider />} sx={{ mt: 1 }}>
-            {branches.map((b) => (
-              <Stack
-                key={b.id}
-                direction="row"
-                spacing={1.5}
-                alignItems="center"
-                onClick={() => setActiveCity(b.city)}
-                sx={{
-                  p: 2.5,
-                  cursor: 'pointer',
-                  bgcolor: activeCity === b.city ? SPA2_CREAM : 'transparent',
-                  borderLeft:
-                    activeCity === b.city ? `3px solid ${SPA2_TEAL}` : '3px solid transparent',
-                  '&:hover': { bgcolor: SPA2_CREAM },
-                }}
-              >
-                <Iconify
-                  icon="solar:map-point-bold"
-                  sx={{ color: activeCity === b.city ? SPA2_TEAL : 'text.disabled' }}
-                />
-                <Stack>
-                  <Typography sx={{ color: SPA2_INK, fontWeight: 600, fontSize: 14 }}>
-                    {b.city}
-                  </Typography>
-                  <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>{b.name}</Typography>
-                </Stack>
-              </Stack>
-            ))}
-          </Stack>
-        </Spa2SoftCard>
-      </Grid>
-      <Grid xs={12} md={8}>
-        <Box
-          sx={{
-            position: 'relative',
-            height: { xs: 320, md: '100%' },
-            minHeight: 360,
-            borderRadius: 4,
-            overflow: 'hidden',
-            boxShadow: '0 10px 30px rgba(31,42,40,0.08)',
-          }}
-        >
-          <iframe
-            title="Nature Spa Map"
-            width="100%"
-            height="100%"
-            style={{ border: 0 }}
-            loading="lazy"
-            src={`https://www.google.com/maps?q=${encodeURIComponent(activeBranch.address)}&output=embed`}
-          />
-        </Box>
-      </Grid>
-    </Grid>
-  );
-}
 
 export function Spa2BranchesManageView() {
   const { t } = useTranslate('spa2-manage');
@@ -533,64 +454,66 @@ export function Spa2BranchesManageView() {
         </Card>
       )}
 
-      {/* Live preview of the whole page — mirrors Spa2BranchesPageView exactly:
-          hero + city-selector/map + branch card grid. */}
+      {/* Full-page live preview - renders the real public Spa2BranchesPageView
+          component (src/sections/spa2/view/spa2-content-pages.tsx), the exact
+          same component src/pages/spa2/branches.tsx renders on the live
+          /spa2/branches page, so this can never visually drift from a
+          hand-rolled mockup. Note: Spa2BranchesPageView currently takes no
+          props - it reads spa2Branches straight from
+          src/sections/spa2/spa2-pages-data, so this preview reflects that
+          shared source rather than this form's in-progress (unsaved) edits.
+          The branch-order drag-and-drop tool below is kept as a separate
+          admin utility (not a "preview") since reordering has no other UI
+          entry point in this view. */}
       {tab === 'preview' && (
-        <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
-          <Spa2PageHero
-            image={banner.image.url}
-            imageStyle={banner.image}
-            eyebrow={banner.eyebrow}
-            title={banner.title}
-            subtitle={banner.subtitle}
-          />
-
-          <Box sx={{ py: { xs: 8, md: 10 } }}>
-            <Container>
-              <BranchLocatorPreview branches={items} />
-            </Container>
+        <Stack spacing={3}>
+          <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
+            <Spa2BranchesPageView />
           </Box>
 
-          <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: SPA2_CREAM }}>
-            <Container>
-              <Spa2SectionTitle eyebrow="Chi nhánh" title="Tất cả địa điểm" />
-              {items.length === 0 ? (
-                <Typography variant="body2" color="text.secondary">
-                  Chưa có chi nhánh nào.
-                </Typography>
-              ) : (
-                <Spa2SortableGrid
-                  items={items.map((b) => ({ ...b, id: String(b.id) }))}
-                  onReorder={reorderItems}
-                >
-                  <Grid container spacing={3}>
-                    {items.map((b) => (
-                      <Grid key={b.id} xs={12} sm={6} md={6}>
-                        <Spa2SortableItem id={String(b.id)}>
-                          {(sortable) => (
-                            <Box sx={{ position: 'relative' }}>
-                              <BranchPreviewCard form={b} />
-                              <Spa2DragHandle
-                                sortable={sortable}
-                                sx={{
-                                  position: 'absolute',
-                                  top: 12,
-                                  left: 12,
-                                  bgcolor: 'common.white',
-                                  boxShadow: 1,
-                                }}
-                              />
-                            </Box>
-                          )}
-                        </Spa2SortableItem>
-                      </Grid>
-                    ))}
-                  </Grid>
-                </Spa2SortableGrid>
-              )}
-            </Container>
-          </Box>
-        </Box>
+          <Card sx={{ p: 3, borderRadius: 3 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 0.5 }}>
+              Sắp xếp thứ tự chi nhánh
+            </Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 2 }}>
+              Kéo thả để thay đổi thứ tự chi nhánh hiển thị trên trang công khai.
+            </Typography>
+            {items.length === 0 ? (
+              <Typography variant="body2" color="text.secondary">
+                Chưa có chi nhánh nào.
+              </Typography>
+            ) : (
+              <Spa2SortableGrid
+                items={items.map((b) => ({ ...b, id: String(b.id) }))}
+                onReorder={reorderItems}
+              >
+                <Grid container spacing={3}>
+                  {items.map((b) => (
+                    <Grid key={b.id} xs={12} sm={6} md={6}>
+                      <Spa2SortableItem id={String(b.id)}>
+                        {(sortable) => (
+                          <Box sx={{ position: 'relative' }}>
+                            <BranchPreviewCard form={b} />
+                            <Spa2DragHandle
+                              sortable={sortable}
+                              sx={{
+                                position: 'absolute',
+                                top: 12,
+                                left: 12,
+                                bgcolor: 'common.white',
+                                boxShadow: 1,
+                              }}
+                            />
+                          </Box>
+                        )}
+                      </Spa2SortableItem>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Spa2SortableGrid>
+            )}
+          </Card>
+        </Stack>
       )}
 
       {/* Create / Edit dialog - left: form, right: live preview */}

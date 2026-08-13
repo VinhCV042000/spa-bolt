@@ -15,7 +15,6 @@ import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -43,7 +42,7 @@ import { TablePaginationCustom } from 'src/components/table/table-pagination-cus
 import {
   Spa2PageHero,
   Spa2SoftCard,
-  Spa2SectionTitle,
+  Spa2PartnersPageView,
 } from 'src/sections/spa2/view/spa2-content-pages';
 import {
   SPA2_INK,
@@ -1101,123 +1100,17 @@ export function Spa2PartnersManageView() {
         </Card>
       )}
 
-      {/* Live preview — mirrors Spa2PartnersPageView's full section stack */}
+      {/* Live preview — renders the actual public Spa2PartnersPageView so this
+          always matches the live /spa2/partners page pixel-for-pixel instead
+          of a separately hand-rolled mockup. Note: Spa2PartnersPageView takes
+          no props — it reads spa2PartnersBanner / spa2PartnerProfiles /
+          spa2ExtraPartners / spa2PartnerCategories / spa2Collaborations /
+          spa2QualityCerts directly from src/sections/spa2/spa2-pages-data, so
+          this preview shows the last-saved public content, not the unsaved
+          edits from the other tabs above. */}
       {tab === 'preview' && (
         <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
-          <Spa2PageHero
-            image={banner.image.url}
-            imageStyle={banner.image}
-            eyebrow={banner.eyebrow}
-            title={banner.title}
-            subtitle={banner.subtitle}
-          />
-
-          <Box sx={{ py: { xs: 8, md: 10 } }}>
-            <Container>
-              <Spa2SectionTitle eyebrow="Thương hiệu" title="Đối tác của chúng tôi" />
-              {items.length === 0 ? (
-                <Typography variant="body2" color="text.secondary">
-                  Chưa có đối tác nào.
-                </Typography>
-              ) : (
-                <Grid container spacing={3}>
-                  {items.map((p) => (
-                    <Grid key={p.id} xs={6} sm={4} md={2}>
-                      <PartnerTileCard form={p} />
-                    </Grid>
-                  ))}
-                </Grid>
-              )}
-            </Container>
-          </Box>
-
-          <Box sx={{ py: { xs: 8, md: 10 }, bgcolor: SPA2_CREAM }}>
-            <Container>
-              <Spa2SectionTitle eyebrow="Phân loại" title="Đối tác chiến lược" />
-              <Grid container spacing={3}>
-                {categories.map((cat) => {
-                  const partnersInCat = items.filter((p) => p.category === cat.key);
-                  return (
-                    <Grid key={cat.key} xs={12} sm={6} md={3}>
-                      <Spa2SoftCard>
-                        <Iconify icon={cat.icon} width={36} sx={{ color: SPA2_TEAL, mb: 1.5 }} />
-                        <Typography variant="h6" sx={{ color: SPA2_INK, mb: 1.5 }}>
-                          {cat.label}
-                        </Typography>
-                        <Stack spacing={1}>
-                          {partnersInCat.length === 0 ? (
-                            <Typography sx={{ fontSize: 13, color: 'text.disabled' }}>—</Typography>
-                          ) : (
-                            partnersInCat.map((p) => (
-                              <Typography key={p.id} sx={{ fontSize: 14, color: 'text.secondary' }}>
-                                • {p.name}
-                              </Typography>
-                            ))
-                          )}
-                        </Stack>
-                      </Spa2SoftCard>
-                    </Grid>
-                  );
-                })}
-              </Grid>
-            </Container>
-          </Box>
-
-          <Box sx={{ py: { xs: 8, md: 10 } }}>
-            <Container>
-              <Spa2SectionTitle eyebrow="Hợp tác" title="Dự án nổi bật" />
-              <Grid container spacing={3}>
-                {collabs.map((c) => (
-                  <Grid key={c.id} xs={12} sm={6} md={4}>
-                    <Spa2SoftCard sx={{ p: 0, overflow: 'hidden' }}>
-                      <Box
-                        sx={{
-                          height: 180,
-                          backgroundImage: `url(${c.image})`,
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center',
-                        }}
-                      />
-                      <Box sx={{ p: 2.5 }}>
-                        <Chip
-                          size="small"
-                          label={c.year}
-                          sx={{ mb: 1.5, bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
-                        />
-                        <Typography sx={{ color: SPA2_INK, fontWeight: 600, mb: 0.5 }}>
-                          {c.title}
-                        </Typography>
-                        <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
-                          Cùng {c.partner}
-                        </Typography>
-                      </Box>
-                    </Spa2SoftCard>
-                  </Grid>
-                ))}
-              </Grid>
-            </Container>
-          </Box>
-
-          <Box sx={{ py: { xs: 8, md: 10 }, bgcolor: SPA2_CREAM }}>
-            <Container>
-              <Spa2SectionTitle eyebrow="Tiêu chuẩn" title="Chứng nhận" />
-              <Grid container spacing={3}>
-                {certs.map((c) => (
-                  <Grid key={c.id} xs={12} sm={6} md={3}>
-                    <Spa2SoftCard sx={{ textAlign: 'center' }}>
-                      <Iconify icon={c.icon} width={44} sx={{ color: SPA2_TEAL, mb: 1.5 }} />
-                      <Typography variant="h6" sx={{ color: SPA2_INK, mb: 0.5 }}>
-                        {c.name}
-                      </Typography>
-                      <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
-                        {c.desc}
-                      </Typography>
-                    </Spa2SoftCard>
-                  </Grid>
-                ))}
-              </Grid>
-            </Container>
-          </Box>
+          <Spa2PartnersPageView />
         </Box>
       )}
 

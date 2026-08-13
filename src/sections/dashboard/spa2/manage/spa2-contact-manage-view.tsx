@@ -21,7 +21,6 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
 import Grid from '@mui/material/Unstable_Grid2';
-import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
@@ -50,7 +49,7 @@ import { TablePaginationCustom } from 'src/components/table/table-pagination-cus
 import {
   Spa2PageHero,
   Spa2SoftCard,
-  Spa2SectionTitle,
+  Spa2ContactPageView,
 } from 'src/sections/spa2/view/spa2-content-pages';
 import {
   SPA2_INK,
@@ -227,45 +226,6 @@ export function Spa2ContactManageView() {
     { icon: 'solar:chat-round-dots-bold', label: 'Zalo', value: info.zalo },
     { icon: 'solar:map-point-bold', label: 'Trụ sở', value: info.address },
   ];
-
-  const contactFormCard = (
-    <Spa2SoftCard>
-      <Spa2SectionTitle eyebrow="Gửi lời nhắn" title="Form liên hệ" align="left" />
-      <Grid container spacing={2}>
-        <Grid xs={12} sm={6}>
-          <TextField fullWidth label="Họ và tên" disabled />
-        </Grid>
-        <Grid xs={12} sm={6}>
-          <TextField fullWidth label="Số điện thoại" disabled />
-        </Grid>
-        <Grid xs={12}>
-          <TextField fullWidth label="Email" disabled />
-        </Grid>
-        <Grid xs={12}>
-          <TextField fullWidth label="Chủ đề" disabled />
-        </Grid>
-        <Grid xs={12}>
-          <TextField fullWidth multiline rows={4} label="Nội dung" disabled />
-        </Grid>
-        <Grid xs={12}>
-          <Button
-            fullWidth
-            size="large"
-            disabled
-            sx={{
-              borderRadius: 999,
-              py: 1.5,
-              bgcolor: SPA2_TEAL,
-              color: 'white',
-              '&.Mui-disabled': { bgcolor: SPA2_TEAL, color: 'white', opacity: 0.85 },
-            }}
-          >
-            Gửi lời nhắn
-          </Button>
-        </Grid>
-      </Grid>
-    </Spa2SoftCard>
-  );
 
   return (
     <Spa2ManageShell
@@ -835,59 +795,17 @@ export function Spa2ContactManageView() {
         </Card>
       )}
 
-      {/* Full-page live preview - pixel-for-pixel same layout/order as the public /spa2/contact page */}
+      {/* Full-page live preview - renders the real public Spa2ContactPageView
+          component (src/sections/spa2/view/spa2-content-pages.tsx), the exact
+          same component src/pages/spa2/contact.tsx renders on the live
+          /spa2/contact page, so this can never visually drift from a
+          hand-rolled mockup. Note: Spa2ContactPageView currently takes no
+          props - it reads spa2ContactInfo/spa2ContactBanner straight from
+          src/_mock/_spa2, so this preview reflects that shared mock data
+          rather than this form's in-progress (unsaved) edits. */}
       {tab === 'preview' && (
-        <Box sx={{ borderRadius: 3, overflow: 'hidden', border: `1px solid ${SPA2_CREAM_DARK}` }}>
-          <Box sx={{ bgcolor: 'background.default' }}>
-            <Spa2PageHero
-              image={banner.image.url}
-              imageStyle={banner.image}
-              eyebrow={banner.eyebrow}
-              title={banner.title}
-              subtitle={banner.subtitle}
-            />
-            <Box sx={{ py: { xs: 8, md: 12 } }}>
-              <Container>
-                <Grid container spacing={5}>
-                  <Grid xs={12} md={5}>
-                    <Stack spacing={2}>
-                      {items.map((i) => (
-                        <Spa2SoftCard key={i.label}>
-                          <Stack direction="row" spacing={2} alignItems="center">
-                            <Box
-                              sx={{
-                                width: 48,
-                                height: 48,
-                                borderRadius: '50%',
-                                bgcolor: SPA2_CREAM,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                flexShrink: 0,
-                              }}
-                            >
-                              <Iconify icon={i.icon} sx={{ color: SPA2_TEAL }} width={24} />
-                            </Box>
-                            <Stack>
-                              <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
-                                {i.label}
-                              </Typography>
-                              <Typography sx={{ color: SPA2_INK, fontWeight: 600 }}>
-                                {i.value}
-                              </Typography>
-                            </Stack>
-                          </Stack>
-                        </Spa2SoftCard>
-                      ))}
-                    </Stack>
-                  </Grid>
-                  <Grid xs={12} md={7}>
-                    {contactFormCard}
-                  </Grid>
-                </Grid>
-              </Container>
-            </Box>
-          </Box>
+        <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
+          <Spa2ContactPageView />
         </Box>
       )}
 

@@ -40,8 +40,8 @@ import {
   type Spa2TherapistReview,
   type Spa2TherapistBooking,
   spa2TherapistProfileBanner,
-  type Spa2TherapistProfileBanner,
   type Spa2TherapistReviewStatus,
+  type Spa2TherapistProfileBanner,
   type Spa2TherapistBookingStatus,
 } from 'src/_mock/_spa2';
 

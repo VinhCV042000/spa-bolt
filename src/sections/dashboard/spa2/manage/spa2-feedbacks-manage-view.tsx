@@ -16,7 +16,6 @@ import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -45,10 +44,9 @@ import { TablePaginationCustom } from 'src/components/table/table-pagination-cus
 
 import { SPA2_INK , SPA2_TEAL, SPA2_CREAM, spa2Feedbacks, SPA2_TEAL_DARK } from 'src/sections/spa2/spa2-pages-data';
 import {
-  Spa2Cta,
   Spa2PageHero,
   Spa2SoftCard,
-  Spa2SectionTitle,
+  Spa2FeedbackPageView,
 } from 'src/sections/spa2/view/spa2-content-pages';
 
 import { Spa2ImageField } from './spa2-image-field';
@@ -219,8 +217,6 @@ export function Spa2FeedbacksManageView() {
     const matchStatus = filterStatus === 'all' || f.status === filterStatus;
     return matchSearch && matchStatus;
   });
-
-  const approvedFeedbacks = items.filter((f) => f.status === 'approved');
 
   const handleApprove = useCallback((id: number) => {
     setItems((p) => p.map((x) => (x.id === id ? { ...x, status: 'approved' } : x)));
@@ -696,69 +692,16 @@ export function Spa2FeedbacksManageView() {
         </Card>
       )}
 
-      {/* Live preview of the whole page — mirrors Spa2FeedbackPageView exactly:
-          hero + read-only video reviews + only approved feedback. */}
+      {/* Live preview — renders the actual public Spa2FeedbackPageView so this
+          always matches the live /spa2/feedback page pixel-for-pixel instead
+          of a separately hand-rolled mockup. Note: Spa2FeedbackPageView takes
+          no props — it reads spa2FeedbackBanner / spa2VideoReviews /
+          spa2Feedbacks directly from src/_mock/_spa2 — so this preview shows
+          the last-saved public content, not the unsaved edits from the other
+          tabs above. */}
       {tab === 'preview' && (
         <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
-          <Spa2PageHero
-            image={banner.image.url}
-            imageStyle={banner.image}
-            eyebrow={banner.eyebrow}
-            title={banner.title}
-            subtitle={banner.subtitle}
-          />
-
-          <Box sx={{ py: { xs: 8, md: 10 } }}>
-            <Container>
-              <Spa2SectionTitle eyebrow="Video" title="Cảm nhận qua video" />
-              <Grid container spacing={3}>
-                {videos.map((v) => (
-                  <Grid key={v.id} xs={12} sm={6} md={4}>
-                    <VideoPreviewCard form={v} />
-                  </Grid>
-                ))}
-              </Grid>
-            </Container>
-          </Box>
-
-          <Box sx={{ pb: { xs: 8, md: 12 } }}>
-            <Container>
-              <Spa2SectionTitle eyebrow="Đánh giá" title="Tất cả phản hồi" />
-              {approvedFeedbacks.length === 0 ? (
-                <Typography variant="body2" color="text.secondary">
-                  Chưa có đánh giá nào được duyệt.
-                </Typography>
-              ) : (
-                <Grid container spacing={3}>
-                  {approvedFeedbacks.map((f) => (
-                    <Grid key={f.id} xs={12} sm={6} md={4}>
-                      <Spa2SoftCard>
-                        <Rating value={f.rating} readOnly size="small" sx={{ mb: 1.5 }} />
-                        <Typography
-                          sx={{ color: SPA2_INK, lineHeight: 1.7, mb: 2, fontStyle: 'italic' }}
-                        >
-                          &ldquo;{f.comment}&rdquo;
-                        </Typography>
-                        <Stack direction="row" spacing={2} alignItems="center">
-                          <Avatar src={f.avatar} />
-                          <Stack>
-                            <Typography sx={{ fontWeight: 600, color: SPA2_INK }}>
-                              {f.name}
-                            </Typography>
-                            <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>
-                              {f.role} · {f.service}
-                            </Typography>
-                          </Stack>
-                        </Stack>
-                      </Spa2SoftCard>
-                    </Grid>
-                  ))}
-                </Grid>
-              )}
-            </Container>
-          </Box>
-
-          <Spa2Cta />
+          <Spa2FeedbackPageView />
         </Box>
       )}
 

@@ -15,7 +15,6 @@ import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -60,10 +59,9 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
 
 import {
-  Spa2Cta,
   Spa2PageHero,
   Spa2SoftCard,
-  Spa2SectionTitle,
+  Spa2OffersPageView,
 } from 'src/sections/spa2/view/spa2-content-pages';
 import {
   SPA2_INK,
@@ -84,10 +82,10 @@ import { Spa2DragHandle, Spa2SortableGrid, Spa2SortableItem } from './spa2-sorta
 // banner, the voucher grid (spa2Offers) and the combo package grid
 // (spa2ComboOffers) - read from and written back in the same shape as
 // src/_mock/_spa2, the single source of truth shared with the public view.
-// The "banner" tab and the "preview" tab reuse Spa2PageHero/Spa2SoftCard/
-// Spa2SectionTitle/Spa2Cta directly (same components the public page
-// renders), and every add/edit dialog shows a live right-hand preview of
-// the exact card being created, built from the same components.
+// The "banner" tab reuses Spa2PageHero directly (same component the public
+// page renders), every add/edit dialog shows a live right-hand preview of
+// the exact card being created (built from the same Spa2SoftCard), and the
+// "preview" tab renders the real Spa2OffersPageView itself.
 // -----------------------------------------------------------------------------
 
 type Voucher = (typeof spa2Offers)[number] & { id: number; active?: boolean };
@@ -1852,60 +1850,16 @@ export function Spa2OffersManageView() {
         </Card>
       )}
 
-      {/* Full-page live preview - pixel-for-pixel same layout/order as the public /spa2/offers page */}
+      {/* Live preview — renders the actual public Spa2OffersPageView so this
+          always matches the live /spa2/offers page pixel-for-pixel instead of
+          a separately hand-rolled mockup. Note: Spa2OffersPageView takes no
+          props — it reads spa2OffersBanner / spa2Offers / spa2ComboOffers
+          directly from src/_mock/_spa2, so this preview shows the last-saved
+          public content, not the unsaved edits from the other tabs above. */}
       {tab === 'preview' && (
         <Box sx={{ borderRadius: 3, overflow: 'hidden', border: `1px solid ${SPA2_CREAM_DARK}` }}>
           <Box sx={{ bgcolor: 'background.default' }}>
-            <Spa2PageHero
-              image={banner.image.url}
-              imageStyle={banner.image}
-              eyebrow={banner.eyebrow}
-              title={banner.title}
-              subtitle={banner.subtitle}
-            />
-
-            <Box sx={{ py: { xs: 8, md: 10 } }}>
-              <Container>
-                <Spa2SectionTitle eyebrow="Voucher" title="Mã ưu đãi hiện có" />
-                <Grid container spacing={3}>
-                  {vouchers.map((o) => (
-                    <Grid key={o.id} xs={12} sm={6} md={3}>
-                      <VoucherPreviewCard
-                        title={o.title}
-                        desc={o.desc}
-                        code={o.code}
-                        discount={o.discount}
-                        expires={o.expires}
-                      />
-                    </Grid>
-                  ))}
-                </Grid>
-              </Container>
-            </Box>
-
-            <Box sx={{ py: { xs: 8, md: 10 }, bgcolor: SPA2_CREAM }}>
-              <Container>
-                <Spa2SectionTitle eyebrow="Combo" title="Gói combo tiết kiệm" />
-                <Grid container spacing={4}>
-                  {combos.map((c) => (
-                    <Grid key={c.id} xs={12} md={4}>
-                      <ComboPreviewCard
-                        name={c.name}
-                        services={c.services}
-                        originalPrice={c.originalPrice}
-                        salePrice={c.salePrice}
-                        image={c.image}
-                        perks={c.perks}
-                        category={c.category}
-                        status={c.status}
-                      />
-                    </Grid>
-                  ))}
-                </Grid>
-              </Container>
-            </Box>
-
-            <Spa2Cta />
+            <Spa2OffersPageView />
           </Box>
         </Box>
       )}

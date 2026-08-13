@@ -11,14 +11,12 @@ import Chip from '@mui/material/Chip';
 import Link from '@mui/material/Link';
 import Tabs from '@mui/material/Tabs';
 import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import TextField from '@mui/material/TextField';
 import { useTheme } from '@mui/material/styles';
@@ -51,7 +49,11 @@ import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
 import { spa2ImageBackgroundStyle } from 'src/sections/spa2/spa2-image-utils';
-import { Spa2PageHero, Spa2SoftCard } from 'src/sections/spa2/view/spa2-content-pages';
+import {
+  Spa2PageHero,
+  Spa2SoftCard,
+  Spa2BlogPageView,
+} from 'src/sections/spa2/view/spa2-content-pages';
 import {
   SPA2_INK,
   SPA2_TEAL,
@@ -287,15 +289,6 @@ export function Spa2BlogManageView() {
   // how spa2-services-manage-view.tsx paginates its own service card grid).
   const pageCount = Math.max(1, Math.ceil(sortedItems.length / PER_PAGE));
   const paginatedItems = sortedItems.slice((page - 1) * PER_PAGE, page * PER_PAGE);
-
-  // The "preview" tab still mirrors the public /spa2/blog page pixel-for-pixel,
-  // which keeps its own highlight-article + remaining-grid layout — so it
-  // needs the old featured/rest split, paginated independently from the list
-  // tab (clamped so an out-of-range page never renders an empty preview).
-  const [featured, ...rest] = sortedItems;
-  const previewPageCount = Math.max(1, Math.ceil(rest.length / PER_PAGE));
-  const previewPage = Math.min(page, previewPageCount);
-  const paginatedRest = rest.slice((previewPage - 1) * PER_PAGE, previewPage * PER_PAGE);
 
   const visibleSlugs = useMemo(() => paginatedItems.map((p) => p.slug), [paginatedItems]);
   const allVisibleSelected = visibleSlugs.length > 0 && visibleSlugs.every((s) => selected.has(s));
@@ -1182,160 +1175,17 @@ export function Spa2BlogManageView() {
         </Stack>
       )}
 
-      {/* Full-page live preview — pixel-for-pixel same layout/order as the public /spa2/blog page */}
+      {/* Live preview — renders the real public Spa2BlogPageView component directly so
+          this can never visually drift from the actual /spa2/blog page. Note:
+          Spa2BlogPageView takes no props — it reads spa2BlogBanner and spa2BlogPosts
+          (= SPA2_POSTS) straight from src/_mock/_spa2. Post create/edit/approve/delete
+          in the "list" tab already writes through to SPA2_POSTS via spa2UpsertPost /
+          spa2DeletePost, so those changes do show up here immediately; only the banner
+          text edited above stays local until the page view itself is wired to accept
+          it as a prop. */}
       {tab === 'preview' && (
         <Box sx={{ borderRadius: 3, overflow: 'hidden', border: `1px solid ${SPA2_CREAM_DARK}` }}>
-          <Box sx={{ bgcolor: 'background.default' }}>
-            <Spa2PageHero
-              image={banner.image.url}
-              imageStyle={banner.image}
-              eyebrow={banner.eyebrow}
-              title={banner.title}
-              subtitle={banner.subtitle}
-            />
-
-            {featured && (
-              <Box sx={{ py: { xs: 6, md: 8 } }}>
-                <Container>
-                  <Spa2SoftCard sx={{ p: 0, overflow: 'hidden' }}>
-                    <Grid container>
-                      <Grid xs={12} md={6}>
-                        <Box
-                          sx={{
-                            minHeight: 280,
-                            height: '100%',
-                            backgroundImage: `url(${featured.cover})`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                          }}
-                        />
-                      </Grid>
-                      <Grid xs={12} md={6}>
-                        <Box sx={{ p: { xs: 3, md: 5 } }}>
-                          <Chip
-                            label="Bài viết nổi bật"
-                            sx={{ bgcolor: SPA2_TEAL, color: 'white', mb: 2 }}
-                          />
-                          <Typography variant="h4" sx={{ color: SPA2_INK, mb: 1.5 }}>
-                            {featured.title}
-                          </Typography>
-                          <Typography sx={{ color: 'text.secondary', mb: 2 }}>
-                            {featured.excerpt}
-                          </Typography>
-                          <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 3 }}>
-                            <Avatar
-                              sx={{ width: 28, height: 28, bgcolor: SPA2_TEAL, fontSize: 13 }}
-                            >
-                              {featured.author[0]}
-                            </Avatar>
-                            <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
-                              {featured.author} · {featured.date} · {featured.readTime}
-                            </Typography>
-                          </Stack>
-                          <Button
-                            disabled
-                            endIcon={<Iconify icon="solar:arrow-right-linear" />}
-                            sx={{
-                              borderRadius: 999,
-                              px: 3,
-                              bgcolor: SPA2_TEAL,
-                              color: 'white',
-                              '&.Mui-disabled': {
-                                bgcolor: SPA2_TEAL,
-                                color: 'white',
-                                opacity: 0.85,
-                              },
-                            }}
-                          >
-                            Đọc bài viết
-                          </Button>
-                        </Box>
-                      </Grid>
-                    </Grid>
-                  </Spa2SoftCard>
-                </Container>
-              </Box>
-            )}
-
-            <Box sx={{ pb: { xs: 8, md: 12 } }}>
-              <Container>
-                <Grid container spacing={5}>
-                  <Grid xs={12} md={8}>
-                    <Grid container spacing={4}>
-                      {paginatedRest.map((p) => (
-                        <Grid key={p.slug} xs={12} sm={6}>
-                          <Spa2SoftCard sx={{ p: 0, overflow: 'hidden' }}>
-                            <Box
-                              sx={{
-                                height: 180,
-                                backgroundImage: `url(${p.cover})`,
-                                backgroundSize: 'cover',
-                                backgroundPosition: 'center',
-                              }}
-                            />
-                            <Box sx={{ p: 2.5 }}>
-                              <Chip
-                                size="small"
-                                label={p.category}
-                                sx={{ mb: 1.5, bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
-                              />
-                              <Typography
-                                variant="h6"
-                                sx={{ color: SPA2_INK, mb: 1, fontSize: 16, lineHeight: 1.4 }}
-                              >
-                                {p.title}
-                              </Typography>
-                              <Typography sx={{ color: 'text.secondary', fontSize: 14, mb: 1.5 }}>
-                                {p.excerpt}
-                              </Typography>
-                              <Stack direction="row" spacing={1} alignItems="center">
-                                <Typography sx={{ fontSize: 12, color: 'text.disabled' }}>
-                                  {p.date}
-                                </Typography>
-                                <Typography sx={{ fontSize: 12, color: 'text.disabled' }}>
-                                  ·
-                                </Typography>
-                                <Typography sx={{ fontSize: 12, color: 'text.disabled' }}>
-                                  {p.readTime}
-                                </Typography>
-                              </Stack>
-                            </Box>
-                          </Spa2SoftCard>
-                        </Grid>
-                      ))}
-                    </Grid>
-                  </Grid>
-
-                  <Grid xs={12} md={4}>
-                    <Stack spacing={3}>
-                      <Spa2SoftCard>
-                        <Typography variant="h6" sx={{ color: SPA2_INK, mb: 2 }}>
-                          Danh mục
-                        </Typography>
-                        <Stack spacing={1.5}>
-                          {categories.map((c) => (
-                            <Stack
-                              key={c.name}
-                              direction="row"
-                              justifyContent="space-between"
-                              sx={{ py: 1, borderBottom: `1px solid ${SPA2_CREAM_DARK}` }}
-                            >
-                              <Typography sx={{ color: SPA2_INK }}>{c.name}</Typography>
-                              <Chip
-                                size="small"
-                                label={c.count}
-                                sx={{ bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
-                              />
-                            </Stack>
-                          ))}
-                        </Stack>
-                      </Spa2SoftCard>
-                    </Stack>
-                  </Grid>
-                </Grid>
-              </Container>
-            </Box>
-          </Box>
+          <Spa2BlogPageView />
         </Box>
       )}
 

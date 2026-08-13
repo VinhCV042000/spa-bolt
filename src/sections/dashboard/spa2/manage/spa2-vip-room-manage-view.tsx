@@ -2,8 +2,8 @@ import type {
   Spa2VipRoom,
   Spa2VipRoomPerk,
   Spa2VipRoomBanner,
-  Spa2AdjustableImage,
   Spa2VipRoomBooking,
+  Spa2AdjustableImage,
   Spa2VipRoomBookingStatus,
 } from 'src/_mock/_spa2';
 

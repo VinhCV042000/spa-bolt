@@ -35,12 +35,12 @@ import { uuidv4 } from 'src/utils/uuidv4';
 import { useTranslate } from 'src/locales';
 import {
   spa2PackageBuilderBanner,
-  type Spa2PackageBuilderBanner,
-  spa2PackageBuilderDiscountTiers,
-  type Spa2PackageBuilderDiscountTier,
   SPA2_PACKAGE_BUILDER_ORDERS,
   type Spa2PackageBuilderOrder,
+  type Spa2PackageBuilderBanner,
+  spa2PackageBuilderDiscountTiers,
   type Spa2PackageBuilderOrderStatus,
+  type Spa2PackageBuilderDiscountTier,
 } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';
@@ -50,15 +50,15 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
 
 import {
+  Spa2ContentPageHero4,
+  Spa2PackageBuilderPageView,
+} from 'src/sections/spa2/view/spa2-content-pages4';
+import {
   SPA2_TEAL,
   SPA2_CREAM,
   SPA2_TEAL_DARK,
   SPA2_CREAM_DARK,
 } from 'src/sections/spa2/spa2-pages-data';
-import {
-  Spa2ContentPageHero4,
-  Spa2PackageBuilderPageView,
-} from 'src/sections/spa2/view/spa2-content-pages4';
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';

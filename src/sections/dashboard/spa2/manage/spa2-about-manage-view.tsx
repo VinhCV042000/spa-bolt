@@ -49,10 +49,10 @@ import {
   spa2CreateAdjustableImage,
 } from 'src/sections/spa2/spa2-image-utils';
 import {
-  Spa2Cta,
   Spa2PageHero,
   Spa2SoftCard,
   Spa2SectionTitle,
+  Spa2AboutPageView,
 } from 'src/sections/spa2/view/spa2-content-pages';
 import {
   SPA2_INK,
@@ -1101,67 +1101,15 @@ export function Spa2AboutManageView() {
         }
       />
 
-      {/* Live preview of the whole page with the current unsaved edits — mirrors Spa2AboutPageView exactly */}
+      {/* Live preview — renders the real public Spa2AboutPageView component directly so
+          this can never visually drift from the actual /spa2/about page. Note:
+          Spa2AboutPageView takes no props (it reads spa2AboutBanner/spa2AboutStory/
+          spa2VisionMission/spa2Team/spa2Certifications straight from src/_mock/_spa2),
+          so this reflects the currently persisted mock content rather than in-progress
+          unsaved edits made in the tabs above. */}
       {tab === 'preview' && (
         <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
-          <Spa2PageHero
-            image={banner.image.url}
-            imageStyle={banner.image}
-            eyebrow={banner.eyebrow}
-            title={banner.title}
-            subtitle={banner.subtitle}
-          />
-
-          {/* Story thương hiệu */}
-          <StoryPreview story={story} storyImage={storyImage} />
-
-          {/* Vision / Mission */}
-          <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: SPA2_CREAM }}>
-            <Container>
-              <Spa2SectionTitle eyebrow="Định hướng" title="Tầm nhìn & Sứ mệnh" />
-              <Grid container spacing={3}>
-                {visionMission.map((v) => (
-                  <Grid key={v.id} xs={12} md={6}>
-                    <VisionPreviewCard form={v} />
-                  </Grid>
-                ))}
-              </Grid>
-            </Container>
-          </Box>
-
-          {/* Đội ngũ */}
-          <Box sx={{ py: { xs: 8, md: 12 } }}>
-            <Container>
-              <Spa2SectionTitle
-                eyebrow="Con người"
-                title="Đội ngũ chuyên gia"
-                subtitle="Mỗi liệu trình tại Nature Spa được thực hiện bởi những con người tận tâm và giàu kinh nghiệm."
-              />
-              <Grid container spacing={3}>
-                {team.map((t) => (
-                  <Grid key={t.id} xs={12} sm={6} md={3}>
-                    <TeamPreviewCard form={t} />
-                  </Grid>
-                ))}
-              </Grid>
-            </Container>
-          </Box>
-
-          {/* Chứng nhận / giải thưởng */}
-          <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: SPA2_CREAM }}>
-            <Container>
-              <Spa2SectionTitle eyebrow="Vinh danh" title="Chứng nhận & giải thưởng" />
-              <Grid container spacing={3}>
-                {certifications.map((c) => (
-                  <Grid key={c.id} xs={12} sm={6} md={3}>
-                    <CertPreviewCard form={c} />
-                  </Grid>
-                ))}
-              </Grid>
-            </Container>
-          </Box>
-
-          <Spa2Cta />
+          <Spa2AboutPageView />
         </Box>
       )}
     </Spa2ManageShell>

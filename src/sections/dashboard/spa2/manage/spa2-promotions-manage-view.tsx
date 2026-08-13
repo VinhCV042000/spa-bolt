@@ -12,7 +12,6 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
@@ -30,12 +29,13 @@ import { spa2FlashSale, spa2PromotionsBanner } from 'src/_mock/_spa2';
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
+import { SPA2_INK , SPA2_TEAL, SPA2_CREAM, spa2Promotions, SPA2_TEAL_DARK } from 'src/sections/spa2/spa2-pages-data';
 import {
   Spa2PageHero,
   Spa2SoftCard,
   Spa2Countdown,
+  Spa2PromotionsPageView,
 } from 'src/sections/spa2/view/spa2-content-pages';
-import { SPA2_INK , SPA2_TEAL, SPA2_CREAM, spa2Promotions, SPA2_TEAL_DARK } from 'src/sections/spa2/spa2-pages-data';
 
 import { Spa2ImageField } from './spa2-image-field';
 import { Spa2ManageShell } from './spa2-manage-shell';
@@ -214,7 +214,6 @@ export function Spa2PromotionsManageView() {
   const [form, setForm] = useState<Omit<Promotion, 'id'>>(EMPTY_FORM);
 
   const filtered = items.filter((p) => p.title.toLowerCase().includes(search.toLowerCase()));
-  const activePromotions = items.filter((p) => p.active);
 
   const openCreate = () => {
     setForm(EMPTY_FORM);
@@ -593,96 +592,15 @@ export function Spa2PromotionsManageView() {
         </Card>
       )}
 
-      {/* Live preview of the whole page — mirrors Spa2PromotionsPageView exactly:
-          hero + the dedicated flash-sale banner (if active) + campaign list. */}
+      {/* Live preview — renders the real public Spa2PromotionsPageView component so the
+          admin preview can never visually drift from what the public page renders.
+          Spa2PromotionsPageView reads banner/flash-sale/campaign content directly from
+          the shared spa2 mock data (it doesn't accept props), so this reflects the
+          currently-saved public content rather than the in-progress unsaved edits made
+          in the tabs above. */}
       {tab === 'preview' && (
         <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
-          <Spa2PageHero
-            image={banner.image.url}
-            imageStyle={banner.image}
-            eyebrow={banner.eyebrow}
-            title={banner.title}
-            subtitle={banner.subtitle}
-          />
-
-          {flashSale.active && (
-            <Box sx={{ py: { xs: 6, md: 8 } }}>
-              <Container>
-                <FlashSalePreviewCard form={flashSale} />
-              </Container>
-            </Box>
-          )}
-
-          <Box sx={{ py: { xs: 4, md: 8 } }}>
-            <Container>
-              {activePromotions.length === 0 ? (
-                <Typography variant="body2" color="text.secondary">
-                  Chưa có chương trình khuyến mãi nào đang chạy.
-                </Typography>
-              ) : (
-                <Stack spacing={4}>
-                  {activePromotions.map((p, idx) => (
-                    <Spa2SoftCard key={p.id} sx={{ p: 0, overflow: 'hidden' }}>
-                      <Grid container>
-                        <Grid xs={12} md={5} sx={{ order: { md: idx % 2 ? 2 : 1 } }}>
-                          <Box
-                            sx={{
-                              minHeight: 260,
-                              height: '100%',
-                              backgroundImage: `url(${p.image})`,
-                              backgroundSize: 'cover',
-                              backgroundPosition: 'center',
-                            }}
-                          />
-                        </Grid>
-                        <Grid xs={12} md={7} sx={{ order: { md: idx % 2 ? 1 : 2 } }}>
-                          <Box sx={{ p: { xs: 3, md: 5 } }}>
-                            <Chip label={p.period} sx={{ bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK, mb: 2 }} />
-                            <Typography variant="h4" sx={{ color: SPA2_INK, mb: 1.5 }}>
-                              {p.title}
-                            </Typography>
-                            <Typography sx={{ color: SPA2_TEAL_DARK, fontWeight: 700, fontSize: 22, mb: 1 }}>
-                              {p.price}
-                            </Typography>
-                            <Typography sx={{ color: 'text.secondary', mb: 2 }}>{p.save}</Typography>
-                            {p.endsAt && (
-                              <Box sx={{ mb: 3 }}>
-                                <Typography sx={{ fontSize: 13, color: 'text.secondary', mb: 1 }}>
-                                  Kết thúc sau:
-                                </Typography>
-                                <Box
-                                  sx={{
-                                    display: 'inline-block',
-                                    bgcolor: SPA2_TEAL_DARK,
-                                    p: 1.5,
-                                    borderRadius: 2,
-                                  }}
-                                >
-                                  <Spa2Countdown endsAt={p.endsAt} />
-                                </Box>
-                              </Box>
-                            )}
-                            <Button
-                              disabled
-                              sx={{
-                                borderRadius: 999,
-                                px: 4,
-                                bgcolor: SPA2_TEAL,
-                                color: 'white',
-                                opacity: 0.7,
-                              }}
-                            >
-                              Đăng ký ngay
-                            </Button>
-                          </Box>
-                        </Grid>
-                      </Grid>
-                    </Spa2SoftCard>
-                  ))}
-                </Stack>
-              )}
-            </Container>
-          </Box>
+          <Spa2PromotionsPageView />
         </Box>
       )}
 

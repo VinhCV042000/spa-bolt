@@ -17,7 +17,6 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
 import Grid from '@mui/material/Unstable_Grid2';
-import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
@@ -40,7 +39,6 @@ import { fCurrency } from 'src/utils/format-number';
 import { useTranslate } from 'src/locales';
 import { bgBlur, varAlpha } from 'src/theme/styles';
 import {
-  spa2Services,
   SPA2_BOOKINGS,
   spa2BookingBanner,
   spa2BookingPackages,
@@ -58,10 +56,9 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
 
 import {
-  Spa2Cta,
   Spa2PageHero,
   Spa2SoftCard,
-  Spa2SectionTitle,
+  Spa2BookingPageView,
 } from 'src/sections/spa2/view/spa2-content-pages';
 import {
   SPA2_INK,
@@ -197,15 +194,6 @@ export function Spa2BookingsManageView() {
   const [savedAt, setSavedAt] = useState<Date | null>(null);
   const [tab, setTab] = useState<'banner' | 'packages' | 'requests' | 'preview'>('banner');
   const markDirty = () => setDirty(true);
-
-  // ---- Preview tab: simplified static category switcher over the same
-  // spa2Services data Spa2BookingPageView filters by category ----
-  const previewCategories = useMemo(
-    () => Array.from(new Set(spa2Services.map((s) => s.category))),
-    []
-  );
-  const [previewCategory, setPreviewCategory] = useState<string>(previewCategories[0] ?? '');
-  const previewServices = spa2Services.filter((s) => s.category === previewCategory);
 
   const [items, setItems] = useState<Spa2BookingItem[]>(SPA2_BOOKINGS);
   const [search, setSearch] = useState('');
@@ -992,136 +980,17 @@ export function Spa2BookingsManageView() {
         </Card>
       )}
 
-      {/* Full-page live preview - same block order as the public /spa2/booking page:
-          Hero -> services-by-category tabs (simplified, static category switcher since
-          this is a preview, not the real interactive booking flow) -> package cards
-          (fully live, built from the editable `packages` state) -> Spa2Cta. */}
+      {/* Full-page live preview - renders the real public Spa2BookingPageView
+          component (src/sections/spa2/view/spa2-content-pages.tsx), the exact
+          same component src/pages/spa2/booking.tsx renders on the live
+          /spa2/booking page, so this can never visually drift from a
+          hand-rolled mockup. Note: Spa2BookingPageView currently takes no
+          props - it reads spa2BookingBanner/spa2Services/spa2BookingPackages
+          straight from src/_mock/_spa2, so this preview reflects that shared
+          mock data rather than this form's in-progress (unsaved) edits. */}
       {tab === 'preview' && (
-        <Box sx={{ borderRadius: 3, overflow: 'hidden', border: `1px solid ${SPA2_CREAM_DARK}` }}>
-          <Box sx={{ bgcolor: 'background.default' }}>
-            <Spa2PageHero
-              image={banner.image.url}
-              imageStyle={banner.image}
-              eyebrow={banner.eyebrow}
-              title={banner.title}
-              subtitle={banner.subtitle}
-            />
-            <Box sx={{ py: { xs: 8, md: 12 } }}>
-              <Container>
-                <Spa2SectionTitle eyebrow="Dịch vụ" title="Chọn nhóm dịch vụ bạn quan tâm" />
-                <Tabs
-                  value={previewCategory}
-                  onChange={(_, v: string) => setPreviewCategory(v)}
-                  variant="scrollable"
-                  scrollButtons="auto"
-                  sx={{
-                    mb: 5,
-                    '& .MuiTabs-indicator': { bgcolor: SPA2_TEAL },
-                    '& .Mui-selected': { color: `${SPA2_TEAL_DARK} !important` },
-                  }}
-                >
-                  {previewCategories.map((c) => (
-                    <Tab key={c} value={c} label={c} sx={{ textTransform: 'capitalize' }} />
-                  ))}
-                </Tabs>
-                <Grid container spacing={3} sx={{ mb: 8 }}>
-                  {previewServices.map((s) => (
-                    <Grid key={s.slug} xs={12} sm={6} md={4}>
-                      <Spa2SoftCard sx={{ textAlign: 'center' }}>
-                        <Iconify icon={s.icon} width={36} sx={{ color: SPA2_TEAL, mb: 1.5 }} />
-                        <Typography sx={{ color: SPA2_INK, fontWeight: 600, mb: 0.5 }}>
-                          {s.name}
-                        </Typography>
-                        <Typography sx={{ color: SPA2_TEAL_DARK, fontWeight: 700, mb: 1 }}>
-                          {formatVND(s.price)}
-                        </Typography>
-                        <Button size="small" disabled sx={{ color: SPA2_TEAL_DARK }}>
-                          Xem chi tiết
-                        </Button>
-                      </Spa2SoftCard>
-                    </Grid>
-                  ))}
-                </Grid>
-
-                <Spa2SectionTitle eyebrow="Gói liệu trình" title="Chọn gói phù hợp với bạn" />
-                <Grid container spacing={3} alignItems="stretch">
-                  {packages.map((p) => (
-                    <Grid key={p.id} xs={12} sm={6} md={3}>
-                      <Spa2SoftCard
-                        sx={{
-                          position: 'relative',
-                          textAlign: 'center',
-                          border: p.hot ? `2px solid ${SPA2_TEAL}` : undefined,
-                          transform: p.hot ? { md: 'scale(1.05)' } : undefined,
-                        }}
-                      >
-                        {p.hot && (
-                          <Chip
-                            label="PHỔ BIẾN NHẤT"
-                            size="small"
-                            sx={{
-                              position: 'absolute',
-                              top: -14,
-                              left: '50%',
-                              transform: 'translateX(-50%)',
-                              bgcolor: SPA2_TEAL,
-                              color: 'white',
-                              fontWeight: 700,
-                            }}
-                          />
-                        )}
-                        <Typography
-                          variant="h6"
-                          sx={{ color: SPA2_INK, mt: p.hot ? 1.5 : 0, mb: 1 }}
-                        >
-                          {p.name}
-                        </Typography>
-                        <Typography variant="h4" sx={{ color: SPA2_TEAL, mb: 0.5 }}>
-                          {formatVND(p.price)}
-                        </Typography>
-                        <Typography sx={{ color: 'text.secondary', mb: 2 }}>
-                          {p.sessions} buổi
-                        </Typography>
-                        <Divider sx={{ my: 2 }} />
-                        <Stack spacing={1} sx={{ mb: 3, textAlign: 'left' }}>
-                          {p.perks.map((perk) => (
-                            <Stack key={perk} direction="row" spacing={1} alignItems="center">
-                              <Iconify
-                                icon="solar:check-circle-bold"
-                                width={16}
-                                sx={{ color: SPA2_TEAL }}
-                              />
-                              <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
-                                {perk}
-                              </Typography>
-                            </Stack>
-                          ))}
-                        </Stack>
-                        <Button
-                          fullWidth
-                          disabled
-                          sx={{
-                            borderRadius: 999,
-                            bgcolor: p.hot ? SPA2_TEAL : 'transparent',
-                            color: p.hot ? 'white' : SPA2_TEAL_DARK,
-                            border: p.hot ? 'none' : `1.5px solid ${SPA2_TEAL}`,
-                            '&.Mui-disabled': {
-                              bgcolor: p.hot ? SPA2_TEAL : 'transparent',
-                              color: p.hot ? 'white' : SPA2_TEAL_DARK,
-                              opacity: 0.9,
-                            },
-                          }}
-                        >
-                          Chọn gói
-                        </Button>
-                      </Spa2SoftCard>
-                    </Grid>
-                  ))}
-                </Grid>
-              </Container>
-            </Box>
-          </Box>
-          <Spa2Cta />
+        <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
+          <Spa2BookingPageView />
         </Box>
       )}
 

@@ -65,10 +65,10 @@ import { TablePaginationCustom } from 'src/components/table/table-pagination-cus
 
 import { spa2ImageBackgroundStyle } from 'src/sections/spa2/spa2-image-utils';
 import {
-  Spa2Cta,
   Spa2PageHero,
   Spa2SoftCard,
   Spa2SectionTitle,
+  Spa2TrainingPageView,
 } from 'src/sections/spa2/view/spa2-content-pages';
 import {
   SPA2_INK,
@@ -1718,101 +1718,15 @@ export function Spa2TrainingManageView() {
         </Card>
       )}
 
-      {/* Live preview of the whole page with the current unsaved edits — mirrors
-          Spa2TrainingPageView exactly, reusing the real Spa2PageHero / Spa2SectionTitle /
-          Spa2SoftCard / Spa2Cta leaf components (same ones the public page renders). */}
+      {/* Live preview — renders the real public Spa2TrainingPageView component so the
+          admin preview can never visually drift from what the public page renders.
+          Spa2TrainingPageView reads banner/mission/programs/roadmap/instructors/
+          graduates content directly from the shared spa2 mock data (it doesn't accept
+          props), so this reflects the currently-saved public content rather than the
+          in-progress unsaved edits made in the tabs above. */}
       {tab === 'preview' && (
         <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
-          <Spa2PageHero
-            image={banner.image.url}
-            imageStyle={banner.image}
-            eyebrow={banner.eyebrow}
-            title={banner.title}
-            subtitle={banner.subtitle}
-          />
-
-          <Box sx={{ pb: { xs: 4, md: 6 } }}>
-            <Container sx={{ textAlign: 'center' }}>
-              <Button
-                disabled
-                size="large"
-                sx={{
-                  px: 5,
-                  py: 1.5,
-                  borderRadius: 999,
-                  bgcolor: SPA2_TEAL,
-                  color: 'white',
-                  opacity: 0.7,
-                }}
-              >
-                Đăng ký tư vấn
-              </Button>
-            </Container>
-          </Box>
-
-          {/* Sứ mệnh học viện */}
-          <MissionPreview mission={mission} missionImage={missionImage} />
-
-          {/* Chương trình đào tạo */}
-          <Box sx={{ py: { xs: 8, md: 12 } }}>
-            <Container>
-              <Spa2SectionTitle eyebrow="Chương trình" title="Lộ trình từ căn bản đến nâng cao" />
-              <Grid container spacing={3}>
-                {programs.map((p) => (
-                  <Grid key={p.id} xs={12} md={4}>
-                    <ProgramPreviewCard form={p} />
-                  </Grid>
-                ))}
-              </Grid>
-            </Container>
-          </Box>
-
-          {/* Lộ trình học */}
-          <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: SPA2_CREAM }}>
-            <Container maxWidth="md">
-              <Spa2SectionTitle eyebrow="Lộ trình" title="Hành trình học tập 10 tuần" />
-              <Stack spacing={0}>
-                {roadmap.map((r, idx) => (
-                  <RoadmapStagePreview
-                    key={r.id}
-                    form={r}
-                    index={idx}
-                    isLast={idx === roadmap.length - 1}
-                  />
-                ))}
-              </Stack>
-            </Container>
-          </Box>
-
-          {/* Giảng viên */}
-          <Box sx={{ py: { xs: 8, md: 12 } }}>
-            <Container>
-              <Spa2SectionTitle eyebrow="Đội ngũ" title="Giảng viên" />
-              <Grid container spacing={3}>
-                {instructors.map((ins) => (
-                  <Grid key={ins.id} xs={12} sm={6} md={4}>
-                    <InstructorPreviewCard form={ins} certs={ins.certs} />
-                  </Grid>
-                ))}
-              </Grid>
-            </Container>
-          </Box>
-
-          {/* Thành tựu học viên */}
-          <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: SPA2_CREAM }}>
-            <Container>
-              <Spa2SectionTitle eyebrow="Thành tựu" title="Học viên nói gì" />
-              <Grid container spacing={3}>
-                {graduates.map((g) => (
-                  <Grid key={g.id} xs={12} sm={6}>
-                    <GraduatePreviewCard form={g} />
-                  </Grid>
-                ))}
-              </Grid>
-            </Container>
-          </Box>
-
-          <Spa2Cta />
+          <Spa2TrainingPageView />
         </Box>
       )}
 

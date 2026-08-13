@@ -11,7 +11,6 @@ import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
@@ -31,6 +30,7 @@ import {
   Spa2PageHero,
   Spa2SoftCard,
   Spa2SectionTitle,
+  Spa2AccountPageView,
 } from 'src/sections/spa2/view/spa2-content-pages';
 
 import { Spa2ImageField } from './spa2-image-field';
@@ -511,28 +511,15 @@ export function Spa2AccountManageView() {
         </Grid>
       )}
 
-      {/* Live preview of the whole page — mirrors Spa2AccountPageView exactly */}
+      {/* Live preview — renders the real public Spa2AccountPageView component directly so
+          this can never visually drift from the actual /spa2/account page. Note:
+          Spa2AccountPageView takes no props (it reads spa2AccountBanner/
+          SPA2_ACCOUNT_CONTENT straight from src/_mock/_spa2), so this reflects the
+          currently persisted mock content rather than in-progress unsaved edits made
+          in the tabs above. */}
       {tab === 'preview' && (
         <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
-          <Spa2PageHero
-            image={banner.image.url}
-            imageStyle={banner.image}
-            eyebrow={banner.eyebrow}
-            title={banner.title}
-            subtitle={banner.subtitle}
-          />
-          <Box sx={{ py: { xs: 8, md: 12 } }}>
-            <Container>
-              <Grid container spacing={3}>
-                <Grid xs={12} md={4}>
-                  <ProfilePreviewCard form={profile} />
-                </Grid>
-                <Grid xs={12} md={8}>
-                  <AppointmentsPreviewCard items={appointments} />
-                </Grid>
-              </Grid>
-            </Container>
-          </Box>
+          <Spa2AccountPageView />
         </Box>
       )}
     </Spa2ManageShell>

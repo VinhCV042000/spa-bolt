@@ -13,7 +13,6 @@ import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import CardMedia from '@mui/material/CardMedia';
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
@@ -31,7 +30,11 @@ import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
-import { Spa2SoftCard, Spa2PageHero } from 'src/sections/spa2/view/spa2-content-pages';
+import {
+  Spa2SoftCard,
+  Spa2PageHero,
+  Spa2GalleryPageView,
+} from 'src/sections/spa2/view/spa2-content-pages';
 import {
   SPA2_INK,
   SPA2_TEAL,
@@ -558,38 +561,16 @@ export function Spa2GalleryManageView() {
         </Stack>
       )}
 
-      {/* Live preview — mirrors Spa2GalleryPageView's hero + masonry grid */}
+      {/* Live preview — renders the actual public Spa2GalleryPageView so this
+          always matches the live /spa2/gallery page pixel-for-pixel instead
+          of a separately hand-rolled mockup. Note: Spa2GalleryPageView takes
+          no props — it reads spa2GalleryBanner / spa2Gallery directly from
+          src/sections/spa2/spa2-pages-data, so this preview shows the
+          last-saved public content, not the unsaved edits from the other
+          tabs above. */}
       {tab === 'preview' && (
         <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
-          <Spa2PageHero
-            image={banner.image.url}
-            imageStyle={banner.image}
-            eyebrow={banner.eyebrow}
-            title={banner.title}
-            subtitle={banner.subtitle}
-          />
-          <Box sx={{ py: { xs: 8, md: 12 } }}>
-            <Container>
-              <Grid container spacing={2}>
-                {items.map((item, idx) => (
-                  <Grid key={item.id} xs={12} sm={6} md={idx % 5 === 0 ? 8 : 4}>
-                    <Box
-                      sx={{
-                        aspectRatio: idx % 5 === 0 ? '16/9' : '4/5',
-                        borderRadius: 4,
-                        backgroundImage: `url(${item.url})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        transition: 'transform .3s',
-                        cursor: 'pointer',
-                        '&:hover': { transform: 'scale(1.02)' },
-                      }}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-            </Container>
-          </Box>
+          <Spa2GalleryPageView />
         </Box>
       )}
 

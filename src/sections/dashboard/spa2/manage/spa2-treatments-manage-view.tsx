@@ -14,7 +14,6 @@ import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -44,6 +43,7 @@ import {
   Spa2PageHero,
   Spa2SoftCard,
   Spa2SectionTitle,
+  Spa2TreatmentsPageView,
 } from 'src/sections/spa2/view/spa2-content-pages';
 import {
   SPA2_INK,
@@ -304,8 +304,6 @@ export function Spa2TreatmentsManageView() {
       statusFilter === 'all' || (statusFilter === 'active' ? item.active : !item.active);
     return matchSearch && matchStatus;
   });
-  const activePreviewItems = items.filter((item) => item.active);
-
   const handleChange =
     (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setForm((p) => ({
@@ -888,60 +886,15 @@ export function Spa2TreatmentsManageView() {
         </Grid>
       )}
 
-      {/* Live preview — mirrors Spa2TreatmentsPageView: banner + card grid (active only) + process */}
+      {/* Live preview — renders the real public Spa2TreatmentsPageView component so the
+          admin preview can never visually drift from what the public page renders.
+          Spa2TreatmentsPageView reads banner/treatment/process content directly from the
+          shared spa2 mock data (it doesn't accept props), so this reflects the
+          currently-saved public content rather than the in-progress unsaved edits made
+          in the tabs above. */}
       {tab === 'preview' && (
         <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
-          <Spa2PageHero
-            image={banner.image.url}
-            imageStyle={banner.image}
-            eyebrow={banner.eyebrow}
-            title={banner.title}
-            subtitle={banner.subtitle}
-          />
-
-          <Box sx={{ py: { xs: 6, md: 10 } }}>
-            <Container>
-              {activePreviewItems.length === 0 ? (
-                <Typography variant="body2" color="text.secondary">
-                  Chưa có liệu trình nào đang hiển thị.
-                </Typography>
-              ) : (
-                <Grid container spacing={3}>
-                  {activePreviewItems.map((t2) => (
-                    <Grid key={t2.id} xs={12} md={6}>
-                      <TreatmentPreviewCard form={t2} />
-                    </Grid>
-                  ))}
-                </Grid>
-              )}
-            </Container>
-          </Box>
-
-          <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: SPA2_CREAM }}>
-            <Container maxWidth="md">
-              <Spa2SectionTitle eyebrow="Quy trình" title="4 bước điều trị chuẩn y khoa" />
-              <Grid container spacing={3}>
-                {process.map((p, idx) => (
-                  <Grid key={p.id} xs={6} md={3}>
-                    <Spa2SoftCard sx={{ textAlign: 'center' }}>
-                      <Typography
-                        variant="h3"
-                        sx={{ color: SPA2_TEAL_LIGHT, fontWeight: 700, mb: 1 }}
-                      >
-                        {idx + 1}
-                      </Typography>
-                      <Typography sx={{ color: SPA2_INK, fontWeight: 600, mb: 1 }}>
-                        {p.title}
-                      </Typography>
-                      <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
-                        {p.desc}
-                      </Typography>
-                    </Spa2SoftCard>
-                  </Grid>
-                ))}
-              </Grid>
-            </Container>
-          </Box>
+          <Spa2TreatmentsPageView />
         </Box>
       )}
 

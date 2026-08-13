@@ -15,7 +15,6 @@ import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
-import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
@@ -56,7 +55,11 @@ import { useTable } from 'src/components/table/use-table';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { TablePaginationCustom } from 'src/components/table/table-pagination-custom';
 
-import { Spa2Cta, Spa2PageHero, Spa2SoftCard } from 'src/sections/spa2/view/spa2-content-pages';
+import {
+  Spa2PageHero,
+  Spa2SoftCard,
+  Spa2ServicesPageView,
+} from 'src/sections/spa2/view/spa2-content-pages';
 import {
   SPA2_INK,
   SPA2_SAGE,
@@ -1341,67 +1344,16 @@ export function Spa2ServicesManageView() {
         </Card>
       )}
 
-      {/* Full-page live preview — pixel-for-pixel same layout/order as the public /spa2/services page */}
+      {/* Live preview — renders the real public Spa2ServicesPageView component (the
+          service list page) so the admin preview can never visually drift from what the
+          public page renders. The per-service details/editor page is a separate concern
+          and isn't previewed here. Spa2ServicesPageView reads services/banner content
+          directly from the shared spa2 mock data (it doesn't accept props), so this
+          reflects the currently-saved public content rather than the in-progress unsaved
+          edits made in the tabs above. */}
       {tab === 'preview' && (
-        <Box sx={{ borderRadius: 3, overflow: 'hidden', border: `1px solid ${SPA2_CREAM_DARK}` }}>
-          <Box sx={{ bgcolor: 'background.default' }}>
-            <Spa2PageHero
-              image={banner.image.url}
-              imageStyle={banner.image}
-              eyebrow={banner.eyebrow}
-              title={banner.title}
-              subtitle={banner.subtitle}
-            />
-            <Box sx={{ py: { xs: 8, md: 12 } }}>
-              <Container>
-                {/* Bộ lọc — static illustration only (search/sort aren't live here, they're on the admin list itself) */}
-                <Spa2SoftCard sx={{ mb: 5 }}>
-                  <Grid container spacing={2} alignItems="center">
-                    <Grid xs={12} md={5}>
-                      <TextField
-                        fullWidth
-                        disabled
-                        placeholder="Tìm kiếm dịch vụ..."
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <Iconify icon="solar:magnifer-linear" sx={{ color: SPA2_TEAL }} />
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                    </Grid>
-                    <Grid xs={6} md={4}>
-                      <TextField fullWidth disabled select label="Danh mục" value="all">
-                        <MenuItem value="all">Tất cả</MenuItem>
-                      </TextField>
-                    </Grid>
-                    <Grid xs={6} md={3}>
-                      <TextField fullWidth disabled select label="Sắp xếp" value="default">
-                        <MenuItem value="default">Mặc định</MenuItem>
-                      </TextField>
-                    </Grid>
-                  </Grid>
-                </Spa2SoftCard>
-
-                <Grid container spacing={4}>
-                  {paginated.map((item) => (
-                    <Grid key={item.slug} xs={12} sm={6} md={4}>
-                      <Spa2ServiceCardPreview item={item} interactive />
-                    </Grid>
-                  ))}
-                  {filtered.length === 0 && (
-                    <Grid xs={12}>
-                      <Typography sx={{ textAlign: 'center', color: 'text.secondary', py: 8 }}>
-                        Không tìm thấy dịch vụ phù hợp.
-                      </Typography>
-                    </Grid>
-                  )}
-                </Grid>
-              </Container>
-            </Box>
-            <Spa2Cta />
-          </Box>
+        <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
+          <Spa2ServicesPageView />
         </Box>
       )}
 

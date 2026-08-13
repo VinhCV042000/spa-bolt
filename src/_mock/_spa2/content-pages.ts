@@ -78,7 +78,11 @@ export const SPA2_CONTENT_PAGE_KEYS = Object.keys(SPA2_CONTENT_PAGES) as Spa2Con
 // string otherwise so this file stays decoupled from routes/paths ordering).
 export function spa2ContentPublicPath(key: Spa2ContentPageKey): string {
   const p = (paths.spa2 as Record<string, unknown>)[
-    key.replace(/-([a-z])/g, (_, c) => c.toUpperCase())
+    (key as string).replace(/-([a-z])/g, (_, c) => c.toUpperCase())
   ];
-  return typeof p === 'string' ? p : SPA2_CONTENT_PAGES[key].publicPath;
+  if (typeof p === 'string') return p;
+  const data: Spa2ContentPageData | undefined = (
+    SPA2_CONTENT_PAGES as Record<string, Spa2ContentPageData>
+  )[key as unknown as string];
+  return data ? data.publicPath : '';
 }

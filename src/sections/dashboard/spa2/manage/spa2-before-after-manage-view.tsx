@@ -17,7 +17,6 @@ import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
 import Accordion from '@mui/material/Accordion';
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -49,6 +48,7 @@ import {
   Spa2SoftCard,
   Spa2SectionTitle,
   Spa2BeforeAfterSlider,
+  Spa2BeforeAfterPageView,
 } from 'src/sections/spa2/view/spa2-content-pages';
 import {
   SPA2_INK,
@@ -318,7 +318,6 @@ export function Spa2BeforeAfterManageView() {
     const matchStatus = statusFilter === 'all' || b.status === statusFilter;
     return matchSearch && matchStatus;
   });
-  const approvedItems = items.filter((b) => b.status === 'approved');
 
   const handleChange =
     (field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -1345,149 +1344,16 @@ export function Spa2BeforeAfterManageView() {
         </Card>
       )}
 
-      {/* Live preview — mirrors Spa2BeforeAfterPageView's slider grid (approved only) */}
+      {/* Live preview — renders the real public Spa2BeforeAfterPageView component
+          directly so this can never visually drift from the actual /spa2/before-after
+          page. Note: Spa2BeforeAfterPageView takes no props (it reads
+          spa2BeforeAfterBanner/spa2BeforeAfters/spa2Technologies/spa2TreatmentExperts/
+          spa2Feedbacks/spa2Faqs straight from src/_mock/_spa2, filtering approved-only
+          itself), so this reflects the currently persisted mock content rather than
+          in-progress unsaved edits made in the tabs above. */}
       {tab === 'preview' && (
         <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
-          <Spa2PageHero
-            image={banner.image.url}
-            imageStyle={banner.image}
-            eyebrow={banner.eyebrow}
-            title={banner.title}
-            subtitle={banner.subtitle}
-          />
-
-          <Box sx={{ py: { xs: 8, md: 12 } }}>
-            <Container>
-              <Spa2SectionTitle eyebrow="Trải nghiệm" title="Kéo để so sánh" />
-              {approvedItems.length === 0 ? (
-                <Typography variant="body2" color="text.secondary">
-                  Chưa có ca nào được duyệt để hiển thị công khai.
-                </Typography>
-              ) : (
-                <Grid container spacing={4}>
-                  {approvedItems.map((ba) => (
-                    <Grid key={ba.id} xs={12} sm={6}>
-                      <BeforeAfterPreviewCard form={ba} />
-                    </Grid>
-                  ))}
-                </Grid>
-              )}
-            </Container>
-          </Box>
-
-          <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: SPA2_CREAM }}>
-            <Container>
-              <Spa2SectionTitle eyebrow="Công nghệ" title="Thiết bị & công nghệ độc quyền" />
-              <Grid container spacing={3}>
-                {techs.map((tc) => (
-                  <Grid key={tc.id} xs={12} sm={6} md={3}>
-                    <Spa2SoftCard sx={{ textAlign: 'center' }}>
-                      <Iconify icon={tc.icon} width={40} sx={{ color: SPA2_TEAL, mb: 1.5 }} />
-                      <Typography sx={{ color: SPA2_INK, fontWeight: 600, mb: 1 }}>
-                        {tc.name}
-                      </Typography>
-                      <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
-                        {tc.desc}
-                      </Typography>
-                    </Spa2SoftCard>
-                  </Grid>
-                ))}
-              </Grid>
-            </Container>
-          </Box>
-
-          <Box sx={{ py: { xs: 8, md: 10 } }}>
-            <Container>
-              <Spa2SectionTitle eyebrow="Đội ngũ" title="Chuyên gia phụ trách" />
-              <Grid container spacing={3} justifyContent="center">
-                {experts.map((e) => (
-                  <Grid key={e.id} xs={12} sm={6} md={3}>
-                    <Spa2SoftCard sx={{ textAlign: 'center' }}>
-                      <Avatar
-                        src={e.image}
-                        sx={{
-                          width: 88,
-                          height: 88,
-                          mx: 'auto',
-                          mb: 1.5,
-                          border: `3px solid ${SPA2_TEAL_LIGHT}`,
-                        }}
-                      />
-                      <Typography sx={{ color: SPA2_INK, fontWeight: 600 }}>{e.name}</Typography>
-                      <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
-                        {e.role}
-                      </Typography>
-                    </Spa2SoftCard>
-                  </Grid>
-                ))}
-              </Grid>
-            </Container>
-          </Box>
-
-          <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: SPA2_CREAM }}>
-            <Container>
-              <Spa2SectionTitle eyebrow="Đánh giá" title="Khách hàng nói gì" />
-              <Grid container spacing={3}>
-                {reviews
-                  .filter((f) => f.status === 'approved')
-                  .slice(0, 3)
-                  .map((f) => (
-                    <Grid key={f.id} xs={12} sm={6} md={4}>
-                      <Spa2SoftCard>
-                        <Rating value={f.rating} readOnly size="small" sx={{ mb: 1.5 }} />
-                        <Typography
-                          sx={{ color: SPA2_INK, lineHeight: 1.7, mb: 2, fontStyle: 'italic' }}
-                        >
-                          &ldquo;{f.comment}&rdquo;
-                        </Typography>
-                        <Stack direction="row" spacing={2} alignItems="center">
-                          <Avatar src={f.avatar} />
-                          <Stack>
-                            <Typography sx={{ fontWeight: 600, color: SPA2_INK }}>
-                              {f.name}
-                            </Typography>
-                            <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>
-                              {f.service}
-                            </Typography>
-                          </Stack>
-                        </Stack>
-                      </Spa2SoftCard>
-                    </Grid>
-                  ))}
-              </Grid>
-            </Container>
-          </Box>
-
-          <Box sx={{ py: { xs: 8, md: 12 } }}>
-            <Container maxWidth="md">
-              <Spa2SectionTitle eyebrow="FAQ" title="Câu hỏi thường gặp" />
-              {faqItems
-                .filter((f) => f.published)
-                .slice(0, 4)
-                .map((f, idx) => (
-                  <Accordion
-                    key={f.id}
-                    defaultExpanded={idx === 0}
-                    sx={{
-                      mb: 1.5,
-                      borderRadius: '12px !important',
-                      border: `1px solid ${SPA2_CREAM}`,
-                      boxShadow: 'none',
-                      '&:before': { display: 'none' },
-                    }}
-                  >
-                    <AccordionSummary expandIcon={<Iconify icon="solar:alt-arrow-down-bold" />}>
-                      <Typography sx={{ fontWeight: 600, color: SPA2_INK }}>{f.q}</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Typography sx={{ color: 'text.secondary', lineHeight: 1.8 }}>
-                        {f.a}
-                      </Typography>
-                    </AccordionDetails>
-                  </Accordion>
-                ))}
-            </Container>
-          </Box>
+          <Spa2BeforeAfterPageView />
         </Box>
       )}
 

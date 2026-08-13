@@ -38,14 +38,14 @@ import { bgBlur, varAlpha } from 'src/theme/styles';
 import {
   spa2OccasionPackages,
   spa2OccasionCategories,
+  SPA2_OCCASION_BOOKINGS,
   type Spa2OccasionPackage,
   type Spa2AdjustableImage,
+  type Spa2OccasionBooking,
   type Spa2OccasionCategory,
   spa2SpecialOccasionsBanner,
-  SPA2_OCCASION_BOOKINGS,
-  type Spa2OccasionBooking,
-  type Spa2SpecialOccasionsBanner,
   type Spa2OccasionBookingStatus,
+  type Spa2SpecialOccasionsBanner,
 } from 'src/_mock/_spa2';
 
 import { Iconify } from 'src/components/iconify';

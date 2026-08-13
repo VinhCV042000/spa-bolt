@@ -69,6 +69,7 @@ import {
   Spa2PageHero,
   Spa2SoftCard,
   Spa2SectionTitle,
+  Spa2CareersPageView,
 } from 'src/sections/spa2/view/spa2-content-pages';
 import {
   SPA2_INK,
@@ -2079,188 +2080,19 @@ export function Spa2CareersManageView() {
         </DialogActions>
       </Dialog>
 
-      {/* Full-page live preview - same section order as the public /spa2/careers page:
-          hero -> join reasons -> position list -> workplace gallery (no recruitment
-          process section and no CTA on this page - that content lives on the career
-          details page instead). Built from the real Spa2PageHero/Spa2SectionTitle/
-          Spa2SoftCard leaf components so it can never visually drift from reality. */}
+      {/* Full-page live preview - renders the real public Spa2CareersPageView
+          component (src/sections/spa2/view/spa2-content-pages.tsx), the exact
+          same component src/pages/spa2/careers.tsx renders on the live
+          /spa2/careers list page, so this can never visually drift from a
+          hand-rolled mockup. (The career details page is a separate route/
+          component, Spa2CareerDetailsPageView, not previewed here.) Note:
+          Spa2CareersPageView currently takes no props - it reads
+          spa2JoinReasons/spa2Careers/spa2WorkplaceGallery/spa2WorkplaceVideos
+          straight from src/_mock/_spa2, so this preview reflects that shared
+          mock data rather than this form's in-progress (unsaved) edits. */}
       {tab === 'preview' && (
-        <Box sx={{ borderRadius: 3, overflow: 'hidden', border: `1px solid ${SPA2_CREAM_DARK}` }}>
-          <Box sx={{ bgcolor: 'background.default' }}>
-            <Spa2PageHero
-              image={banner.image.url}
-              imageStyle={banner.image}
-              eyebrow={banner.eyebrow}
-              title={banner.title}
-              subtitle={banner.subtitle}
-            />
-
-            {/* Lý do gia nhập */}
-            <Box sx={{ py: { xs: 8, md: 10 } }}>
-              <Container>
-                <Spa2SectionTitle
-                  eyebrow="Vì sao chọn chúng tôi"
-                  title="Lý do gia nhập Nature Spa"
-                />
-                <Grid container spacing={3}>
-                  {reasons.map((r) => (
-                    <Grid key={r.id} xs={6} md={3}>
-                      <Spa2SoftCard sx={{ textAlign: 'center' }}>
-                        <Iconify icon={r.icon} width={40} sx={{ color: SPA2_TEAL, mb: 1.5 }} />
-                        <Typography sx={{ color: SPA2_INK, fontWeight: 600 }}>{r.text}</Typography>
-                      </Spa2SoftCard>
-                    </Grid>
-                  ))}
-                </Grid>
-              </Container>
-            </Box>
-
-            {/* Danh sách vị trí */}
-            <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: SPA2_CREAM }}>
-              <Container>
-                <Spa2SectionTitle eyebrow="Vị trí đang tuyển" title="Cơ hội nghề nghiệp" />
-                <Stack spacing={2}>
-                  {items.map((c) => (
-                    <Spa2SoftCard key={c.id}>
-                      <Stack
-                        direction={{ xs: 'column', md: 'row' }}
-                        spacing={2}
-                        alignItems={{ xs: 'flex-start', md: 'center' }}
-                        justifyContent="space-between"
-                      >
-                        <Stack spacing={1}>
-                          <Typography variant="h6" sx={{ color: SPA2_INK }}>
-                            {c.title}
-                          </Typography>
-                          <Stack direction="row" spacing={2} flexWrap="wrap">
-                            <Stack direction="row" spacing={0.5} alignItems="center">
-                              <Iconify
-                                icon="solar:map-point-bold"
-                                sx={{ color: SPA2_TEAL }}
-                                width={16}
-                              />
-                              <Typography sx={{ fontSize: 14, color: 'text.secondary' }}>
-                                {c.location}
-                              </Typography>
-                            </Stack>
-                            <Stack direction="row" spacing={0.5} alignItems="center">
-                              <Iconify
-                                icon="solar:case-bold"
-                                sx={{ color: SPA2_TEAL }}
-                                width={16}
-                              />
-                              <Typography sx={{ fontSize: 14, color: 'text.secondary' }}>
-                                {c.type}
-                              </Typography>
-                            </Stack>
-                            <Stack direction="row" spacing={0.5} alignItems="center">
-                              <Iconify
-                                icon="solar:wallet-money-bold"
-                                sx={{ color: SPA2_TEAL }}
-                                width={16}
-                              />
-                              <Typography sx={{ fontSize: 14, color: 'text.secondary' }}>
-                                {c.salary}
-                              </Typography>
-                            </Stack>
-                          </Stack>
-                          <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mt: 1 }}>
-                            {c.benefits.map((b) => (
-                              <Chip
-                                key={b}
-                                size="small"
-                                label={b}
-                                sx={{ bgcolor: SPA2_CREAM, color: SPA2_TEAL_DARK }}
-                              />
-                            ))}
-                          </Stack>
-                        </Stack>
-                        <Button
-                          component={RouterLink}
-                          href={paths.spa2.careerDetails(c.id)}
-                          sx={{
-                            borderRadius: 999,
-                            px: 3,
-                            bgcolor: SPA2_TEAL,
-                            color: 'white',
-                            '&:hover': { bgcolor: SPA2_TEAL_DARK },
-                          }}
-                        >
-                          Xem chi tiết
-                        </Button>
-                      </Stack>
-                    </Spa2SoftCard>
-                  ))}
-                  {items.length === 0 && (
-                    <Typography sx={{ color: 'text.disabled', textAlign: 'center', py: 4 }}>
-                      Không có vị trí nào phù hợp.
-                    </Typography>
-                  )}
-                </Stack>
-              </Container>
-            </Box>
-
-            {/* Văn hóa doanh nghiệp */}
-            <Box sx={{ py: { xs: 8, md: 12 } }}>
-              <Container>
-                <Spa2SectionTitle eyebrow="Văn hóa" title="Môi trường làm việc" />
-                <Grid container spacing={2}>
-                  {gallery.map((g) => (
-                    <Grid key={g.id} xs={6} md={3}>
-                      <Box
-                        sx={{
-                          width: '100%',
-                          aspectRatio: '4/3',
-                          borderRadius: 3,
-                          backgroundImage: `url(${g.image.url})`,
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center',
-                        }}
-                      />
-                    </Grid>
-                  ))}
-                  {videos.map((v) => (
-                    <Grid key={v.id} xs={6} md={3}>
-                      <Box
-                        sx={{
-                          position: 'relative',
-                          borderRadius: 3,
-                          overflow: 'hidden',
-                          aspectRatio: '4/3',
-                          ...spa2ImageBackgroundStyle(v.thumbnail),
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            position: 'absolute',
-                            inset: 0,
-                            bgcolor: 'rgba(31,42,40,0.3)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              width: 40,
-                              height: 40,
-                              borderRadius: '50%',
-                              bgcolor: 'rgba(255,255,255,0.9)',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                            }}
-                          >
-                            <Iconify icon="solar:play-bold" width={20} sx={{ color: SPA2_TEAL }} />
-                          </Box>
-                        </Box>
-                      </Box>
-                    </Grid>
-                  ))}
-                </Grid>
-              </Container>
-            </Box>
-          </Box>
+        <Box sx={{ bgcolor: 'background.default', borderRadius: 3, overflow: 'hidden' }}>
+          <Spa2CareersPageView />
         </Box>
       )}
     </Spa2ManageShell>

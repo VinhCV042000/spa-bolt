@@ -1,16 +1,27 @@
 import { lazy, Suspense } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
 import { MainLayout } from 'src/layouts/main';
 import { SimpleLayout } from 'src/layouts/simple';
 import { useSpaNavData } from 'src/layouts/config-nav-spa';
+import { useSpa2NavData } from 'src/layouts/config-nav-spa2';
 
 import { SplashScreen } from 'src/components/loading-screen';
 
 // ----------------------------------------------------------------------
 
 function SpaMainLayout() {
-  const navData = useSpaNavData();
+  const { pathname } = useLocation();
+
+  // Both hooks must be called unconditionally on every render (rules-of-hooks).
+  // spa2 gets its own full nav; every other spa variant (spa1, spa3-28) keeps
+  // the generic nav unchanged.
+  const genericNavData = useSpaNavData();
+  const spa2NavData = useSpa2NavData();
+
+  const isSpa2 = pathname.startsWith('/spa2');
+
+  const navData = isSpa2 ? spa2NavData : genericNavData;
 
   return (
     <MainLayout data={{ nav: navData }}>
